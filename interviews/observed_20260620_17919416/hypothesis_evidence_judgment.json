@@ -1,0 +1,38 @@
+{
+  "hypothesis": "旅客在旅行安排改動後反覆確認，主要因為沒有人清楚負責同步最新安排。",
+  "operational_condition_present": "在一次具體回憶事件中，參與者明確描述：旅行安排改動後，沒有人清楚負責同步最新安排。",
+  "operational_condition_absent": "在一次具體回憶事件中，參與者明確描述：旅行安排改動後，誰負責更新/同步最新安排是清楚的，或不存在這種責任不清。",
+  "target_behaviour_observed": true,
+  "target_behaviour_refs": [
+    "exchange_1.persona",
+    "exchange_9.persona"
+  ],
+  "condition_present": {
+    "status": "not_observed",
+    "evidence_refs": [
+      "exchange_7.persona",
+      "exchange_9.persona"
+    ],
+    "rationale": "有提到需要再跟老師、家長群組或另一個家庭確認，但這是等待他人最終確認/回覆，並不等於『沒有人清楚負責同步最新安排』。相反地，受訪者明說交通和住宿誰來改很清楚。"
+  },
+  "condition_absent": {
+    "status": "observed",
+    "evidence_refs": [
+      "exchange_4.persona",
+      "exchange_7.persona"
+    ],
+    "rationale": "受訪者明確表示『實際去改的是我』，且『交通和住宿誰來改很清楚』，屬於責任清楚的具體事件；但同一事件中仍出現反覆確認。"
+  },
+  "supporting_evidence_refs": [],
+  "contradicting_evidence_refs": [
+    "exchange_4.persona",
+    "exchange_7.persona"
+  ],
+  "recommended_verdict": "unsupported",
+  "confidence": "medium",
+  "warnings": [
+    "『要等別人確認』不等於『沒有人清楚負責同步最新安排』，兩者不能視為同一機制。",
+    "exchange_7 與 exchange_9 帶有問題預設條件，且回答更接近外部確認未定，而非同步責任不清。",
+    "雖有一個不來回確認的對比事件（exchange_5.persona、exchange_8.persona），但它也未直接測到『同步責任是否不清』的精確條件。"
+  ]
+}

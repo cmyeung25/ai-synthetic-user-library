@@ -1,0 +1,170 @@
+[
+  {
+    "interview_phase": "opening",
+    "probing_strategy": "broad_neutral",
+    "decision_rationale": "目前沒有逐字稿，先用中性且明確指向旅遊情境的開場問題，建立是否有相關經驗與可供後續追問的最近事件，避免把一般排程或家庭協調誤當成旅行證據。",
+    "message_to_persona": "你可以說說最近一次你在出發前或旅行途中遇到安排變動的經過嗎？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "對方是否有與旅遊安排臨時變動直接相關的親身經驗？",
+      "若有，最近一次具體事件是發生在出發前還是旅行途中？",
+      "事件中實際變動的是哪一類安排，例如交通、住宿、集合時間或其他？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee300-ab1d-7a72-a48a-754ecaa73d77",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "目前仍無逐字稿，且觀察方向要求先聚焦最近一次具體旅行事件。保留中性、不預設原因，也不把問題導向工具，只先請對方描述最近一次實際發生的旅行變動。",
+    "message_to_persona": "你最近一次在出發前或旅行途中真的遇到安排臨時變動，是發生了什麼事？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "對方是否有與旅行安排臨時變動直接相關的親身經驗？",
+      "最近一次具體事件發生在出發前還是旅行途中？",
+      "當時實際變動的是交通、住宿、時間安排，還是其他項目？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee300-ab1d-7a72-a48a-754ecaa73d77",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "fit_check",
+    "probing_strategy": "domain_mismatch",
+    "decision_rationale": "對方提供的是學校集合時間提前，且影響高鐵與接送，這同時包含旅行與校務協調元素。依規則需先釐清這是否是一次真正的旅行情境，避免把相鄰領域故事直接當成旅客證據；因此先做一次中性的情境確認，而不是直接追問原因或工具。",
+    "message_to_persona": "那次是和旅行出發有直接關係，還是比較像因為學校安排變動而臨時重排交通？",
+    "evidence_updates": [
+      {
+        "claim": "對方提到一次因孩子學校臨時提前集合時間，影響原本排好的高鐵與到站後接送。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "事件當天早上，對方在門口一邊改車票一邊確認老師訊息。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對方認為當下困難在於快速判斷哪些安排只是延後、哪些會讓後續整串出錯。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這次事件是否屬於研究目標中的旅行情境，而非以學校安排為主的相鄰情境？",
+      "如果屬於旅行情境，具體是哪一段旅行受影響？",
+      "當時對方實際先確認了哪些安排，後來發生了什麼結果？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee300-ab1d-7a72-a48a-754ecaa73d77",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "fit_check",
+    "probing_strategy": "domain_mismatch",
+    "decision_rationale": "觀察者想探後果嚴重度，但目前最大的證據缺口仍是情境是否符合旅行研究範圍。受訪者描述的是學校集合時間變動帶動交通重排，若未先釐清，直接問『哪個確認動作後果最嚴重』會過早進入因果與嚴重性判斷，也帶有預設一定存在高風險確認動作的傾向，因此先保留中性的適配確認。",
+    "message_to_persona": "那次主要是旅行出發被打亂，還是比較像因為學校通知變動才臨時重排交通？",
+    "evidence_updates": [
+      {
+        "claim": "對方提到一次因孩子學校臨時提前集合時間，影響原本排好的高鐵與到站後接送。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "事件當天早上，對方在門口一邊改車票一邊確認老師訊息。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對方認為當下困難在於快速判斷哪些安排只是延後、哪些會讓後續整串出錯。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這次事件是否屬於研究目標中的旅行情境，而非以學校安排為主的相鄰情境？",
+      "若屬於旅行情境，受影響的具體旅行段落是什麼？",
+      "在確認研究情境適配後，當時對方實際先確認了哪些安排，接著發生了什麼結果？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee300-ab1d-7a72-a48a-754ecaa73d77",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "fit_check",
+    "probing_strategy": "rescope_or_end",
+    "decision_rationale": "受訪者已明確說明這次主要是學校通知變動，旅行本身沒有出問題，屬於研究目標的相鄰情境而非旅行途中或旅行安排本身的臨時變動。依證據紀律，不應把這個故事繼續深挖成旅客反覆確認安排的根本原因，因此建議在此結束並改找更貼近旅行情境的受訪者或事件。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "那次事件主要是學校通知變動，並連帶打亂出發交通。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者表示旅行本身沒有出問題。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "原本剛好接上的安排被往前推之後，後面每一段都要重算。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "事件當天早上，受訪者一邊改車票一邊確認老師訊息。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "是否能找到一次真正由旅行安排本身臨時變動引發反覆確認的具體事件？",
+      "在旅行情境中，受訪者實際會先確認哪些安排，後來發生什麼結果？",
+      "是否存在旅行情境下不需要反覆確認的對照案例？"
+    ],
+    "should_end": true,
+    "end_reason": "目前取得的是學校安排變動帶動交通重排的相鄰情境，與研究目標中的旅行臨時變動不完全匹配，繼續追問會降低證據品質。",
+    "provider_session_id": "019ee300-ab1d-7a72-a48a-754ecaa73d77",
+    "decision_status": "not_asked_at_close"
+  }
+]

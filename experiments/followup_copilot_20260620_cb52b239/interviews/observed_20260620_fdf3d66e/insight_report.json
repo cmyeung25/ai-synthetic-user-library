@@ -1,0 +1,192 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "最直接就係個客會等",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "件事由交付變咗做交代",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "兩件急事一齊夾埋嚟嗰陣...唔夠分清楚邊樣一定要先做",
+        "evidence_ref": "exchange_4.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次具體事件係客戶電話會議後，參與者答應當晚補比較表，但被家庭覆診安排打斷，最後延到第二朝交付。",
+      "參與者當晚即時設八點半提醒，並在自己私訊 thread 留短 note 記低客戶同要 send 嘅內容。",
+      "現有方法在多件急事並行時會失手，問題主要是優先次序同整理，而唔係單純唔記得。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用電話提醒記住 deadline。",
+      "喺自己私訊 thread 打一句短 note，寫清楚邊個客同要 send 乜。",
+      "翌日開手機先靠提醒同 note 再整理交付。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "必須由參與者自己最後過目。",
+      "唔可以自動改內容或自動發送。",
+      "唔可以一開波就要全帳戶授權。",
+      "試完要容易斷開或暫停。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "只接受好窄範圍開始，例如指定郵箱 folder。",
+      "可接受某一個已有明確主題嘅工作日曆會議。",
+      "要由參與者逐步揀清楚畀邊啲資料。"
+    ],
+    "rejected_data_access": [
+      "私人對話。",
+      "混合屋企安排嘅內容。",
+      "默默食晒成段對話。",
+      "未授權情況下再攞更多權限。",
+      "一開始就全帳戶授權。"
+    ],
+    "required_trust_explanation": [
+      "要清楚講到實際讀到乜。",
+      "要清楚講到整理完之後邊個會見到。",
+      "所有建議要先畀參與者過目。",
+      "停用或暫停流程要乾淨。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "穩陣咁抽到邊啲真係答應咗要跟進。",
+      "分得出期限同對象。",
+      "只在已選資料範圍內運作。",
+      "唔好自己改內容或發出去。"
+    ],
+    "time_to_value": "第一次試用就要見到準確抽取同清晰整理，之後要連續幾個星期都捉得準先足以建立付費信心。",
+    "abandonment_triggers": [
+      "第一次就抽錯得好離譜。",
+      "漏咗真係答應過嘅跟進。",
+      "好似想再攞多啲權限。",
+      "令參與者覺得未整理好嘅內容變成可見建議。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "高；參與者要先見到佢連續幾個星期都捉得準、而且可乾淨停用，先會考慮月費。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "要真係幫到一個亂週，而唔係淨係靚靚哋列清單。",
+      "要連續幾個星期都準。",
+      "要保留確認後先出。",
+      "要可容易停用或暫停。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "能取代自己補私訊 note。",
+      "能取代手動再對一次提醒。",
+      "整理結果仍可由自己最後過目。"
+    ],
+    "drop_off_reasons": [
+      "如果只係多一層清單而冇取代現有步驟。",
+      "準確度不穩。",
+      "權限邊界變闊。",
+      "停用唔乾淨。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "參與者有 recurring follow-up 問題，而且有實際後果。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "有近期具體事件，亦講到亂週或多件急事同時出現時會影響交付同要補解釋。"
+    },
+    {
+      "assumption": "現有 workaround 不足以支撐高壓情境，值得改變行為。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_4.persona",
+        "exchange_11.persona"
+      ],
+      "rationale": "現有做法平時可用，但在多件急事並行時不夠分優先次序；是否足以驅動改變仍取決於新工具能否真正取代 note 同手動核對。"
+    },
+    {
+      "assumption": "只畀 selected-source access 已足夠，不需要 broad message access。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_9.persona"
+      ],
+      "rationale": "參與者明確只接受窄範圍、手動選取嘅資料來源，並反對全帳戶授權。"
+    },
+    {
+      "assumption": "review-before-action 會明顯提升信任。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_10.persona",
+        "exchange_11.persona"
+      ],
+      "rationale": "參與者反覆要求先過目，並拒絕自動改內容或發送。"
+    },
+    {
+      "assumption": "產品可以喺第一星期展示有意義價值。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "exchange_10.persona"
+      ],
+      "rationale": "第一次試用必須即時準確先唔會被放棄，但真正建立付費信心需要連續幾個星期表現。"
+    },
+    {
+      "assumption": "窄範圍 onboarding 可接受。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_9.persona"
+      ],
+      "rationale": "參與者明確接受由指定 folder 或單一工作日曆逐步接入。"
+    },
+    {
+      "assumption": "證明效果後有 credible willingness to pay。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_10.persona"
+      ],
+      "rationale": "有明確付費條件，但未提供價位，亦屬概念層面的 stated evidence。"
+    },
+    {
+      "assumption": "產品可以取代一步，而唔係只係再加一層。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_11.persona",
+        "exchange_12.persona"
+      ],
+      "rationale": "參與者只會在能取代私訊 note 同手動核對提醒時留到第二個月，並指出核心問題是整理、可見性與補救，而唔係單純提醒。"
+    }
+  ],
+  "key_insights": [
+    "問題存在，但核心唔係『記性差』，而係亂週入面點整理、排序同補救 follow-up。",
+    "信任邊界比功能更前置；未講清資料範圍、可見性同退出機制，參與者會即刻停。",
+    "首個價值唔係自動發送，而係準確抽取承諾、辨識期限與對象，並保留人工最後審核。",
+    "要留到第二個月，產品必須取代現有私訊 note 同手動核對提醒，否則只係多一層管理負擔。",
+    "付費唔會因為清單靚，而係因為產品真係幫到一個混亂星期，同時長期維持準確度。"
+  ],
+  "next_experiment": "做一個超窄 onboarding 原型，只連單一郵箱 folder 或單一工作日曆，輸出『抽取到嘅承諾 + 期限 + 對象』清單，全部先經人工過目；測試參與者會否覺得已取代私訊 note 同手動提醒核對。",
+  "evidence_gaps": [
+    "未有月費接受區間。",
+    "未有真實試用行為，只係概念反應。",
+    "只有一位 synthetic persona，未足以代表其他工作型態或較低隱私敏感度用戶。",
+    "未驗證 delivery surface 偏好，例如 email、app 內 inbox 定 calendar side panel。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念驗證前測，屬模擬證據，唔可以代替真人用戶研究或市場證明。"
+}

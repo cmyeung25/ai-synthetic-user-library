@@ -1,0 +1,125 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "45-54",
+    "location_type": "suburban",
+    "household_structure": "multi-generational household",
+    "occupation_band": "program_management",
+    "income_band": "upper_middle",
+    "education_band": "postgraduate",
+    "language": [
+      "Cantonese",
+      "English"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "digital-first",
+    "schedule_pressure": "high",
+    "budget_flexibility": "high",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "medium",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "hong_kong_smb",
+    "life_stage": "caregiver_balancing_work",
+    "purchase_authority_type": "team_influencer",
+    "employment_stability": "contract_based",
+    "workflow_maturity": "tool_heavy",
+    "decision_speed": "fast",
+    "proof_threshold": "light_demo",
+    "cash_flow_volatility": "high"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "another tool that adds one more dashboard without replacing existing work"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "evidence that the workflow can survive internal review and comparison"
+    ],
+    "default_heuristic": "Adopt when the payoff is concrete, the learning curve is bounded, and the tool can replace at least part of an existing habit instead of sitting beside it.",
+    "green_lights": [
+      "can test with low-risk sample data",
+      "shows immediate value in follow-up or task capture",
+      "fits current spreadsheet and messaging habits during transition",
+      "has credible privacy posture and onboarding clarity",
+      "gives Alex language to explain the choice internally"
+    ],
+    "red_flags": [
+      "requires a big upfront reorganisation",
+      "promises automation but still needs heavy manual checking",
+      "asks for broad data access before trust is established",
+      "prices itself as small but multiplies across a team",
+      "assumes constant enthusiasm from a busy operator"
+    ],
+    "trial_preference": "Prefers a short, realistic pilot with one repeatable use case over a broad trial full of optional features.",
+    "spend_logic": "Can afford useful software, but volatile cash flow and software-spend scrutiny make Alex behave more cautiously than income band alone suggests.",
+    "escalation_path": "If a tool looks promising, Alex will gather a simple before-and-after story, check whether manager or team comparison is needed, and then push for a fast yes or no rather than a long evaluation."
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "tone": "Practical, respectful, and concise.",
+    "preferred_format": [
+      "short summary first",
+      "concrete example second",
+      "pricing or setup implications early",
+      "avoid jargon unless it saves time"
+    ],
+    "demo_preferences": [
+      "show the exact first-use workflow",
+      "highlight what Alex would stop doing manually",
+      "make privacy and rollback options visible"
+    ],
+    "objection_style": "Alex rarely rejects with ideology; objections usually show up as questions about setup burden, duplication, proof, and whether the habit will survive a busy week.",
+    "follow_up_expectations": "If follow-up is needed, it should be purposeful, brief, and easy to compare against current practice."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_openai_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-17",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "openai",
+      "profile": "chatgpt-5.4-high",
+      "model": "gpt-5.4",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-17T23:24:32+00:00",
+      "rationale": "{'identity_anchor_preservation': ['kept name, age, location, household structure, occupation, education, income level, marital status, device/payment environment, and language consistent with the seed', 'preserved contract-based employment, high schedule pressure, tool-heavy workflow, fast decision speed, and medium trust/privacy/switching constraints'], 'realism_enrichment_choices': ['translated abstract traits into concrete operating pressures such as shared-space interruptions, software-spend review, and midweek fallback behavior', 'added believable tension between upper-middle income and high cash-flow volatility', 'made team-influencer status operational by describing internal justification and manager review behavior'], 'anti_stereotype_notes': ['did not infer personality or preferences from gender identity, age, or Hong Kong background beyond the explicit seeded business context', 'treated non-binary identity as a respect and inclusion consideration rather than a behavioral determinant', 'avoided turning caregiving, single status, or locale into deterministic habits'], 'validation_usefulness': 'The persona is structured to help evaluate onboarding, workflow fit, trust-building, pricing sensitivity, privacy messaging, and habit durability under real schedule pressure without using the profile for diagnosis or sensitive targeting.'}"
+    }
+  }
+}

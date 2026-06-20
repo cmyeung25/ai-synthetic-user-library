@@ -1,0 +1,212 @@
+{
+  "aggregation_version": "aggregator/v1",
+  "project_name": "Private Intake Helper",
+  "persona_count": 2,
+  "selected_persona_count": 2,
+  "successful_response_count": 2,
+  "failed_response_count": 0,
+  "response_coverage_pct": 100.0,
+  "run_status": "completed",
+  "failure_reasons": [],
+  "average_scores": {
+    "problem_resonance": 4.0,
+    "solution_attractiveness": 3.0,
+    "willingness_to_pay": 2.0
+  },
+  "top_buying_triggers": [
+    {
+      "trigger": "a privacy-light workflow with minimal sensitive data",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0011",
+        "su_0003"
+      ],
+      "panel_roles": [
+        "privacy_sensitive"
+      ],
+      "examples": [
+        "a privacy-light workflow with minimal sensitive data"
+      ]
+    }
+  ],
+  "top_objections": [
+    {
+      "objection": "unclear data handling",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0011",
+        "su_0003"
+      ],
+      "panel_roles": [
+        "privacy_sensitive"
+      ],
+      "examples": [
+        "unclear data handling"
+      ]
+    }
+  ],
+  "trigger_clusters": [
+    {
+      "trigger": "a privacy-light workflow with minimal sensitive data",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0011",
+        "su_0003"
+      ],
+      "panel_roles": [
+        "privacy_sensitive"
+      ],
+      "examples": [
+        "a privacy-light workflow with minimal sensitive data"
+      ]
+    }
+  ],
+  "objection_clusters": [
+    {
+      "objection": "unclear data handling",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0011",
+        "su_0003"
+      ],
+      "panel_roles": [
+        "privacy_sensitive"
+      ],
+      "examples": [
+        "unclear data handling"
+      ]
+    }
+  ],
+  "segment_summary": {
+    "privacy_sensitive": {
+      "count": 2,
+      "problem_resonance": 4.0,
+      "solution_attractiveness": 3.0,
+      "willingness_to_pay": 2.0,
+      "top_objections": [
+        {
+          "objection": "unclear data handling",
+          "count": 2
+        }
+      ],
+      "top_triggers": [
+        {
+          "trigger": "a privacy-light workflow with minimal sensitive data",
+          "count": 2
+        }
+      ],
+      "top_trust_concerns": [
+        {
+          "trust_concern": "I would need clearer proof on privacy and data boundaries.",
+          "count": 2
+        }
+      ]
+    }
+  },
+  "risk_map": [
+    {
+      "category": "privacy_risk",
+      "highest_severity": "medium",
+      "finding_count": 1,
+      "affected_persona_ids": [],
+      "observations": [
+        "The concept appears to depend on personal or workflow data, so trust language and data-minimisation choices will materially affect adoption."
+      ],
+      "recommended_validation_questions": [
+        "Which minimum data fields are truly necessary for the first useful experience?"
+      ]
+    },
+    {
+      "category": "reporting_risk",
+      "highest_severity": "low",
+      "finding_count": 1,
+      "affected_persona_ids": [
+        "su_0003",
+        "su_0011"
+      ],
+      "observations": [
+        "Some personas signal trust concerns that should be reported as design risks rather than as fixed segment truths."
+      ],
+      "recommended_validation_questions": [
+        "Which trust concerns repeat across real user interviews, and how should the product present those trade-offs?"
+      ]
+    }
+  ],
+  "audit_categories": [
+    {
+      "category": "privacy_risk",
+      "severity": "medium",
+      "observation": "The concept appears to depend on personal or workflow data, so trust language and data-minimisation choices will materially affect adoption.",
+      "evidence_refs": [
+        "brief",
+        "persona_responses"
+      ],
+      "recommended_validation_question": "Which minimum data fields are truly necessary for the first useful experience?"
+    },
+    {
+      "category": "reporting_risk",
+      "severity": "low",
+      "observation": "Some personas signal trust concerns that should be reported as design risks rather than as fixed segment truths.",
+      "evidence_refs": [
+        "su_0011",
+        "su_0003"
+      ],
+      "recommended_validation_question": "Which trust concerns repeat across real user interviews, and how should the product present those trade-offs?"
+    }
+  ],
+  "skeptic_review": {
+    "review_version": "skeptic-review/v1",
+    "summary": "Skeptic review focuses on weak proof, habit-change friction, pricing readiness, and value-capture gaps.",
+    "challenged_assumptions": [
+      {
+        "finding_id": "skeptic_solution_clarity",
+        "severity": "medium",
+        "title": "Solution story may still be too abstract",
+        "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+        "evidence_refs": [
+          "raw_responses",
+          "summary"
+        ],
+        "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+      },
+      {
+        "finding_id": "skeptic_pricing_readiness",
+        "severity": "high",
+        "title": "Pricing may be ahead of proven value",
+        "observation": "A meaningful slice of the current panel does not yet show enough willingness to pay at the proposed stage.",
+        "evidence_refs": [
+          "raw_responses"
+        ],
+        "recommended_validation_question": "What proof or trial experience would make the initial price feel justified within the first week?"
+      }
+    ]
+  },
+  "assumption_risk_map": [
+    {
+      "finding_id": "skeptic_solution_clarity",
+      "severity": "medium",
+      "title": "Solution story may still be too abstract",
+      "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+      "evidence_refs": [
+        "raw_responses",
+        "summary"
+      ],
+      "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+    },
+    {
+      "finding_id": "skeptic_pricing_readiness",
+      "severity": "high",
+      "title": "Pricing may be ahead of proven value",
+      "observation": "A meaningful slice of the current panel does not yet show enough willingness to pay at the proposed stage.",
+      "evidence_refs": [
+        "raw_responses"
+      ],
+      "recommended_validation_question": "What proof or trial experience would make the initial price feel justified within the first week?"
+    }
+  ],
+  "generated_at": "2026-06-17T16:11:02+00:00"
+}

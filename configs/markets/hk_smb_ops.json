@@ -1,0 +1,71 @@
+{
+  "config_version": "market-distribution/v1",
+  "market_id": "hk_smb_ops",
+  "display_name": "Hong Kong SMB Operations",
+  "default_locale": "zh-HK",
+  "target_population": "Hong Kong small-business operators and service coordinators with mixed digital maturity.",
+  "weights": {
+    "panel_role": {
+      "mainstream": 0.28,
+      "skeptic": 0.14,
+      "privacy_sensitive": 0.12,
+      "inclusion": 0.06,
+      "political_risk": 0.08,
+      "low_tech": 0.14,
+      "budget_constrained": 0.12,
+      "extreme_user": 0.06
+    },
+    "locale_pack": {
+      "hong_kong_smb": 0.80,
+      "new_territories_operator": 0.15,
+      "cross_border_service_mix": 0.05
+    },
+    "payment_environment": {
+      "digital-first": 0.25,
+      "mixed": 0.55,
+      "careful subscription user": 0.20
+    },
+    "schedule_pressure": {
+      "low": 0.10,
+      "medium": 0.45,
+      "high": 0.45
+    },
+    "trust_threshold": {
+      "needs_social_proof": 0.35,
+      "needs_trial": 0.45,
+      "adopts_after_peer_signal": 0.20
+    }
+  },
+  "quota_rules": [
+    {
+      "rule_id": "min_low_tech_presence",
+      "dimension": "panel_role",
+      "operator": "min_share",
+      "target": "low_tech",
+      "value": 0.10
+    },
+    {
+      "rule_id": "min_budget_constrained_presence",
+      "dimension": "panel_role",
+      "operator": "min_share",
+      "target": "budget_constrained",
+      "value": 0.10
+    }
+  ],
+  "exclusion_rules": [
+    {
+      "rule_id": "avoid_near_duplicate_decision_policies",
+      "type": "decision_similarity_threshold",
+      "threshold": 0.88
+    }
+  ],
+  "overlays": [
+    "zh_hk_copy_review",
+    "smb_service_workflow_overlay"
+  ],
+  "metadata": {
+    "owner": "product_architecture",
+    "notes": "Locale-specific market mix for Hong Kong SMB operations workflows."
+  }
+}
+

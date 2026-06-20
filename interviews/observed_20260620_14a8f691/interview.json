@@ -1,0 +1,490 @@
+{
+  "interview_id": "observed_20260620_14a8f691",
+  "persona_id": "su_0002",
+  "persona_name": "Priya Wong",
+  "research_goal": "驗證旅客在旅行安排改動後反覆確認的原因。",
+  "product_context": "只做問題訪談，不展示方案。",
+  "output_language": "Natural Traditional Chinese",
+  "facilitator_provider": "codex",
+  "facilitator_model": "gpt-5.4",
+  "persona_provider": "codex",
+  "persona_model": "gpt-5.4",
+  "facilitator_prompt_version": "facilitator-interview/v2",
+  "synthesis_prompt_version": "facilitator-synthesis/v2",
+  "interview_mode": "validate_hypothesis",
+  "hypothesis": "旅客在旅行安排改動後反覆確認，主要因為沒有人清楚負責同步最新安排。",
+  "facilitator_provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+  "persona_provider_session_id": "019ee315-3546-7870-aa54-5a0e64167381",
+  "persona_conversation_session_id": "chat_20260620_d2f013bf",
+  "quality_provider": "codex",
+  "quality_model": "gpt-5.4",
+  "quality_prompt_version": "facilitator-quality-evaluator/v2",
+  "quality_provider_session_id": "019ee317-bdbf-7fe3-a4cf-55a30ec918a0",
+  "max_turns": 4,
+  "created_at": "2026-06-20T03:30:54+00:00",
+  "updated_at": "2026-06-20T03:34:29+00:00",
+  "status": "completed",
+  "stop_reason": "safety_turn_limit_reached",
+  "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+  "facilitator_decisions": [
+    {
+      "interview_phase": "opening",
+      "probing_strategy": "recent_event",
+      "decision_rationale": "首輪先用中性、具體的近期事件提問，建立旅行安排改動的真實情境；不直接帶入反覆確認或責任分工假設，避免引導。",
+      "message_to_persona": "可以跟我說說你最近一次旅行安排有變動時，當時發生了什麼嗎？",
+      "evidence_updates": [],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "最近是否有一次具體的旅行安排改動事件可供重建？",
+        "該事件中是否出現反覆確認的實際行為？",
+        "若有反覆確認，最初觸發它的是什麼具體情境？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "event_reconstruction",
+      "probing_strategy": "sequence_probe",
+      "decision_rationale": "參與者已提供近期具體事件與多個行動，但目標行為是否為反覆確認仍未明確觀察到。下一步先重建當下的先後順序，聚焦一個具體動作，避免過早追問原因或帶入責任分工假設。",
+      "message_to_persona": "你那時先去翻車票，是想確認哪一件事？",
+      "evidence_updates": [
+        {
+          "claim": "參與者最近一次旅行安排變動，是因為出發前一天下午收到學校臨時活動通知，導致原本的台中過夜行程需要調整。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "在行程變動後，參與者先查看車票、住宿取消條件，以及是否能改成隔天晚一點出發，最後把原本過夜改成當天來回。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者調整安排時，擔心若不縮成當天來回，整體安排會一直有人在補漏洞。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "參與者當時逐一查看車票、住宿與出發時間的先後順序與各自目的為何？",
+        "這次事件中是否真的出現反覆確認的行為，而不只是一次性比對多個條件？",
+        "所謂『一直有人在補漏洞』具體是指誰在補、補什麼、發生過什麼後果？",
+        "是否有人負責同步最新安排，以及這點是否實際影響了參與者的確認行為？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "behaviour_check",
+      "probing_strategy": "sequence_probe",
+      "decision_rationale": "目前已看到她依序檢查不同安排條件，但尚未觀察到『反覆確認』是否真的發生。先追問同一事件中的具體重看行為，比直接問原因更能公平測試假設。",
+      "message_to_persona": "你那次有沒有回頭再看一次已經查過的資訊？",
+      "evidence_updates": [
+        {
+          "claim": "參與者在安排變動後，先確認車票是否能以最小改動保留行程，再決定是否需要調整住宿。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者調整時採取條件式決策：若車票仍可改班次，才值得進一步處理住宿。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者的首要目標是用最小改動保住原本行程。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "這次事件中是否出現重複查看同一資訊的行為？",
+        "如果有回頭重看，觸發重看的具體原因是什麼？",
+        "這次調整是否涉及他人同步最新安排，或其實主要是參與者自己在做條件判斷？",
+        "是否存在沒有反覆確認也能完成改動的對照情況？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "causal_probe",
+      "probing_strategy": "causal_probe",
+      "decision_rationale": "現在已觀察到一次明確的反覆確認行為，且原因尚未指向他人同步責任不清。下一題聚焦她為何在要改動時再對一次，檢驗是記憶風險、金錢後果，還是同步問題在驅動。",
+      "message_to_persona": "你那次真的要改住宿前，為什麼會想再對一次截止時間？",
+      "evidence_updates": [
+        {
+          "claim": "在這次旅行安排改動中，參與者有回頭再次查看已查過的資訊。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者回頭再看的是住宿取消條件中的截止時間。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者通常第一次先抓方向，真的要改時會再核對一次。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者再次核對的直接顧慮，是怕自己記錯而多賠一筆費用。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "反覆確認可能主要由記憶不確定與金錢損失風險驅動，而非安排同步責任不清。",
+          "evidence_type": "facilitator_hypothesis",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "root_cause_hypotheses": [
+        {
+          "hypothesis": "在旅行安排要正式改動前，參與者會再次確認關鍵限制，主要是因為怕自己記錯而產生額外費用。",
+          "supporting_evidence_refs": [
+            "exchange_3.persona"
+          ],
+          "alternative_explanations": [
+            "需要確認資訊在短時間內是否已變動",
+            "有人口頭更新過安排但內容不夠明確",
+            "住宿規則本身複雜，所以需要再核對一次"
+          ],
+          "validation_gap": "還未釐清這次再核對是因為個人記憶風險、規則易變，還是有人際同步問題觸發。",
+          "confidence": "medium"
+        }
+      ],
+      "open_questions": [
+        "這次再核對截止時間的最直接觸發點是什麼？",
+        "當時是否有其他人參與調整，並影響她需要再確認？",
+        "除了住宿截止時間外，她是否也反覆確認過其他資訊？",
+        "有沒有相似的改動情況下，她沒有再對一次資訊的對照案例？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+      "decision_status": "asked"
+    }
+  ],
+  "exchanges": [
+    {
+      "exchange_id": 1,
+      "facilitator_question": "可以跟我說說你最近一次旅行安排有變動時，當時發生了什麼嗎？",
+      "persona_response": "有一次原本打算週末帶小孩去台中住一晚，前一天下午學校臨時補了一個活動通知，時間剛好卡住。那時我不是先看飯店，而是先把車票、住宿取消條件、還有隔天能不能改成晚一點出發都翻了一遍，最後直接縮成當天來回，不然整個安排會一直有人在補漏洞。",
+      "facilitator_phase": "opening",
+      "probing_strategy": "recent_event",
+      "created_at": "2026-06-20T03:31:27+00:00"
+    },
+    {
+      "exchange_id": 2,
+      "facilitator_question": "你那時先去翻車票，是想確認哪一件事？",
+      "persona_response": "先確認能不能用最小的改動把行程留住。因為如果車票那邊還有可改的班次，我才有必要再看住宿要不要延後或縮短，不然後面都是白調。",
+      "facilitator_phase": "event_reconstruction",
+      "probing_strategy": "sequence_probe",
+      "created_at": "2026-06-20T03:32:02+00:00"
+    },
+    {
+      "exchange_id": 3,
+      "facilitator_question": "你那次有沒有回頭再看一次已經查過的資訊？",
+      "persona_response": "有，我有回頭再看一次取消條件，特別是住宿那邊的截止時間。我通常第一次先抓方向，真的要改時會再對一次，免得以為自己記對了，結果多賠一筆。",
+      "facilitator_phase": "behaviour_check",
+      "probing_strategy": "sequence_probe",
+      "created_at": "2026-06-20T03:32:38+00:00"
+    },
+    {
+      "exchange_id": 4,
+      "facilitator_question": "你那次真的要改住宿前，為什麼會想再對一次截止時間？",
+      "persona_response": "因為那種時間點最容易記成自己以為的版本，像是以為是午夜前，其實是傍晚前。真的要按下去之前，我會再對一次，不然一個判斷錯了，後面就不是改行程，是多付錢。",
+      "facilitator_phase": "causal_probe",
+      "probing_strategy": "causal_probe",
+      "created_at": "2026-06-20T03:33:15+00:00"
+    }
+  ],
+  "pending_facilitator_decision": {},
+  "observer_interventions": [],
+  "last_error": "",
+  "failed_operation": "",
+  "failed_payload": {},
+  "insight_report": {
+    "executive_summary": "這次合成訪談提供了一個具體事件，也觀察到一次明確的反覆確認行為；但目前證據較不支持「主要因為沒有人清楚負責同步最新安排」這個假設。較強的訊號是：參與者在真正要改動前，會再次核對關鍵限制，主因是怕自己記錯細節，進而造成額外金錢損失。",
+    "insights": [
+      {
+        "insight": "反覆確認在這次事件中確實出現，但只明確出現在正式改動前對住宿取消截止時間的再次核對。",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "high",
+        "implication": "需要把『有沒有反覆確認』和『反覆確認發生在哪個決策點』分開看，不能把前面的一次性掃描多個條件直接當成重複確認。"
+      },
+      {
+        "insight": "這次再次核對的直接驅動因素，是怕自己把時間條件記成錯的版本，導致多付費用。",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "high",
+        "implication": "在此案例中，反覆確認更像是高風險決策前的防錯行為，而不是同步責任不清後的協調補救。"
+      },
+      {
+        "insight": "參與者前面的查找順序是條件式決策流程：先看車票是否還能最小改動保住行程，再決定是否值得處理住宿。",
+        "evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "confidence": "high",
+        "implication": "她的確認行為部分可能來自跨限制條件的連動判斷，而不一定來自多人協作中的資訊不同步。"
+      },
+      {
+        "insight": "逐字稿中沒有出現明確的人際同步失敗證據，例如誰負責更新、誰沒更新、或因版本不同導致重查。",
+        "evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "high",
+        "implication": "若要主張『主要原因是責任不清』，目前證據不足，且有被其他機制更好解釋的風險。"
+      }
+    ],
+    "needs": [
+      "在安排變動時快速判斷是否還能以最小代價保留原本旅行",
+      "在正式提交改動前，確認高風險規則細節沒有記錯",
+      "避免因時間截止或條件誤判而產生額外費用"
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "旅客在旅行安排改動後反覆確認，主要是因為關鍵限制條件容易被記成錯的版本，所以在真正改動前會再核對一次。",
+        "supporting_evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "取消規則本身表述複雜",
+          "短時間內需要同時比較多個互相關聯條件",
+          "資訊可能會變動，因此需要臨門一腳再看一次"
+        ],
+        "validation_gap": "還缺少更多事件來確認這是不是穩定模式，而不只是這次住宿取消條件的特殊情境。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "反覆確認可能部分來自高後果風險，而不是單純不確定；也就是一旦判斷錯，成本會立即變成金錢損失。",
+        "supporting_evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "參與者本身習慣謹慎核對",
+          "這次是因為帶小孩出行，容錯更低",
+          "出發前一天改動使時間壓力放大了確認需求"
+        ],
+        "validation_gap": "尚未取得低風險改動情境作為對照，無法判斷是否只有高損失情境才會觸發重複確認。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "『沒有人清楚負責同步最新安排』不是這次反覆確認的主要成因，至少在現有證據中未被觀察到。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "可能存在未說出的家庭分工問題",
+          "『一直有人在補漏洞』也可能暗示協調成本，但未被展開",
+          "同步問題可能發生在其他旅行案例而不是這一次"
+        ],
+        "validation_gap": "尚未追問是否有他人參與決策與同步，因此只能說目前未被支持，不能完全排除。",
+        "confidence": "medium"
+      }
+    ],
+    "contradictions": [
+      "研究假設聚焦於『沒有人清楚負責同步最新安排』，但逐字稿中的直接原因集中在『怕自己記錯』與『怕多付錢』。",
+      "參與者提到『一直有人在補漏洞』，聽起來像協調問題；但後續具體例子仍落在個人核對規則，而非他人同步失敗。"
+    ],
+    "pov_statements": [
+      "一位在出發前夕臨時遇到行程變動、又想盡量保住原旅行安排的家長，需要在真正改動前再次核對高風險限制，因為她怕自己把關鍵時間條件記錯而多付錢。",
+      "一位面對車票、住宿與出發時間彼此連動的旅客，需要先確認哪個條件還有調整空間，因為不先判斷可行性，後面的調整都可能白做。"
+    ],
+    "how_might_we_questions": [
+      "我們如何幫旅客在要正式改動前，更有把握地辨認最容易記錯、但代價最高的限制條件？",
+      "我們如何幫旅客在多個安排互相牽動時，先看出哪個條件值得優先確認，減少白調整？",
+      "我們如何區分『個人防錯核對』與『多人同步失敗』這兩種不同來源的反覆確認？"
+    ],
+    "hypothesis_assessment": {
+      "hypothesis": "旅客在旅行安排改動後反覆確認，主要因為沒有人清楚負責同步最新安排。",
+      "verdict": "unsupported",
+      "supporting_evidence_refs": [],
+      "contradicting_evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "alternative_explanations": [
+        "害怕記錯關鍵條件",
+        "避免金錢損失",
+        "多條件連動下的審慎決策流程"
+      ],
+      "evidence_gaps": [
+        "未追問是否有他人參與同步最新安排",
+        "沒有對照案例顯示在同步清楚時是否仍會重複確認",
+        "只有單一事件，無法判斷主因是否可泛化"
+      ],
+      "confidence": "medium"
+    },
+    "evidence_gaps": [
+      "缺少是否有其他旅伴或家人參與安排調整與資訊同步的證據",
+      "缺少反例：哪些改動情況下她不會再核對一次",
+      "缺少更多事件，無法判斷這是個人穩定習慣、特定高風險情境，還是更普遍的旅行安排模式",
+      "缺少對『一直有人在補漏洞』的具體展開，因此無法判斷其中是否包含同步責任不清"
+    ],
+    "recommended_human_validation": [
+      "在人類訪談中追問：這次誰有參與決定或接收最新安排？有沒有誰以為版本不同？",
+      "收集一個對照事件：有改動但她沒有反覆確認時，當時有何不同",
+      "比較高金錢風險與低金錢風險的改動事件，看反覆確認是否只在高損失情境發生",
+      "針對『補漏洞』做事件重建，確認那是個人防錯、家庭協調，還是資訊同步責任不清"
+    ],
+    "synthetic_only_disclaimer": "以上僅為單一合成人物訪談的預驗證分析，屬於假設生成與初步篩選，不能替代真實使用者研究或作為市場事實證明。"
+  },
+  "quality_evaluation": {
+    "overall_verdict": "warn",
+    "scores": {
+      "neutrality": 4,
+      "probing_quality": 3,
+      "conversation_naturalness": 4,
+      "evidence_discipline": 3,
+      "causal_rigor": 3,
+      "hypothesis_validation_rigor": 2,
+      "synthesis_fidelity": 3,
+      "overall": 3
+    },
+    "checks": {
+      "leading_question_risk": "pass",
+      "repetition_risk": "pass",
+      "premature_root_cause_risk": "warn",
+      "mechanical_five_whys_risk": "pass",
+      "evidence_reference_quality": "pass",
+      "synthesis_overreach_risk": "warn",
+      "conversation_naturalness": "pass",
+      "persona_over_structuring_risk": "pass",
+      "interviewer_jargon_risk": "pass",
+      "domain_fit_alignment": "warn",
+      "hypothesis_confirmation_bias_risk": "warn"
+    },
+    "strengths": [
+      "The opening question is neutral, concrete, and anchors on a recent event without revealing the hypothesis.",
+      "The facilitator waits until a repeat-check behavior is actually observed in `exchange_3.persona` before asking a direct causal question in `exchange_4.facilitator`.",
+      "The synthesis correctly notes that current evidence does not support the supplied synchronization-responsibility hypothesis and cites the absence of direct interpersonal-sync evidence."
+    ],
+    "findings": [
+      {
+        "category": "Hypothesis validation rigor",
+        "severity": "high",
+        "observation": "In `validate_hypothesis` mode, the interview never attempts a real disconfirmation test of the supplied hypothesis. No participant-facing question probes who else was involved, who was responsible for updates, whether anyone had conflicting versions, or whether repeat checking still happens when responsibility is clear. The trace notes these gaps, but they are not tested in spoken exchanges.",
+        "evidence_refs": [
+          "exchange_1.facilitator",
+          "exchange_2.facilitator",
+          "exchange_3.facilitator",
+          "exchange_4.facilitator",
+          "FACILITATOR TRACE[1]",
+          "FACILITATOR TRACE[2]",
+          "FACILITATOR TRACE[3]"
+        ],
+        "recommendation": "Add at least one direct but neutral test of the hypothesis and one disconfirming contrast case, such as asking who else was involved, whether anyone owned updates, and whether repeat checking also occurs in solo or clearly-owned cases."
+      },
+      {
+        "category": "Causal rigor",
+        "severity": "medium",
+        "observation": "`exchange_4.facilitator` moves to a why-question immediately after one observed repeat-check instance, narrowing onto the cancellation deadline rather than first broadening across alternatives. This creates some premature causal closure around memory/cost risk before testing other plausible mechanisms like changing information, family coordination, or responsibility ambiguity.",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.facilitator",
+          "exchange_4.persona"
+        ],
+        "recommendation": "Before asking why, probe a broader comparison: what else they rechecked, what triggered the recheck, and whether the same pattern appears in cases with or without other people involved."
+      },
+      {
+        "category": "Synthesis fidelity",
+        "severity": "medium",
+        "observation": "The synthesis generates needs, POVs, and HMWs that generalize beyond the single observed behavior. The evidence clearly supports one recheck of a cancellation deadline before committing a change, but outputs like broad traveler needs and multi-constraint prioritization frame a wider pattern than this single case securely establishes.",
+        "evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "SYNTHESIS.needs",
+          "SYNTHESIS.pov_statements",
+          "SYNTHESIS.how_might_we_questions"
+        ],
+        "recommendation": "Keep downstream design artifacts tighter to the observed case, or explicitly label them as tentative extrapolations requiring additional interviews."
+      },
+      {
+        "category": "Domain fit alignment",
+        "severity": "medium",
+        "observation": "Some downstream framing shifts toward general travel-change decision support rather than the target changed action of repeat confirmation after itinerary changes. The strongest observed changed action is rechecking a high-risk rule before editing lodging, not a broader workflow failure around synchronization.",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "SYNTHESIS.how_might_we_questions"
+        ],
+        "recommendation": "Anchor conclusions and problem framing on the exact changed action observed: repeat verification of high-stakes conditions before committing a change."
+      },
+      {
+        "category": "Evidence discipline",
+        "severity": "low",
+        "observation": "The trace introduces a facilitator hypothesis that repeat confirmation may be driven by memory uncertainty and financial risk from `exchange_3.persona`, which is reasonable, but that interpretation becomes prominent before alternative explanations are participant-tested.",
+        "evidence_refs": [
+          "FACILITATOR TRACE[3]"
+        ],
+        "recommendation": "When adding internal hypotheses, keep them explicitly provisional and ensure the next spoken question tests multiple competing explanations rather than mainly elaborating one."
+      }
+    ],
+    "required_improvements": [
+      "In `validate_hypothesis` mode, include at least one explicit disconfirmation attempt against the supplied hypothesis using participant-facing questions.",
+      "Probe interpersonal synchronization directly before ruling the hypothesis unsupported: who was involved, who owned updates, and whether anyone had mismatched versions.",
+      "Use comparison questions to test alternatives, such as a case where plans changed but the participant did not recheck, or a case where responsibility was clear but rechecking still occurred.",
+      "Constrain synthesis outputs to the observed evidence, especially needs/POV/HMW artifacts, or label them as tentative extrapolations."
+    ],
+    "human_review_needed": false,
+    "synthetic_only_disclaimer": "This evaluation reviews a synthetic interview artifact and its trace. Judgments about evidence strength, bias, and synthesis overreach apply only to this simulated material and do not substitute for review of real participant research."
+  },
+  "exchange_count": 4,
+  "facilitator_decision_count": 4
+}

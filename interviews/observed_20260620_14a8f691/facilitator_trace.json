@@ -1,0 +1,178 @@
+[
+  {
+    "interview_phase": "opening",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "首輪先用中性、具體的近期事件提問，建立旅行安排改動的真實情境；不直接帶入反覆確認或責任分工假設，避免引導。",
+    "message_to_persona": "可以跟我說說你最近一次旅行安排有變動時，當時發生了什麼嗎？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近是否有一次具體的旅行安排改動事件可供重建？",
+      "該事件中是否出現反覆確認的實際行為？",
+      "若有反覆確認，最初觸發它的是什麼具體情境？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "event_reconstruction",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "參與者已提供近期具體事件與多個行動，但目標行為是否為反覆確認仍未明確觀察到。下一步先重建當下的先後順序，聚焦一個具體動作，避免過早追問原因或帶入責任分工假設。",
+    "message_to_persona": "你那時先去翻車票，是想確認哪一件事？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次旅行安排變動，是因為出發前一天下午收到學校臨時活動通知，導致原本的台中過夜行程需要調整。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在行程變動後，參與者先查看車票、住宿取消條件，以及是否能改成隔天晚一點出發，最後把原本過夜改成當天來回。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者調整安排時，擔心若不縮成當天來回，整體安排會一直有人在補漏洞。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者當時逐一查看車票、住宿與出發時間的先後順序與各自目的為何？",
+      "這次事件中是否真的出現反覆確認的行為，而不只是一次性比對多個條件？",
+      "所謂『一直有人在補漏洞』具體是指誰在補、補什麼、發生過什麼後果？",
+      "是否有人負責同步最新安排，以及這點是否實際影響了參與者的確認行為？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "behaviour_check",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "目前已看到她依序檢查不同安排條件，但尚未觀察到『反覆確認』是否真的發生。先追問同一事件中的具體重看行為，比直接問原因更能公平測試假設。",
+    "message_to_persona": "你那次有沒有回頭再看一次已經查過的資訊？",
+    "evidence_updates": [
+      {
+        "claim": "參與者在安排變動後，先確認車票是否能以最小改動保留行程，再決定是否需要調整住宿。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者調整時採取條件式決策：若車票仍可改班次，才值得進一步處理住宿。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者的首要目標是用最小改動保住原本行程。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這次事件中是否出現重複查看同一資訊的行為？",
+      "如果有回頭重看，觸發重看的具體原因是什麼？",
+      "這次調整是否涉及他人同步最新安排，或其實主要是參與者自己在做條件判斷？",
+      "是否存在沒有反覆確認也能完成改動的對照情況？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "causal_probe",
+    "probing_strategy": "causal_probe",
+    "decision_rationale": "現在已觀察到一次明確的反覆確認行為，且原因尚未指向他人同步責任不清。下一題聚焦她為何在要改動時再對一次，檢驗是記憶風險、金錢後果，還是同步問題在驅動。",
+    "message_to_persona": "你那次真的要改住宿前，為什麼會想再對一次截止時間？",
+    "evidence_updates": [
+      {
+        "claim": "在這次旅行安排改動中，參與者有回頭再次查看已查過的資訊。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者回頭再看的是住宿取消條件中的截止時間。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者通常第一次先抓方向，真的要改時會再核對一次。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者再次核對的直接顧慮，是怕自己記錯而多賠一筆費用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "反覆確認可能主要由記憶不確定與金錢損失風險驅動，而非安排同步責任不清。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "在旅行安排要正式改動前，參與者會再次確認關鍵限制，主要是因為怕自己記錯而產生額外費用。",
+        "supporting_evidence_refs": [
+          "exchange_3.persona"
+        ],
+        "alternative_explanations": [
+          "需要確認資訊在短時間內是否已變動",
+          "有人口頭更新過安排但內容不夠明確",
+          "住宿規則本身複雜，所以需要再核對一次"
+        ],
+        "validation_gap": "還未釐清這次再核對是因為個人記憶風險、規則易變，還是有人際同步問題觸發。",
+        "confidence": "medium"
+      }
+    ],
+    "open_questions": [
+      "這次再核對截止時間的最直接觸發點是什麼？",
+      "當時是否有其他人參與調整，並影響她需要再確認？",
+      "除了住宿截止時間外，她是否也反覆確認過其他資訊？",
+      "有沒有相似的改動情況下，她沒有再對一次資訊的對照案例？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee314-e6bc-7973-a613-24fbd69140ad",
+    "decision_status": "asked"
+  }
+]

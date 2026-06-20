@@ -1,0 +1,218 @@
+[
+  {
+    "interview_phase": "open_broad",
+    "probing_strategy": "broad_neutral",
+    "decision_rationale": "目前沒有逐字稿，先用中性開場問題確認受訪者是否有相關經驗，並邀請其自行選擇一個具體情境切入，避免預設頻率、痛點或原因。",
+    "message_to_persona": "可以跟我說說你最近一次因為行程臨時變動而需要重新確認安排的經過嗎？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者是否有相關經驗可分享？",
+      "若有，最近一次具體事件是什麼？",
+      "當時重新確認了哪些安排、和誰確認、造成了什麼後果？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2f6-7e98-7e22-8170-3ad07d75e672"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "critical_incident",
+    "decision_rationale": "逐字稿仍為空，因此不延續先前未實際提出的問句。依觀察方向保留『最近一次具體事件』焦點，同時避免把原因預設為工具或任何特定類型問題。",
+    "message_to_persona": "請你回想最近一次行程臨時有變動時，當時你是怎麼重新確認安排的？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者是否有親身相關的最近事件？",
+      "當時先確認的是哪一項安排？",
+      "受訪者實際用了哪些人或管道來確認？",
+      "重新確認帶來了哪些後果或影響？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2f6-7e98-7e22-8170-3ad07d75e672"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "受訪者已提供一個具體事件與初步做法，也提到三個確認重點。下一步應重建實際順序，先釐清當下第一個觸發與行動，而不是跳去假設原因或工具問題。",
+    "message_to_persona": "你那次一看到學校改時間的訊息後，第一個實際做的動作是什麼？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最近一次相關事件是學校臨時更改集合時間，且與原本排好的工作會議衝突。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者當時會回頭確認三件事：新時間是否為最終版本、需要同步給誰、以及哪些安排可以延後。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會交叉比對學校訊息、自己的行事曆與同事的會議邀請，必要時直接傳訊息確認。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者重新確認安排，可能是為了避免表面上小幅度的時間變動，實際造成接送責任或會議紀錄無人承接。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當下第一個觸發後的實際處理順序是什麼？",
+      "受訪者先確認『是不是最後版本』的原因是什麼？",
+      "哪些後果是受訪者最優先避免的：接送責任、會議銜接，或其他風險？",
+      "那次重新確認是否有哪一段特別卡住或重複確認？",
+      "有沒有類似變動發生時，受訪者不需要這樣反覆確認的例外情況？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2f6-7e98-7e22-8170-3ad07d75e672"
+  },
+  {
+    "interview_phase": "sequence_probe",
+    "probing_strategy": "journey_reconstruction",
+    "decision_rationale": "觀察方向想了解哪些確認最關鍵，但現在還缺當下實際處理順序。直接問『哪個後果最嚴重』會讓受訪者事後概括排序，略過可觀察行為。先補第一步動作，比較能為後續判斷關鍵確認與後果建立因果鏈。",
+    "message_to_persona": "你那次一看到學校改時間的訊息後，第一個實際做的動作是什麼？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最近一次相關事件是學校臨時更改集合時間，且與原本排好的工作會議衝突。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者當時會回頭確認三件事：新時間是否為最終版本、需要同步給誰、以及哪些安排可以延後。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會交叉比對學校訊息、自己的行事曆與同事的會議邀請，必要時直接傳訊息確認。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者擔心表面上小幅度的時間變動，最後導致接送責任或會議紀錄無人承接。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者當下的第一個實際動作是什麼？",
+      "三個確認項目在那次事件中的先後順序為何？",
+      "哪一個風險在當下最先驅動受訪者去確認：最終版本、通知他人，還是調整可延後安排？",
+      "那次是否有某個環節特別需要重複確認？",
+      "有沒有類似情況不需要這樣反覆確認的例外？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2f6-7e98-7e22-8170-3ad07d75e672"
+  },
+  {
+    "interview_phase": "causal_probe",
+    "probing_strategy": "adaptive_five_whys",
+    "decision_rationale": "現在已有具體事件與第一個動作，且受訪者明確提到『先照印象動後面全部安排』是關鍵風險。下一步適合追問這個風險在當時為何特別重要，以釐清反覆確認背後的因果，而不是跳去討論工具或一般偏好。",
+    "message_to_persona": "你那次特別怕自己照印象先動後面安排，是因為以前發生過什麼，還是那天有什麼風險特別大？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最近一次相關事件是學校臨時更改集合時間，且與原本排好的工作會議衝突。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者當時會回頭確認三件事：新時間是否為最終版本、需要同步給誰、以及哪些安排可以延後。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會交叉比對學校訊息、自己的行事曆與同事的會議邀請，必要時直接傳訊息確認。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者擔心表面上小幅度的時間變動，最後導致接送責任或會議紀錄無人承接。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者看到臨時改動訊息後，第一個動作是重看訊息，確認日期、集合地點與新版時間無誤，而不是先改行事曆。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為臨時通知最麻煩的不是晚看到，而是自己憑印象先調整後續安排。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "反覆確認安排的其中一個可能原因，是受訪者認為一開始若誤讀臨時通知，後續跨角色的安排會連鎖出錯，因此先確認原始訊息正確性。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "alternative_explanations": [
+          "這可能主要是該次事件同時牽涉工作會議與接送，單次風險特別高，而非受訪者一貫模式。",
+          "這也可能是因為學校通知格式常有變動或不夠清楚，導致需要重看，而不是受訪者本身特別不信任自己的記憶。",
+          "也可能只是受訪者一般做事謹慎，與行程臨時變動無特別關聯。"
+        ],
+        "validation_gap": "還缺少受訪者對這個風險來源的具體說明，例如是否曾實際出錯、那次有哪些利害關係讓他特別不敢先動後續安排，以及有無不需要這樣做的對照情境。",
+        "confidence": "medium"
+      }
+    ],
+    "open_questions": [
+      "受訪者擔心『照印象先動安排』的風險，來自過往失誤還是那次事件本身的高風險？",
+      "當時最怕出錯的是日期、地點、時間版本，還是後續通知誰的責任分配？",
+      "確認原始訊息後，他接下來先對的是工作會議還是接送安排，為什麼？",
+      "有沒有類似臨時變動時，受訪者不需要先重看訊息也能直接調整的例外情況？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2f6-7e98-7e22-8170-3ad07d75e672"
+  }
+]

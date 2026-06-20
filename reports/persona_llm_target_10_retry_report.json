@@ -1,0 +1,61 @@
+{
+  "input_dir": "data\\personas",
+  "output_dir": "data\\personas_llm",
+  "backend": "codex",
+  "judge_personas": false,
+  "resume_enabled": true,
+  "limit": null,
+  "target_count": 10,
+  "batch_size": 1,
+  "max_rounds": null,
+  "max_stall_rounds": 2,
+  "workers": 1,
+  "auth_source": "codex_auth_file:C:\\Users\\user\\.codex\\auth.json",
+  "transport": "codex_cli",
+  "mode": "target",
+  "valid_output_persona_ids": [
+    "su_0001",
+    "su_0002",
+    "su_0003",
+    "su_0004",
+    "su_0005",
+    "su_0006",
+    "su_0007",
+    "su_0008",
+    "su_0009",
+    "su_0010"
+  ],
+  "failures": [],
+  "available_input_count": 100,
+  "initial_valid_count": 9,
+  "final_valid_count": 10,
+  "completed": true,
+  "stopped_reason": "target_reached",
+  "rounds": [
+    {
+      "round_index": 1,
+      "requested_limit": 1,
+      "valid_count_before": 9,
+      "valid_count_after": 10,
+      "batch": {
+        "processed_count": 10,
+        "succeeded_count": 1,
+        "failed_count": 0,
+        "skipped_count": 9,
+        "failures": [],
+        "processed_persona_ids": [
+          "su_0001",
+          "su_0002",
+          "su_0003",
+          "su_0004",
+          "su_0005",
+          "su_0006",
+          "su_0007",
+          "su_0008",
+          "su_0009",
+          "su_0010"
+        ]
+      }
+    }
+  ]
+}

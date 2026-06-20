@@ -1,0 +1,164 @@
+{
+  "input_dir": "data\\personas",
+  "output_dir": "data\\personas_llm",
+  "backend": "codex",
+  "judge_personas": false,
+  "resume_enabled": true,
+  "limit": null,
+  "target_count": 15,
+  "batch_size": 4,
+  "max_rounds": null,
+  "max_stall_rounds": 2,
+  "workers": 1,
+  "auth_source": "codex_auth_file:C:\\Users\\user\\.codex\\auth.json",
+  "transport": "codex_cli",
+  "mode": "target",
+  "valid_output_persona_ids": [
+    "su_0001",
+    "su_0002",
+    "su_0003",
+    "su_0004",
+    "su_0005",
+    "su_0006",
+    "su_0007",
+    "su_0008",
+    "su_0009",
+    "su_0010",
+    "su_0011"
+  ],
+  "failures": [
+    {
+      "persona_id": "su_0012",
+      "error": "Codex CLI transport failed: 2026-06-18T01:05:02.090702Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:13.236384Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0013",
+      "error": "Codex CLI transport failed: 2026-06-18T01:05:16.624925Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:23.816300Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0014",
+      "error": "Codex CLI transport failed: 2026-06-18T01:05:27.139126Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:34.612825Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0015",
+      "error": "Codex CLI transport failed: 2026-06-18T01:05:38.066806Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:45.269746Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0012",
+      "error": "Codex CLI transport failed: 2026-06-18T01:05:48.686390Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:57.767311Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0013",
+      "error": "Codex CLI transport failed: 2026-06-18T01:06:01.145048Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:06:08.598127Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0014",
+      "error": "Codex CLI transport failed: 2026-06-18T01:06:11.918794Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:06:19.102383Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0015",
+      "error": "Codex CLI transport failed: 2026-06-18T01:06:22.451423Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:06:29.422681Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    }
+  ],
+  "available_input_count": 100,
+  "initial_valid_count": 11,
+  "final_valid_count": 11,
+  "completed": false,
+  "stopped_reason": "max_stall_rounds_reached_with_failures",
+  "rounds": [
+    {
+      "round_index": 1,
+      "requested_limit": 4,
+      "valid_count_before": 11,
+      "valid_count_after": 11,
+      "batch": {
+        "processed_count": 15,
+        "succeeded_count": 0,
+        "failed_count": 4,
+        "skipped_count": 11,
+        "failures": [
+          {
+            "persona_id": "su_0012",
+            "error": "Codex CLI transport failed: 2026-06-18T01:05:02.090702Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:13.236384Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          },
+          {
+            "persona_id": "su_0013",
+            "error": "Codex CLI transport failed: 2026-06-18T01:05:16.624925Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:23.816300Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          },
+          {
+            "persona_id": "su_0014",
+            "error": "Codex CLI transport failed: 2026-06-18T01:05:27.139126Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:34.612825Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          },
+          {
+            "persona_id": "su_0015",
+            "error": "Codex CLI transport failed: 2026-06-18T01:05:38.066806Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:45.269746Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          }
+        ],
+        "processed_persona_ids": [
+          "su_0001",
+          "su_0002",
+          "su_0003",
+          "su_0004",
+          "su_0005",
+          "su_0006",
+          "su_0007",
+          "su_0008",
+          "su_0009",
+          "su_0010",
+          "su_0011",
+          "su_0012",
+          "su_0013",
+          "su_0014",
+          "su_0015"
+        ]
+      }
+    },
+    {
+      "round_index": 2,
+      "requested_limit": 4,
+      "valid_count_before": 11,
+      "valid_count_after": 11,
+      "batch": {
+        "processed_count": 15,
+        "succeeded_count": 0,
+        "failed_count": 4,
+        "skipped_count": 11,
+        "failures": [
+          {
+            "persona_id": "su_0012",
+            "error": "Codex CLI transport failed: 2026-06-18T01:05:48.686390Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:05:57.767311Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          },
+          {
+            "persona_id": "su_0013",
+            "error": "Codex CLI transport failed: 2026-06-18T01:06:01.145048Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:06:08.598127Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          },
+          {
+            "persona_id": "su_0014",
+            "error": "Codex CLI transport failed: 2026-06-18T01:06:11.918794Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:06:19.102383Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          },
+          {
+            "persona_id": "su_0015",
+            "error": "Codex CLI transport failed: 2026-06-18T01:06:22.451423Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:06:29.422681Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          }
+        ],
+        "processed_persona_ids": [
+          "su_0001",
+          "su_0002",
+          "su_0003",
+          "su_0004",
+          "su_0005",
+          "su_0006",
+          "su_0007",
+          "su_0008",
+          "su_0009",
+          "su_0010",
+          "su_0011",
+          "su_0012",
+          "su_0013",
+          "su_0014",
+          "su_0015"
+        ]
+      }
+    }
+  ]
+}

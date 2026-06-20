@@ -1,0 +1,536 @@
+import tempfile
+import unittest
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from ai_validation_swarm.conversation.providers import ChatResult
+from ai_validation_swarm.facilitator.models import FacilitatorDecision
+from ai_validation_swarm.facilitator.providers import validate_quality_evaluation
+from ai_validation_swarm.observer.runtime import ObserverControlledInterviewRuntime
+from ai_validation_swarm.personas.generator import generate_personas
+from ai_validation_swarm.storage.files import read_json, save_persona
+
+
+def decision(question, phase, strategy, session_id="fac-thread", *, should_end=False):
+    return FacilitatorDecision(
+        interview_phase=phase,
+        probing_strategy=strategy,
+        decision_rationale=f"LLM selected {strategy} from the available transcript.",
+        message_to_persona=question,
+        evidence_updates=[],
+        root_cause_hypotheses=[],
+        open_questions=[],
+        should_end=should_end,
+        end_reason="Evidence is sufficient." if should_end else "",
+        provider_session_id=session_id,
+    )
+
+
+def synthesis_payload():
+    return {
+        "executive_summary": "Responsibility ambiguity may be more important than route generation.",
+        "insights": [{
+            "insight": "Changes create coordination work.",
+            "evidence_refs": ["exchange_1.persona"],
+            "confidence": "medium",
+            "implication": "Validate responsibility handoffs.",
+        }],
+        "needs": ["Know who owns the next action after a change."],
+        "root_cause_hypotheses": [{
+            "hypothesis": "Unclear ownership may cause repeated checking.",
+            "supporting_evidence_refs": ["exchange_1.persona"],
+            "alternative_explanations": ["The trip may have been unusually complex."],
+            "validation_gap": "Interview real travellers.",
+            "confidence": "low",
+        }],
+        "contradictions": [],
+        "pov_statements": ["A traveller facing change needs clear ownership because coordination becomes uncertain."],
+        "how_might_we_questions": ["How might we clarify responsibility after plans change?"],
+        "hypothesis_assessment": {
+            "hypothesis": "",
+            "verdict": "not_tested",
+            "supporting_evidence_refs": [],
+            "contradicting_evidence_refs": [],
+            "mechanism_test_basis": "not_tested",
+            "condition_present_case_refs": [],
+            "condition_absent_case_refs": [],
+            "alternative_explanations": [],
+            "alternative_tests": [],
+            "evidence_gaps": ["No explicit hypothesis was supplied."],
+            "confidence": "low",
+        },
+        "evidence_gaps": ["No human evidence."],
+        "recommended_human_validation": ["Interview people after a disrupted trip."],
+        "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+    }
+
+
+def quality_payload():
+    return {
+        "overall_verdict": "warn",
+        "scores": {
+            "neutrality": 4,
+            "probing_quality": 3,
+            "conversation_naturalness": 3,
+            "evidence_discipline": 4,
+            "causal_rigor": 3,
+            "hypothesis_validation_rigor": 3,
+            "synthesis_fidelity": 4,
+            "overall": 3,
+        },
+        "checks": {
+            "leading_question_risk": "pass",
+            "repetition_risk": "warn",
+            "premature_root_cause_risk": "warn",
+            "mechanical_five_whys_risk": "pass",
+            "evidence_reference_quality": "pass",
+            "synthesis_overreach_risk": "pass",
+            "conversation_naturalness": "warn",
+            "persona_over_structuring_risk": "warn",
+            "interviewer_jargon_risk": "pass",
+            "domain_fit_alignment": "pass",
+            "hypothesis_confirmation_bias_risk": "pass",
+            "hypothesis_judge_alignment": "pass",
+        },
+        "strengths": ["Questions requested concrete examples."],
+        "findings": [{
+            "category": "repetition",
+            "severity": "medium",
+            "observation": "One probe partially repeated sequence detail.",
+            "evidence_refs": ["exchange_1.facilitator"],
+            "recommendation": "Move to a counterexample sooner.",
+        }],
+        "required_improvements": ["Ask for a counterexample before strengthening the root-cause hypothesis."],
+        "human_review_needed": True,
+        "synthetic_only_disclaimer": "Synthetic interview quality review only.",
+    }
+
+
+class ObserverFacilitatorFixture:
+    provider_name = "recorded-llm"
+    model_name = "recorded-facilitator/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            decision("Describe the last disrupted trip.", "recent_event", "critical_incident"),
+            decision("Which handoff was uncertain in that event?", "workflow", "observer_steered_probe"),
+            decision("What consequence did that uncertainty create?", "consequence", "consequence_probe"),
+            decision("When has a similar change gone smoothly?", "counterexample", "counterexample_probe"),
+            decision("What would you do differently next time?", "closure", "counterfactual_probe"),
+        ]
+
+    def next_turn(self, **kwargs):
+        self.calls.append(kwargs)
+        return self.decisions.pop(0)
+
+    def synthesize(self, **kwargs):
+        self.calls.append(kwargs)
+        return synthesis_payload(), "fac-thread"
+
+    def judge_hypothesis_evidence(self, **kwargs):
+        self.calls.append(kwargs)
+        return ({
+            "hypothesis": "A fixture hypothesis.",
+            "operational_condition_present": "Condition is present.",
+            "operational_condition_absent": "Condition is absent.",
+            "target_behaviour_observed": True,
+            "target_behaviour_refs": ["exchange_1.persona"],
+            "condition_present": {"status": "not_observed", "evidence_refs": [], "rationale": "Missing."},
+            "condition_absent": {"status": "observed", "evidence_refs": ["exchange_1.persona"], "rationale": "Observed."},
+            "supporting_evidence_refs": [],
+            "contradicting_evidence_refs": ["exchange_1.persona"],
+            "recommended_verdict": "not_tested",
+            "confidence": "low",
+            "warnings": ["Condition-present case missing."],
+        }, "judge-thread")
+
+    def synthesize_concept(self, **kwargs):
+        self.calls.append(kwargs)
+        return synthesis_payload(), "fac-thread"
+
+
+class ObserverPersonaFixture:
+    provider_name = "recorded-llm"
+    model_name = "recorded-persona/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.responses = [
+            "My partner and I each thought the other person had confirmed the new time.",
+            "I then checked every booking again because I did not trust the shared plan.",
+            "Next time I would assign one owner before changing the rest of the plan.",
+        ]
+
+    def respond(self, **kwargs):
+        self.calls.append(kwargs)
+        return ChatResult(self.responses.pop(0), "unclear", "high", "persona-thread")
+
+
+class ObserverQualityFixture:
+    provider_name = "recorded-llm"
+    model_name = "recorded-quality/v1"
+
+    def __init__(self):
+        self.calls = []
+
+    def evaluate_quality(self, **kwargs):
+        self.calls.append(kwargs)
+        return quality_payload(), "quality-thread"
+
+
+class FailOnceFacilitator(ObserverFacilitatorFixture):
+    def __init__(self):
+        super().__init__()
+        self.failed = False
+
+    def next_turn(self, **kwargs):
+        if not self.failed:
+            self.failed = True
+            raise RuntimeError("temporary LLM transport failure")
+        return super().next_turn(**kwargs)
+
+
+class HypotheticalThenEpisodicFacilitator(ObserverFacilitatorFixture):
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="contrast",
+                probing_strategy="counterfactual",
+                decision_rationale="Test an imagined condition.",
+                message_to_persona="如果只有你自己，你還會再看嗎？",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=[],
+                should_end=False,
+                end_reason="",
+                question_evidence_basis="current_event",
+                provider_session_id="fac-thread",
+            ),
+            FacilitatorDecision(
+                interview_phase="contrast",
+                probing_strategy="recalled_contrast_event",
+                decision_rationale="Use a real past contrast.",
+                message_to_persona="你記得另一次只有自己出發、安排又有改動的情況嗎？",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=[],
+                should_end=False,
+                end_reason="",
+                question_evidence_basis="recalled_contrast_event",
+                provider_session_id="fac-thread",
+            ),
+        ]
+
+
+class EndThenContrastFacilitator(HypotheticalThenEpisodicFacilitator):
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="closure",
+                probing_strategy="evidence_sufficiency",
+                decision_rationale="Enough evidence.",
+                message_to_persona="",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=[],
+                should_end=True,
+                end_reason="Enough evidence.",
+                question_evidence_basis="clarification",
+                provider_session_id="fac-thread",
+            ),
+            FacilitatorDecision(
+                interview_phase="contrast",
+                probing_strategy="recalled_contrast_event",
+                decision_rationale="Collect the missing real contrast.",
+                message_to_persona="你記得另一次不知道由誰更新安排的情況嗎？",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=[],
+                should_end=False,
+                end_reason="",
+                question_evidence_basis="recalled_contrast_event",
+                provider_session_id="fac-thread",
+            ),
+        ]
+
+
+class LoadedThenNeutralFacilitator(HypotheticalThenEpisodicFacilitator):
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="mechanism",
+                probing_strategy="hypothesis_condition",
+                decision_rationale="Test ownership.",
+                message_to_persona="嗰次其實冇人講清楚邊個負責更新嗎？",
+                evidence_updates=[], root_cause_hypotheses=[], open_questions=[],
+                should_end=False, end_reason="", question_evidence_basis="current_event",
+                question_evidence_target="hypothesis_condition", provider_session_id="fac-thread",
+            ),
+            FacilitatorDecision(
+                interview_phase="mechanism",
+                probing_strategy="role_reconstruction",
+                decision_rationale="Reconstruct roles neutrally.",
+                message_to_persona="嗰次住宿、車票同接送最後分別係邊個處理？",
+                evidence_updates=[], root_cause_hypotheses=[], open_questions=[],
+                should_end=False, end_reason="", question_evidence_basis="current_event",
+                question_evidence_target="hypothesis_condition", provider_session_id="fac-thread",
+            ),
+        ]
+
+
+class ObserverRuntimeTest(unittest.TestCase):
+    def _library(self, root):
+        persona = generate_personas(count=1, random_seed=83)[0]
+        save_persona(persona, root / "personas")
+        return persona
+
+    def test_observer_can_steer_ask_pause_resume_stop_and_receive_quality_audit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = ObserverFacilitatorFixture()
+            quality = ObserverQualityFixture()
+            persona_provider = ObserverPersonaFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=persona_provider,
+                quality_provider=quality,
+            )
+            folder, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand trip replanning friction.",
+                max_turns=6,
+            )
+            self.assertEqual(session.status, "awaiting_observer")
+            self.assertEqual(session.pending_facilitator_decision["message_to_persona"], "Describe the last disrupted trip.")
+
+            session = runtime.steer(session.interview_id, "Focus on responsibility without suggesting a cause.")
+            self.assertEqual(session.pending_facilitator_decision["message_to_persona"], "Which handoff was uncertain in that event?")
+            self.assertEqual(session.observer_interventions[0]["action"], "steer")
+            self.assertEqual(session.observer_interventions[0]["superseded_question"], "Describe the last disrupted trip.")
+
+            session = runtime.continue_interview(session.interview_id)
+            self.assertEqual(len(session.exchanges), 1)
+            self.assertEqual(session.exchanges[0].facilitator_phase, "workflow")
+            self.assertEqual(session.pending_facilitator_decision["message_to_persona"], "What consequence did that uncertainty create?")
+
+            session = runtime.pause(session.interview_id)
+            self.assertEqual(session.status, "paused")
+            _, reloaded = runtime.load(session.interview_id)
+            self.assertEqual(reloaded.status, "paused")
+            session = runtime.continue_interview(session.interview_id)
+            self.assertEqual(session.status, "awaiting_observer")
+            self.assertEqual(len(session.exchanges), 2)
+            self.assertEqual(session.pending_facilitator_decision["message_to_persona"], "When has a similar change gone smoothly?")
+
+            session = runtime.ask_direct(session.interview_id, "What did you do next because of that uncertainty?")
+            self.assertEqual(len(session.exchanges), 3)
+            self.assertEqual(session.exchanges[2].facilitator_phase, "observer_intervention")
+            self.assertEqual(session.observer_interventions[-1]["action"], "direct_question")
+            self.assertEqual(session.pending_facilitator_decision["message_to_persona"], "What would you do differently next time?")
+
+            session = runtime.finalize(session.interview_id, stop_reason="observer_stop")
+            self.assertEqual(session.status, "completed")
+            self.assertEqual(session.quality_provider_session_id, "quality-thread")
+            self.assertEqual(session.quality_evaluation["overall_verdict"], "warn")
+            self.assertNotEqual(session.facilitator_provider_session_id, session.persona_provider_session_id)
+            decision_statuses = [item["decision_status"] for item in session.facilitator_decisions]
+            self.assertIn("superseded_by_observer", decision_statuses)
+            self.assertIn("asked", decision_statuses)
+            self.assertIn("not_asked_at_close", decision_statuses)
+            for name in (
+                "observer_events.json", "insight_report.json", "insights.md",
+                "quality_evaluation.json", "quality_evaluation.md",
+            ):
+                self.assertTrue((folder / name).exists(), name)
+
+            facilitator_input = "\n".join(str(call) for call in facilitator.calls)
+            self.assertNotIn("PERSONA RESEARCH KERNEL", facilitator_input)
+            self.assertNotIn(persona.profile.basic_identity["name"], facilitator_input)
+            self.assertIn("OBSERVER DIRECTION", facilitator_input)
+            self.assertIn("OBSERVER INTERVENTIONS", quality.calls[0]["user_prompt"])
+            self.assertNotIn('"evidence_updates"', quality.calls[0]["user_prompt"])
+            self.assertIn('"question_evidence_basis"', quality.calls[0]["user_prompt"])
+            self.assertIn("Natural Synthetic Participant Interview Mode", persona_provider.calls[0]["system_prompt"])
+            self.assertIn("Do not exhaustively account for the decision", persona_provider.calls[0]["system_prompt"])
+
+            session = runtime.reevaluate_quality(session.interview_id)
+            self.assertEqual(session.status, "completed")
+            self.assertEqual(len(quality.calls), 2)
+            self.assertTrue((folder / "quality_evaluation.previous.json").exists())
+
+            session = runtime.resynthesize(session.interview_id)
+            self.assertEqual(session.status, "completed")
+            self.assertTrue((folder / "insight_report.previous.json").exists())
+            self.assertEqual(session.last_error, "")
+            self.assertEqual(session.failed_operation, "")
+
+    def test_observer_suggested_question_is_reviewed_by_facilitator_before_asking(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = ObserverFacilitatorFixture()
+            persona_provider = ObserverPersonaFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=persona_provider,
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand trip replanning friction.",
+            )
+            suggested = "Which confirmation failure would have the most serious consequence?"
+            session = runtime.suggest_question(session.interview_id, suggested)
+            self.assertEqual(session.observer_interventions[-1]["action"], "suggested_question")
+            self.assertEqual(session.facilitator_decisions[0]["decision_status"], "superseded_by_observer")
+            self.assertNotEqual(session.pending_facilitator_decision["message_to_persona"], suggested)
+            self.assertIn("OBSERVER SUGGESTED QUESTION", facilitator.calls[-1]["user_prompt"])
+            self.assertEqual(len(persona_provider.calls), 0)
+
+    def test_observed_hypothesis_mode_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            hypothesis = "People recheck because responsibility for updates is unclear."
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Test why changed trips trigger repeated checks.",
+                interview_mode="validate_hypothesis",
+                hypothesis=hypothesis,
+            )
+            self.assertEqual(session.interview_mode, "validate_hypothesis")
+            self.assertEqual(session.hypothesis, hypothesis)
+            self.assertIn("INTERVIEW MODE:\nvalidate_hypothesis", facilitator.calls[0]["user_prompt"])
+            self.assertIn(hypothesis, facilitator.calls[0]["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("INTERVIEW MODE:\nvalidate_hypothesis", quality_context)
+            self.assertIn(hypothesis, quality_context)
+
+    def test_hypothetical_validation_question_is_revised_before_persona_sees_it(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = HypotheticalThenEpisodicFacilitator()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Test a cause.",
+                interview_mode="validate_hypothesis",
+                hypothesis="Unclear ownership causes repeated checking.",
+            )
+            self.assertEqual(
+                session.pending_facilitator_decision["message_to_persona"],
+                "你記得另一次只有自己出發、安排又有改動的情況嗎？",
+            )
+            self.assertEqual(session.facilitator_decisions[0]["decision_status"], "rejected_by_evidence_gate")
+            self.assertEqual(session.facilitator_decisions[0]["question_evidence_basis"], "hypothetical")
+            self.assertIn("EVIDENCE GATE", facilitator.calls[1]["user_prompt"])
+
+    def test_validation_closure_is_rejected_until_real_contrasts_are_attempted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = EndThenContrastFacilitator()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Test a cause.",
+                interview_mode="validate_hypothesis",
+                hypothesis="Unclear ownership causes repeated checking.",
+            )
+            self.assertFalse(session.pending_facilitator_decision["should_end"])
+            self.assertEqual(session.facilitator_decisions[0]["decision_status"], "rejected_by_evidence_gate")
+            self.assertIn("evidence checklist was complete", facilitator.calls[1]["user_prompt"])
+
+    def test_loaded_hypothesis_condition_is_rewritten_as_neutral_reconstruction(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = LoadedThenNeutralFacilitator()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas", session_dir=root / "interviews",
+                facilitator_provider=facilitator, persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Test a cause.", interview_mode="validate_hypothesis",
+                hypothesis="Unclear ownership causes repeated checking.",
+            )
+            self.assertEqual(
+                session.pending_facilitator_decision["message_to_persona"],
+                "嗰次住宿、車票同接送最後分別係邊個處理？",
+            )
+            self.assertEqual(session.facilitator_decisions[0]["decision_status"], "rejected_by_evidence_gate")
+            self.assertIn("Reconstruct actions first", facilitator.calls[1]["user_prompt"])
+
+    def test_failed_llm_operation_is_persisted_and_retryable_without_rules_fallback(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = FailOnceFacilitator()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand trip replanning friction.",
+            )
+            self.assertEqual(session.status, "failed")
+            self.assertEqual(session.failed_operation, "request_initial_question")
+            self.assertFalse(session.pending_facilitator_decision)
+
+            session = runtime.retry(session.interview_id)
+            self.assertEqual(session.status, "awaiting_observer")
+            self.assertEqual(session.pending_facilitator_decision["message_to_persona"], "Describe the last disrupted trip.")
+            persisted = read_json(root / "interviews" / session.interview_id / "interview.json")
+            self.assertEqual(persisted["failed_operation"], "")
+
+    def test_quality_contract_rejects_warn_with_perfect_overall_score(self):
+        payload = quality_payload()
+        payload["scores"]["overall"] = 5
+        payload["findings"][0]["severity"] = "high"
+        with self.assertRaisesRegex(ValueError, "overall <= 4"):
+            validate_quality_evaluation(payload)
+
+
+if __name__ == "__main__":
+    unittest.main()

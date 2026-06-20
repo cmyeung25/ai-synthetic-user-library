@@ -1,0 +1,345 @@
+[
+  {
+    "interview_phase": "opening",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "首題先做目標情境的開放式 fit-check，鎖定最近一次旅行安排改動的具體事件，避免過早引入反覆確認或責任分工等假設詞。",
+    "message_to_persona": "想請你回想最近一次旅行安排臨時有變動，是發生了什麼事？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "是否有最近且具體的旅行安排改動事件可供重建？",
+      "該事件中是否出現反覆確認這個目標行為？",
+      "安排變動實際影響了哪些交通、住宿、時間或同行協調事項？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee325-bfa1-7431-93fe-a0d84dd85a16",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "event_reconstruction",
+    "probing_strategy": "behaviour_check",
+    "decision_rationale": "已有具體旅行改動事件，但目標行為「反覆確認」尚未被觀察到，先用行為檢查釐清她重排後實際做了哪些確認動作，再決定是否進入因果 probing。",
+    "message_to_persona": "你那晚重排完之後，接下來有沒有再回頭確認哪些安排？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者描述了一次具體的近期旅行安排變動事件：出發前一天因孩子活動需提早到，當晚重排高鐵與住宿，少住一晚並刪除部分行程點。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "重排後是否出現反覆確認這個目標行為？",
+      "她具體回頭確認了哪些項目、用了哪些工具或訊息來源？",
+      "這次變動涉及哪些同行者或外部單位，誰實際更新了資訊？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee325-bfa1-7431-93fe-a0d84dd85a16",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "causal_probe",
+    "probing_strategy": "participant_led_cause",
+    "decision_rationale": "目標行為已被觀察到：她隔天再次確認集合時間、退費規則與車次。依驗證流程，先用開放式因果問題讓受訪者自己說明當次為何會重複確認，避免過早帶入責任同步的假設。",
+    "message_to_persona": "那次你隔天還會再確認，當下主要是卡在哪裡？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者在重排行程後，隔天早上再次確認孩子集合時間、飯店短住退費規則與車次。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者表示，前一天改過的行程時，她通常不會只相信自己晚上那次判斷。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "旅行安排改動後再次確認，可能主要是因為她對自己前一晚在匆忙狀態下做的判斷不完全放心。",
+        "supporting_evidence_refs": [
+          "exchange_2.persona"
+        ],
+        "alternative_explanations": [
+          "外部資訊本身可能不穩定或表述不清，例如學校集合時間或飯店退費規則。",
+          "也可能因為同行或相關單位之間沒有明確同步最新安排。"
+        ],
+        "validation_gap": "尚未知道她重複確認時最在意的是自己的判斷、外部資訊是否變動，還是誰負責更新資訊不清楚。",
+        "confidence": "low"
+      }
+    ],
+    "open_questions": [
+      "她自己認為那次重複確認的直接原因是什麼？",
+      "再次確認時，實際擔心的是看錯、記錯、規則理解錯，還是資訊沒有被同步？",
+      "這次安排變動中，誰有參與更新或接收最新安排？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee325-bfa1-7431-93fe-a0d84dd85a16",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "mechanism_probe",
+    "probing_strategy": "neutral_factual_probe",
+    "decision_rationale": "已取得受訪者對重複確認的自發原因，接下來依驗證流程，用中性事實題確認這次變動中有哪些人收到更新、誰實際處理各段安排，以測試是否存在同步責任不清。",
+    "message_to_persona": "那次改動後，最新安排你有另外跟誰確認或通知嗎？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者重複確認時，卡點之一是學校通知過於簡短，讓她不敢確定自己對集合時間的理解是否正確。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者重複確認時，卡點之二是住宿平台雖顯示已改訂，但退費金額與退款時間不直白，因此她隔天再核對一次。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "旅行安排改動後再次確認，可能主要是因為關鍵資訊表述不清，讓她無法當下確認自己是否理解正確。",
+        "supporting_evidence_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona"
+        ],
+        "alternative_explanations": [
+          "也可能是變動發生在前一晚，她對自己當時匆忙做的判斷較不放心。",
+          "也可能是最新安排需要在家人、學校與住宿平台之間同步，但沒有人清楚負責。"
+        ],
+        "validation_gap": "尚未知道這次是否涉及他人同步最新安排，以及她是否因為沒人明確接手通知或確認而再三檢查。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "旅行安排改動後再次確認，可能與她對前一晚臨時重排時的判斷信心不足有關。",
+        "supporting_evidence_refs": [
+          "exchange_2.persona"
+        ],
+        "alternative_explanations": [
+          "外部資訊本身可能含糊，例如學校通知與退費規則。",
+          "也可能有同步分工不清，導致她需要自己再核對。"
+        ],
+        "validation_gap": "還缺少她當晚如何做決定，以及若有他人協助同步時她是否仍會重複確認的對比。",
+        "confidence": "low"
+      }
+    ],
+    "open_questions": [
+      "這次變動中有哪些人實際收到或更新了最新安排？",
+      "是否存在沒有人明確負責通知或確認最新安排的情況？",
+      "如果這次只有她自己處理，重複確認是否主要仍來自資訊表述不清，而不是同步問題？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee325-bfa1-7431-93fe-a0d84dd85a16",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "contrast_probe",
+    "probing_strategy": "counterexample",
+    "decision_rationale": "目前已有對假設不利的線索：她重複確認主要指向通知與退費資訊不清，而非明顯的同步責任缺口。下一步用對比事件測試預測力，看看在有人清楚處理或資訊清楚時，她是否就不再反覆確認。",
+    "message_to_persona": "有沒有哪次也是臨時改動，但你沒有再這樣回頭確認？",
+    "evidence_updates": [
+      {
+        "claim": "這次改動後，受訪者先與先生對一次，因為接送與出發時間都被影響。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "住宿變動後，受訪者沒有另外聯絡客服，而是查看系統訊息。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "學校活動部分，受訪者再次回看通知，主要是確認不是自己讀錯。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "旅行安排改動後再次確認，較可能是因為關鍵資訊表述不清，讓她無法確定自己是否理解正確。",
+        "supporting_evidence_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "她可能普遍對前一晚臨時做的判斷較不放心。",
+          "也可能因為家庭內需要同步接送與出發安排，所以會再和先生對一次。"
+        ],
+        "validation_gap": "仍缺少對比案例來判斷：當資訊清楚或有人明確處理時，她是否就不再回頭確認。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "旅行安排改動後再次確認，主要因為沒有人清楚負責同步最新安排。",
+        "supporting_evidence_refs": [
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "她與先生其實有直接對過一次，顯示至少家庭內有人在同步。",
+          "她反覆確認學校通知與退費規則，更像是在處理資訊含糊而非責任不清。"
+        ],
+        "validation_gap": "目前只看到有限的同步動作，還沒有證據顯示因為『沒人負責同步』才導致她反覆確認。需要對比一個未反覆確認的改動案例。",
+        "confidence": "low"
+      }
+    ],
+    "open_questions": [
+      "是否存在臨時改動但她沒有反覆確認的對比事件？",
+      "若有對比事件，當時不同之處是資訊更清楚、有人直接處理，還是影響較小？",
+      "她和先生對一次是單純同步出發安排，還是因為沒人明確負責才必須彼此再確認？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee325-bfa1-7431-93fe-a0d84dd85a16",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "consequence_probe",
+    "probing_strategy": "near_miss_probe",
+    "decision_rationale": "已完成目標行為、開放式原因、機制事實題與對比案例。最大缺口是實際後果仍未建立；需確認再次確認是否發現差點出錯或避免了具體麻煩，而不是只停留在擔心。",
+    "message_to_persona": "你隔天再看那次，最後有沒有發現哪裡真的差點弄錯，或因此避開了什麼麻煩？",
+    "evidence_updates": [
+      {
+        "claim": "在影響範圍小、沒有退費、集合時間或接送配合的臨時改動中，受訪者通常改完就不會再回頭確認。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者是否回頭確認，會隨改動影響範圍與是否涉及退費、集合時間、接送配合而改變。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "旅行安排改動後再次確認，較可能發生在改動牽涉多個相依條件且關鍵資訊不夠清楚時，而不只是因為沒有人負責同步。",
+        "supporting_evidence_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "exchange_5.persona"
+        ],
+        "alternative_explanations": [
+          "她可能普遍不信任前一晚臨時做的判斷。",
+          "家庭內仍可能存在同步責任不明，尤其接送與出發安排需要和先生對齊。"
+        ],
+        "validation_gap": "還缺少再次確認帶來的實際結果，及是否真的曾因同步不清而差點出錯的直接證據。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "旅行安排改動後反覆確認，主要因為沒有人清楚負責同步最新安排。",
+        "supporting_evidence_refs": [
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "目前更直接的證據指向學校通知與住宿退費資訊不清。",
+          "對比案例顯示影響範圍小且依賴條件少時，她不會回頭確認。"
+        ],
+        "validation_gap": "尚未看到因責任不清而漏通知、版本不一致或需要追著人確認的具體事件。",
+        "confidence": "low"
+      }
+    ],
+    "open_questions": [
+      "再次確認是否真的發現錯誤或避免了具體麻煩？",
+      "她與先生對一次時，是否曾出現版本不一致或誰該通知不明的情況？",
+      "若資訊清楚但仍需和家人同步時，她是否還會同樣反覆確認？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee325-bfa1-7431-93fe-a0d84dd85a16",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "hypothesis_disconfirmation",
+    "probing_strategy": "alternative_test",
+    "decision_rationale": "目前證據主要支持資訊不清與退款理解偏差，對假設中的『同步責任不清』仍缺直接測試。下一題隔離家庭同步這個條件，確認即使已和先生對過，她回頭確認是否仍主要發生在外部資訊本身。",
+    "message_to_persona": "如果那次你先生把接送和出發時間都已經講清楚了，你還會再回頭看哪些地方？",
+    "evidence_updates": [
+      {
+        "claim": "再次確認帶來了實際結果：受訪者隔天發現住宿退款不是自己前一晚理解的全額退款，而是會扣一點手續費。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若未再次確認，受訪者預期之後看到刷退金額不一致，會再回頭翻訊息確認是否系統出錯。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "旅行安排改動後再次確認，較可能是因為關鍵資訊不夠清楚，尤其是容易被樂觀解讀的規則或簡短通知，而不是主要因為沒有人負責同步。",
+        "supporting_evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "exchange_5.persona",
+          "exchange_6.persona"
+        ],
+        "alternative_explanations": [
+          "她可能普遍不信任自己前一晚臨時做的判斷。",
+          "只要牽涉接送與出發時間，她可能仍會因家庭內同步需要而再確認。"
+        ],
+        "validation_gap": "還需要隔離同步條件，確認在家人之間已對齊的情況下，她是否仍會因外部資訊本身而重複確認。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "旅行安排改動後反覆確認，主要因為沒有人清楚負責同步最新安排。",
+        "supporting_evidence_refs": [
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "目前最直接的具體錯誤來自退款規則理解偏差。",
+          "她在影響小且不涉及集合時間、退費、接送的改動中不會回頭確認。"
+        ],
+        "validation_gap": "尚未看到因沒人負責同步而造成版本不一致、漏通知或差點出錯的具體證據。",
+        "confidence": "low"
+      }
+    ],
+    "open_questions": [
+      "如果家庭內同步已經清楚，她是否仍會回頭確認外部資訊？",
+      "她與先生之間是否曾因最新安排沒同步好而真的出過錯？",
+      "前一晚判斷信心不足與外部資訊不清，哪個更能解釋她這次的再次確認？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee325-bfa1-7431-93fe-a0d84dd85a16",
+    "decision_status": "asked"
+  }
+]

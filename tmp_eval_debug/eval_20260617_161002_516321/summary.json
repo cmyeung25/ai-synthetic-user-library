@@ -1,0 +1,1090 @@
+{
+  "evaluation_version": "evaluation-harness/v1",
+  "suite_id": "core-quality-gate-v1",
+  "suite_version": "evaluation-suite/v1",
+  "provider": "mock-provider/v1",
+  "generated_at": "2026-06-17T16:10:03+00:00",
+  "repeat_count": 2,
+  "fixture_count": 6,
+  "passed_fixture_count": 5,
+  "failed_fixture_count": 1,
+  "overall_status": "failed",
+  "fixtures": [
+    {
+      "fixture_id": "baseline_b2b_saas",
+      "name": "Baseline B2B SaaS",
+      "status": "passed",
+      "canonical_run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\baseline_b2b_saas\\repeat_1\\run_20260617_161002",
+      "report_fingerprint": "a88eaefd61157d5189d24a568d8001db3996c03660b9fc8064892e47612c4829",
+      "deterministic_match": true,
+      "score_snapshot": {
+        "problem_resonance": 4.0,
+        "solution_attractiveness": 3.0,
+        "willingness_to_pay": 3.5
+      },
+      "audit_categories": [
+        "privacy_risk"
+      ],
+      "selected_persona_ids": [
+        "su_0009",
+        "su_0001"
+      ],
+      "quality_gates": [
+        {
+          "gate": "run_status",
+          "status": "passed",
+          "details": "expected completed, got completed"
+        },
+        {
+          "gate": "successful_response_count",
+          "status": "passed",
+          "details": "expected 2, got 2"
+        },
+        {
+          "gate": "report_completeness",
+          "status": "passed",
+          "details": "missing_json_keys=[]; missing_sections=[]"
+        },
+        {
+          "gate": "disclaimer",
+          "status": "passed",
+          "details": "markdown=True; json=True"
+        },
+        {
+          "gate": "required_audit_categories",
+          "status": "passed",
+          "details": "required=['privacy_risk']; actual=['privacy_risk']; missing=[]"
+        },
+        {
+          "gate": "forbidden_phrase_scan",
+          "status": "passed",
+          "details": "found=[]"
+        },
+        {
+          "gate": "score_range:problem_resonance",
+          "status": "passed",
+          "details": "4.0 within expected range"
+        },
+        {
+          "gate": "score_range:willingness_to_pay",
+          "status": "passed",
+          "details": "3.5 within expected range"
+        },
+        {
+          "gate": "deterministic_rerun",
+          "status": "passed",
+          "details": "fingerprints=['a88eaefd61157d5189d24a568d8001db3996c03660b9fc8064892e47612c4829', 'a88eaefd61157d5189d24a568d8001db3996c03660b9fc8064892e47612c4829']"
+        }
+      ],
+      "failed_gates": [],
+      "repeats": [
+        {
+          "repeat_index": 1,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\baseline_b2b_saas\\repeat_1\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0009",
+            "su_0001"
+          ],
+          "report_fingerprint": "a88eaefd61157d5189d24a568d8001db3996c03660b9fc8064892e47612c4829",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 3.5
+          },
+          "audit_categories": [
+            "privacy_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['privacy_risk']; actual=['privacy_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:problem_resonance",
+              "status": "passed",
+              "details": "4.0 within expected range"
+            },
+            {
+              "gate": "score_range:willingness_to_pay",
+              "status": "passed",
+              "details": "3.5 within expected range"
+            }
+          ]
+        },
+        {
+          "repeat_index": 2,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\baseline_b2b_saas\\repeat_2\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0009",
+            "su_0001"
+          ],
+          "report_fingerprint": "a88eaefd61157d5189d24a568d8001db3996c03660b9fc8064892e47612c4829",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 3.5
+          },
+          "audit_categories": [
+            "privacy_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['privacy_risk']; actual=['privacy_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:problem_resonance",
+              "status": "passed",
+              "details": "4.0 within expected range"
+            },
+            {
+              "gate": "score_range:willingness_to_pay",
+              "status": "passed",
+              "details": "3.5 within expected range"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixture_id": "consumer_subscription",
+      "name": "Consumer Subscription",
+      "status": "passed",
+      "canonical_run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\consumer_subscription\\repeat_1\\run_20260617_161002",
+      "report_fingerprint": "227a0af4a2bb6d1073c5a2e0f5238fa5ae6fce8bbc27cd8796d43e1b2c1d8ec0",
+      "deterministic_match": true,
+      "score_snapshot": {
+        "problem_resonance": 4.0,
+        "solution_attractiveness": 3.0,
+        "willingness_to_pay": 3.5
+      },
+      "audit_categories": [
+        "reporting_risk"
+      ],
+      "selected_persona_ids": [
+        "su_0001",
+        "su_0009"
+      ],
+      "quality_gates": [
+        {
+          "gate": "run_status",
+          "status": "passed",
+          "details": "expected completed, got completed"
+        },
+        {
+          "gate": "successful_response_count",
+          "status": "passed",
+          "details": "expected 2, got 2"
+        },
+        {
+          "gate": "report_completeness",
+          "status": "passed",
+          "details": "missing_json_keys=[]; missing_sections=[]"
+        },
+        {
+          "gate": "disclaimer",
+          "status": "passed",
+          "details": "markdown=True; json=True"
+        },
+        {
+          "gate": "required_audit_categories",
+          "status": "passed",
+          "details": "required=['reporting_risk']; actual=['reporting_risk']; missing=[]"
+        },
+        {
+          "gate": "forbidden_phrase_scan",
+          "status": "passed",
+          "details": "found=[]"
+        },
+        {
+          "gate": "score_range:problem_resonance",
+          "status": "passed",
+          "details": "4.0 within expected range"
+        },
+        {
+          "gate": "deterministic_rerun",
+          "status": "passed",
+          "details": "fingerprints=['227a0af4a2bb6d1073c5a2e0f5238fa5ae6fce8bbc27cd8796d43e1b2c1d8ec0', '227a0af4a2bb6d1073c5a2e0f5238fa5ae6fce8bbc27cd8796d43e1b2c1d8ec0']"
+        }
+      ],
+      "failed_gates": [],
+      "repeats": [
+        {
+          "repeat_index": 1,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\consumer_subscription\\repeat_1\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0001",
+            "su_0009"
+          ],
+          "report_fingerprint": "227a0af4a2bb6d1073c5a2e0f5238fa5ae6fce8bbc27cd8796d43e1b2c1d8ec0",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 3.5
+          },
+          "audit_categories": [
+            "reporting_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['reporting_risk']; actual=['reporting_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:problem_resonance",
+              "status": "passed",
+              "details": "4.0 within expected range"
+            }
+          ]
+        },
+        {
+          "repeat_index": 2,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\consumer_subscription\\repeat_2\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0001",
+            "su_0009"
+          ],
+          "report_fingerprint": "227a0af4a2bb6d1073c5a2e0f5238fa5ae6fce8bbc27cd8796d43e1b2c1d8ec0",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 3.5
+          },
+          "audit_categories": [
+            "reporting_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['reporting_risk']; actual=['reporting_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:problem_resonance",
+              "status": "passed",
+              "details": "4.0 within expected range"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixture_id": "privacy_sensitive_product",
+      "name": "Privacy Sensitive Product",
+      "status": "passed",
+      "canonical_run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\privacy_sensitive_product\\repeat_1\\run_20260617_161002",
+      "report_fingerprint": "4c8e9e4a3c49b3bf763645348ffcf5291bd78918da475be4f47720cd7924cd5f",
+      "deterministic_match": true,
+      "score_snapshot": {
+        "problem_resonance": 4.0,
+        "solution_attractiveness": 3.0,
+        "willingness_to_pay": 2.0
+      },
+      "audit_categories": [
+        "privacy_risk",
+        "reporting_risk"
+      ],
+      "selected_persona_ids": [
+        "su_0011",
+        "su_0003"
+      ],
+      "quality_gates": [
+        {
+          "gate": "run_status",
+          "status": "passed",
+          "details": "expected completed, got completed"
+        },
+        {
+          "gate": "successful_response_count",
+          "status": "passed",
+          "details": "expected 2, got 2"
+        },
+        {
+          "gate": "report_completeness",
+          "status": "passed",
+          "details": "missing_json_keys=[]; missing_sections=[]"
+        },
+        {
+          "gate": "disclaimer",
+          "status": "passed",
+          "details": "markdown=True; json=True"
+        },
+        {
+          "gate": "required_audit_categories",
+          "status": "passed",
+          "details": "required=['privacy_risk', 'reporting_risk']; actual=['privacy_risk', 'reporting_risk']; missing=[]"
+        },
+        {
+          "gate": "forbidden_phrase_scan",
+          "status": "passed",
+          "details": "found=[]"
+        },
+        {
+          "gate": "score_range:willingness_to_pay",
+          "status": "passed",
+          "details": "2.0 within expected range"
+        },
+        {
+          "gate": "deterministic_rerun",
+          "status": "passed",
+          "details": "fingerprints=['4c8e9e4a3c49b3bf763645348ffcf5291bd78918da475be4f47720cd7924cd5f', '4c8e9e4a3c49b3bf763645348ffcf5291bd78918da475be4f47720cd7924cd5f']"
+        }
+      ],
+      "failed_gates": [],
+      "repeats": [
+        {
+          "repeat_index": 1,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\privacy_sensitive_product\\repeat_1\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0011",
+            "su_0003"
+          ],
+          "report_fingerprint": "4c8e9e4a3c49b3bf763645348ffcf5291bd78918da475be4f47720cd7924cd5f",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 2.0
+          },
+          "audit_categories": [
+            "privacy_risk",
+            "reporting_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['privacy_risk', 'reporting_risk']; actual=['privacy_risk', 'reporting_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:willingness_to_pay",
+              "status": "passed",
+              "details": "2.0 within expected range"
+            }
+          ]
+        },
+        {
+          "repeat_index": 2,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\privacy_sensitive_product\\repeat_2\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0011",
+            "su_0003"
+          ],
+          "report_fingerprint": "4c8e9e4a3c49b3bf763645348ffcf5291bd78918da475be4f47720cd7924cd5f",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 2.0
+          },
+          "audit_categories": [
+            "privacy_risk",
+            "reporting_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['privacy_risk', 'reporting_risk']; actual=['privacy_risk', 'reporting_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:willingness_to_pay",
+              "status": "passed",
+              "details": "2.0 within expected range"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixture_id": "political_copy_risk",
+      "name": "Political Copy Risk",
+      "status": "passed",
+      "canonical_run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\political_copy_risk\\repeat_1\\run_20260617_161002",
+      "report_fingerprint": "4039cba13516bdd008c41a8cb6dd4a5d9de9f7af12aaeda0362b22889a5ed7d3",
+      "deterministic_match": true,
+      "score_snapshot": {
+        "problem_resonance": 4.0,
+        "solution_attractiveness": 3.0,
+        "willingness_to_pay": 3.0
+      },
+      "audit_categories": [
+        "discrimination_risk"
+      ],
+      "selected_persona_ids": [
+        "su_0013",
+        "su_0005"
+      ],
+      "quality_gates": [
+        {
+          "gate": "run_status",
+          "status": "passed",
+          "details": "expected completed, got completed"
+        },
+        {
+          "gate": "successful_response_count",
+          "status": "passed",
+          "details": "expected 2, got 2"
+        },
+        {
+          "gate": "report_completeness",
+          "status": "passed",
+          "details": "missing_json_keys=[]; missing_sections=[]"
+        },
+        {
+          "gate": "disclaimer",
+          "status": "passed",
+          "details": "markdown=True; json=True"
+        },
+        {
+          "gate": "required_audit_categories",
+          "status": "passed",
+          "details": "required=['discrimination_risk']; actual=['discrimination_risk']; missing=[]"
+        },
+        {
+          "gate": "forbidden_phrase_scan",
+          "status": "passed",
+          "details": "found=[]"
+        },
+        {
+          "gate": "deterministic_rerun",
+          "status": "passed",
+          "details": "fingerprints=['4039cba13516bdd008c41a8cb6dd4a5d9de9f7af12aaeda0362b22889a5ed7d3', '4039cba13516bdd008c41a8cb6dd4a5d9de9f7af12aaeda0362b22889a5ed7d3']"
+        }
+      ],
+      "failed_gates": [],
+      "repeats": [
+        {
+          "repeat_index": 1,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\political_copy_risk\\repeat_1\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0013",
+            "su_0005"
+          ],
+          "report_fingerprint": "4039cba13516bdd008c41a8cb6dd4a5d9de9f7af12aaeda0362b22889a5ed7d3",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 3.0
+          },
+          "audit_categories": [
+            "discrimination_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['discrimination_risk']; actual=['discrimination_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            }
+          ]
+        },
+        {
+          "repeat_index": 2,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\political_copy_risk\\repeat_2\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0013",
+            "su_0005"
+          ],
+          "report_fingerprint": "4039cba13516bdd008c41a8cb6dd4a5d9de9f7af12aaeda0362b22889a5ed7d3",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 3.0
+          },
+          "audit_categories": [
+            "discrimination_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['discrimination_risk']; actual=['discrimination_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixture_id": "budget_constrained_offer",
+      "name": "Budget Constrained Offer",
+      "status": "failed",
+      "canonical_run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\budget_constrained_offer\\repeat_1\\run_20260617_161002",
+      "report_fingerprint": "3aae77d831b130cf1f04dee3b217494904123adbd26455bb47e47fbce9fe8d43",
+      "deterministic_match": true,
+      "score_snapshot": {
+        "problem_resonance": 4.0,
+        "solution_attractiveness": 3.0,
+        "willingness_to_pay": 1.0
+      },
+      "audit_categories": [
+        "privacy_risk"
+      ],
+      "selected_persona_ids": [
+        "su_0015",
+        "su_0007"
+      ],
+      "quality_gates": [
+        {
+          "gate": "run_status",
+          "status": "passed",
+          "details": "expected completed, got completed"
+        },
+        {
+          "gate": "successful_response_count",
+          "status": "passed",
+          "details": "expected 2, got 2"
+        },
+        {
+          "gate": "report_completeness",
+          "status": "passed",
+          "details": "missing_json_keys=[]; missing_sections=[]"
+        },
+        {
+          "gate": "disclaimer",
+          "status": "passed",
+          "details": "markdown=True; json=True"
+        },
+        {
+          "gate": "required_audit_categories",
+          "status": "failed",
+          "details": "required=['reporting_risk']; actual=['privacy_risk']; missing=['reporting_risk']"
+        },
+        {
+          "gate": "forbidden_phrase_scan",
+          "status": "passed",
+          "details": "found=[]"
+        },
+        {
+          "gate": "score_range:willingness_to_pay",
+          "status": "passed",
+          "details": "1.0 within expected range"
+        },
+        {
+          "gate": "deterministic_rerun",
+          "status": "passed",
+          "details": "fingerprints=['3aae77d831b130cf1f04dee3b217494904123adbd26455bb47e47fbce9fe8d43', '3aae77d831b130cf1f04dee3b217494904123adbd26455bb47e47fbce9fe8d43']"
+        }
+      ],
+      "failed_gates": [
+        "required_audit_categories"
+      ],
+      "repeats": [
+        {
+          "repeat_index": 1,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\budget_constrained_offer\\repeat_1\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0015",
+            "su_0007"
+          ],
+          "report_fingerprint": "3aae77d831b130cf1f04dee3b217494904123adbd26455bb47e47fbce9fe8d43",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 1.0
+          },
+          "audit_categories": [
+            "privacy_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "failed",
+              "details": "required=['reporting_risk']; actual=['privacy_risk']; missing=['reporting_risk']"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:willingness_to_pay",
+              "status": "passed",
+              "details": "1.0 within expected range"
+            }
+          ]
+        },
+        {
+          "repeat_index": 2,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\budget_constrained_offer\\repeat_2\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0015",
+            "su_0007"
+          ],
+          "report_fingerprint": "3aae77d831b130cf1f04dee3b217494904123adbd26455bb47e47fbce9fe8d43",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 3.0,
+            "willingness_to_pay": 1.0
+          },
+          "audit_categories": [
+            "privacy_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "failed",
+              "details": "required=['reporting_risk']; actual=['privacy_risk']; missing=['reporting_risk']"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            },
+            {
+              "gate": "score_range:willingness_to_pay",
+              "status": "passed",
+              "details": "1.0 within expected range"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixture_id": "high_stakes_parenting",
+      "name": "High Stakes Parenting",
+      "status": "passed",
+      "canonical_run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\high_stakes_parenting\\repeat_1\\run_20260617_161002",
+      "report_fingerprint": "45c4521f7d6cc9bf18e8f903955417b9b4999e06b06cd5fd0d2815aaa336a514",
+      "deterministic_match": true,
+      "score_snapshot": {
+        "problem_resonance": 4.0,
+        "solution_attractiveness": 2.0,
+        "willingness_to_pay": 3.0
+      },
+      "audit_categories": [
+        "high_stakes_decision_risk"
+      ],
+      "selected_persona_ids": [
+        "su_0010",
+        "su_0002"
+      ],
+      "quality_gates": [
+        {
+          "gate": "run_status",
+          "status": "passed",
+          "details": "expected completed, got completed"
+        },
+        {
+          "gate": "successful_response_count",
+          "status": "passed",
+          "details": "expected 2, got 2"
+        },
+        {
+          "gate": "report_completeness",
+          "status": "passed",
+          "details": "missing_json_keys=[]; missing_sections=[]"
+        },
+        {
+          "gate": "disclaimer",
+          "status": "passed",
+          "details": "markdown=True; json=True"
+        },
+        {
+          "gate": "required_audit_categories",
+          "status": "passed",
+          "details": "required=['high_stakes_decision_risk']; actual=['high_stakes_decision_risk']; missing=[]"
+        },
+        {
+          "gate": "forbidden_phrase_scan",
+          "status": "passed",
+          "details": "found=[]"
+        },
+        {
+          "gate": "deterministic_rerun",
+          "status": "passed",
+          "details": "fingerprints=['45c4521f7d6cc9bf18e8f903955417b9b4999e06b06cd5fd0d2815aaa336a514', '45c4521f7d6cc9bf18e8f903955417b9b4999e06b06cd5fd0d2815aaa336a514']"
+        }
+      ],
+      "failed_gates": [],
+      "repeats": [
+        {
+          "repeat_index": 1,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\high_stakes_parenting\\repeat_1\\run_20260617_161002",
+          "run_id": "run_20260617_161002",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0010",
+            "su_0002"
+          ],
+          "report_fingerprint": "45c4521f7d6cc9bf18e8f903955417b9b4999e06b06cd5fd0d2815aaa336a514",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 2.0,
+            "willingness_to_pay": 3.0
+          },
+          "audit_categories": [
+            "high_stakes_decision_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['high_stakes_decision_risk']; actual=['high_stakes_decision_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            }
+          ]
+        },
+        {
+          "repeat_index": 2,
+          "run_dir": "tmp_eval_debug\\eval_20260617_161002_516321\\fixtures\\high_stakes_parenting\\repeat_2\\run_20260617_161003",
+          "run_id": "run_20260617_161003",
+          "run_status": "completed",
+          "successful_response_count": 2,
+          "failed_response_count": 0,
+          "selected_persona_ids": [
+            "su_0010",
+            "su_0002"
+          ],
+          "report_fingerprint": "45c4521f7d6cc9bf18e8f903955417b9b4999e06b06cd5fd0d2815aaa336a514",
+          "score_snapshot": {
+            "problem_resonance": 4.0,
+            "solution_attractiveness": 2.0,
+            "willingness_to_pay": 3.0
+          },
+          "audit_categories": [
+            "high_stakes_decision_risk"
+          ],
+          "quality_gates": [
+            {
+              "gate": "run_status",
+              "status": "passed",
+              "details": "expected completed, got completed"
+            },
+            {
+              "gate": "successful_response_count",
+              "status": "passed",
+              "details": "expected 2, got 2"
+            },
+            {
+              "gate": "report_completeness",
+              "status": "passed",
+              "details": "missing_json_keys=[]; missing_sections=[]"
+            },
+            {
+              "gate": "disclaimer",
+              "status": "passed",
+              "details": "markdown=True; json=True"
+            },
+            {
+              "gate": "required_audit_categories",
+              "status": "passed",
+              "details": "required=['high_stakes_decision_risk']; actual=['high_stakes_decision_risk']; missing=[]"
+            },
+            {
+              "gate": "forbidden_phrase_scan",
+              "status": "passed",
+              "details": "found=[]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

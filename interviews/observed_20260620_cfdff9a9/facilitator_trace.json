@@ -1,0 +1,162 @@
+[
+  {
+    "interview_phase": "opening",
+    "probing_strategy": "broad_open",
+    "decision_rationale": "目前沒有逐字稿，先用中性且開放的開場問題確認是否有相關經驗，避免直接假設旅遊情境或提前進入因果推論。",
+    "message_to_persona": "可以跟我說說，你最近一次行程臨時有變動時，當時是怎麼處理的嗎？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "對方是否有與旅遊行程臨時變動直接相關的近期經驗？",
+      "若有，最近一次事件的具體情境、變動內容與處理過程是什麼？",
+      "對方是否出現反覆確認安排的行為，以及那發生在流程中的哪個時點？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2fb-fe5d-7ad0-8adc-072d05cb7c8f",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "concrete_event",
+    "decision_rationale": "依照觀察方向，將開場收斂到最近一次具體事件，但仍保持中性，不預設原因是工具或任何特定問題來源。由於尚無逐字稿，仍應先取得一個可重建的真實事件。",
+    "message_to_persona": "說說你最近一次行程臨時有變動的那次，當時發生了什麼？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "對方是否有與旅遊行程臨時變動直接相關的近期具體事件？",
+      "那次變動是什麼、由誰觸發、當時在什麼情境下發生？",
+      "對方當下做了哪些具體行動，是否出現反覆確認安排的行為？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2fb-fe5d-7ad0-8adc-072d05cb7c8f",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "fit_check",
+    "probing_strategy": "domain_mismatch",
+    "decision_rationale": "目前唯一事件是學校接送與工作排程衝突，屬於旅遊相鄰情境，不能直接當作旅客在行程變動下反覆確認安排的證據。先做一次中性的領域適配確認，避免把相鄰經驗誤當成旅遊證據。",
+    "message_to_persona": "如果是旅行中的行程臨時變動，你有過類似的親身經驗嗎？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者分享了一次學校活動時間提前，與內部覆核會議衝突的近期事件。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者當下重排行程、確認接手分工，並與同事改時間。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若當下沒有把責任分清楚，後面會很亂。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者是否有旅遊情境下的親身類似經驗？",
+      "若有，最近一次旅遊行程臨時變動的具體事件是什麼？",
+      "在旅遊情境中，是否真的出現反覆確認安排的行為與可觀察後果？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2fb-fe5d-7ad0-8adc-072d05cb7c8f",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "fit_check",
+    "probing_strategy": "domain_mismatch",
+    "decision_rationale": "觀察者想追問確認動作與後果，但目前最大證據缺口仍是情境不符：受訪者只提供了接送與工作協調事件，尚未證明有旅遊中的親身經驗。若直接問哪個確認最嚴重，會把相鄰情境當成旅遊證據，也會過早放大後果。先維持中性的旅遊適配確認。",
+    "message_to_persona": "那如果是旅行途中行程臨時變動，你有親身遇過類似的一次嗎？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者分享的最近一次事件是學校活動時間提前，與內部覆核會議衝突。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者當下重排會議資料與接送安排，並確認由誰接手哪一段，再與同事改時間。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為若當下沒有把責任分清楚，後面會很亂。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者是否有旅行情境下的親身類似經驗？",
+      "若有，最近一次旅行行程臨時變動的具體事件是什麼？",
+      "在旅行情境中，是否真的出現反覆確認安排的行為，以及實際後果是什麼？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2fb-fe5d-7ad0-8adc-072d05cb7c8f",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "sequence_probe",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "現在已有旅遊情境的具體事件，但『重新對一遍』與『一直補救』仍偏概括，尚未看出他當下實際怎麼確認、先看哪一段、以及反覆確認是否真的發生。下一題應回到事件流程，拆出第一個具體確認動作。",
+    "message_to_persona": "你那時先重對的是哪一項安排，接著又怎麼決定下一步？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者有一次週末短程出門時，在到車站前發現目的地方向班次延誤，導致後續轉乘接不上。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者當下先重新核對住宿和到達時間，再改成較穩定的路線，並先處理可取消的預約。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為最麻煩的不是改動本身，而是每一段若沒有清楚寫誰負責、最晚何時確認，後面容易一直補救。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者在這次旅遊變動中，第一個具體確認動作是什麼？",
+      "受訪者是否在同一次事件中反覆確認不同安排；若有，順序與觸發點是什麼？",
+      "所謂『一直補救』在這次事件裡實際發生了什麼後果，還是只是擔心可能會發生？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee2fb-fe5d-7ad0-8adc-072d05cb7c8f",
+    "decision_status": "not_asked_at_close"
+  }
+]

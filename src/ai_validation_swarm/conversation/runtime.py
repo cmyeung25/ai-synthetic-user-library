@@ -1,0 +1,201 @@
+from __future__ import annotations
+
+import json
+import uuid
+from pathlib import Path
+from typing import Any
+
+from ai_validation_swarm.conversation.models import ConversationSession, ConversationTurn
+from ai_validation_swarm.conversation.providers import ConversationProvider
+from ai_validation_swarm.domain.models import PersonaSkill, utc_now_iso
+from ai_validation_swarm.storage.files import ensure_dir, load_persona, read_json, resolve_persona_version_folder, write_json
+
+
+PROMPT_VERSION = "persona-conversation/v1"
+MAX_HISTORY_TURNS = 12
+MAX_SYSTEM_CONTEXT_CHARS = 12_000
+MAX_STRUCTURED_CONTEXT_CHARS = 10_000
+
+
+def resolve_persona_folder(data_dir: Path, persona_id: str) -> Path:
+    base = data_dir / persona_id
+    try:
+        return resolve_persona_version_folder(base)
+    except ValueError:
+        raise ValueError(f"Persona '{persona_id}' was not found under {data_dir}.") from None
+
+
+def _read_optional(path: Path) -> str:
+    return path.read_text(encoding="utf-8").strip() if path.exists() else ""
+
+
+def _identity_name(persona: PersonaSkill) -> str:
+    return str(persona.profile.basic_identity.get("name", persona.profile.synthetic_user_id))
+
+
+def _relevant_profile_context(persona: PersonaSkill, message: str) -> dict[str, Any]:
+    profile = persona.profile
+    sections: dict[str, Any] = {
+        "basic_identity": profile.basic_identity,
+        "values": profile.values,
+        "behavior_profile": profile.behavior_profile,
+        "product_reaction_rules": profile.product_reaction_rules,
+        "pricing_logic": profile.pricing_logic,
+        "persona_voiceprint": profile.persona_voiceprint,
+        "contradiction_map": profile.contradiction_map,
+        "deep_research_notes": profile.deep_research_notes,
+    }
+    lowered = message.lower()
+    if any(term in lowered for term in ("privacy", "identity", "gender", "family", "health", "politic", "data", "私隱", "身份", "家庭", "健康")):
+        sections["sensitive_scenario_reactions"] = profile.sensitive_scenario_reactions
+        sections["sensitive_reality_layer"] = profile.sensitive_reality_layer
+    if any(term in lowered for term in ("local", "city", "payment", "currency", "language", "market", "地區", "付款", "語言")):
+        sections["local_grounding_layer"] = profile.local_grounding_layer
+        sections["cultural_texture"] = profile.cultural_texture
+    if any(term in lowered for term in ("routine", "daily", "onboarding", "setup", "workflow", "日常", "設定", "流程")):
+        sections["daily_micro_behaviours"] = profile.daily_micro_behaviours
+        sections["workflow_adoption_model"] = profile.workflow_adoption_model
+        sections["hidden_habits"] = profile.hidden_habits
+    return sections
+
+
+class ConversationRuntime:
+    def __init__(self, *, data_dir: Path, session_dir: Path, provider: ConversationProvider) -> None:
+        self.data_dir = data_dir
+        self.session_dir = session_dir
+        self.provider = provider
+
+    def start(self, persona_id: str) -> tuple[ConversationSession, PersonaSkill, Path]:
+        folder = resolve_persona_folder(self.data_dir, persona_id)
+        persona = load_persona(folder)
+        session = ConversationSession(
+            session_id=f"chat_{utc_now_iso()[:10].replace('-', '')}_{uuid.uuid4().hex[:8]}",
+            persona_id=persona_id,
+            persona_name=_identity_name(persona),
+            persona_version=persona.skill_version,
+            provider=self.provider.provider_name,
+            model=self.provider.model_name,
+            prompt_version=PROMPT_VERSION,
+        )
+        self.save(session)
+        return session, persona, folder
+
+    def resume(self, session_id: str) -> tuple[ConversationSession, PersonaSkill, Path]:
+        path = self.session_dir / session_id / "session.json"
+        if not path.exists():
+            raise ValueError(f"Conversation session '{session_id}' was not found.")
+        session = ConversationSession.from_dict(read_json(path))
+        folder = resolve_persona_folder(self.data_dir, session.persona_id)
+        return session, load_persona(folder), folder
+
+    def send(
+        self,
+        session: ConversationSession,
+        persona: PersonaSkill,
+        persona_folder: Path,
+        message: str,
+        *,
+        runtime_instruction: str = "",
+    ) -> str:
+        cleaned = message.strip()
+        if not cleaned:
+            raise ValueError("Message cannot be empty.")
+        user_turn = ConversationTurn(turn_id=len(session.turns) + 1, role="user", content=cleaned)
+        session.turns.append(user_turn)
+        system_prompt = self._system_prompt(persona, persona_folder, runtime_instruction=runtime_instruction)
+        user_prompt = self._user_prompt(
+            session,
+            persona,
+            cleaned,
+            include_history=not bool(session.provider_session_id),
+        )
+        try:
+            result = self.provider.respond(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                persona=persona,
+                provider_session_id=session.provider_session_id,
+            )
+        except Exception:
+            session.turns.pop()
+            raise
+        session.turns.append(ConversationTurn(
+            turn_id=len(session.turns) + 1,
+            role="persona",
+            content=result.reply,
+            intent_level=result.intent_level,
+            confidence=result.confidence,
+        ))
+        if result.provider_session_id:
+            session.provider_session_id = result.provider_session_id
+        session.updated_at = utc_now_iso()
+        self.save(session)
+        return result.reply
+
+    def reset(self, session: ConversationSession) -> None:
+        session.turns.clear()
+        session.updated_at = utc_now_iso()
+        self.save(session)
+
+    def close(self, session: ConversationSession) -> None:
+        session.status = "closed"
+        session.updated_at = utc_now_iso()
+        self.save(session)
+
+    def save(self, session: ConversationSession) -> Path:
+        folder = self.session_dir / session.session_id
+        ensure_dir(folder)
+        write_json(folder / "session.json", session.to_dict())
+        (folder / "transcript.md").write_text(self.render_transcript(session), encoding="utf-8")
+        return folder
+
+    @staticmethod
+    def render_transcript(session: ConversationSession) -> str:
+        lines = [
+            f"# Conversation with {session.persona_name}", "",
+            f"> {session.synthetic_only_disclaimer}", "",
+            f"Session: `{session.session_id}`  ",
+            f"Persona: `{session.persona_id}` ({session.persona_version})  ",
+            f"Provider: `{session.provider}` / `{session.model}`  ",
+            f"Prompt: `{session.prompt_version}`", "",
+        ]
+        for turn in session.turns:
+            speaker = "User" if turn.role == "user" else session.persona_name
+            lines.extend([f"## {speaker}", "", turn.content, ""])
+            if turn.role == "persona":
+                lines.extend([f"Intent: `{turn.intent_level}` | Confidence: `{turn.confidence}`", ""])
+        return "\n".join(lines).rstrip() + "\n"
+
+    def _system_prompt(self, persona: PersonaSkill, folder: Path, *, runtime_instruction: str = "") -> str:
+        prompt_path = Path(__file__).parents[1] / "prompts" / "persona-conversation" / "v1.md"
+        runtime_rules = prompt_path.read_text(encoding="utf-8").strip()
+        kernel = _read_optional(folder / "research_kernel.md")
+        # The kernel is the runtime artifact; persona.skill.md largely duplicates it and
+        # is only a fallback for older persona folders without a kernel.
+        skill = _read_optional(folder / "persona.skill.md")
+        runtime_artifact = kernel or skill or persona.narrative
+        artifact_label = "PERSONA RESEARCH KERNEL" if kernel else "PERSONA RUNTIME ARTIFACT"
+        mode_instruction = f"\n\nRUNTIME MODE:\n{runtime_instruction.strip()}" if runtime_instruction.strip() else ""
+        context = f"{runtime_rules}{mode_instruction}\n\n{artifact_label}:\n{runtime_artifact}"
+        return context[:MAX_SYSTEM_CONTEXT_CHARS]
+
+    @staticmethod
+    def _user_prompt(
+        session: ConversationSession,
+        persona: PersonaSkill,
+        latest_message: str,
+        *,
+        include_history: bool = True,
+    ) -> str:
+        history_turns = session.turns[-MAX_HISTORY_TURNS:-1] if include_history else []
+        history = "\n".join(f"{turn.role.upper()}: {turn.content}" for turn in history_turns) or "(none)"
+        relevant = json.dumps(
+            _relevant_profile_context(persona, latest_message),
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )[:MAX_STRUCTURED_CONTEXT_CHARS]
+        return (
+            f"RELEVANT STRUCTURED PERSONA CONTEXT:\n{relevant}\n\n"
+            f"CONVERSATION HISTORY:\n{history}\n\n"
+            f"LATEST USER MESSAGE:\n{latest_message}"
+        )

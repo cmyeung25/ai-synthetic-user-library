@@ -1,0 +1,239 @@
+[
+  {
+    "interview_phase": "開場探索",
+    "probing_strategy": "以中性、開放式的廣泛提問開場，先讓受訪者自選一個最近的臨時變動經驗，再依後續回答收斂到具體事件、流程與影響。",
+    "decision_rationale": "目前沒有逐字稿，最重要是先取得一個近期且真實的情境作為後續追問基礎，因此選擇不帶解法暗示的開放式開場問題。",
+    "message_to_persona": "可否請你回想一次最近旅程中出現臨時變動、讓你需要重新規劃或重新確認安排的經驗，從頭跟我說當時發生了什麼？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次臨時變動的具體情境是什麼？",
+      "變動發生後，受訪者第一步做了什麼？",
+      "重新規劃與確認安排時，最卡的環節在哪裡？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee12b-ef42-7b21-b037-20fcacca8aa1"
+  },
+  {
+    "interview_phase": "事件重建",
+    "probing_strategy": "受訪者已提供初步框架，下一步收斂到單一最近事件的實際處理順序，優先追問觸發後的具體行動、聯絡對象與使用工具，避免停留在原則性總結。",
+    "decision_rationale": "上一輪已有抽象歸納，但缺少事件發生後的實際步驟與操作細節。先重建當下 sequence，才能判斷真正的阻塞點是在資訊確認、協調分工，還是執行切換。",
+    "message_to_persona": "你看到前一晚那個補充通知之後，接下來實際是怎麼處理的？請按順序說說你做了哪些事。",
+    "evidence_updates": [
+      {
+        "claim": "最接近的一次相關經驗是家庭週末短程出行出現臨時變動。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona:1"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "claim": "前一晚發現活動通知補充內容，集合時間提前，且原本以為可現場處理的事項改為需先在線上確認。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona:2"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者先將安排拆成固定不能動與可調整項目。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona:3"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者重新確認交通時間、家長是否需停留，以及伴侶能否分擔其中一段。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona:4"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者最後縮短河濱行程、改選可快速用餐地點，並提前放好文件與付款資料。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona:5"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為最困擾的不是改計畫本身，而是小變動會同時影響照顧、交通與付款安排。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona:6"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "臨時變動的核心困難可能來自多方責任與確認狀態不同步，而不只是單點資訊不足。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona:4",
+          "exchange_1.persona:6"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "根本困難可能是在臨時變動後，需要跨家庭成員與多個安排項目快速重新對齊責任與確認狀態。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona:4",
+          "exchange_1.persona:6"
+        ],
+        "alternative_explanations": [
+          "問題主要是通知出現得太晚",
+          "問題主要是前置行政要求從現場改為線上，增加額外步驟",
+          "問題主要是行程本身緩衝不足"
+        ],
+        "validation_gap": "仍不清楚實際最耗時或最容易出錯的是哪一個步驟，以及是否每次都涉及多人協調。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "受訪者採用『固定項/可調項/回退方案』的做法，可能反映現有工具難以支援例外情境下的快速重排。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona:3",
+          "exchange_1.persona:6"
+        ],
+        "alternative_explanations": [
+          "這只是受訪者個人的規劃習慣",
+          "即使沒有工具，人工處理已足夠",
+          "真正問題是外部服務資訊不可靠，而非規劃工具本身"
+        ],
+        "validation_gap": "還不知道受訪者當時用了哪些工具、哪些資訊來源，以及哪一步最依賴手動處理。",
+        "confidence": "low"
+      }
+    ],
+    "open_questions": [
+      "看到補充通知後的實際處理順序是什麼？",
+      "第一個被確認的對象或資訊來源是什麼？",
+      "哪一個步驟最花時間或最容易出錯？",
+      "當時是否有任何工具、訊息或清單幫上忙，或反而造成混亂？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee12b-ef42-7b21-b037-20fcacca8aa1"
+  },
+  {
+    "interview_phase": "因果探查",
+    "probing_strategy": "受訪者已清楚描述處理順序，且主動指出『責任沒有重新說清楚』是最常出問題處。下一步聚焦在這個最強因果主張，請對方提供當次事件中實際如何對分工、哪裡差點失準、造成什麼後果，以驗證是否真是核心阻塞。",
+    "decision_rationale": "目前已有流程，但對『責任分工是關鍵』仍主要是受訪者判斷。需要一個具體片段來區分：問題是分工不清、資訊不完整，還是時間壓力下的執行失誤。",
+    "message_to_persona": "你提到最常出問題的是責任沒有重新說清楚；就那次來說，你和伴侶當時具體是怎麼對分工的，哪裡差點出錯？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者會先重讀補充通知兩遍，確認是否除了時間提前外，還新增線上確認、額外資料或現場流程變動。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona:1"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會先把行程拆成固定項與可調項，以降低混亂感。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona:2"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會重新估算交通與報到時間，且不採用原本較樂觀的時間假設。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona:3"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會與伴侶重新確認誰送、誰接、誰做線上確認，以避免雙方都以為對方已完成。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona:4"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果通知要求先完成某項事項，受訪者傾向在前一晚完成，而不留到隔天早上。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona:5"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會主動將後續安排改成失敗成本較低的選項，並準備回退方案。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona:6",
+          "exchange_2.persona:8"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為臨時變動最關鍵的風險不是改行程，而是責任分工沒有重新說清楚。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona:8"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "此類臨時變動的主要痛點可能是多人協作下的責任重置與確認機制不足。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona:4",
+          "exchange_2.persona:4",
+          "exchange_2.persona:8"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "根本困難可能在於臨時變動發生後，既有分工假設失效，但沒有一個明確、即時的重新確認機制，導致多人各自補位或重複假設。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona:4",
+          "exchange_2.persona:4",
+          "exchange_2.persona:8"
+        ],
+        "alternative_explanations": [
+          "真正的主因是通知內容改動太晚",
+          "主因是交通與時間緩衝不足",
+          "主因是行政要求變動增加了額外認知負擔"
+        ],
+        "validation_gap": "仍缺少當次事件中分工差點出錯的具體例子與實際後果，尚未證明它比其他因素更核心。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "受訪者的重新規劃負擔，可能主要來自要把單一變動重新映射到多個相依安排，而非單純重排時間。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona:6",
+          "exchange_2.persona:1",
+          "exchange_2.persona:3",
+          "exchange_2.persona:6"
+        ],
+        "alternative_explanations": [
+          "這只是受訪者偏好高掌控感的規劃方式",
+          "若是單人行程，困難可能明顯降低",
+          "若外部資訊更清楚，重新映射的成本可能不高"
+        ],
+        "validation_gap": "還不清楚哪些相依項目最容易連動失準，以及是否每次都涉及多人協調。",
+        "confidence": "medium"
+      }
+    ],
+    "open_questions": [
+      "那次事件中，分工具體是怎麼重新對齊的？",
+      "哪一個責任點最容易出現『以為對方已做』的情況？",
+      "如果當時沒有重新確認分工，最可能出現什麼實際後果？",
+      "分工問題和資訊變動相比，哪個才是當次最先造成壓力的因素？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "provider_session_id": "019ee12b-ef42-7b21-b037-20fcacca8aa1"
+  }
+]

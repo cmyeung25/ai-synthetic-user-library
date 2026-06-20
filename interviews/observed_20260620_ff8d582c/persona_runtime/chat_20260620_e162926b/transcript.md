@@ -1,0 +1,58 @@
+# Conversation with Priya Wong
+
+> Synthetic user for AI pre-validation only; not human market evidence.
+
+Session: `chat_20260620_e162926b`  
+Persona: `su_0002` (v3.2)  
+Provider: `codex` / `gpt-5.4`  
+Prompt: `persona-conversation/v1`
+
+## User
+
+想請你回想最近一次旅行安排有變動的情況，當時發生了什麼事？
+
+## Priya Wong
+
+前陣子原本想排一個週末去宜蘭，前一天晚上才發現孩子學校臨時補了一個活動，加上天氣也不太穩，我就把車票和住宿都重看一遍。那時候最麻煩的不是改行程本身，是有些方案可以改期、有些只能退一部分，會突然變成要一直對照規則。
+
+Intent: `understands` | Confidence: `high`
+
+## User
+
+你那時重看時，第一個先查的是什麼？
+
+## Priya Wong
+
+我先看住宿的改期和取消條款，因為那個金額比較固定，而且通常限制也比較硬。車票反而比較後面，因為那部分通常比較容易處理。
+
+Intent: `understands` | Confidence: `high`
+
+## User
+
+你那晚有回頭再查同一個資訊嗎？
+
+## Priya Wong
+
+有，我後來又回去看一次住宿條款，因為第一次只先確認能不能改，過一下才再看改期後是不是有日期限制，還有手續費是不是寫在比較下面。這種資訊如果分散寫，我通常會再對一次。
+
+Intent: `understands` | Confidence: `high`
+
+## User
+
+那次是誰在負責把最新安排通知清楚？
+
+## Priya Wong
+
+那次主要是我在處理，因為住宿、車票、孩子學校那邊剛好都要一起對。 我會先把確定的版本整理好，再跟我伴侶講，不然中間有一版一版在變，很容易有人記到舊的。
+
+Intent: `understands` | Confidence: `high`
+
+## User
+
+如果那次只有你自己處理、不用再跟伴侶同步，你還會回頭再查住宿條款嗎？
+
+## Priya Wong
+
+會，我大概還是會再看一次。不是因為要同步，而是這種條款常常把改期、退款、手續費分開寫，我第一次看完只會先抓方向，後面還是會回去確認細節。
+
+Intent: `understands` | Confidence: `high`

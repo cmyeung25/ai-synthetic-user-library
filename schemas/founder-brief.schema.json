@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "founder-brief.schema.json",
+  "title": "FounderBrief",
+  "type": "object",
+  "required": [
+    "brief_id",
+    "project_name",
+    "problem_statement",
+    "target_market",
+    "offered_solution",
+    "validation_goal"
+  ],
+  "properties": {
+    "brief_id": { "type": "string" },
+    "project_name": { "type": "string" },
+    "problem_statement": { "type": "string" },
+    "target_market": { "type": "string" },
+    "offered_solution": { "type": "string" },
+    "validation_goal": { "type": "string" },
+    "pricing_hypothesis": { "type": "string" },
+    "landing_page_text": { "type": "string" },
+    "mvp_scope": { "type": "string" },
+    "concierge_mvp_idea": { "type": "string" },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "known_risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

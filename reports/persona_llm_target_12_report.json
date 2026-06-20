@@ -1,0 +1,146 @@
+{
+  "input_dir": "data\\personas",
+  "output_dir": "data\\personas_llm",
+  "backend": "codex",
+  "judge_personas": false,
+  "resume_enabled": true,
+  "limit": null,
+  "target_count": 12,
+  "batch_size": 2,
+  "max_rounds": null,
+  "max_stall_rounds": 2,
+  "workers": 1,
+  "auth_source": "codex_auth_file:C:\\Users\\user\\.codex\\auth.json",
+  "transport": "codex_cli",
+  "mode": "target",
+  "valid_output_persona_ids": [
+    "su_0001",
+    "su_0002",
+    "su_0003",
+    "su_0004",
+    "su_0005",
+    "su_0006",
+    "su_0007",
+    "su_0008",
+    "su_0009",
+    "su_0010",
+    "su_0011"
+  ],
+  "failures": [
+    {
+      "persona_id": "su_0012",
+      "error": "Codex CLI transport failed: 2026-06-18T01:03:04.773176Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:03:12.070277Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0012",
+      "error": "Codex CLI transport failed: 2026-06-18T01:03:15.614262Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:03:22.784094Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    },
+    {
+      "persona_id": "su_0012",
+      "error": "Codex CLI transport failed: 2026-06-18T01:03:26.071827Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:03:33.189186Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+    }
+  ],
+  "available_input_count": 100,
+  "initial_valid_count": 10,
+  "final_valid_count": 11,
+  "completed": false,
+  "stopped_reason": "max_stall_rounds_reached_with_failures",
+  "rounds": [
+    {
+      "round_index": 1,
+      "requested_limit": 2,
+      "valid_count_before": 10,
+      "valid_count_after": 11,
+      "batch": {
+        "processed_count": 12,
+        "succeeded_count": 1,
+        "failed_count": 1,
+        "skipped_count": 10,
+        "failures": [
+          {
+            "persona_id": "su_0012",
+            "error": "Codex CLI transport failed: 2026-06-18T01:03:04.773176Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:03:12.070277Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          }
+        ],
+        "processed_persona_ids": [
+          "su_0001",
+          "su_0002",
+          "su_0003",
+          "su_0004",
+          "su_0005",
+          "su_0006",
+          "su_0007",
+          "su_0008",
+          "su_0009",
+          "su_0010",
+          "su_0011",
+          "su_0012"
+        ]
+      }
+    },
+    {
+      "round_index": 2,
+      "requested_limit": 1,
+      "valid_count_before": 11,
+      "valid_count_after": 11,
+      "batch": {
+        "processed_count": 12,
+        "succeeded_count": 0,
+        "failed_count": 1,
+        "skipped_count": 11,
+        "failures": [
+          {
+            "persona_id": "su_0012",
+            "error": "Codex CLI transport failed: 2026-06-18T01:03:15.614262Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:03:22.784094Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          }
+        ],
+        "processed_persona_ids": [
+          "su_0001",
+          "su_0002",
+          "su_0003",
+          "su_0004",
+          "su_0005",
+          "su_0006",
+          "su_0007",
+          "su_0008",
+          "su_0009",
+          "su_0010",
+          "su_0011",
+          "su_0012"
+        ]
+      }
+    },
+    {
+      "round_index": 3,
+      "requested_limit": 1,
+      "valid_count_before": 11,
+      "valid_count_after": 11,
+      "batch": {
+        "processed_count": 12,
+        "succeeded_count": 0,
+        "failed_count": 1,
+        "skipped_count": 11,
+        "failures": [
+          {
+            "persona_id": "su_0012",
+            "error": "Codex CLI transport failed: 2026-06-18T01:03:26.071827Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0) | 2026-06-18T01:03:33.189186Z ERROR codex_models_manager::manager: failed to refresh available models: stream disconnected before completion: error sending request for url (https://chatgpt.com/backend-api/codex/models?client_version=0.140.0)"
+          }
+        ],
+        "processed_persona_ids": [
+          "su_0001",
+          "su_0002",
+          "su_0003",
+          "su_0004",
+          "su_0005",
+          "su_0006",
+          "su_0007",
+          "su_0008",
+          "su_0009",
+          "su_0010",
+          "su_0011",
+          "su_0012"
+        ]
+      }
+    }
+  ]
+}

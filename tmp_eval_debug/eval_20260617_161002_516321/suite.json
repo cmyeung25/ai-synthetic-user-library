@@ -1,0 +1,145 @@
+{
+  "suite_id": "core-quality-gate-v1",
+  "suite_version": "evaluation-suite/v1",
+  "default_forbidden_phrases": [
+    "guaranteed to work",
+    "safe to skip compliance review",
+    "real user interviews are unnecessary",
+    "no privacy risk"
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "baseline_b2b_saas",
+      "name": "Baseline B2B SaaS",
+      "brief_path": "briefs/baseline_b2b_saas.json",
+      "panel_spec": {
+        "panel_type": "mainstream",
+        "sample_size": 2,
+        "random_seed": 11,
+        "preset_name": "mainstream"
+      },
+      "expectations": {
+        "expected_run_status": "completed",
+        "expected_successful_response_count": 2,
+        "required_audit_categories": [
+          "privacy_risk"
+        ],
+        "score_ranges": {
+          "problem_resonance": {
+            "min": 3.5
+          },
+          "willingness_to_pay": {
+            "min": 3.0
+          }
+        }
+      }
+    },
+    {
+      "fixture_id": "consumer_subscription",
+      "name": "Consumer Subscription",
+      "brief_path": "briefs/consumer_subscription.json",
+      "panel_spec": {
+        "panel_type": "mainstream",
+        "sample_size": 2,
+        "random_seed": 19,
+        "preset_name": "mainstream"
+      },
+      "expectations": {
+        "expected_run_status": "completed",
+        "expected_successful_response_count": 2,
+        "required_audit_categories": [
+          "reporting_risk"
+        ],
+        "score_ranges": {
+          "problem_resonance": {
+            "min": 3.0
+          }
+        }
+      }
+    },
+    {
+      "fixture_id": "privacy_sensitive_product",
+      "name": "Privacy Sensitive Product",
+      "brief_path": "briefs/privacy_sensitive_product.json",
+      "panel_spec": {
+        "panel_type": "privacy_sensitive",
+        "sample_size": 2,
+        "random_seed": 11,
+        "preset_name": "privacy_sensitive"
+      },
+      "expectations": {
+        "expected_run_status": "completed",
+        "expected_successful_response_count": 2,
+        "required_audit_categories": [
+          "privacy_risk",
+          "reporting_risk"
+        ],
+        "score_ranges": {
+          "willingness_to_pay": {
+            "max": 2.5
+          }
+        }
+      }
+    },
+    {
+      "fixture_id": "political_copy_risk",
+      "name": "Political Copy Risk",
+      "brief_path": "briefs/political_copy_risk.json",
+      "panel_spec": {
+        "panel_type": "political_risk",
+        "sample_size": 2,
+        "random_seed": 11,
+        "preset_name": "political_risk"
+      },
+      "expectations": {
+        "expected_run_status": "completed",
+        "expected_successful_response_count": 2,
+        "required_audit_categories": [
+          "discrimination_risk"
+        ]
+      }
+    },
+    {
+      "fixture_id": "budget_constrained_offer",
+      "name": "Budget Constrained Offer",
+      "brief_path": "briefs/budget_constrained_offer.json",
+      "panel_spec": {
+        "panel_type": "budget_constrained",
+        "sample_size": 2,
+        "random_seed": 11,
+        "preset_name": "budget_constrained"
+      },
+      "expectations": {
+        "expected_run_status": "completed",
+        "expected_successful_response_count": 2,
+        "required_audit_categories": [
+          "reporting_risk"
+        ],
+        "score_ranges": {
+          "willingness_to_pay": {
+            "max": 2.0
+          }
+        }
+      }
+    },
+    {
+      "fixture_id": "high_stakes_parenting",
+      "name": "High Stakes Parenting",
+      "brief_path": "briefs/high_stakes_parenting.json",
+      "panel_spec": {
+        "panel_type": "skeptic",
+        "sample_size": 2,
+        "random_seed": 11,
+        "preset_name": "skeptic"
+      },
+      "expectations": {
+        "expected_run_status": "completed",
+        "expected_successful_response_count": 2,
+        "required_audit_categories": [
+          "high_stakes_decision_risk"
+        ]
+      }
+    }
+  ]
+}
+

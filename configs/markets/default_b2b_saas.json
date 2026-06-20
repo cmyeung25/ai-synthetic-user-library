@@ -1,0 +1,72 @@
+{
+  "config_version": "market-distribution/v1",
+  "market_id": "default_b2b_saas",
+  "display_name": "Default B2B SaaS Validation Mix",
+  "default_locale": "en-HK",
+  "target_population": "SMB operators, consultants, and managers evaluating lightweight workflow tools.",
+  "weights": {
+    "panel_role": {
+      "mainstream": 0.32,
+      "skeptic": 0.12,
+      "privacy_sensitive": 0.10,
+      "inclusion": 0.08,
+      "political_risk": 0.06,
+      "low_tech": 0.10,
+      "budget_constrained": 0.12,
+      "extreme_user": 0.10
+    },
+    "locale_pack": {
+      "hong_kong_smb": 0.45,
+      "singapore_smb": 0.25,
+      "taiwan_knowledge_work": 0.20,
+      "regional_sea_service_ops": 0.10
+    },
+    "budget_flexibility": {
+      "low": 0.25,
+      "medium": 0.50,
+      "high": 0.25
+    },
+    "privacy_risk_tolerance": {
+      "low": 0.25,
+      "medium": 0.55,
+      "high": 0.20
+    },
+    "digital_literacy_ceiling": {
+      "low": 0.15,
+      "medium": 0.50,
+      "high": 0.35
+    }
+  },
+  "quota_rules": [
+    {
+      "rule_id": "min_privacy_sensitive_presence",
+      "dimension": "panel_role",
+      "operator": "min_share",
+      "target": "privacy_sensitive",
+      "value": 0.08
+    },
+    {
+      "rule_id": "max_extreme_user_share",
+      "dimension": "panel_role",
+      "operator": "max_share",
+      "target": "extreme_user",
+      "value": 0.15
+    }
+  ],
+  "exclusion_rules": [
+    {
+      "rule_id": "avoid_duplicate_seed_collision",
+      "type": "similarity_threshold",
+      "threshold": 0.92
+    }
+  ],
+  "overlays": [
+    "default_trial_pricing",
+    "default_smb_ai_copy"
+  ],
+  "metadata": {
+    "owner": "product_architecture",
+    "notes": "Baseline config for seeded B2B SaaS validation panels."
+  }
+}
+

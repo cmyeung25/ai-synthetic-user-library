@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "validation-run.schema.json",
+  "title": "ValidationRun",
+  "type": "object",
+  "required": [
+    "run_id",
+    "brief_id",
+    "panel_spec",
+    "selected_persona_ids",
+    "prompt_version",
+    "model_version",
+    "started_at",
+    "status",
+    "successful_response_count",
+    "failed_response_count",
+    "error_count",
+    "failure_reasons",
+    "artifact_paths"
+  ],
+  "properties": {
+    "run_id": { "type": "string" },
+    "brief_id": { "type": "string" },
+    "panel_spec": {
+      "type": "object",
+      "required": ["panel_type", "sample_size"],
+      "properties": {
+        "panel_type": { "type": "string" },
+        "sample_size": { "type": "integer" },
+        "random_seed": { "type": ["integer", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "selected_persona_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "prompt_version": { "type": "string" },
+    "model_version": { "type": "string" },
+    "started_at": { "type": "string" },
+    "finished_at": { "type": ["string", "null"] },
+    "token_estimate": { "type": ["integer", "null"] },
+    "cost_estimate": { "type": ["number", "null"] },
+    "status": { "type": "string" },
+    "successful_response_count": { "type": "integer" },
+    "failed_response_count": { "type": "integer" },
+    "error_count": { "type": "integer" },
+    "failure_reasons": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "artifact_paths": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

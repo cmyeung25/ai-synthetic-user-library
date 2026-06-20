@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "synthetic-user.schema.json",
+  "title": "SyntheticUser",
+  "type": "object",
+  "required": [
+    "basic_identity",
+    "personality_belief",
+    "technology_profile",
+    "economic_profile",
+    "values",
+    "life_story",
+    "behavior_profile",
+    "problem_context",
+    "sensitive_reality_layer",
+    "audit_evidence_layer"
+  ],
+  "properties": {
+    "basic_identity": {
+      "type": "object",
+      "required": ["synthetic_user_id", "name", "age", "occupation", "location"],
+      "properties": {
+        "synthetic_user_id": { "type": "string" },
+        "name": { "type": "string" },
+        "age": { "type": "integer" },
+        "occupation": { "type": "string" },
+        "location": { "type": "string" },
+        "language": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "personality_belief": {
+      "type": "object",
+      "required": ["decision_style", "risk_tolerance", "trust_orientation"],
+      "additionalProperties": true
+    },
+    "technology_profile": {
+      "type": "object",
+      "required": ["tech_savviness", "privacy_concern", "automation_openness"],
+      "additionalProperties": true
+    },
+    "economic_profile": {
+      "type": "object",
+      "required": ["price_sensitivity", "subscription_tolerance", "switching_cost"],
+      "additionalProperties": true
+    },
+    "values": {
+      "type": "object",
+      "required": ["core_values", "fears", "aspirations"],
+      "additionalProperties": true
+    },
+    "life_story": {
+      "type": "object",
+      "required": ["career_path", "current_daily_routine", "frustrations"],
+      "additionalProperties": true
+    },
+    "behavior_profile": {
+      "type": "object",
+      "required": ["buying_behavior", "decision_blockers"],
+      "additionalProperties": true
+    },
+    "problem_context": {
+      "type": "object",
+      "required": ["active_pain_points", "jobs_to_be_done", "willingness_to_pay"],
+      "additionalProperties": true
+    },
+    "sensitive_reality_layer": {
+      "type": "object",
+      "required": ["fairness_and_inclusion_profile", "response_boundaries"],
+      "additionalProperties": true
+    },
+    "audit_evidence_layer": {
+      "type": "object",
+      "required": ["persona_generation_method", "evidence_grade", "synthetic_only_disclaimer", "do_not_use_for"],
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

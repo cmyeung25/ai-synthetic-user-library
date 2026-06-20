@@ -1,0 +1,166 @@
+{
+  "aggregation_version": "aggregator/v1",
+  "project_name": "Parent Support Planner",
+  "persona_count": 2,
+  "selected_persona_count": 2,
+  "successful_response_count": 2,
+  "failed_response_count": 0,
+  "response_coverage_pct": 100.0,
+  "run_status": "completed",
+  "failure_reasons": [],
+  "average_scores": {
+    "problem_resonance": 4.0,
+    "solution_attractiveness": 2.0,
+    "willingness_to_pay": 3.0
+  },
+  "top_buying_triggers": [
+    {
+      "trigger": "clear time savings",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0010",
+        "su_0002"
+      ],
+      "panel_roles": [
+        "skeptic"
+      ],
+      "examples": [
+        "clear time savings"
+      ]
+    }
+  ],
+  "top_objections": [
+    {
+      "objection": "claims feel under-proven",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0010",
+        "su_0002"
+      ],
+      "panel_roles": [
+        "skeptic"
+      ],
+      "examples": [
+        "claims feel under-proven"
+      ]
+    }
+  ],
+  "trigger_clusters": [
+    {
+      "trigger": "clear time savings",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0010",
+        "su_0002"
+      ],
+      "panel_roles": [
+        "skeptic"
+      ],
+      "examples": [
+        "clear time savings"
+      ]
+    }
+  ],
+  "objection_clusters": [
+    {
+      "objection": "claims feel under-proven",
+      "count": 2,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0010",
+        "su_0002"
+      ],
+      "panel_roles": [
+        "skeptic"
+      ],
+      "examples": [
+        "claims feel under-proven"
+      ]
+    }
+  ],
+  "segment_summary": {
+    "skeptic": {
+      "count": 2,
+      "problem_resonance": 4.0,
+      "solution_attractiveness": 2.0,
+      "willingness_to_pay": 3.0,
+      "top_objections": [
+        {
+          "objection": "claims feel under-proven",
+          "count": 2
+        }
+      ],
+      "top_triggers": [
+        {
+          "trigger": "clear time savings",
+          "count": 2
+        }
+      ],
+      "top_trust_concerns": [
+        {
+          "trust_concern": "I would need proof that this fits smoothly into existing habits.",
+          "count": 2
+        }
+      ]
+    }
+  },
+  "risk_map": [
+    {
+      "category": "high_stakes_decision_risk",
+      "highest_severity": "high",
+      "finding_count": 1,
+      "affected_persona_ids": [],
+      "observations": [
+        "This concept touches a high-stakes domain and should not rely on AI validation alone for product, compliance, or messaging decisions."
+      ],
+      "recommended_validation_questions": [
+        "What expert or compliance review must happen before broader rollout?"
+      ]
+    }
+  ],
+  "audit_categories": [
+    {
+      "category": "high_stakes_decision_risk",
+      "severity": "high",
+      "observation": "This concept touches a high-stakes domain and should not rely on AI validation alone for product, compliance, or messaging decisions.",
+      "evidence_refs": [
+        "brief"
+      ],
+      "recommended_validation_question": "What expert or compliance review must happen before broader rollout?"
+    }
+  ],
+  "skeptic_review": {
+    "review_version": "skeptic-review/v1",
+    "summary": "Skeptic review focuses on weak proof, habit-change friction, pricing readiness, and value-capture gaps.",
+    "challenged_assumptions": [
+      {
+        "finding_id": "skeptic_solution_clarity",
+        "severity": "medium",
+        "title": "Solution story may still be too abstract",
+        "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+        "evidence_refs": [
+          "raw_responses",
+          "summary"
+        ],
+        "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+      }
+    ]
+  },
+  "assumption_risk_map": [
+    {
+      "finding_id": "skeptic_solution_clarity",
+      "severity": "medium",
+      "title": "Solution story may still be too abstract",
+      "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+      "evidence_refs": [
+        "raw_responses",
+        "summary"
+      ],
+      "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+    }
+  ],
+  "generated_at": "2026-06-17T16:10:03+00:00"
+}

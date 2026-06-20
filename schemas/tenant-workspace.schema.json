@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tenant-workspace.schema.json",
+  "title": "Tenant Workspace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workspace_id",
+    "slug",
+    "display_name",
+    "region_code",
+    "data_residency_region",
+    "plan_tier",
+    "status",
+    "created_at",
+    "members"
+  ],
+  "properties": {
+    "workspace_id": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "region_code": {
+      "type": "string"
+    },
+    "data_residency_region": {
+      "type": "string"
+    },
+    "plan_tier": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "suspended",
+        "archived"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "settings": {
+      "type": "object"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "user_id",
+          "role",
+          "joined_at"
+        ],
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "admin",
+              "editor",
+              "viewer",
+              "billing_admin"
+            ]
+          },
+          "joined_at": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
+

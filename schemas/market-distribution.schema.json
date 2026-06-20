@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "market-distribution.schema.json",
+  "title": "Market Distribution Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "config_version",
+    "market_id",
+    "display_name",
+    "default_locale",
+    "target_population",
+    "weights"
+  ],
+  "properties": {
+    "config_version": {
+      "type": "string"
+    },
+    "market_id": {
+      "type": "string"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "default_locale": {
+      "type": "string"
+    },
+    "target_population": {
+      "type": "string"
+    },
+    "weights": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "quota_rules": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "exclusion_rules": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "overlays": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}
+
