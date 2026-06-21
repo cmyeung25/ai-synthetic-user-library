@@ -1,0 +1,211 @@
+{
+  "problem_evidence": {
+    "strength": "strong",
+    "supporting_quotes": [
+      {
+        "quote": "其實我通常唔係冇選擇，我係卡喺點樣快啲定到人、定到時間，同埋唔好搞到我要做收數同追覆嗰個。",
+        "evidence_ref": "exchange_10.persona"
+      },
+      {
+        "quote": "去到要訂嗰下，我其實停咗一停，因為有一個人仲未覆，另一個又話可能遲到，我唔想自己先墊晒錢。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "如果最後我都係要自己追數，咁就算個 fee 唔高，我都唔會覺得值。",
+        "evidence_ref": "exchange_9.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次真實事件係幫幾個朋友搵週末甜品工作坊，先喺 WhatsApp 傾起，再自己整兩三個選項比較。",
+      "發現渠道主要係 Instagram 廣告，再去商戶網站或 Klook 類平台核對時間、價錢同條款。",
+      "真正卡位出現在落訂前：有人未覆、有人可能遲到、未敢先墊錢，最後要等到夜晚確認人數先下訂。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用 WhatsApp group 傾方向同逐個追覆。",
+      "自己喺 Instagram、商戶網站同平台之間來回比較時間、地點、價錢。",
+      "翻朋友之前 send 過嘅 link 再比一比。",
+      "等朋友私下承諾即刻過數後，先敢代為落訂。"
+    ],
+    "pain_level": "high",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "一開始就要睇到清楚時間、地點、總價同包咩。",
+      "取消／改期條款要清楚。",
+      "唔可以到最後一步先加額外收費。",
+      "朋友最好唔使先下載或註冊一輪先可以回覆或付款。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "根據之前真係睇過或報過嘅活動作同區、相近價位推薦。",
+      "清楚講明推薦邏輯。",
+      "畀用戶自己關掉推薦。",
+      "提供熟悉付款方式、本地商戶訊號、透明價格與條款。"
+    ],
+    "rejected_data_access": [
+      "令人感覺平台追住佢行蹤。",
+      "假設平台知道佢幾時有空。",
+      "模糊描述、太 generic 推介、隱藏收費。"
+    ],
+    "required_trust_explanation": [
+      "要證明係真本地商戶。",
+      "要清楚列出時間、地點、總價、包含內容、取消／改期安排。",
+      "要用熟悉付款方式。",
+      "如果圖片同描述太空泛，佢通常唔會再花時間。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "將揀選項、比較同落訂放埋同一個 flow。",
+      "可以即刻按時間、地點、價錢篩選，減少開幾個 app 來回比。",
+      "分享出去嘅 link 已有時間、地點、價錢同可揀時段。",
+      "朋友撳入去就可以直接揀得唔得，唔使先下載或註冊。",
+      "睇到邊個已睇、邊個未覆；去到某個人數可以直接落訂或收款。"
+    ],
+    "time_to_value": "第一次用就要幫到佢更快定到人、定到時間，同減少自己追覆追數；如果只係靚啲展示活動，價值唔夠快出現。",
+    "abandonment_triggers": [
+      "最後仍然要自己追數。",
+      "confirm 同付款流程仍然散開。",
+      "內容太 generic 或唔夠本地。",
+      "最後一步先出現額外收費。",
+      "朋友需要重新學點用先參與到。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "unknown",
+    "monthly_comfort_range": "unknown",
+    "payment_justification": [
+      "收費要一開始講明每次幾多、包咩。",
+      "平台要真係處理到收款、確認，同有人甩底時嘅安排。",
+      "如果仍然要自己手動追人追數，就算 fee 低都唔值。"
+    ],
+    "evidence_strength": "hypothetical"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "第二次唔需要再教朋友點用。",
+      "share 個 link 後，朋友可以照樣回覆同付款。",
+      "有人遲覆或臨時退出時，仍然比 WhatsApp 加手動收錢輕鬆。",
+      "推薦夠貼近之前真實興趣，又唔會過界。"
+    ],
+    "drop_off_reasons": [
+      "平台只係改善發現活動，但冇改善確認、收款同甩底處理。",
+      "朋友要下載／註冊先參與。",
+      "推薦太似監視。",
+      "價格或條款唔透明。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "參與者有真實嘅活動發現或協調問題。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_10.persona"
+      ],
+      "rationale": "問題唔止係搵活動，而係最近真實事件中，確認人數、時間同付款責任明顯拖慢落訂。"
+    },
+    {
+      "assumption": "現有渠道未完全解決問題。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_10.persona"
+      ],
+      "rationale": "Instagram、商戶網站、Klook 同 WhatsApp 可以搵到選項，但 confirm 同付款仍然分散，要手動追人追數。"
+    },
+    {
+      "assumption": "即日或同週預訂價值高。",
+      "status": "unknown",
+      "evidence_refs": [
+        "exchange_1.persona"
+      ],
+      "rationale": "只知道係幫朋友搵週末工作坊，未有足夠證據證明 same-day 或 same-week 本身係核心價值驅動。"
+    },
+    {
+      "assumption": "即時名額／即時確認會增加信任。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "佢重視快啲定到人同可到某個人數直接落訂，但未直接提到名額真實性；較明確係確認流程要集中。"
+    },
+    {
+      "assumption": "付款前必須有清楚價格、地點、時長／內容、準備資訊、退款條款。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "佢多次主動提到時間、地點、總價、包咩、取消／改期條款同隱藏收費。"
+    },
+    {
+      "assumption": "save 或 share 容易造成假陽性興趣。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "單純 group 傾同 send link 唔夠，要能直接揀得唔得、睇誰未覆、推動真正 confirm 同付款先算有進展。"
+    },
+    {
+      "assumption": "推薦只有喺真係減少搜尋成本又唔 creepy 時先有用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "佢接受基於真實瀏覽／報名行為嘅同區同價位推薦，但拒絕似監視行蹤或假設空閒時間。"
+    },
+    {
+      "assumption": "願意付款取決於商戶可信度、退款政策同活動匹配。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "安心付款條件包括本地商戶、熟悉付款方式、清楚取消／改期安排，同朋友已確認會過數。"
+    },
+    {
+      "assumption": "群組分享／投票未必帶來真轉化。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "佢明確指出只有分享唔夠；若唔能減少追覆、追數同處理甩底，分享功能唔算真價值。"
+    },
+    {
+      "assumption": "產品一定要減少決策成本，而唔係加多一層瀏覽。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_10.persona"
+      ],
+      "rationale": "佢想減少開幾個 app 來回比，但更重要係不要把 confirm 同付款再拆散。"
+    }
+  ],
+  "key_insights": [
+    "對呢位 persona，最大痛點唔係『冇活動可揀』，而係多人活動入面點樣快啲定到人、定到時間，同避免自己承擔收數追覆責任。",
+    "Go Out La! 嘅吸引力首先來自整合搜尋、比較同落訂，但真正決定值唔值得用，係佢有冇把群組確認、收款同甩底處理一齊收埋。",
+    "透明度係基本門檻：清楚時間、地點、總價、包咩、取消／改期安排、本地商戶訊號、熟悉付款方式，缺一樣都會令佢停低。",
+    "分享功能只有喺『唔使下載註冊、可直接表態、可見未覆、到人數可直接落訂或收款』時先會由假興趣變成真進展。",
+    "推薦係次要加分，不是主價值；而且一定要可解釋、可關掉，否則容易由方便變成反感。"
+  ],
+  "next_experiment": "做一個最小可行測試，只驗證『群組活動確認＋收款』而唔係先驗證更多活動發現：用一條免註冊分享連結，畀朋友直接揀時段／表態／付款承諾，並測試對比 WhatsApp 手動追覆，係咪真能縮短確認時間同減少主揪追數步驟。",
+  "evidence_gaps": [
+    "未測到佢自己一個人報名活動時，Go Out La! 價值是否仍然成立。",
+    "未有真實價格帶或可接受 fee 範圍，只知透明同值唔值比絕對價錢更重要。",
+    "未驗證實際推薦效果，只得到對推薦邊界嘅假設性回應。",
+    "未測試退款／有人甩底時，平台代收款與退款流程具體要點。",
+    "只得一位 synthetic persona，未知道呢個模式對其他活動類型或非群組場景是否一樣。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅模擬訪談洞察，用嚟做前期方向判斷可以，但唔可以當成人類市場證據或因果結論；關鍵假設仍需要真人訪談同行為測試驗證。"
+}
