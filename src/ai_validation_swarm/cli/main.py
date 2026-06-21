@@ -43,6 +43,12 @@ from ai_validation_swarm.personas.v3_2 import (
     generate_v3_2_personas,
     validate_v3_2_persona_folder,
 )
+from ai_validation_swarm.personas.v3_3 import (
+    FullPassRepairV33SynthesisAdapter,
+    OpenAIV33SynthesisAdapter,
+    generate_v3_3_personas,
+    validate_v3_3_persona_folder,
+)
 from ai_validation_swarm.personas.validator import validate_personas
 from ai_validation_swarm.providers.factory import build_provider
 from ai_validation_swarm.providers.openai_client import OpenAIProviderError
@@ -305,6 +311,21 @@ def _build_parser() -> argparse.ArgumentParser:
 
     validate_v3_2_cmd = subparsers.add_parser("validate-personas-v3-2")
     validate_v3_2_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
+
+    generate_v3_3_cmd = subparsers.add_parser("generate-v3-3-persona")
+    generate_v3_3_cmd.add_argument("--persona-id", action="append", dest="persona_ids", required=True)
+    generate_v3_3_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
+    generate_v3_3_cmd.add_argument("--compare-against", type=Path, default=Path("data/personas"))
+    generate_v3_3_cmd.add_argument("--section", action="append", dest="enabled_sections")
+    generate_v3_3_cmd.add_argument("--seed-offset", type=int, default=11)
+    generate_v3_3_cmd.add_argument("--max-attempts", type=int, default=3)
+    generate_v3_3_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
+    generate_v3_3_cmd.add_argument("--brief-dir", type=Path)
+    generate_v3_3_cmd.add_argument("--repair-batch-size", type=int, default=1)
+    generate_v3_3_cmd.add_argument("--debug-progress", action="store_true")
+
+    validate_v3_3_cmd = subparsers.add_parser("validate-personas-v3-3")
+    validate_v3_3_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
 
     generate_target_cmd = subparsers.add_parser("generate-persona-to-target")
     generate_target_cmd.add_argument("--target-version", choices=["v3", "v3_1", "v3_1_1", "v3_1_2"], required=True)
@@ -796,6 +817,105 @@ def _cmd_validate_personas_v3_2(args: argparse.Namespace) -> int:
         print(f"V3.2 validation passed for {len(reports)} personas.")
         return 0
     print(f"V3.2 validation found issues in {len(invalid)} of {len(reports)} personas.")
+    for persona_id, report in invalid:
+        for message in report["missing_fields"]:
+            print(f"- {persona_id} | missing_field | {message}")
+        for message in report["warnings"]:
+            print(f"- {persona_id} | warning | {message}")
+    return 1
+
+
+def _cmd_generate_v3_3_persona(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.providers.openai_client import (
+        OpenAIResponsesClient,
+        load_openai_provider_config,
+    )
+
+    uses_codex_auth = args.backend in {"codex", "codex-sdk"}
+    forced_transport = {
+        "codex": "codex_cli",
+        "codex-sdk": "codex_sdk_node",
+    }.get(args.backend)
+    config = load_openai_provider_config(
+        prefer_codex_auth=uses_codex_auth,
+        force_transport=forced_transport,
+    )
+    client = OpenAIResponsesClient(config)
+    progress_writer = (lambda message: print(message, flush=True)) if args.debug_progress else None
+    if progress_writer is not None:
+        progress_writer(
+            f"[v3.3] backend={args.backend} transport={config.transport} model={config.model} "
+            f"reasoning={config.model_reasoning_effort} timeout={config.timeout_seconds}s "
+            f"repair_batch_size={args.repair_batch_size}"
+        )
+    primary_adapter = OpenAIV33SynthesisAdapter(client, config)
+    repair_adapter = SectionBatchedV32SynthesisAdapter(
+        OpenAIV33SynthesisAdapter(client, config),
+        batch_size=args.repair_batch_size,
+        cache_dir=args.output_dir / ".v3_3_repair_cache",
+        progress_writer=progress_writer,
+    )
+    adapter = FullPassRepairV33SynthesisAdapter(
+        primary_adapter,
+        repair_adapter,
+        progress_writer=progress_writer,
+        state_dir=args.output_dir / ".v3_3_resume_state",
+    )
+    generation_briefs = {}
+    if args.brief_dir:
+        for persona_id in args.persona_ids:
+            brief_path = args.brief_dir / f"{persona_id}.json"
+            if not brief_path.exists():
+                raise ValueError(f"Generation brief not found: {brief_path}")
+            brief = json.loads(brief_path.read_text(encoding="utf-8"))
+            if not isinstance(brief, dict):
+                raise ValueError(f"Generation brief must be an object: {brief_path}")
+            if brief.get("synthetic_user_id") not in {None, persona_id}:
+                raise ValueError(f"Generation brief ID does not match {persona_id}: {brief_path}")
+            generation_briefs[persona_id] = brief
+    comparison_personas = []
+    if args.compare_against.exists():
+        for persona_root in sorted(path for path in args.compare_against.iterdir() if path.is_dir()):
+            folder = persona_root / "v3_3"
+            if not folder.exists():
+                continue
+            try:
+                comparison_personas.append(load_persona(folder))
+            except (OSError, ValueError, KeyError):
+                continue
+    written_paths = generate_v3_3_personas(
+        persona_ids=args.persona_ids,
+        output_dir=args.output_dir,
+        adapter=adapter,
+        enabled_sections=args.enabled_sections,
+        random_seed_offset=args.seed_offset,
+        max_attempts=args.max_attempts,
+        comparison_personas=comparison_personas,
+        generation_briefs=generation_briefs,
+        progress_writer=progress_writer,
+    )
+    print(
+        f"Generated {len(written_paths)} V3.3 personas in {args.output_dir} "
+        f"using {args.backend} full synthesis with repair fallback."
+    )
+    return 0
+
+
+def _cmd_validate_personas_v3_3(args: argparse.Namespace) -> int:
+    reports = []
+    if args.data_dir.exists():
+        for persona_root in sorted(path for path in args.data_dir.iterdir() if path.is_dir()):
+            folder = persona_root / "v3_3"
+            if folder.exists():
+                reports.append((persona_root.name, validate_v3_3_persona_folder(folder)))
+    if not reports:
+        print("No V3.3 personas found.")
+        return 1
+    invalid = [(persona_id, report) for persona_id, report in reports if not report["valid"]]
+    if not invalid:
+        print(f"V3.3 validation passed for {len(reports)} personas.")
+        return 0
+    print(f"V3.3 validation found issues in {len(invalid)} of {len(reports)} personas.")
     for persona_id, report in invalid:
         for message in report["missing_fields"]:
             print(f"- {persona_id} | missing_field | {message}")
@@ -1469,12 +1589,14 @@ def main(argv: list[str] | None = None) -> int:
         "generate-v3-1-1-persona": _cmd_generate_v3_1_1_persona,
         "generate-v3-1-2-persona": _cmd_generate_v3_1_2_persona,
         "generate-v3-2-persona": _cmd_generate_v3_2_persona,
+        "generate-v3-3-persona": _cmd_generate_v3_3_persona,
         "generate-persona-to-target": _cmd_generate_persona_to_target,
         "run-distinctiveness-check-v3-1-1": _cmd_run_distinctiveness_check_v3_1_1,
         "run-distinctiveness-check-v3-1-2": _cmd_run_distinctiveness_check_v3_1_2,
         "validate-personas-v3-1-1": _cmd_validate_personas_v3_1_1,
         "validate-personas-v3-1-2": _cmd_validate_personas_v3_1_2,
         "validate-personas-v3-2": _cmd_validate_personas_v3_2,
+        "validate-personas-v3-3": _cmd_validate_personas_v3_3,
         "summarize-personas": _cmd_summarize_personas,
         "inspect-openai-auth": _cmd_inspect_openai_auth,
         "probe-codex-auth": _cmd_probe_codex_auth,

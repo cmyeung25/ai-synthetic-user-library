@@ -47,6 +47,13 @@ def _stable_hash(payload: Any) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def _prompt_fingerprints(prompt_texts: dict[str, str]) -> dict[str, str]:
+    return {
+        version: _stable_hash(text)
+        for version, text in sorted(prompt_texts.items())
+    }
+
+
 @dataclass(slots=True)
 class PersonaSynthesisRequest:
     synthetic_user_id: str
@@ -87,6 +94,33 @@ class PersonaSynthesisResult:
 
 class PersonaSynthesisAdapter(Protocol):
     def synthesize(self, request: PersonaSynthesisRequest) -> PersonaSynthesisResult: ...
+
+
+def _normalize_sections_payload(
+    payload: dict[str, Any],
+    requested_sections: list[PersonaSectionSpec],
+) -> dict[str, dict[str, Any]]:
+    sections_payload = payload.get("sections", {})
+    if isinstance(sections_payload, dict) and sections_payload:
+        return dict(sections_payload)
+
+    inferred: dict[str, dict[str, Any]] = {}
+    for section in requested_sections:
+        direct_section = payload.get(section.name)
+        if isinstance(direct_section, dict):
+            if all(target in direct_section for target in section.targets):
+                inferred[section.name] = dict(direct_section)
+                continue
+            if len(section.targets) == 1:
+                inferred[section.name] = {section.targets[0]: direct_section}
+                continue
+        wrapped_targets: dict[str, Any] = {}
+        for target in section.targets:
+            if target in payload:
+                wrapped_targets[target] = payload[target]
+        if wrapped_targets:
+            inferred[section.name] = wrapped_targets
+    return inferred
 
 
 class RecordedV32SynthesisAdapter:
@@ -193,7 +227,7 @@ class OpenAIV32SynthesisAdapter:
             use_transport_output_schema=self.config.transport != "codex_sdk_node",
         )
         return PersonaSynthesisResult(
-            sections=dict(payload.get("sections", {})),
+            sections=_normalize_sections_payload(payload, request.sections),
             decision_policy=dict(payload.get("decision_policy", {})),
             response_style=dict(payload.get("response_style", {})),
             narrative=str(payload.get("narrative", "")).strip(),
@@ -220,17 +254,42 @@ class SectionBatchedV32SynthesisAdapter:
         batch_size: int = 2,
         cache_dir: Path | None = None,
         progress_writer: Callable[[str], None] | None = None,
+        batch_result_hook: Callable[[PersonaSynthesisRequest, PersonaSynthesisResult], None] | None = None,
+        max_batch_attempts: int = 2,
     ) -> None:
         if batch_size < 1:
             raise ValueError("V3.2 section batch size must be at least 1.")
+        if max_batch_attempts < 1:
+            raise ValueError("V3.2 batch attempts must be at least 1.")
         self.adapter = adapter
         self.batch_size = batch_size
         self.cache_dir = cache_dir
         self.progress_writer = progress_writer
+        self.batch_result_hook = batch_result_hook
+        self.max_batch_attempts = max_batch_attempts
 
     def _progress(self, message: str) -> None:
         if self.progress_writer is not None:
             self.progress_writer(message)
+
+    def _notify_batch_result(self, request: PersonaSynthesisRequest, result: PersonaSynthesisResult) -> None:
+        if self.batch_result_hook is not None:
+            self.batch_result_hook(request, result)
+
+    @staticmethod
+    def _batch_findings(request: PersonaSynthesisRequest, result: PersonaSynthesisResult) -> list[str]:
+        findings: list[str] = []
+        for section in request.sections:
+            payload = result.sections.get(section.name)
+            if not isinstance(payload, dict):
+                findings.append(f"missing_section:{section.name}")
+                continue
+            for target in section.targets:
+                value = payload.get(target)
+                expected = list if target == "contradiction_map" else dict
+                if not isinstance(value, expected) or not value:
+                    findings.append(f"missing_or_empty_target:{section.name}.{target}")
+        return findings
 
     def _cache_identity(self) -> dict[str, Any]:
         """Keep cached LLM results isolated by provider configuration."""
@@ -267,6 +326,7 @@ class SectionBatchedV32SynthesisAdapter:
     ) -> tuple[Path | None, str, PersonaSynthesisResult | None]:
         request_hash = _stable_hash({
             "request": request.trace_payload(),
+            "prompt_fingerprints": _prompt_fingerprints(request.prompt_texts),
             "cache_identity": self._cache_identity(),
         })
         if self.cache_dir is None:
@@ -347,23 +407,56 @@ class SectionBatchedV32SynthesisAdapter:
             )
             cache_path, request_hash, result = self._cached_result(batch_request, batch_names)
             if result is None:
-                started_at = time.perf_counter()
-                result = self.adapter.synthesize(batch_request)
-                elapsed = time.perf_counter() - started_at
-                self._progress(
-                    f"[v3.2] {request.synthetic_user_id} attempt {request.attempt} "
-                    f"finished sections={', '.join(batch_names)} in {elapsed:.1f}s"
-                )
-                if cache_path is not None and self._covers_requested_sections(result, batch_request):
+                batch_result: PersonaSynthesisResult | None = None
+                current_request = batch_request
+                last_findings: list[str] = []
+                for batch_attempt in range(1, self.max_batch_attempts + 1):
+                    started_at = time.perf_counter()
+                    candidate = self.adapter.synthesize(current_request)
+                    elapsed = time.perf_counter() - started_at
+                    self._progress(
+                        f"[v3.2] {request.synthetic_user_id} attempt {request.attempt} "
+                        f"finished sections={', '.join(batch_names)} in {elapsed:.1f}s"
+                    )
+                    last_findings = self._batch_findings(current_request, candidate)
+                    if not last_findings:
+                        batch_result = candidate
+                        break
+                    if batch_attempt >= self.max_batch_attempts:
+                        break
+                    self._progress(
+                        f"[v3.2] {request.synthetic_user_id} retrying sections={', '.join(batch_names)} "
+                        f"after findings: {', '.join(last_findings)}"
+                    )
+                    current_request = PersonaSynthesisRequest(
+                        synthetic_user_id=current_request.synthetic_user_id,
+                        seed=copy.deepcopy(current_request.seed),
+                        identity_anchors=copy.deepcopy(current_request.identity_anchors),
+                        creative_brief=copy.deepcopy(current_request.creative_brief),
+                        sections=current_request.sections,
+                        prompt_texts=current_request.prompt_texts,
+                        random_seed=current_request.random_seed,
+                        attempt=current_request.attempt,
+                        revision_findings=[*current_request.revision_findings, *last_findings],
+                    )
+                if batch_result is None:
+                    raise ValueError(
+                        f"V3.2 batched synthesis failed for {request.synthetic_user_id} "
+                        f"sections={','.join(batch_names)}: {', '.join(last_findings) or 'missing batch payload'}"
+                    )
+                result = batch_result
+                if cache_path is not None:
                     self._write_cached_result(cache_path, request_hash, result)
                     self._progress(
                         f"[v3.2] {request.synthetic_user_id} cached sections={', '.join(batch_names)} -> {cache_path.name}"
                     )
+                self._notify_batch_result(batch_request, result)
             else:
                 self._progress(
                     f"[v3.2] {request.synthetic_user_id} cache hit for sections={', '.join(batch_names)} -> "
                     f"{cache_path.name if cache_path is not None else '(memory)'}"
                 )
+                self._notify_batch_result(batch_request, result)
             merged_sections.update(copy.deepcopy(result.sections))
             provider = result.provider
             model = result.model

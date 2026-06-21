@@ -23,7 +23,10 @@ CORE_ASSUMPTION_COUNT = 8
 def _persona_ids(data_dir: Path) -> list[str]:
     return sorted(
         path.name for path in data_dir.iterdir()
-        if path.is_dir() and (path / "v3_2" / "profile.json").exists()
+        if path.is_dir() and (
+            (path / "v3_3" / "profile.json").exists()
+            or (path / "v3_2" / "profile.json").exists()
+        )
     )
 
 

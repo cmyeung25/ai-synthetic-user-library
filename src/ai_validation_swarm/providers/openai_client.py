@@ -392,6 +392,18 @@ def extract_json_object(raw_text: str) -> dict[str, Any]:
     return payload
 
 
+def payload_satisfies_required_keys(payload: dict[str, Any], schema: dict[str, Any] | None) -> bool:
+    if not schema or not isinstance(schema, dict):
+        return True
+    required = schema.get("required")
+    if not isinstance(required, list) or not required:
+        return True
+    for key in required:
+        if not isinstance(key, str) or key not in payload:
+            return False
+    return True
+
+
 def extract_output_text(payload: dict[str, Any]) -> str:
     direct = payload.get("output_text")
     if isinstance(direct, str) and direct.strip():
@@ -658,11 +670,26 @@ class OpenAIResponsesClient:
                         return output_payload
                     if strategy == "direct":
                         if set(output_payload.keys()) == {"json_payload_b64"}:
-                            return decode_codex_json_payload(str(output_payload.get("json_payload_b64", "")).strip())
+                            decoded_payload = decode_codex_json_payload(str(output_payload.get("json_payload_b64", "")).strip())
+                            if not payload_satisfies_required_keys(decoded_payload, output_schema):
+                                raise OpenAIProviderError(
+                                    "Codex CLI direct strategy returned JSON but it did not satisfy the required top-level output keys."
+                                )
+                            return decoded_payload
                         payload_text = str(output_payload.get("json_payload", "")).strip()
-                        return extract_json_object(payload_text)
+                        decoded_payload = extract_json_object(payload_text)
+                        if not payload_satisfies_required_keys(decoded_payload, output_schema):
+                            raise OpenAIProviderError(
+                                "Codex CLI direct strategy returned JSON but it did not satisfy the required top-level output keys."
+                            )
+                        return decoded_payload
                     payload_b64 = str(output_payload.get("json_payload_b64", "")).strip()
-                    return decode_codex_json_payload(payload_b64)
+                    decoded_payload = decode_codex_json_payload(payload_b64)
+                    if not payload_satisfies_required_keys(decoded_payload, output_schema):
+                        raise OpenAIProviderError(
+                            "Codex CLI wrapper strategy returned JSON but it did not satisfy the required top-level output keys."
+                        )
+                    return decoded_payload
                 except OpenAIProviderError as exc:
                     last_error = exc
                     continue

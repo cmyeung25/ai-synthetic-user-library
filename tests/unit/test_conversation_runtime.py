@@ -93,14 +93,16 @@ class ConversationRuntimeTest(unittest.TestCase):
             runtime.reset(resumed)
             self.assertEqual(read_json(root / "conversations" / session.session_id / "session.json")["turns"], [])
 
-    def test_version_resolution_prefers_v3_2(self):
+    def test_version_resolution_prefers_v3_3(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp) / "personas" / "su_0001"
             (base / "v3").mkdir(parents=True)
+            (base / "v3_3").mkdir()
             (base / "v3_2").mkdir()
             (base / "v3" / "profile.json").write_text("{}", encoding="utf-8")
+            (base / "v3_3" / "profile.json").write_text("{}", encoding="utf-8")
             (base / "v3_2" / "profile.json").write_text("{}", encoding="utf-8")
-            self.assertEqual(resolve_persona_folder(base.parent, "su_0001"), base / "v3_2")
+            self.assertEqual(resolve_persona_folder(base.parent, "su_0001"), base / "v3_3")
 
     def test_live_provider_removes_object_replacement_format_character(self):
         class StubClient:

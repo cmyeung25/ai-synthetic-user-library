@@ -21,6 +21,7 @@ from ai_validation_swarm.personas.v3_2 import (
     PersonaSynthesisRequest,
     PersonaSynthesisResult,
     SectionBatchedV32SynthesisAdapter,
+    _normalize_sections_payload,
     build_v3_2_output_schema,
     generate_v3_2_personas,
     load_v3_2_prompt_texts,
@@ -118,6 +119,30 @@ class FixtureSynthesisAdapter:
         )
 
 
+class FlakyBatchFixtureAdapter(FixtureSynthesisAdapter):
+    def __init__(self) -> None:
+        super().__init__()
+        self._seen: dict[tuple[str, str], int] = {}
+
+    def synthesize(self, request):
+        key = (request.synthetic_user_id, ",".join(section.name for section in request.sections))
+        self._seen[key] = self._seen.get(key, 0) + 1
+        if self._seen[key] == 1:
+            self.calls.append(copy.deepcopy(request))
+            return PersonaSynthesisResult(
+                sections={},
+                decision_policy={},
+                response_style={},
+                narrative="",
+                rationale="first attempt intentionally incomplete",
+                provider="fixture",
+                model="fixture-v3.2",
+                prompt_versions=["persona-synthesis/v3_2.md"],
+                raw_metadata={"fixture": True, "incomplete_once": True},
+            )
+        return super().synthesize(request)
+
+
 class PersonaV32Test(unittest.TestCase):
     def test_default_registry_assigns_narrative_sections_to_llm(self) -> None:
         sections = DEFAULT_V3_2_REGISTRY.enabled()
@@ -172,6 +197,28 @@ class PersonaV32Test(unittest.TestCase):
         self.assertEqual(required, ["biography", "lifestyle_and_hobbies"])
         hobby_targets = schema["properties"]["sections"]["properties"]["lifestyle_and_hobbies"]["required"]
         self.assertIn("interests_and_hobbies", hobby_targets)
+
+    def test_normalize_sections_payload_accepts_direct_single_section_shape(self) -> None:
+        section = PersonaSectionSpec(
+            name="childhood_environment",
+            targets=("childhood_environment",),
+            prompt_version="childhood-environment/v3_2.md",
+        )
+        payload = {
+            "childhood_environment": {
+                "family_structure_and_stability": "stable",
+                "ordinary_childhood_scenes": [{"age": 7, "setting": "home", "scene": "sorted notes"}],
+            }
+        }
+        normalized = _normalize_sections_payload(payload, [section])
+        self.assertEqual(
+            normalized,
+            {
+                "childhood_environment": {
+                    "childhood_environment": payload["childhood_environment"],
+                }
+            },
+        )
 
     def test_direct_generation_writes_v3_2_with_provenance_and_hobbies(self) -> None:
         adapter = FixtureSynthesisAdapter()
@@ -329,6 +376,25 @@ class PersonaV32Test(unittest.TestCase):
             adapter._write_cached_result(cache_path, request_hash, empty)
             _, _, cached = adapter._cached_result(request, [sections[0].name])
             self.assertIsNone(cached)
+
+    def test_section_batched_adapter_retries_incomplete_batch_result(self) -> None:
+        fixture = FlakyBatchFixtureAdapter()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            adapter = SectionBatchedV32SynthesisAdapter(
+                fixture,
+                batch_size=1,
+                cache_dir=root / "cache",
+                max_batch_attempts=2,
+            )
+            paths = generate_v3_2_personas(
+                persona_ids=["su_0043"],
+                output_dir=root,
+                adapter=adapter,
+                random_seed_offset=43,
+            )
+            self.assertTrue(validate_v3_2_persona_folder(paths[0])["valid"])
+            self.assertGreater(len(fixture.calls), 9)
 
     def test_section_batched_adapter_emits_progress_messages(self) -> None:
         fixture = FixtureSynthesisAdapter()
