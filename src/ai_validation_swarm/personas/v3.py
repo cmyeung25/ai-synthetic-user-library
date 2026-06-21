@@ -121,6 +121,37 @@ def _list_of_strings(value: Any) -> list[str]:
     return [str(value)]
 
 
+def _flatten_text_parts(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, (int, float, bool)):
+        return [str(value)]
+    if isinstance(value, list):
+        parts: list[str] = []
+        for item in value:
+            parts.extend(_flatten_text_parts(item))
+        return parts
+    if isinstance(value, dict):
+        parts: list[str] = []
+        for key in sorted(value):
+            child_parts = _flatten_text_parts(value[key])
+            if not child_parts:
+                continue
+            label = key.replace("_", " ")
+            if len(child_parts) == 1:
+                parts.append(f"{label}: {child_parts[0]}")
+            else:
+                parts.append(f"{label}: {'; '.join(child_parts)}")
+        return parts
+    return [str(value)]
+
+
+def _stringify_text_field(value: Any, separator: str = " ") -> str:
+    return separator.join(part.strip() for part in _flatten_text_parts(value) if str(part).strip())
+
+
 def _version_dir(base_dir: Path, persona_id: str, version: str) -> Path:
     return base_dir / persona_id / version
 
@@ -1333,7 +1364,7 @@ def _dimension_text(persona: PersonaSkill, dimension: str) -> str:
             + persona.profile.values.get("fears", [])
         )
     if dimension == "life_arc_similarity":
-        return str(persona.profile.canonical_biography.get("life_arc_summary", ""))
+        return _stringify_text_field(persona.profile.canonical_biography.get("life_arc_summary", ""))
     if dimension == "formative_event_similarity":
         return " ".join(
             chapter.get("specific_scene", "")
@@ -1376,13 +1407,13 @@ def _dimension_text(persona: PersonaSkill, dimension: str) -> str:
         return json.dumps(persona.profile.sensitive_scenario_reactions, ensure_ascii=False, sort_keys=True)
     if dimension == "phrase_similarity":
         return (
-            persona.profile.canonical_biography.get("life_arc_summary", "")
+            _stringify_text_field(persona.profile.canonical_biography.get("life_arc_summary", ""))
             + " "
             + persona.profile.persona_voiceprint.get("example_hard_rejection", "")
             + " "
             + persona.profile.persona_voiceprint.get("example_near_purchase_question", "")
             + " "
-            + persona.profile.product_reaction_rules.get("difference_between_curiosity_and_purchase", "")
+            + _stringify_text_field(persona.profile.product_reaction_rules.get("difference_between_curiosity_and_purchase", ""))
         )
     raise KeyError(dimension)
 

@@ -284,12 +284,29 @@ QUALITY_FINDING_SCHEMA: dict[str, Any] = {
     },
 }
 
+QUALITY_IMPROVEMENT_HINTS_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "next_interview_focus",
+        "coverage_gap_actions",
+        "prompt_adjustments",
+        "turn_budget_guidance",
+    ],
+    "properties": {
+        "next_interview_focus": {"type": "array", "items": {"type": "string"}},
+        "coverage_gap_actions": {"type": "array", "items": {"type": "string"}},
+        "prompt_adjustments": {"type": "array", "items": {"type": "string"}},
+        "turn_budget_guidance": {"type": "string"},
+    },
+}
+
 FACILITATOR_QUALITY_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
     "required": [
         "overall_verdict", "scores", "checks", "strengths", "findings",
-        "required_improvements", "human_review_needed", "synthetic_only_disclaimer",
+        "required_improvements", "improvement_hints", "human_review_needed", "synthetic_only_disclaimer",
     ],
     "properties": {
         "overall_verdict": {"type": "string", "enum": ["pass", "warn", "fail"]},
@@ -336,6 +353,7 @@ FACILITATOR_QUALITY_SCHEMA: dict[str, Any] = {
         "strengths": {"type": "array", "items": {"type": "string"}},
         "findings": {"type": "array", "items": QUALITY_FINDING_SCHEMA},
         "required_improvements": {"type": "array", "items": {"type": "string"}},
+        "improvement_hints": QUALITY_IMPROVEMENT_HINTS_SCHEMA,
         "human_review_needed": {"type": "boolean"},
         "synthetic_only_disclaimer": {"type": "string"},
     },
@@ -390,6 +408,9 @@ def validate_quality_evaluation(payload: dict[str, Any]) -> None:
         raise ValueError("Facilitator quality evaluation has an invalid verdict or scores object.")
     if not isinstance(findings, list) or not isinstance(improvements, list):
         raise ValueError("Facilitator quality evaluation findings and improvements must be lists.")
+    hints = payload.get("improvement_hints")
+    if not isinstance(hints, dict):
+        raise ValueError("Facilitator quality evaluation improvement_hints must be an object.")
     required_scores = set(FACILITATOR_QUALITY_SCHEMA["properties"]["scores"]["required"])
     missing_scores = required_scores - set(scores)
     checks = payload.get("checks")
@@ -414,6 +435,13 @@ def validate_quality_evaluation(payload: dict[str, Any]) -> None:
     score_values = [value for value in scores.values() if isinstance(value, int)]
     if findings and score_values and all(value == 5 for value in score_values):
         raise ValueError("Quality evaluation cannot assign all perfect scores when findings exist.")
+    hint_lists = [
+        hints.get("next_interview_focus", []),
+        hints.get("coverage_gap_actions", []),
+        hints.get("prompt_adjustments", []),
+    ]
+    if verdict != "pass" and not any(isinstance(item, list) and item for item in hint_lists):
+        raise ValueError("Warn or fail quality evaluations require at least one actionable improvement hint.")
 
 
 def validate_hypothesis_assessment(payload: dict[str, Any]) -> None:

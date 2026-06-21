@@ -240,6 +240,7 @@ class OpenAIV32SynthesisAdapter:
                 "reasoning_effort": self.config.model_reasoning_effort,
                 "transport": self.config.transport,
                 "auth_source": self.config.auth_source,
+                "transport_metadata": copy.deepcopy(self.client.last_transport_metadata),
             },
         )
 

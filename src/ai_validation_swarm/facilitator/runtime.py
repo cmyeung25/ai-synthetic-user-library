@@ -19,6 +19,28 @@ SYNTHESIS_PROMPT_VERSION = "facilitator-synthesis/v2"
 HYPOTHESIS_EVIDENCE_JUDGE_PROMPT_VERSION = "hypothesis-evidence-judge/v1"
 CONCEPT_SYNTHESIS_PROMPT_VERSION = "concept-synthesis/v1"
 
+CONCEPT_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "recent_behaviour",
+    "current_workaround",
+    "concept_reaction",
+    "trust_boundary",
+    "payment_conditions",
+    "retention_repeat_use",
+    "founder_assumption_check",
+)
+ROOT_CAUSE_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "recent_behaviour",
+    "participant_cause",
+    "consequence",
+)
+HYPOTHESIS_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "target_behaviour",
+    "participant_cause",
+    "consequence",
+    "hypothesis_condition",
+    "alternative_condition",
+)
+
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8").strip()
@@ -56,11 +78,16 @@ class FacilitatedInterviewRuntime:
         concept_label: str = "",
         output_language: str = "Traditional Chinese",
         max_turns: int = 10,
+        soft_turn_limit: int | None = None,
+        hard_turn_limit: int | None = None,
     ) -> Path:
         if not research_goal.strip():
             raise ValueError("Research goal cannot be empty.")
-        if max_turns < 1:
-            raise ValueError("max_turns must be at least 1.")
+        soft_limit, hard_limit = self._resolve_turn_limits(
+            max_turns=max_turns,
+            soft_turn_limit=soft_turn_limit,
+            hard_turn_limit=hard_turn_limit,
+        )
         mode = self._validate_interview_brief(interview_mode, hypothesis)
         concept = load_concept_protocol(concept_protocol, label=concept_label) if mode == "concept_validation" else None
 
@@ -98,8 +125,11 @@ class FacilitatedInterviewRuntime:
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
             persona_conversation_session_id=persona_session.session_id,
-            max_turns=max_turns,
+            max_turns=hard_limit,
+            soft_turn_limit=soft_limit,
+            hard_turn_limit=hard_limit,
         )
+        self._update_coverage_status(session)
         self._save(session, interview_folder)
 
         facilitator_system = self._facilitator_system_prompt(session)
@@ -109,7 +139,7 @@ class FacilitatedInterviewRuntime:
         )
         decision = self._revise_non_episodic_validation_question(session, decision, facilitator_system)
 
-        while len(session.exchanges) < max_turns:
+        while len(session.exchanges) < session.hard_turn_limit:
             self._record_decision(session, decision)
             if decision.should_end:
                 self._mark_latest_decision_status(session, "ended_interview")
@@ -139,11 +169,11 @@ class FacilitatedInterviewRuntime:
             session.exchanges.append(exchange)
             self._mark_latest_decision_status(session, "asked")
             session.persona_provider_session_id = persona_session.provider_session_id
+            self._update_coverage_status(session)
             session.updated_at = utc_now_iso()
             self._save(session, interview_folder)
 
-            if len(session.exchanges) >= max_turns:
-                session.stop_reason = "safety_turn_limit_reached"
+            if self._should_finalize_after_exchange(session):
                 break
 
             decision = self.facilitator_provider.next_turn(
@@ -182,6 +212,89 @@ class FacilitatedInterviewRuntime:
         write_json(interview_folder / "insight_report.json", synthesis)
         (interview_folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
         return interview_folder
+
+    @staticmethod
+    def _resolve_turn_limits(
+        *,
+        max_turns: int = 10,
+        soft_turn_limit: int | None = None,
+        hard_turn_limit: int | None = None,
+    ) -> tuple[int, int]:
+        soft_limit = max_turns if soft_turn_limit is None else soft_turn_limit
+        hard_limit = max_turns if hard_turn_limit is None else hard_turn_limit
+        if soft_limit < 1:
+            raise ValueError("soft_turn_limit must be at least 1.")
+        if hard_limit < 1:
+            raise ValueError("hard_turn_limit must be at least 1.")
+        if soft_limit > hard_limit:
+            raise ValueError("soft_turn_limit cannot exceed hard_turn_limit.")
+        return soft_limit, hard_limit
+
+    @staticmethod
+    def _coverage_requirements(interview_mode: str) -> tuple[str, ...]:
+        if interview_mode == "concept_validation":
+            return CONCEPT_VALIDATION_COVERAGE_REQUIREMENTS
+        if interview_mode == "validate_hypothesis":
+            return HYPOTHESIS_VALIDATION_COVERAGE_REQUIREMENTS
+        return ROOT_CAUSE_COVERAGE_REQUIREMENTS
+
+    @staticmethod
+    def _update_coverage_status(session: InterviewSession) -> None:
+        requirements = FacilitatedInterviewRuntime._coverage_requirements(session.interview_mode)
+        covered = {item: False for item in requirements}
+        for exchange in session.exchanges:
+            basis = FacilitatedInterviewRuntime._effective_question_basis(
+                exchange.facilitator_question,
+                exchange.question_evidence_basis,
+            )
+            phase = exchange.facilitator_phase.casefold()
+            target = (exchange.question_evidence_target or "context").casefold()
+            if "recent_behaviour" in covered and ("recent" in phase or "event" in phase or "warm" in phase):
+                covered["recent_behaviour"] = True
+            if "current_workaround" in covered and ("workflow" in phase or "workaround" in phase or "current" in phase):
+                covered["current_workaround"] = True
+            if "concept_reaction" in covered and ("concept" in phase or "scenario" in phase or "reaction" in phase or "fit" in phase):
+                covered["concept_reaction"] = True
+            if "trust_boundary" in covered and ("trust" in phase or "privacy" in phase or "data" in phase):
+                covered["trust_boundary"] = True
+            if "payment_conditions" in covered and ("pricing" in phase or "payment" in phase or "booking" in phase):
+                covered["payment_conditions"] = True
+            if "retention_repeat_use" in covered and ("retention" in phase or "repeat" in phase or "month" in phase):
+                covered["retention_repeat_use"] = True
+            if "founder_assumption_check" in covered and ("founder" in phase or "assumption" in phase or "closure" in phase):
+                covered["founder_assumption_check"] = True
+            if "target_behaviour" in covered and (target == "target_behaviour" or basis == "current_event"):
+                covered["target_behaviour"] = True
+            if "participant_cause" in covered and (target == "participant_cause" or "cause" in phase or "root_cause" in phase):
+                covered["participant_cause"] = True
+            if "consequence" in covered and (target == "consequence" or "consequence" in phase):
+                covered["consequence"] = True
+            if "hypothesis_condition" in covered and target == "hypothesis_condition":
+                covered["hypothesis_condition"] = True
+            if "alternative_condition" in covered and (target == "alternative_condition" or "counterexample" in phase or "contrast" in phase):
+                covered["alternative_condition"] = True
+        session.coverage_status = {
+            "requirements": list(requirements),
+            "covered": {key: bool(covered.get(key, False)) for key in requirements},
+            "missing": [key for key in requirements if not covered.get(key, False)],
+            "coverage_complete": all(covered.get(key, False) for key in requirements),
+            "soft_limit_reached": len(session.exchanges) >= session.soft_turn_limit,
+            "hard_limit_reached": len(session.exchanges) >= session.hard_turn_limit,
+            "exchange_count": len(session.exchanges),
+        }
+
+    @staticmethod
+    def _should_finalize_after_exchange(session: InterviewSession) -> bool:
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+        if len(session.exchanges) >= session.hard_turn_limit:
+            session.stop_reason = "hard_turn_limit_reached"
+            return True
+        if len(session.exchanges) < session.soft_turn_limit:
+            return False
+        if session.coverage_status.get("coverage_complete"):
+            session.stop_reason = "soft_turn_limit_with_required_coverage_met"
+            return True
+        return False
 
     @staticmethod
     def _record_decision(session: InterviewSession, decision: FacilitatorDecision) -> None:
@@ -339,6 +452,9 @@ class FacilitatedInterviewRuntime:
             f"DISCLOSED PRODUCT CONTEXT:\n{session.product_context or '(none; remain in problem discovery)'}\n\n"
             f"OUTPUT LANGUAGE:\n{session.output_language}\n\n"
             f"CONCEPT LABEL:\n{session.concept_label or '(none)'}\n\n"
+            f"TURN POLICY:\nsoft={session.soft_turn_limit}, hard={session.hard_turn_limit}\n\n"
+            "REQUIRED COVERAGE:\n"
+            f"{json.dumps(session.coverage_status.get('requirements', []), ensure_ascii=False, separators=(',', ':'))}\n\n"
             "No interview transcript exists yet. Choose and return the first interview question."
         )
 
@@ -349,6 +465,8 @@ class FacilitatedInterviewRuntime:
             f"HYPOTHESIS TO TEST: {session.hypothesis or '(none)'}\n"
             f"OUTPUT LANGUAGE: {session.output_language}\n\n"
             f"CONCEPT LABEL: {session.concept_label or '(none)'}\n\n"
+            "COVERAGE STATUS:\n"
+            f"{json.dumps(session.coverage_status, ensure_ascii=False, separators=(',', ':'))}\n\n"
             "INTERVIEW TRANSCRIPT TO DATE:\n"
             f"{FacilitatedInterviewRuntime._plain_transcript(session)}\n\n"
             "Use the transcript to choose the next question or end the interview."
@@ -367,6 +485,8 @@ class FacilitatedInterviewRuntime:
             f"OUTPUT LANGUAGE:\n{session.output_language}\n\n"
             f"CONCEPT LABEL:\n{session.concept_label or '(none)'}\n\n"
             f"STOP REASON:\n{session.stop_reason or 'facilitator decision'}\n\n"
+            "COVERAGE STATUS:\n"
+            f"{json.dumps(session.coverage_status, ensure_ascii=False, separators=(',', ':'))}\n\n"
             f"TRANSCRIPT:\n{FacilitatedInterviewRuntime._plain_transcript(session)}\n\n"
             f"FACILITATOR EVIDENCE TRACE:\n{trace}\n\n"
             "INDEPENDENT HYPOTHESIS EVIDENCE JUDGMENT:\n"
@@ -506,6 +626,9 @@ class FacilitatedInterviewRuntime:
             *( [f"Concept: {session.concept_label}"] if session.concept_label else [] ),
             "",
             f"Research goal: {session.research_goal}", "",
+            f"Turn policy: soft {session.soft_turn_limit}, hard {session.hard_turn_limit}",
+            *( [f"Coverage complete: {session.coverage_status.get('coverage_complete', False)}"] if session.coverage_status else [] ),
+            "",
         ]
         for exchange in session.exchanges:
             lines.extend([

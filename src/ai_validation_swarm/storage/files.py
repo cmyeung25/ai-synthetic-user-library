@@ -57,7 +57,7 @@ def load_persona(folder: Path) -> PersonaSkill:
 def resolve_persona_version_folder(folder: Path) -> Path:
     if (folder / "profile.json").exists():
         return folder
-    for version in ("v3_3", "v3_2", "v3_1_2", "v3_1_1", "v3_1", "v3", "v2"):
+    for version in ("v4", "v3_3", "v3_2", "v3_1_2", "v3_1_1", "v3_1", "v3", "v2"):
         candidate = folder / version
         if (candidate / "profile.json").exists():
             return candidate

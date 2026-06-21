@@ -1,0 +1,130 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 3,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview starts with a concrete recent event and current workaround before concept introduction, which is appropriate for `concept_validation` (`exchange_1` to `exchange_3`).",
+    "Most asked questions keep one conversational focus and avoid analytical jargon in participant-facing language.",
+    "The facilitator distinguishes several concept dimensions reasonably well: trust/info needs (`exchange_5`), sharing/coordination (`exchange_6`), retention (`exchange_7`), recommendation boundaries (`exchange_8`), and pricing acceptance (`exchange_9`).",
+    "The synthesis preserves some disconfirming problem evidence, especially that discovery itself is not the main pain point (`exchange_10.persona`)."
+  ],
+  "findings": [
+    {
+      "category": "neutrality",
+      "severity": "medium",
+      "observation": "The concept is introduced with a bundled value proposition that presumes benefit: '一次過睇附近活動、篩時間地點價錢、直接訂同付款'. This is more than neutral exposure and invites feature selection from researcher-supplied benefits rather than an open reaction to a minimally described concept.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "FACILITATOR TRACE[3]"
+      ],
+      "recommendation": "Introduce the concept with a leaner description, then ask what they think it would change in their process before asking which part is most useful."
+    },
+    {
+      "category": "probing_quality",
+      "severity": "medium",
+      "observation": "Several later questions are still useful but become somewhat questionnaire-like after concept introduction, moving feature-by-feature through trust, sharing, retention, recommendations, pricing, and founder assumptions without adapting based on the strongest observed issue: coordination and payment risk in the recent event.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_6.facilitator",
+        "exchange_7.facilitator",
+        "exchange_8.facilitator",
+        "exchange_9.facilitator",
+        "exchange_10.facilitator",
+        "FACILITATOR TRACE[4]",
+        "FACILITATOR TRACE[5]",
+        "FACILITATOR TRACE[6]",
+        "FACILITATOR TRACE[7]",
+        "FACILITATOR TRACE[8]",
+        "FACILITATOR TRACE[9]"
+      ],
+      "recommendation": "After the first strong signal in `exchange_1` and `exchange_3`, spend one more adaptive probe on the current workaround breakdown before covering additional concept assumptions."
+    },
+    {
+      "category": "evidence_discipline",
+      "severity": "high",
+      "observation": "The synthesis upgrades hypothetical concept reactions into supported assumption claims. For example, '即時名額／即時確認會增加信任' is marked `partially_supported`, but the cited evidence only shows hypothetical desire for faster coordination and direct booking, not observed trust effects from real-time inventory/confirmation. Likewise, pricing, retention, recommendation, and sharing conclusions rely heavily on hypothetical answers rather than observed behavior.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "exchange_9.persona",
+        "SYNTHESIS.assumption_validation[3]",
+        "SYNTHESIS.pricing_signal",
+        "SYNTHESIS.retention_risk",
+        "SYNTHESIS.first_value_requirement"
+      ],
+      "recommendation": "Downgrade these claims to stated preferences or hypotheses-to-test, and label them explicitly as hypothetical rather than supported behavioral evidence."
+    },
+    {
+      "category": "synthesis_fidelity",
+      "severity": "high",
+      "observation": "The report overstates concept validation breadth for a single synthetic interview. Items such as `workflow_effect: replaces_workflow`, multiple `supported` assumption validations, and a concrete product experiment direction go beyond what one simulated participant can justify, especially when much of the evidence is concept-response rather than observed adoption behavior.",
+      "evidence_refs": [
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.assumption_validation",
+        "SYNTHESIS.next_experiment",
+        "SYNTHESIS.synthetic_only_disclaimer"
+      ],
+      "recommendation": "Constrain outputs to bounded learnings from this persona only. Avoid product-shaping statements that imply generalizable workflow replacement or broad assumption validation."
+    },
+    {
+      "category": "domain_fit",
+      "severity": "medium",
+      "observation": "The interview does identify changed action bottlenecks in group coordination, but the synthesis still treats several adjacent feature areas as validated domain requirements. Recommendation logic, service-fee acceptance, and retention conditions were not observed as changed actions; they were elicited as forecasts about a proposed product.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_8.persona",
+        "exchange_9.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.trust_boundary",
+        "SYNTHESIS.pricing_signal",
+        "SYNTHESIS.retention_risk"
+      ],
+      "recommendation": "Separate actual changed-action evidence from adjacent feature opinions. Keep the domain-fit core centered on observed coordination, commitment, and payment-risk behavior."
+    },
+    {
+      "category": "evidence_reference_quality",
+      "severity": "medium",
+      "observation": "Most references point to the right exchange, but several synthesis claims are broader than their cited material. Example: `save 或 share 容易造成假陽性興趣` is marked `supported`, yet `exchange_1.persona` does not discuss save/share false positives directly; it discusses waiting for replies and payment hesitation. The conclusion is plausible but not exact-semantic support.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.assumption_validation[5]"
+      ],
+      "recommendation": "Tighten claims to the wording actually evidenced, or add a participant-facing probe that directly distinguishes passive sharing from real commitment."
+    }
+  ],
+  "required_improvements": [
+    "Relabel hypothetical concept reactions as hypothetical or stated preferences throughout the synthesis instead of treating them as supported behavioral evidence.",
+    "Reduce concept selling in the introduction question and ask one open process-change question before feature-specific probes.",
+    "Keep domain conclusions bounded to observed actions in the recent event: discovery source, comparison behavior, coordination delay, and payment hesitation.",
+    "Avoid broad product outputs such as workflow replacement, retention confidence, or validated assumption sets from a single synthetic concept interview.",
+    "Strengthen transcript-to-claim discipline by ensuring each strong synthesis statement has an exact matching participant quote or narrowing the claim."
+  ],
+  "human_review_needed": true,
+  "synthetic_only_disclaimer": "This audit evaluates a synthetic interview artifact, not a real participant session. Findings address methodological quality and evidence discipline within the simulation and should not be treated as market evidence."
+}

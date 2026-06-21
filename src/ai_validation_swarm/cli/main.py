@@ -195,6 +195,25 @@ def _resolve_export_format(output: Path, requested_format: str | None) -> str:
     return "markdown"
 
 
+def _resolve_interview_turn_policy(
+    args: argparse.Namespace,
+    *,
+    default_soft: int,
+    default_hard: int,
+) -> tuple[int, int]:
+    soft = getattr(args, "soft_turn_limit", None)
+    hard = getattr(args, "hard_turn_limit", None)
+    max_turns = getattr(args, "max_turns", None)
+    if soft is None and hard is None and max_turns is not None:
+        soft = max_turns
+        hard = max_turns
+    if soft is None:
+        soft = default_soft
+    if hard is None:
+        hard = max(hard or 0, default_hard, soft)
+    return int(soft), int(hard)
+
+
 def _select_personas_by_id(
     personas: list,
     *,
@@ -460,7 +479,9 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
     interview_cmd.add_argument("--model", default="gpt-5.4")
     interview_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
-    interview_cmd.add_argument("--max-turns", type=int, default=10)
+    interview_cmd.add_argument("--max-turns", type=int)
+    interview_cmd.add_argument("--soft-turn-limit", type=int)
+    interview_cmd.add_argument("--hard-turn-limit", type=int)
 
     observer_cmd = subparsers.add_parser("observe-facilitated-interview")
     observer_cmd.add_argument("--persona-id")
@@ -477,7 +498,9 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
     observer_cmd.add_argument("--model", default="gpt-5.4")
     observer_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
-    observer_cmd.add_argument("--max-turns", type=int, default=10)
+    observer_cmd.add_argument("--max-turns", type=int)
+    observer_cmd.add_argument("--soft-turn-limit", type=int)
+    observer_cmd.add_argument("--hard-turn-limit", type=int)
     observer_cmd.add_argument("--action", action="append", dest="actions")
 
     concept_panel_generic_cmd = subparsers.add_parser("run-concept-panel")
@@ -1531,6 +1554,7 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
         label = "Facilitator" if role == "facilitator" else args.persona_id
         print(_console_safe(f"\n{label}: {message}"))
 
+    soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=10, default_hard=12)
     runtime = FacilitatedInterviewRuntime(
         data_dir=args.data_dir,
         session_dir=args.session_dir,
@@ -1548,7 +1572,9 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
         concept_protocol=args.concept_protocol,
         concept_label=args.concept_label,
         output_language=args.language,
-        max_turns=args.max_turns,
+        max_turns=hard_limit,
+        soft_turn_limit=soft_limit,
+        hard_turn_limit=hard_limit,
     )
     print(f"\nInterview completed: {output}")
     print(f"Transcript: {output / 'transcript.md'}")
@@ -1557,9 +1583,16 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
 
 
 def _print_observer_state(session) -> None:
-    print(_console_safe(f"\nStatus: {session.status} | Exchanges: {len(session.exchanges)}/{session.max_turns}"))
+    print(_console_safe(
+        f"\nStatus: {session.status} | Exchanges: {len(session.exchanges)} | "
+        f"Soft/Hard: {session.soft_turn_limit}/{session.hard_turn_limit}"
+    ))
     if session.last_error:
         print(_console_safe(f"Failed operation: {session.failed_operation}\nError: {session.last_error}"))
+    coverage = getattr(session, "coverage_status", {}) or {}
+    if coverage:
+        missing = ", ".join(coverage.get("missing", [])) or "(none)"
+        print(_console_safe(f"Coverage complete: {coverage.get('coverage_complete', False)} | Missing: {missing}"))
     pending = session.pending_facilitator_decision
     if pending:
         print(_console_safe(f"Phase: {pending.get('interview_phase', '')}"))
@@ -1623,6 +1656,7 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
         persona_provider=persona_provider,
         quality_provider=quality_provider,
     )
+    soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=12, default_hard=16)
     if args.interview_id:
         folder, session = runtime.load(args.interview_id)
     else:
@@ -1635,7 +1669,9 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
             concept_protocol=args.concept_protocol,
             concept_label=args.concept_label,
             output_language=args.language,
-            max_turns=args.max_turns,
+            max_turns=hard_limit,
+            soft_turn_limit=soft_limit,
+            hard_turn_limit=hard_limit,
         )
     interview_id = session.interview_id
     print("Synthetic-user interview for AI pre-validation only; not human market evidence.")

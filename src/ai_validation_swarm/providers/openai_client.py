@@ -6,12 +6,13 @@ import subprocess
 import base64
 import shutil
 import tempfile
+import threading
 import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 
 class OpenAIProviderError(RuntimeError):
@@ -127,7 +128,7 @@ def inspect_openai_auth(config: OpenAIProviderConfig) -> dict[str, Any]:
         "codex_ignore_rules": config.codex_ignore_rules,
         "codex_cli_retries": config.codex_cli_retries,
         "codex_cli_retry_backoff_seconds": config.codex_cli_retry_backoff_seconds,
-        "codex_cli_output_mode": config.codex_cli_output_mode,
+        "codex_cli_output_mode": getattr(config, "codex_cli_output_mode", "auto"),
         "has_token": bool(config.api_key),
         "token_claim_keys": sorted(claims.keys()),
         "scopes": normalized_scopes,
@@ -138,7 +139,12 @@ def inspect_openai_auth(config: OpenAIProviderConfig) -> dict[str, Any]:
     }
 
 
-def load_openai_provider_config(*, prefer_codex_auth: bool = False, force_transport: str | None = None) -> OpenAIProviderConfig:
+def load_openai_provider_config(
+    *,
+    prefer_codex_auth: bool = False,
+    force_transport: str | None = None,
+    timeout_default: int | None = None,
+) -> OpenAIProviderConfig:
     auth_source = ""
     codex_auth_file = ""
     api_key = ""
@@ -184,14 +190,16 @@ def load_openai_provider_config(*, prefer_codex_auth: bool = False, force_transp
     if codex_home_mode not in {"global", "local"}:
         codex_home_mode = codex_home_mode_default
     codex_home_path = os.getenv("AI_VALIDATION_CODEX_HOME", "").strip() or os.getenv("CODEX_HOME", "").strip()
-    timeout_default = "240" if resolved_transport == "codex_cli" else "120"
+    resolved_timeout_default = timeout_default
+    if resolved_timeout_default is None:
+        resolved_timeout_default = 240 if resolved_transport == "codex_cli" else 120
     return OpenAIProviderConfig(
         api_key=api_key,
         model=os.getenv("AI_VALIDATION_OPENAI_MODEL", "gpt-5.4"),
         profile=os.getenv("AI_VALIDATION_OPENAI_PROFILE", "chatgpt-5.4-high"),
         model_reasoning_effort=os.getenv("AI_VALIDATION_OPENAI_REASONING_EFFORT", "high"),
         api_base=os.getenv("AI_VALIDATION_OPENAI_BASE_URL", "https://api.openai.com/v1"),
-        timeout_seconds=int(os.getenv("AI_VALIDATION_OPENAI_TIMEOUT_SECONDS", timeout_default)),
+        timeout_seconds=int(os.getenv("AI_VALIDATION_OPENAI_TIMEOUT_SECONDS", str(resolved_timeout_default))),
         auth_source=auth_source or "unknown",
         transport=resolved_transport,
         workspace_root=os.getenv("AI_VALIDATION_WORKSPACE_ROOT", os.getcwd()),
@@ -398,10 +406,85 @@ def payload_satisfies_required_keys(payload: dict[str, Any], schema: dict[str, A
     required = schema.get("required")
     if not isinstance(required, list) or not required:
         return True
+    missing: list[str] = []
     for key in required:
-        if not isinstance(key, str) or key not in payload:
-            return False
-    return True
+        if not isinstance(key, str):
+            continue
+        if key not in payload:
+            missing.append(key)
+    if not missing:
+        return True
+    # Some Codex CLI turns return a valid flat persona payload without the
+    # outer "sections" wrapper, while still including the other required
+    # top-level contract keys. Let the persona-layer normalizer handle it.
+    if missing == ["sections"]:
+        other_required = [key for key in required if isinstance(key, str) and key != "sections"]
+        if all(key in payload for key in other_required) and any(key not in set(other_required) for key in payload):
+            return True
+    return False
+
+
+def _estimate_token_count(text: str) -> int:
+    candidate = text.strip()
+    if not candidate:
+        return 0
+    return max(1, len(candidate) // 4)
+
+
+def _normalize_usage_payload(payload: Any) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    normalized: dict[str, Any] = {}
+    for key in (
+        "input_tokens",
+        "output_tokens",
+        "total_tokens",
+        "reasoning_tokens",
+        "cached_tokens",
+    ):
+        value = payload.get(key)
+        if isinstance(value, int):
+            normalized[key] = value
+    if normalized:
+        normalized["source"] = "api"
+        return normalized
+    return None
+
+
+def _find_usage_in_jsonish(payload: Any) -> dict[str, Any] | None:
+    if isinstance(payload, dict):
+        direct = _normalize_usage_payload(payload.get("usage"))
+        if direct is not None:
+            return direct
+        direct = _normalize_usage_payload(payload)
+        if direct is not None:
+            return direct
+        for value in payload.values():
+            nested = _find_usage_in_jsonish(value)
+            if nested is not None:
+                return nested
+    elif isinstance(payload, list):
+        for item in payload:
+            nested = _find_usage_in_jsonish(item)
+            if nested is not None:
+                return nested
+    return None
+
+
+def extract_usage_from_jsonl_output(text: str) -> dict[str, Any] | None:
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        usage = _find_usage_in_jsonish(payload)
+        if usage is not None:
+            usage["source"] = "codex_jsonl"
+            return usage
+    return None
 
 
 def extract_output_text(payload: dict[str, Any]) -> str:
@@ -475,9 +558,21 @@ def extract_codex_session_id(jsonl_output: str) -> str:
 
 
 class OpenAIResponsesClient:
-    def __init__(self, config: OpenAIProviderConfig) -> None:
+    def __init__(self, config: OpenAIProviderConfig, debug_writer: Callable[[str], None] | None = None) -> None:
         self.config = config
         self.last_transport_metadata: dict[str, Any] = {}
+        self.debug_writer = debug_writer
+
+    def _debug(self, message: str) -> None:
+        if self.debug_writer is not None:
+            self.debug_writer(message)
+
+    def _debug_block(self, label: str, text: str) -> None:
+        if self.debug_writer is None:
+            return
+        self.debug_writer(f"[llm] {label} >>>")
+        self.debug_writer(text)
+        self.debug_writer(f"[llm] {label} <<<")
 
     def create_json_response(
         self,
@@ -490,6 +585,10 @@ class OpenAIResponsesClient:
         use_transport_output_schema: bool = True,
     ) -> dict[str, Any]:
         self.last_transport_metadata = {}
+        self._debug(
+            f"[llm] create_json_response transport={self.config.transport} model={self.config.model} "
+            f"reasoning={self.config.model_reasoning_effort} persist_session={persist_codex_session}"
+        )
         body = {
             "model": self.config.model,
             "input": [
@@ -515,6 +614,10 @@ class OpenAIResponsesClient:
             payload = self._create_response_via_node(body)
         else:
             payload = self._create_response_via_python(body)
+        usage = _find_usage_in_jsonish(payload)
+        if usage is not None:
+            self.last_transport_metadata["usage"] = usage
+            self._debug(f"[llm] usage {json.dumps(usage, ensure_ascii=False)}")
 
         output_text = extract_output_text(payload)
         return extract_json_object(output_text)
@@ -537,8 +640,15 @@ class OpenAIResponsesClient:
         with tempfile.TemporaryDirectory(prefix="codex-cli-", dir=tmp_root) as temp_dir:
             env = os.environ.copy()
             env["CODEX_HOME"] = str(codex_home)
+            self._debug(
+                f"[llm] codex_cli workspace_root={workspace_root} codex_home={codex_home} "
+                f"timeout={self.config.timeout_seconds}s output_mode={self.config.codex_cli_output_mode}"
+            )
+            self._debug_block("system_prompt", system_prompt)
+            self._debug_block("user_prompt", user_prompt)
             last_error: OpenAIProviderError | None = None
             for strategy in _codex_cli_strategies(self.config, persist_session):
+                self._debug(f"[llm] codex_cli strategy={strategy} persist_session={persist_session}")
                 transport_requirements = (
                     [
                         "Transport requirement:",
@@ -564,6 +674,7 @@ class OpenAIResponsesClient:
                 wrapped_prompt = "\n".join(
                     [system_prompt.strip(), "", user_prompt.strip(), "", *transport_requirements]
                 ).strip()
+                self._debug_block("wrapped_prompt", wrapped_prompt)
 
                 schema_path = Path(temp_dir) / f"schema-{strategy}.json"
                 output_path = Path(temp_dir) / f"output-{strategy}.json"
@@ -575,6 +686,10 @@ class OpenAIResponsesClient:
                     else CODEX_JSON_WRAPPER_SCHEMA
                 )
                 schema_path.write_text(json.dumps(transport_schema, ensure_ascii=False), encoding="utf-8")
+                self._debug_block(
+                    "output_schema",
+                    json.dumps(transport_schema, ensure_ascii=False, indent=2),
+                )
 
                 command = [codex_cli_path, "exec"]
                 if codex_session_id:
@@ -610,12 +725,17 @@ class OpenAIResponsesClient:
                 if codex_session_id:
                     command.append(codex_session_id)
                 command.append(wrapped_prompt)
+                self._debug(f"[llm] codex_cli command={' '.join(command[:-1])}")
 
                 attempts = max(1, int(self.config.codex_cli_retries) + 1)
                 failure_details = ""
                 stdout = ""
                 completed: subprocess.CompletedProcess[str] | None = None
                 for attempt_index in range(attempts):
+                    self._debug(
+                        f"[llm] codex_cli subprocess_start strategy={strategy} attempt={attempt_index + 1}/{attempts}"
+                    )
+                    started_at = time.perf_counter()
                     try:
                         completed = subprocess.run(
                             command,
@@ -628,19 +748,40 @@ class OpenAIResponsesClient:
                             env=env,
                         )
                     except subprocess.TimeoutExpired as exc:
+                        self._debug(
+                            f"[llm] codex_cli timeout strategy={strategy} attempt={attempt_index + 1}/{attempts} "
+                            f"after={int(exc.timeout)}s"
+                        )
                         raise OpenAIProviderError(
                             f"Codex CLI transport timed out after {int(exc.timeout)} seconds. "
                             "Try reducing prompt size, lowering workers, or increasing AI_VALIDATION_OPENAI_TIMEOUT_SECONDS."
                         ) from exc
                     except OSError as exc:
+                        self._debug(f"[llm] codex_cli start_error strategy={strategy} error={exc}")
                         raise OpenAIProviderError(f"Codex CLI transport failed to start: {exc}") from exc
 
+                    elapsed = time.perf_counter() - started_at
                     stdout = completed.stdout.strip()
                     stderr = completed.stderr.strip()
+                    self._debug(
+                        f"[llm] codex_cli subprocess_exit strategy={strategy} attempt={attempt_index + 1}/{attempts} "
+                        f"returncode={completed.returncode} elapsed={elapsed:.1f}s"
+                    )
+                    if stdout:
+                        self._debug_block("codex_cli.stdout", stdout)
+                        usage = extract_usage_from_jsonl_output(stdout)
+                        if usage is not None:
+                            self.last_transport_metadata["usage"] = usage
+                            self._debug(f"[llm] usage {json.dumps(usage, ensure_ascii=False)}")
+                    if stderr:
+                        self._debug_block("codex_cli.stderr", stderr)
                     if completed.returncode == 0:
                         break
 
                     failure_details = summarize_codex_failure(stdout, stderr)
+                    self._debug(
+                        f"[llm] codex_cli retryable_failure strategy={strategy} details={failure_details}"
+                    )
                     remaining_attempts = attempts - attempt_index - 1
                     if remaining_attempts <= 0 or not is_retryable_codex_failure(failure_details):
                         last_error = OpenAIProviderError(f"Codex CLI transport failed: {failure_details}")
@@ -655,18 +796,31 @@ class OpenAIResponsesClient:
                 if completed is None:
                     continue
                 if not output_path.exists():
+                    self._debug(f"[llm] codex_cli missing_output_file strategy={strategy} path={output_path}")
                     last_error = OpenAIProviderError(
                         "Codex CLI transport completed without writing the final message file."
                     )
                     continue
 
                 try:
-                    output_payload = extract_json_object(output_path.read_text(encoding="utf-8"))
+                    raw_output_text = output_path.read_text(encoding="utf-8")
+                    if "usage" not in self.last_transport_metadata:
+                        estimated_usage = {
+                            "input_tokens_estimated": _estimate_token_count(wrapped_prompt),
+                            "output_tokens_estimated": _estimate_token_count(raw_output_text),
+                            "total_tokens_estimated": _estimate_token_count(wrapped_prompt) + _estimate_token_count(raw_output_text),
+                            "source": "estimated_from_text",
+                        }
+                        self.last_transport_metadata["usage"] = estimated_usage
+                        self._debug(f"[llm] usage {json.dumps(estimated_usage, ensure_ascii=False)}")
+                    self._debug_block("codex_cli.output_file", raw_output_text)
+                    output_payload = extract_json_object(raw_output_text)
                     if persist_session:
                         resolved_session_id = extract_codex_session_id(stdout) or (codex_session_id or "")
                         if not resolved_session_id:
                             raise OpenAIProviderError("Codex CLI persistent transport completed without a thread id.")
                         self.last_transport_metadata["codex_session_id"] = resolved_session_id
+                        self._debug(f"[llm] codex_cli persist_success session_id={resolved_session_id}")
                         return output_payload
                     if strategy == "direct":
                         if set(output_payload.keys()) == {"json_payload_b64"}:
@@ -675,27 +829,44 @@ class OpenAIResponsesClient:
                                 raise OpenAIProviderError(
                                     "Codex CLI direct strategy returned JSON but it did not satisfy the required top-level output keys."
                                 )
+                            self._debug_block(
+                                "codex_cli.decoded_payload",
+                                json.dumps(decoded_payload, ensure_ascii=False, indent=2),
+                            )
                             return decoded_payload
                         payload_text = str(output_payload.get("json_payload", "")).strip()
+                        self._debug_block("codex_cli.json_payload_text", payload_text)
                         decoded_payload = extract_json_object(payload_text)
                         if not payload_satisfies_required_keys(decoded_payload, output_schema):
                             raise OpenAIProviderError(
                                 "Codex CLI direct strategy returned JSON but it did not satisfy the required top-level output keys."
                             )
+                        self._debug_block(
+                            "codex_cli.decoded_payload",
+                            json.dumps(decoded_payload, ensure_ascii=False, indent=2),
+                        )
                         return decoded_payload
                     payload_b64 = str(output_payload.get("json_payload_b64", "")).strip()
+                    self._debug_block("codex_cli.json_payload_b64", payload_b64)
                     decoded_payload = decode_codex_json_payload(payload_b64)
                     if not payload_satisfies_required_keys(decoded_payload, output_schema):
                         raise OpenAIProviderError(
                             "Codex CLI wrapper strategy returned JSON but it did not satisfy the required top-level output keys."
                         )
+                    self._debug_block(
+                        "codex_cli.decoded_payload",
+                        json.dumps(decoded_payload, ensure_ascii=False, indent=2),
+                    )
                     return decoded_payload
                 except OpenAIProviderError as exc:
+                    self._debug(f"[llm] codex_cli decode_error strategy={strategy} error={exc}")
                     last_error = exc
                     continue
 
             if last_error is not None:
+                self._debug(f"[llm] codex_cli final_error error={last_error}")
                 raise last_error
+            self._debug("[llm] codex_cli final_error no usable JSON payload")
             raise OpenAIProviderError("Codex CLI transport failed without producing a usable JSON payload.")
 
     def _create_response_via_python(self, body: dict[str, Any]) -> dict[str, Any]:
@@ -776,18 +947,63 @@ class OpenAIResponsesClient:
             "codex_auth_file": self.config.codex_auth_file,
             "codex_sdk_module_path": self.config.codex_sdk_module_path,
         }
-        completed = subprocess.run(
-            ["node", "--use-system-ca", str(helper_path)],
-            input=json.dumps(helper_input, ensure_ascii=False),
-            capture_output=True,
+        command = ["node", "--use-system-ca", str(helper_path)]
+        self._debug(f"[llm] codex_sdk subprocess_start command={' '.join(command)}")
+        started_at = time.perf_counter()
+        process = subprocess.Popen(
+            command,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
             encoding="utf-8",
-            timeout=self.config.timeout_seconds + 15,
-            check=False,
         )
-        stdout = completed.stdout.strip()
-        stderr = completed.stderr.strip()
-        if completed.returncode != 0:
+        stdout_parts: list[str] = []
+        stderr_parts: list[str] = []
+
+        def drain_stdout() -> None:
+            assert process.stdout is not None
+            for line in process.stdout:
+                stdout_parts.append(line)
+
+        def drain_stderr() -> None:
+            assert process.stderr is not None
+            for line in process.stderr:
+                stderr_parts.append(line)
+                self._debug(f"[llm] codex_sdk event {line.rstrip()}")
+
+        stdout_thread = threading.Thread(target=drain_stdout, daemon=True)
+        stderr_thread = threading.Thread(target=drain_stderr, daemon=True)
+        stdout_thread.start()
+        stderr_thread.start()
+        assert process.stdin is not None
+        process.stdin.write(json.dumps(helper_input, ensure_ascii=False))
+        process.stdin.close()
+        deadline = time.monotonic() + self.config.timeout_seconds + 15
+        next_heartbeat = time.monotonic() + 15
+        while process.poll() is None:
+            now = time.monotonic()
+            if now >= deadline:
+                process.kill()
+                process.wait()
+                raise OpenAIProviderError(
+                    f"Codex SDK transport timed out after {self.config.timeout_seconds + 15} seconds."
+                )
+            if now >= next_heartbeat:
+                self._debug(
+                    f"[llm] codex_sdk heartbeat elapsed={time.perf_counter() - started_at:.1f}s"
+                )
+                next_heartbeat = now + 15
+            time.sleep(0.2)
+        stdout_thread.join(timeout=2)
+        stderr_thread.join(timeout=2)
+        stdout = "".join(stdout_parts).strip()
+        stderr = "".join(stderr_parts).strip()
+        self._debug(
+            f"[llm] codex_sdk subprocess_exit returncode={process.returncode} "
+            f"elapsed={time.perf_counter() - started_at:.1f}s"
+        )
+        if process.returncode != 0:
             details = stderr or stdout or "unknown codex sdk transport error"
             raise OpenAIProviderError(f"Codex SDK transport failed: {details}")
 
@@ -798,5 +1014,12 @@ class OpenAIResponsesClient:
 
         if not isinstance(payload, dict):
             raise OpenAIProviderError("Codex SDK transport returned a non-object payload.")
+        usage = _normalize_usage_payload(payload.get("usage"))
+        if usage is not None:
+            usage["source"] = "codex_sdk"
+            self.last_transport_metadata["usage"] = usage
+            self._debug(f"[llm] usage {json.dumps(usage, ensure_ascii=False)}")
+        self.last_transport_metadata["sdk_module_path"] = str(payload.get("sdk_module_path", ""))
         final_response = str(payload.get("final_response", "")).strip()
+        self._debug_block("codex_sdk.final_response", final_response)
         return extract_json_object(final_response)

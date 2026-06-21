@@ -114,7 +114,9 @@ function resolveCodexSdkModule(workspaceRoot, explicitModulePath) {
 }
 
 async function runStructuredTurn({ workspace, system_prompt, user_prompt, output_schema, model, model_reasoning_effort, codex_auth_file, codex_sdk_module_path }) {
+  const emit = (event) => process.stderr.write(`${JSON.stringify({ ts: new Date().toISOString(), ...event })}\n`);
   const workspaceRoot = path.resolve(workspace || ".");
+  emit({ type: "transport.started", workspace: workspaceRoot, model, model_reasoning_effort });
   await ensureCodexHome(
     workspaceRoot,
     codex_auth_file,
@@ -123,6 +125,7 @@ async function runStructuredTurn({ workspace, system_prompt, user_prompt, output
   );
 
   const sdkModulePath = resolveCodexSdkModule(workspaceRoot, codex_sdk_module_path);
+  emit({ type: "sdk.resolved", sdk_module_path: sdkModulePath });
   const { Codex } = await import(pathToFileURL(sdkModulePath).href);
   const codex = new Codex();
   const thread = codex.startThread({
@@ -144,10 +147,14 @@ async function runStructuredTurn({ workspace, system_prompt, user_prompt, output
 
   const runOptions = output_schema ? { outputSchema: output_schema } : {};
   const { events } = await thread.runStreamed(prompt, runOptions);
+  emit({ type: "turn.started" });
 
   let finalResponse = "";
   let usage = null;
   for await (const event of events) {
+    if (["thread.started", "turn.started", "turn.completed", "turn.failed", "error"].includes(event.type)) {
+      emit({ type: "codex.event", event_type: event.type });
+    }
     if (event.type === "turn.failed") {
       throw new Error(event.error?.message || "Codex structured turn failed.");
     }
@@ -165,6 +172,8 @@ async function runStructuredTurn({ workspace, system_prompt, user_prompt, output
       finalResponse = event.item.text;
     }
   }
+
+  emit({ type: "transport.completed", has_final_response: Boolean(finalResponse), usage });
 
   process.stdout.write(JSON.stringify({
     final_response: finalResponse,

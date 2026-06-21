@@ -288,6 +288,35 @@ class OpenAIPersonaToolsTest(unittest.TestCase):
         self.assertEqual(config.codex_home_mode, "global")
         self.assertEqual(config.timeout_seconds, 240)
 
+    def test_load_openai_provider_config_honors_custom_timeout_default_when_env_unset(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            auth_path = Path(tmp) / "auth.json"
+            auth_path.write_text(
+                (
+                    "{"
+                    "\"auth_mode\":\"chatgpt\","
+                    "\"tokens\":{\"access_token\":\"codex_auth_token\"}"
+                    "}"
+                ),
+                encoding="utf-8",
+            )
+            with patch.dict(
+                os.environ,
+                {
+                    "AI_VALIDATION_CODEX_AUTH_FILE": str(auth_path),
+                },
+                clear=True,
+            ):
+                config = load_openai_provider_config(
+                    prefer_codex_auth=True,
+                    force_transport="codex_sdk_node",
+                    timeout_default=360,
+                )
+
+        self.assertEqual(config.timeout_seconds, 360)
+
     def test_is_retryable_codex_failure_matches_models_refresh_errors(self) -> None:
         self.assertTrue(
             is_retryable_codex_failure(

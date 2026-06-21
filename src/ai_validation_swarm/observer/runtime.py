@@ -56,11 +56,16 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         concept_label: str = "",
         output_language: str = "Traditional Chinese",
         max_turns: int = 10,
+        soft_turn_limit: int | None = None,
+        hard_turn_limit: int | None = None,
     ) -> tuple[Path, InterviewSession]:
         if not research_goal.strip():
             raise ValueError("Research goal cannot be empty.")
-        if max_turns < 1:
-            raise ValueError("max_turns must be at least 1.")
+        soft_limit, hard_limit = self._resolve_turn_limits(
+            max_turns=max_turns,
+            soft_turn_limit=soft_turn_limit,
+            hard_turn_limit=hard_turn_limit,
+        )
         mode = self._validate_interview_brief(interview_mode, hypothesis)
         concept = load_concept_protocol(concept_protocol, label=concept_label) if mode == "concept_validation" else None
 
@@ -100,9 +105,12 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             quality_provider=self.quality_provider.provider_name,
             quality_model=self.quality_provider.model_name,
             quality_prompt_version=QUALITY_PROMPT_VERSION,
-            max_turns=max_turns,
+            max_turns=hard_limit,
+            soft_turn_limit=soft_limit,
+            hard_turn_limit=hard_limit,
             status="requesting_facilitator",
         )
+        self._update_coverage_status(session)
         self._save_controlled(session, folder)
         self._request_facilitator(
             session,
@@ -486,11 +494,12 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             self._mark_latest_decision_status(session, "asked")
         session.persona_provider_session_id = persona_session.provider_session_id
         session.pending_facilitator_decision = {}
+        self._update_coverage_status(session)
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
 
-        if len(session.exchanges) >= session.max_turns:
-            return self.finalize(session.interview_id, stop_reason="safety_turn_limit_reached")
+        if self._should_finalize_after_exchange(session):
+            return self.finalize(session.interview_id, stop_reason=session.stop_reason)
         self._request_facilitator(
             session,
             folder,
@@ -580,6 +589,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             f"INTERVIEW MODE:\n{session.interview_mode}",
             f"HYPOTHESIS TO TEST:\n{session.hypothesis or '(none)'}",
             f"RESEARCH GOAL:\n{session.research_goal}",
+            "COVERAGE STATUS:\n" + json.dumps(session.coverage_status, ensure_ascii=False, separators=(",", ":")),
             f"TRANSCRIPT:\n{FacilitatedInterviewRuntime._plain_transcript(session)}",
             "FACILITATOR TRACE:\n" + json.dumps(
                 FacilitatedInterviewRuntime._audit_trace(session), ensure_ascii=False, separators=(",", ":")
@@ -607,4 +617,15 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         lines.extend(["", "## Required Improvements", ""])
         for item in quality.get("required_improvements", []):
             lines.append(f"- {item}")
+        hints = quality.get("improvement_hints", {})
+        if isinstance(hints, dict):
+            lines.extend(["", "## Improvement Hints", ""])
+            for item in hints.get("next_interview_focus", []):
+                lines.append(f"- Focus next: {item}")
+            for item in hints.get("coverage_gap_actions", []):
+                lines.append(f"- Close gap: {item}")
+            for item in hints.get("prompt_adjustments", []):
+                lines.append(f"- Prompt change: {item}")
+            if hints.get("turn_budget_guidance"):
+                lines.append(f"- Turn budget: {hints.get('turn_budget_guidance')}")
         return "\n".join(lines).rstrip() + "\n"

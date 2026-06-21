@@ -252,6 +252,8 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertEqual(session["interview_mode"], "explore_root_cause")
             self.assertEqual(session["facilitator_prompt_version"], "facilitator-interview/v2")
             self.assertEqual(session["stop_reason"], "Further probing would create synthetic precision.")
+            self.assertEqual(session["soft_turn_limit"], 5)
+            self.assertEqual(session["hard_turn_limit"], 5)
             self.assertEqual(session["facilitator_provider_session_id"], "facilitator-thread-1")
             self.assertEqual(session["persona_provider_session_id"], "persona-thread-1")
             self.assertEqual(
@@ -270,6 +272,7 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertNotIn(persona.profile.basic_identity["name"], all_facilitator_inputs)
             self.assertIn("exchange_1.persona", all_facilitator_inputs)
             self.assertIn("INTERVIEW MODE", all_facilitator_inputs)
+            self.assertIn("COVERAGE STATUS", all_facilitator_inputs)
 
     def test_hypothesis_validation_requires_and_propagates_hypothesis(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -531,6 +534,16 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "--hypothesis", "People recheck because ownership is unclear.",
         ])
         self.assertEqual(parsed.interview_mode, "validate_hypothesis")
+
+        parsed = parser.parse_args([
+            "observe-facilitated-interview",
+            "--persona-id", "su_0001",
+            "--research-goal", "Test",
+            "--soft-turn-limit", "12",
+            "--hard-turn-limit", "16",
+        ])
+        self.assertEqual(parsed.soft_turn_limit, 12)
+        self.assertEqual(parsed.hard_turn_limit, 16)
 
 
 if __name__ == "__main__":

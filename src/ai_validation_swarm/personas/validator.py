@@ -247,7 +247,7 @@ def validate_persona_artifact(persona: PersonaSkill) -> list[PersonaValidationIs
             {
                 "active_pain_points": "string_list",
                 "jobs_to_be_done": "string_list",
-                "willingness_to_pay": "string",
+                "willingness_to_pay": "string_or_object",
             },
         ),
         "sensitive_reality_layer": (

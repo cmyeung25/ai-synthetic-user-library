@@ -106,6 +106,12 @@ def quality_payload():
             "recommendation": "Move to a counterexample sooner.",
         }],
         "required_improvements": ["Ask for a counterexample before strengthening the root-cause hypothesis."],
+        "improvement_hints": {
+            "next_interview_focus": ["Ask for a concrete counterexample before closing."],
+            "coverage_gap_actions": ["Collect one explicit contrast event with a different outcome."],
+            "prompt_adjustments": ["Tell the facilitator to prefer counterexamples after one causal claim appears."],
+            "turn_budget_guidance": "Keep the current hard limit, but allow one extra turn after the soft limit when contrast evidence is missing.",
+        },
         "human_review_needed": True,
         "synthetic_only_disclaimer": "Synthetic interview quality review only.",
     }
@@ -287,6 +293,46 @@ class LoadedThenNeutralFacilitator(HypotheticalThenEpisodicFacilitator):
         ]
 
 
+class CoverageAwareFacilitator:
+    provider_name = "recorded-llm"
+    model_name = "coverage-aware/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            decision("Tell me about the last disrupted trip.", "recent_event", "critical_incident"),
+            decision("What did you think was causing the repeated checking in that moment?", "root_cause", "participant_cause_probe"),
+            decision("What consequence did that create for you or the other person?", "consequence", "consequence_probe"),
+            decision("What would you change next time?", "closure", "counterfactual_probe", should_end=True),
+        ]
+
+    def next_turn(self, **kwargs):
+        self.calls.append(kwargs)
+        return self.decisions.pop(0)
+
+    def synthesize(self, **kwargs):
+        self.calls.append(kwargs)
+        return synthesis_payload(), "coverage-thread"
+
+    def judge_hypothesis_evidence(self, **kwargs):
+        self.calls.append(kwargs)
+        return ObserverFacilitatorFixture().judge_hypothesis_evidence(**kwargs)
+
+    def synthesize_concept(self, **kwargs):
+        self.calls.append(kwargs)
+        return synthesis_payload(), "coverage-thread"
+
+
+class CoverageAwarePersonaFixture(ObserverPersonaFixture):
+    def __init__(self):
+        super().__init__()
+        self.responses = [
+            "The disruption started when the booking time changed and we both assumed the other person had handled it.",
+            "I thought the cause was that nobody wanted to take clear ownership of the updates.",
+            "The consequence was that I checked every booking again and still felt unsure.",
+        ]
+
+
 class ObserverRuntimeTest(unittest.TestCase):
     def _library(self, root):
         persona = generate_personas(count=1, random_seed=83)[0]
@@ -360,10 +406,14 @@ class ObserverRuntimeTest(unittest.TestCase):
             self.assertNotIn(persona.profile.basic_identity["name"], facilitator_input)
             self.assertIn("OBSERVER DIRECTION", facilitator_input)
             self.assertIn("OBSERVER INTERVENTIONS", quality.calls[0]["user_prompt"])
+            self.assertIn("COVERAGE STATUS", quality.calls[0]["user_prompt"])
             self.assertNotIn('"evidence_updates"', quality.calls[0]["user_prompt"])
             self.assertIn('"question_evidence_basis"', quality.calls[0]["user_prompt"])
             self.assertIn("Natural Synthetic Participant Interview Mode", persona_provider.calls[0]["system_prompt"])
             self.assertIn("Do not exhaustively account for the decision", persona_provider.calls[0]["system_prompt"])
+            quality_md = (folder / "quality_evaluation.md").read_text(encoding="utf-8")
+            self.assertIn("Improvement Hints", quality_md)
+            self.assertIn("Turn budget:", quality_md)
 
             session = runtime.reevaluate_quality(session.interview_id)
             self.assertEqual(session.status, "completed")
@@ -550,11 +600,57 @@ class ObserverRuntimeTest(unittest.TestCase):
             persisted = read_json(root / "interviews" / session.interview_id / "interview.json")
             self.assertEqual(persisted["failed_operation"], "")
 
+    def test_observer_extends_past_soft_limit_until_coverage_is_met(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=CoverageAwareFacilitator(),
+                persona_provider=CoverageAwarePersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand trip replanning friction.",
+                soft_turn_limit=1,
+                hard_turn_limit=4,
+            )
+            self.assertFalse(session.coverage_status["coverage_complete"])
+            session = runtime.continue_interview(session.interview_id)
+            self.assertEqual(len(session.exchanges), 1)
+            self.assertEqual(session.status, "awaiting_observer")
+            self.assertEqual(session.stop_reason, "")
+            self.assertIn("participant_cause", session.coverage_status["missing"])
+
+            session = runtime.continue_interview(session.interview_id)
+            self.assertEqual(len(session.exchanges), 2)
+            self.assertEqual(session.status, "awaiting_observer")
+            self.assertIn("consequence", session.coverage_status["missing"])
+
+            session = runtime.continue_interview(session.interview_id)
+            self.assertEqual(len(session.exchanges), 3)
+            self.assertEqual(session.status, "completed")
+            self.assertEqual(session.stop_reason, "soft_turn_limit_with_required_coverage_met")
+            self.assertTrue(session.coverage_status["coverage_complete"])
+
     def test_quality_contract_rejects_warn_with_perfect_overall_score(self):
         payload = quality_payload()
         payload["scores"]["overall"] = 5
         payload["findings"][0]["severity"] = "high"
         with self.assertRaisesRegex(ValueError, "overall <= 4"):
+            validate_quality_evaluation(payload)
+
+    def test_quality_contract_requires_actionable_hints_for_warn(self):
+        payload = quality_payload()
+        payload["improvement_hints"] = {
+            "next_interview_focus": [],
+            "coverage_gap_actions": [],
+            "prompt_adjustments": [],
+            "turn_budget_guidance": "No change.",
+        }
+        with self.assertRaisesRegex(ValueError, "actionable improvement hint"):
             validate_quality_evaluation(payload)
 
 

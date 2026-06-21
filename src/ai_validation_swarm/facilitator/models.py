@@ -68,6 +68,8 @@ class InterviewSession:
     hypothesis_evidence_judge_prompt_version: str = ""
     hypothesis_evidence_judge_provider_session_id: str = ""
     max_turns: int = 10
+    soft_turn_limit: int = 10
+    hard_turn_limit: int = 10
     created_at: str = field(default_factory=utc_now_iso)
     updated_at: str = field(default_factory=utc_now_iso)
     status: str = "active"
@@ -83,6 +85,7 @@ class InterviewSession:
     insight_report: dict[str, Any] = field(default_factory=dict)
     quality_evaluation: dict[str, Any] = field(default_factory=dict)
     hypothesis_evidence_judgment: dict[str, Any] = field(default_factory=dict)
+    coverage_status: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)

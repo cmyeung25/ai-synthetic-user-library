@@ -15,6 +15,7 @@ from ai_validation_swarm.personas.v3 import (
     _normalize_text,
     _persona_ids_in,
     _resolve_persona_folder,
+    _stringify_text_field,
     _text_similarity,
     build_diversity_report as build_diversity_report_v3,
     render_local_grounding_md as render_local_grounding_md_v3,
@@ -78,23 +79,54 @@ def _title_from_key(value: str) -> str:
     return value.replace("_", " ").title()
 
 
-def _top_salience_keys(salience: dict[str, int], count: int = 3) -> list[str]:
+def _normalized_salience_map(salience: dict[str, object] | None) -> dict[str, int]:
+    if not isinstance(salience, dict):
+        return {}
+    if salience and all(isinstance(value, (int, float, str)) for value in salience.values()):
+        normalized: dict[str, int] = {}
+        for key, value in salience.items():
+            try:
+                normalized[key] = int(value)
+            except (TypeError, ValueError):
+                continue
+        return normalized
+
+    normalized: dict[str, int] = {}
+    ranking_bands = (
+        ("highest_salience", 9),
+        ("medium_salience", 6),
+        ("lower_but_present_salience", 3),
+    )
+    for field_name, score in ranking_bands:
+        values = salience.get(field_name, [])
+        if not isinstance(values, list):
+            continue
+        for item in values:
+            if isinstance(item, str) and item.strip():
+                normalized[item.strip()] = max(normalized.get(item.strip(), 0), score)
+    return normalized
+
+
+def _top_salience_keys(salience: dict[str, object], count: int = 3) -> list[str]:
+    normalized = _normalized_salience_map(salience)
     return [
         key
         for key, _score in sorted(
-            salience.items(),
-            key=lambda item: (-int(item[1]), item[0]),
+            normalized.items(),
+            key=lambda item: (-item[1], item[0]),
         )[:count]
     ]
 
 
-def _salience_similarity(left: dict[str, int], right: dict[str, int]) -> float:
-    if not left and not right:
+def _salience_similarity(left: dict[str, object], right: dict[str, object]) -> float:
+    left_map = _normalized_salience_map(left)
+    right_map = _normalized_salience_map(right)
+    if not left_map and not right_map:
         return 0.0
-    keys = set(left) | set(right)
+    keys = set(left_map) | set(right_map)
     if not keys:
         return 0.0
-    total_gap = sum(abs(int(left.get(key, 0)) - int(right.get(key, 0))) for key in keys)
+    total_gap = sum(abs(left_map.get(key, 0) - right_map.get(key, 0)) for key in keys)
     max_gap = len(keys) * 9
     return round(1.0 - (total_gap / max_gap), 4)
 
@@ -835,7 +867,7 @@ def upgrade_persona_to_v3_1(source_persona: PersonaSkill, *, random_seed: int | 
 
 def _dimension_text_v3_1(persona: PersonaSkill, dimension: str) -> str:
     if dimension == "life_arc_similarity":
-        return str(persona.profile.canonical_biography.get("life_arc_summary", ""))
+        return _stringify_text_field(persona.profile.canonical_biography.get("life_arc_summary", ""))
     if dimension == "sensitive_topic_reaction_similarity":
         return json.dumps(persona.profile.sensitive_scenario_reactions, ensure_ascii=False, sort_keys=True)
     if dimension == "hidden_contradiction_similarity":
@@ -844,7 +876,7 @@ def _dimension_text_v3_1(persona: PersonaSkill, dimension: str) -> str:
         return json.dumps(persona.profile.cross_domain_product_reaction_model, ensure_ascii=False, sort_keys=True)
     if dimension == "phrase_similarity":
         return (
-            persona.profile.canonical_biography.get("life_arc_summary", "")
+            _stringify_text_field(persona.profile.canonical_biography.get("life_arc_summary", ""))
             + " "
             + persona.profile.persona_voiceprint.get("what_they_repeat_when_skeptical", "")
             + " "
@@ -1185,8 +1217,8 @@ def render_research_kernel_md_v3_1(persona: PersonaSkill) -> str:
         "## Identity",
         f"{identity.get('name', '')} is a {identity.get('age', '')}-year-old {identity.get('occupation', '')} in {identity.get('location', '')}.",
         "",
-        "## Life Arc Summary",
-        persona.profile.canonical_biography.get("life_arc_summary", ""),
+            "## Life Arc Summary",
+            _stringify_text_field(persona.profile.canonical_biography.get("life_arc_summary", "")),
         "",
         "## Top Formative Patterns",
     ]
@@ -1199,7 +1231,7 @@ def render_research_kernel_md_v3_1(persona: PersonaSkill) -> str:
             persona.profile.canonical_biography.get("current_daily_life", ""),
             "",
             "## Buying Logic",
-            persona.profile.product_reaction_rules.get("difference_between_curiosity_and_purchase", ""),
+            _stringify_text_field(persona.profile.product_reaction_rules.get("difference_between_curiosity_and_purchase", "")),
             "",
             "## Pricing Logic",
             f"Personal comfort: {persona.profile.pricing_logic.get('personal_payment_comfort', '')}",
@@ -1295,7 +1327,7 @@ def render_persona_skill_md_v3_1(persona: PersonaSkill) -> str:
         f"{identity.get('name', '')} | {identity.get('age', '')} | {identity.get('occupation', '')} | {identity.get('location', '')}",
         "",
         "## Canonical Life Arc",
-        persona.profile.canonical_biography.get("life_arc_summary", ""),
+        _stringify_text_field(persona.profile.canonical_biography.get("life_arc_summary", "")),
         "",
         "## Decade Memory",
     ]
@@ -1319,7 +1351,7 @@ def render_persona_skill_md_v3_1(persona: PersonaSkill) -> str:
             f"Rejection triggers: {', '.join(persona.decision_policy.get('rejection_triggers', [])[:4])}",
             "",
             "## Buying Logic",
-            persona.profile.product_reaction_rules.get("difference_between_curiosity_and_purchase", ""),
+            _stringify_text_field(persona.profile.product_reaction_rules.get("difference_between_curiosity_and_purchase", "")),
             "",
             "## Pricing Logic",
             f"{persona.profile.pricing_logic.get('what_makes_price_feel_fair', '')} Watch for: {persona.profile.pricing_logic.get('pricing_objection', '')}",

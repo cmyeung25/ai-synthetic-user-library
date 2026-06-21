@@ -197,6 +197,7 @@ class OpenAIV33SynthesisAdapter:
                 "generation_mode": "single_pass_primary",
                 "repair_mode": bool(request.revision_findings),
                 "requested_sections": [section.name for section in request.sections],
+                "transport_metadata": copy.deepcopy(self.client.last_transport_metadata),
             },
         )
 
