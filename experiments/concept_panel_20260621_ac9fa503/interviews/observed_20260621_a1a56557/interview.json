@@ -1,0 +1,753 @@
+{
+  "interview_id": "observed_20260621_a1a56557",
+  "persona_id": "su_1104",
+  "persona_name": "Mabel Cheung",
+  "research_goal": "Interview five synthetic B2B SaaS buyer personas about whether an AI Synthetic User Validation Platform solves a real pre-research and concept-validation problem, how it fits or fails inside their current workflow, what trust and evidence boundaries they need, what would make them trial or pay, and what founder assumptions remain weak.",
+  "product_context": "An AI pre-validation platform for founders, product designers, PMs, research ops, and innovation teams. Users bring an idea, landing page, pricing direction, feature scope, or prototype. They then interview a library of distinct synthetic users to stress-test assumptions, messaging, pricing, trust boundaries, and sensitive-topic risk before spending more on real user research. The product explicitly does not claim to replace real user interviews. It aims to narrow scope, improve interview prep, and surface objections or blind spots earlier.",
+  "output_language": "Natural Cantonese Traditional Chinese",
+  "facilitator_provider": "codex",
+  "facilitator_model": "gpt-5.4",
+  "persona_provider": "codex",
+  "persona_model": "gpt-5.4",
+  "facilitator_prompt_version": "facilitator-interview/v2",
+  "synthesis_prompt_version": "concept-synthesis/v1",
+  "concept_protocol_version": "ai-synthetic-user-platform/v1",
+  "concept_label": "AI Synthetic User Platform",
+  "interview_mode": "concept_validation",
+  "hypothesis": "",
+  "facilitator_provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+  "persona_provider_session_id": "019eea97-3917-7310-ab59-433f4f63d5ef",
+  "persona_conversation_session_id": "chat_20260621_209233a0",
+  "quality_provider": "codex",
+  "quality_model": "gpt-5.4",
+  "quality_prompt_version": "facilitator-quality-evaluator/v2",
+  "quality_provider_session_id": "019eea9a-66ed-7823-bdc6-c8bd338db445",
+  "hypothesis_evidence_judge_prompt_version": "hypothesis-evidence-judge/v1",
+  "hypothesis_evidence_judge_provider_session_id": "",
+  "max_turns": 14,
+  "soft_turn_limit": 10,
+  "hard_turn_limit": 14,
+  "created_at": "2026-06-21T14:30:15+00:00",
+  "updated_at": "2026-06-21T14:34:39+00:00",
+  "status": "completed",
+  "stop_reason": "Coverage complete and additional probing would likely be repetitive rather than materially improving the evidence map.",
+  "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+  "facilitator_decisions": [
+    {
+      "interview_phase": "opening_recent_event",
+      "probing_strategy": "recent_event",
+      "decision_rationale": "開始先建立目標範圍同近期具體情境，避免太早介紹概念或問假設性反應。問題聚焦一個最近事件，為後續了解現有做法同痛點打基礎。",
+      "message_to_persona": "可唔可以講下你最近一次要幫一個新產品諗定位或者準備用研之前，你當時點樣開始？",
+      "evidence_updates": [],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "最近一次具體的概念整理或研究準備事件是甚麼？",
+        "當時想釐清的核心不確定性是甚麼？",
+        "現時實際用甚麼方法或工具做前期判斷？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "current_workaround",
+      "probing_strategy": "sequence_probe",
+      "decision_rationale": "參與者已提供一個最近事件，並描述先把模糊 brief 改寫成可驗證問題。下一步應追問當時實際如何操作這個前期整理，建立現有 workaround，而不是太早引入概念。",
+      "message_to_persona": "你嗰朝喺 notes 度改寫嗰陣，實際係點樣整理同判斷邊啲問題值得開用研？",
+      "evidence_updates": [
+        {
+          "claim": "參與者在新產品定位或用研準備前，會先查看 intake，確認決策者、現有假設，以及哪些表述其實是在尋求支持。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "在最近一次事件中，參與者於早上搭 MTR 清電郵時，看到一份寫得很闊的新產品 brief，先在自己的 notes 中改寫成幾個可驗證問題，之後才決定是否值得開用研。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "當時用甚麼具體方法或工具把模糊 brief 改寫成可驗證問題？",
+        "參與者如何判斷哪些問題值得進入用研、哪些不值得？",
+        "現有前期整理流程的痛點、時間成本或不確定性在哪裡？",
+        "之後何時適合引入 AI Synthetic User Platform 概念並測試其反應與信任邊界？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "concept_introduction",
+      "probing_strategy": "concept_reaction",
+      "decision_rationale": "近期事件同現有前期判斷做法已經夠具體，符合先講現況再引入概念的要求。下一步應中性介紹概念並先收集第一反應，而未急於問信任、付費或留存。",
+      "message_to_persona": "如果有個 AI Synthetic User Platform 俾你喺真實用研前先訪問一批唔同背景嘅合成用戶去試假設同訊息，你第一個反應係咩？",
+      "evidence_updates": [
+        {
+          "claim": "參與者會先刪走容易變成立場題的句子，改寫成決策前真正需要知道的問題。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者判斷是否要開用研時，會看未知的是哪個行為、估錯會影響甚麼，以及現有數據是否已回答部分問題。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "在最近一次事件中，參與者在車上逐句圈出假設，並以『如果今天不做訪談，是否仍可憑已有資料決定』作為是否立即開用研的判斷準則。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "參與者對 AI Synthetic User Platform 最先感到有用或可疑的是甚麼？",
+        "他會把這類工具放在現有流程的哪一步，而不是取代甚麼？",
+        "甚麼情況下他會信任或拒絕這類合成輸出？",
+        "甚麼證據形式才會令結果可行動而不只是好看的 AI 內容？",
+        "甚麼條件下他會願意試用、持續使用或付費？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "trust_boundary",
+      "probing_strategy": "boundary_probe",
+      "decision_rationale": "參與者已給出初步概念反應，並清楚畫出不能取代真人用研的界線。下一步應把這個界線具體化，了解他容許工具發揮作用的位置與拒絕使用的位置。",
+      "message_to_persona": "對你嚟講，去到邊一類決定你一定要睇真人，而唔會接受呢類合成訪談？",
+      "evidence_updates": [
+        {
+          "claim": "參與者認為 AI Synthetic User Platform 可用於真實用研前的前期 scoping。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果工具能幫他及早發現問題問得太闊或假設太偷步，參與者會有興趣。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果產品暗示可取代真實受訪者，參與者會明顯退後，不願接受。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "參與者對合成訪談的信任邊界具體落在哪些決策類型？",
+        "他需要甚麼輸出證據或可追溯性才會覺得結果可用？",
+        "甚麼條件下他會願意試用或推入現有流程？",
+        "甚麼重複使用場景會令他下個月再開這類工具？",
+        "哪些產品說法或做法最容易造成過度承諾或錯誤使用？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "payment_conditions",
+      "probing_strategy": "value_probe",
+      "decision_rationale": "信任邊界已經具體，下一步要測試是否有足夠決策價值支撐付費，而不是只停留在『有興趣』。問題聚焦實際購買門檻，為後續留存和 founder assumption check 建立基準。",
+      "message_to_persona": "如果要你哋真係為呢類工具畀錢，佢最少要幫你減少邊一步判斷錯誤或者工作量？",
+      "evidence_updates": [
+        {
+          "claim": "參與者認為凡是會影響真實客戶如何理解風險、作出金融選擇的決定，一定要看真人回應。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "當團隊需要據此向內部主張『這是用戶怎樣看』時，參與者不接受只靠合成訪談。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "對於敏感議題、跨市場語境差異大，或需要判斷微妙猶豫與誤解的情況，參與者認為合成訪談不足夠。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "甚麼具體價值或風險減少會令參與者願意付費？",
+        "甚麼重複使用場景會令他持續在下個月再用？",
+        "他覺得這個概念最容易被過度承諾或誤用的地方是甚麼？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "retention_repeat_use",
+      "probing_strategy": "repeat_use_probe",
+      "decision_rationale": "付費條件已經收窄到是否能減少錯開研究和問錯問題。下一步應測試是否有重複出現的使用場景，分開『有價值一次』和『會持續回來用』。",
+      "message_to_persona": "咩情況會令你下個月又再開返呢類工具？",
+      "evidence_updates": [
+        {
+          "claim": "參與者認為這類工具最少要在研究開始前，及早篩走那些問題未定義清楚、假設太多、但已準備直接開 recruit 的 request。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果工具只是幫人快速產生看似像樣的訪談摘要，參與者不會付費。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果工具能減少錯開研究和問錯問題，參與者認為這才有付費價值。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "甚麼重複出現的工作情境會令參與者持續使用這類工具？",
+        "若要進入真實工作流，這個工具需要取代或縮短哪一步？",
+        "參與者認為這個概念最容易被過度承諾或誤用的地方是甚麼？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "founder_assumption_check",
+      "probing_strategy": "assumption_probe",
+      "decision_rationale": "留存場景已具體，現時只欠 founder assumption check。最有效的是直接問最容易被過度承諾或誤用之處，以測試產品最弱假設和失敗模式。",
+      "message_to_persona": "你覺得呢類產品最容易講大咗或者畀團隊用錯嘅地方係邊？",
+      "evidence_updates": [
+        {
+          "claim": "參與者會在下個月再次使用這類工具，前提是又收到一批同樣鬆散的 brief，而且工具上次真的幫到他及早看出哪些假設站不住腳。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "當需要同幾個市場一起做前期 scoping，但又未值得立刻動用真人研究資源時，參與者會再次打開這類工具。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "這個概念最容易被過度承諾或誤用的地方是甚麼？",
+        "參與者認為產品最強和最弱的假設分別是甚麼？",
+        "甚麼最小真實測試最能證明這個工具是否值得進入工作流？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "alternative_condition",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "closure",
+      "probing_strategy": "saturation_check",
+      "decision_rationale": "所需 coverage 已完成，且參與者已具體交代現有流程、概念位置、信任界線、付費條件、重複使用場景及最大誤用風險。再追問大機會只會重複，不會實質改變證據圖。",
+      "message_to_persona": "",
+      "evidence_updates": [
+        {
+          "claim": "參與者認為這類產品最容易被誇大成『已經代表用戶聲音』，但其實只應用來收窄假設。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者觀察到的主要誤用風險，是團隊拿著順耳的合成回答，在 deadline 緊時跳過真人驗證。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [],
+      "should_end": true,
+      "end_reason": "Coverage complete and additional probing would likely be repetitive rather than materially improving the evidence map.",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eea96-dc99-7e92-867c-1189aa3807f6",
+      "decision_status": "not_asked_at_close"
+    }
+  ],
+  "exchanges": [
+    {
+      "exchange_id": 1,
+      "facilitator_question": "可唔可以講下你最近一次要幫一個新產品諗定位或者準備用研之前，你當時點樣開始？",
+      "persona_response": "通常我唔會一開始就諗訊息或者標語，我會先拎返個 intake 睇清楚：邊個真係要做決定、而家其實有咩假設、邊句聽落好似問題但其實只係想要支持。最近有一次都係咁，我喺朝早搭 MTR 清 email 時見到一個新產品 brief 寫得好闊，我先喺自己 notes 度改寫成幾個可驗證嘅問題，之後先決定值唔值得開用研。",
+      "facilitator_phase": "opening_recent_event",
+      "probing_strategy": "recent_event",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-21T14:30:49+00:00"
+    },
+    {
+      "exchange_id": 2,
+      "facilitator_question": "你嗰朝喺 notes 度改寫嗰陣，實際係點樣整理同判斷邊啲問題值得開用研？",
+      "persona_response": "我通常會先刪走啲好快變成立場題嘅句子，例如『用戶會唔會鍾意』呢類，改成決策前真係要知道嘅嘢：邊個行為未知、如果估錯會影響咩、現有數據其實有冇答到一部分。嗰朝我記得係喺車上逐句圈低假設，同自己問，如果今日唔做訪談，我哋係咪仍然可以靠已有資料決定；如果可以，我就唔會急住開用研。",
+      "facilitator_phase": "current_workaround",
+      "probing_strategy": "sequence_probe",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "created_at": "2026-06-21T14:31:14+00:00"
+    },
+    {
+      "exchange_id": 3,
+      "facilitator_question": "如果有個 AI Synthetic User Platform 俾你喺真實用研前先訪問一批唔同背景嘅合成用戶去試假設同訊息，你第一個反應係咩？",
+      "persona_response": "我第一個反應會係，呢個可以用嚟做前期 scoping，但唔好同真實用研混埋講。如果你話佢幫我早啲發現問題問得太闊、假設太偷步，我會有興趣；如果你暗示佢可以代替真實受訪者，我會即刻收得好後。",
+      "facilitator_phase": "concept_introduction",
+      "probing_strategy": "concept_reaction",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-21T14:31:39+00:00"
+    },
+    {
+      "exchange_id": 4,
+      "facilitator_question": "對你嚟講，去到邊一類決定你一定要睇真人，而唔會接受呢類合成訪談？",
+      "persona_response": "如果個決定會影響真實客戶點樣理解風險、作出金融選擇，或者我哋要據此向內部講『呢個係用戶點睇』，我一定要睇真人。去到敏感議題、跨市場語境差異好大，或者要判斷一啲微妙猶豫同誤解嗰陣，合成訪談對我嚟講唔夠。",
+      "facilitator_phase": "trust_boundary",
+      "probing_strategy": "boundary_probe",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-21T14:32:05+00:00"
+    },
+    {
+      "exchange_id": 5,
+      "facilitator_question": "如果要你哋真係為呢類工具畀錢，佢最少要幫你減少邊一步判斷錯誤或者工作量？",
+      "persona_response": "最少要幫我喺研究開始前，早啲篩走嗰啲其實問題未定義清楚、假設太多、但又準備直接開 recruit 嘅 request。 如果佢只係幫人快啲產生一堆似樣嘅訪談摘要，我唔會畀錢；如果佢真係減少錯開研究、問錯問題，呢個先有價值。",
+      "facilitator_phase": "payment_conditions",
+      "probing_strategy": "value_probe",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-21T14:32:29+00:00"
+    },
+    {
+      "exchange_id": 6,
+      "facilitator_question": "咩情況會令你下個月又再開返呢類工具？",
+      "persona_response": "如果下個月又有一堆 brief 一樣咁鬆散，而個工具上次真係幫到我早啲睇到邊啲假設企唔住，我會再開。另一個情況係我要同幾個市場一齊做前期 scoping，但又未值得即刻動用真人研究資源。",
+      "facilitator_phase": "retention_repeat_use",
+      "probing_strategy": "repeat_use_probe",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-21T14:32:52+00:00"
+    },
+    {
+      "exchange_id": 7,
+      "facilitator_question": "你覺得呢類產品最容易講大咗或者畀團隊用錯嘅地方係邊？",
+      "persona_response": "最容易講大咗嘅位係，明明只係幫人收窄假設，最後被講成『已經代表用戶聲音』。用錯通常就係團隊拎住啲好順耳嘅合成回答，跳過真人驗證，尤其當 deadline 緊嗰陣，呢個風險我會特別警惕。",
+      "facilitator_phase": "founder_assumption_check",
+      "probing_strategy": "assumption_probe",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "alternative_condition",
+      "created_at": "2026-06-21T14:33:13+00:00"
+    }
+  ],
+  "pending_facilitator_decision": {},
+  "observer_interventions": [],
+  "last_error": "",
+  "failed_operation": "",
+  "failed_payload": {},
+  "insight_report": {
+    "problem_evidence": {
+      "strength": "medium",
+      "supporting_quotes": [
+        {
+          "quote": "呢個可以用嚟做前期 scoping，但唔好同真實用研混埋講。",
+          "evidence_ref": "exchange_3.persona"
+        },
+        {
+          "quote": "如果佢真係減少錯開研究、問錯問題，呢個先有價值。",
+          "evidence_ref": "exchange_5.persona"
+        },
+        {
+          "quote": "明明只係幫人收窄假設，最後被講成『已經代表用戶聲音』。",
+          "evidence_ref": "exchange_7.persona"
+        }
+      ],
+      "recent_behavior_evidence": [
+        "最近一次事件入面，參與者先重寫一份寫得好闊嘅 brief，變成幾個可驗證問題，先決定值唔值得開用研。",
+        "佢會逐句圈低假設，判斷如果今日唔做訪談，係咪仍然可以靠已有資料決定。",
+        "當 brief 鬆散、假設多但團隊已準備直接開 recruit 時，佢視為高風險前期判斷場景。"
+      ]
+    },
+    "current_workaround": {
+      "existing_workaround": [
+        "先睇 intake，釐清邊個真係做決定。",
+        "刪走『用戶會唔會鍾意』呢類立場題，改寫成可驗證問題。",
+        "用已有數據先判斷有冇部分答案，再決定是否需要真人用研。",
+        "用自己 notes 做前期 scoping，而唔係即刻開研究。"
+      ],
+      "pain_level": "medium",
+      "switching_difficulty": "medium",
+      "what_must_not_change": [
+        "唔可以混淆真人用研同合成輸出。",
+        "敏感、金融風險、跨市場語境差異大嘅決定仍然要真人證據。",
+        "唔可以令團隊更容易跳過真人驗證。"
+      ]
+    },
+    "trust_boundary": {
+      "accepted_data_access": [
+        "前期 scoping",
+        "收窄假設",
+        "提早發現問題問得太闊",
+        "多市場但未值得即刻動用真人研究資源嘅前期整理"
+      ],
+      "rejected_data_access": [
+        "代替真實受訪者",
+        "代表『用戶聲音』作內部背書",
+        "金融選擇或風險理解相關決定",
+        "敏感議題",
+        "需要判斷微妙猶豫與誤解嘅情境"
+      ],
+      "required_trust_explanation": [
+        "必須清楚聲明只係 AI pre-validation，唔係真實市場證據。",
+        "價值要落喺減少錯開研究、問錯問題，而唔係產生順耳摘要。",
+        "結果應該幫團隊知道下一步要點樣做真人驗證，而唔係提供結論終點。"
+      ]
+    },
+    "first_value_requirement": {
+      "first_use_success": [
+        "幫參與者早啲睇到邊啲假設企唔住。",
+        "喺研究開始前篩走問題未定義清楚但已準備 recruit 嘅 request。",
+        "幫手收窄問題範圍，而唔係只係生成內容。"
+      ],
+      "time_to_value": "第一次用就要喺研究開始前提供可行動嘅前期判斷價值。",
+      "abandonment_triggers": [
+        "輸出只係似樣摘要",
+        "暗示可以取代真人用研",
+        "令團隊產生假信心",
+        "冇辦法改善研究問題定義"
+      ]
+    },
+    "pricing_signal": {
+      "free_trial_need": "unknown",
+      "monthly_comfort_range": "unknown",
+      "payment_justification": [
+        "減少錯開研究",
+        "減少問錯問題",
+        "及早篩走未定義清楚但已想直接開研究嘅 request",
+        "支援多市場前期 scoping 而唔使即刻用真人資源"
+      ],
+      "evidence_strength": "stated"
+    },
+    "retention_risk": {
+      "continuation_reasons": [
+        "下個月再遇到一堆鬆散 brief",
+        "上次使用真係幫到早啲識別站唔住腳嘅假設",
+        "要同幾個市場一齊做前期 scoping，但未值得即刻做真人研究"
+      ],
+      "drop_off_reasons": [
+        "只係產生好睇輸出而冇決策幫助",
+        "被包裝成可代表真實用戶",
+        "團隊用佢去合理化跳過真人驗證"
+      ],
+      "workflow_effect": "replaces_workflow"
+    },
+    "assumption_validation": [
+      {
+        "assumption": "參與者有真實嘅 pre-research / concept-validation 問題值得解。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_5.persona"
+        ],
+        "rationale": "佢已經有一套前期問題整理流程，而且明確指出鬆散 brief 同過早開 recruit 係實際風險。"
+      },
+      {
+        "assumption": "現有 workaround 不足，值得加一個新工具。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_2.persona",
+          "exchange_5.persona"
+        ],
+        "rationale": "現有方法可運作，但當 brief 鬆散、假設太多、多市場前期 scoping 時仍有缺口；未證明缺口足夠大到必然採用新工具。"
+      },
+      {
+        "assumption": "Synthetic users 只喺能 sharpen real next steps 時先有用。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_5.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "參與者重複強調用途應是前期 scoping、收窄假設、減少問錯問題，而非代替真人證據。"
+      },
+      {
+        "assumption": "Evidence trace、透明度、synthetic-only framing 會影響信任。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "佢明確要求不要和真人用研混淆，但未具體說明想要哪種 trace 或報告格式。"
+      },
+      {
+        "assumption": "產品必須 fit 喺真人訪談之前，而唔係同真人訪談競爭。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "rationale": "佢接受前期 scoping，但對任何替代真人研究嘅暗示都會即刻退後。"
+      },
+      {
+        "assumption": "Adoption 需要清楚 workflow insertion point，同時縮短現有一步。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_5.persona",
+          "exchange_6.persona"
+        ],
+        "rationale": "佢要工具直接減少錯開研究、問錯問題，並在鬆散 brief 和多市場前期整理時反覆使用。"
+      },
+      {
+        "assumption": "最大失敗模式是假信心。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_7.persona"
+        ],
+        "rationale": "參與者直接指出 deadline 緊時，團隊最容易拎住順耳合成回答跳過真人驗證。"
+      },
+      {
+        "assumption": "有明確月費或採購舒適區間。",
+        "status": "unknown",
+        "evidence_refs": [
+          "exchange_5.persona"
+        ],
+        "rationale": "只收集到價值條件，冇收集預算、購買流程或價格範圍。"
+      }
+    ],
+    "key_insights": [
+      "對呢位 persona 而言，AI Synthetic User Platform 唔係 research substitute，而係 research gatekeeper。",
+      "真正價值唔係『更快產生內容』，而係『更早阻止錯誤研究開始』。",
+      "最佳切入位係鬆散 brief、多假設、準備過早 recruit、或多市場前期 scoping。",
+      "最重要嘅信任界線係唔可以被描述成代表真實用戶聲音。",
+      "最大 adoption risk 係 deadline 壓力下被團隊當成跳過真人驗證嘅藉口。"
+    ],
+    "next_experiment": "用一個真實但鬆散嘅產品 brief 做 concierge test，比參與者先用平台收窄假設，再比較佢原本 notes 流程同平台輸出，觀察有冇更早識別『唔應該直接開研究』嘅 request。",
+    "evidence_gaps": [
+      "未問到具體預算、購買者、審批邊界。",
+      "未問到佢需要咩輸出格式先覺得 actionable。",
+      "只得一位 synthetic persona，未能比較唔同 buyer 類型。",
+      "留存仍然係假設性陳述，未有真實 repeated-use 行為。"
+    ],
+    "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 嘅概念驗證前測，唔可以當成人類市場證據或因果結論；只適合用嚟收窄下一輪真人研究假設。"
+  },
+  "quality_evaluation": {
+    "overall_verdict": "warn",
+    "scores": {
+      "neutrality": 4,
+      "probing_quality": 4,
+      "conversation_naturalness": 4,
+      "evidence_discipline": 3,
+      "causal_rigor": 4,
+      "hypothesis_validation_rigor": 4,
+      "synthesis_fidelity": 3,
+      "overall": 4
+    },
+    "checks": {
+      "leading_question_risk": "pass",
+      "repetition_risk": "pass",
+      "premature_root_cause_risk": "pass",
+      "mechanical_five_whys_risk": "pass",
+      "evidence_reference_quality": "warn",
+      "synthesis_overreach_risk": "warn",
+      "conversation_naturalness": "pass",
+      "persona_over_structuring_risk": "pass",
+      "interviewer_jargon_risk": "pass",
+      "domain_fit_alignment": "warn",
+      "hypothesis_confirmation_bias_risk": "pass",
+      "hypothesis_judge_alignment": "pass"
+    },
+    "strengths": [
+      "The interview establishes a recent concrete event before introducing the concept, and the first two questions stay anchored in an observed workflow (`exchange_1`, `exchange_2`).",
+      "Concept introduction is relatively neutral and bounded; it does not explicitly sell replacement and the participant independently draws the boundary against real research (`exchange_3`).",
+      "Questions are mostly single-focus, conversational, and non-repetitive across the seven asked turns.",
+      "The facilitator separated trust boundary, payment condition, repeat use, and misuse risk into distinct probes rather than collapsing them into one long questionnaire."
+    ],
+    "findings": [
+      {
+        "category": "evidence_discipline",
+        "severity": "medium",
+        "observation": "Coverage marks `payment_conditions` and `retention_repeat_use` as covered, but the transcript only captures stated hypothetical conditions, not buyer process, budget behavior, or real repeat-use evidence. The synthesis correctly flags some of this as stated/unknown, but coverage completeness overstates what was actually learned.",
+        "evidence_refs": [
+          "exchange_5.facilitator",
+          "exchange_5.persona",
+          "exchange_6.facilitator",
+          "exchange_6.persona",
+          "coverage_status"
+        ],
+        "recommendation": "Split behavioural coverage from stated/hypothetical coverage. Require at least one participant-facing probe on budget owner, approval path, or last comparable purchase before marking payment covered, and explicitly label repeat-use as hypothetical unless tied to observed prior tool reuse."
+      },
+      {
+        "category": "synthesis_fidelity",
+        "severity": "medium",
+        "observation": "Some synthesis claims exceed the narrow evidence. `workflow_effect: replaces_workflow` is not supported; the participant described a tool that could assist pre-research scoping, not replace their notes workflow. `research gatekeeper` and similar framing in `key_insights` is plausible but interpretive rather than directly evidenced.",
+        "evidence_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_5.persona",
+          "exchange_6.persona",
+          "synthesis.current_workaround",
+          "synthesis.retention_risk",
+          "synthesis.key_insights"
+        ],
+        "recommendation": "Constrain synthesis language to what the participant explicitly said. Use labels like `augments existing scoping workflow` unless the transcript shows replacement, and mark interpretive product framing as inference."
+      },
+      {
+        "category": "domain_fit_alignment",
+        "severity": "medium",
+        "observation": "The interview tests fit around disruption sources and abstract value boundaries, but it does not probe actual changed actions in the participant's workflow after using such a tool. That leaves adoption fit inferred from intent statements rather than workflow change evidence.",
+        "evidence_refs": [
+          "exchange_5.persona",
+          "exchange_6.persona",
+          "synthesis.assumption_validation"
+        ],
+        "recommendation": "Add a participant-facing action-change probe such as what they would do differently in the same brief, what step would disappear, and what artifact would be produced or skipped if the tool were used."
+      },
+      {
+        "category": "concept_validation",
+        "severity": "low",
+        "observation": "The concept question bundles multiple possible jobs: interviewing synthetic users, testing assumptions, and testing messaging. The participant handled it well, but the prompt still contains more than one evaluative object.",
+        "evidence_refs": [
+          "exchange_3.facilitator"
+        ],
+        "recommendation": "Introduce the concept with one core job first, then probe adjacent jobs separately if needed."
+      },
+      {
+        "category": "pricing_research",
+        "severity": "low",
+        "observation": "The payment probe asks what error or workload reduction would justify paying, but never isolates pricing, trial expectations, or procurement mechanics. The report preserves this as unknown in part, yet still treats payment conditions as covered.",
+        "evidence_refs": [
+          "exchange_5.facilitator",
+          "exchange_5.persona",
+          "synthesis.pricing_signal"
+        ],
+        "recommendation": "Follow value justification with one short concrete commercial probe: last similar tool purchase, acceptable pilot format, or who would need to sign off."
+      }
+    ],
+    "required_improvements": [
+      "Do not mark payment or retention fully covered when evidence is only hypothetical; distinguish behavioural proof from stated intent in coverage logic and reporting.",
+      "Tighten synthesis to avoid replacement or workflow-effect claims unless the transcript explicitly shows changed actions or displaced steps.",
+      "Add at least one action-change probe and one concrete commercial/procurement probe in concept-validation runs before closing."
+    ],
+    "improvement_hints": {
+      "next_interview_focus": [
+        "Ask the participant to walk through the same recent brief and say exactly what they would do differently, earlier, or not do at all if this platform were available.",
+        "Ask for a concrete comparable tool decision: who approved it, what budget line it came from, and what minimum pilot evidence was needed.",
+        "Probe required output format and evidence trace directly: what deliverable would make the synthetic output actionable versus unsafe to circulate."
+      ],
+      "coverage_gap_actions": [
+        "Add a participant-facing probe for current workaround limits, not just the existence of a workaround, by asking where their notes process fails or becomes too slow.",
+        "Add a direct trial probe distinct from payment: what would make them try it once, with what input, and what would count as success.",
+        "Add a direct retention probe tied to workflow recurrence and artifacts, not only a generic 'next month' condition.",
+        "If reporting pricing or trust conclusions, collect explicit participant statements on setup burden, privacy boundary, and acceptable proof format."
+      ],
+      "prompt_adjustments": [
+        "Change coverage rules so `payment_conditions` requires either a concrete purchase-process answer or is tagged `stated_only`.",
+        "Change coverage rules so `retention_repeat_use` requires either prior analogous repeat behavior or an explicit hypothetical label in both coverage and synthesis.",
+        "Prompt the facilitator to ask one `what changes in your workflow` question after positive concept reaction and before closure.",
+        "In concept introduction, describe one primary use first and hold messaging-testing or assumption-testing as follow-up variants instead of combining them in a single sentence."
+      ],
+      "turn_budget_guidance": "The current 7-turn interview is close but slightly tight for concept validation with buyer-fit goals. Keep the soft limit flexible and allow 1-2 extra turns when payment, workflow change, or output-format evidence is still only hypothetical."
+    },
+    "human_review_needed": false,
+    "synthetic_only_disclaimer": "This audit evaluates methodological quality of a single synthetic interview and its write-up. Any product, pricing, retention, or design implication should remain bounded to this one synthetic persona unless corroborated by additional interviews."
+  },
+  "hypothesis_evidence_judgment": {},
+  "coverage_status": {
+    "requirements": [
+      "recent_behaviour",
+      "current_workaround",
+      "concept_reaction",
+      "trust_boundary",
+      "payment_conditions",
+      "retention_repeat_use",
+      "founder_assumption_check"
+    ],
+    "covered": {
+      "recent_behaviour": true,
+      "current_workaround": true,
+      "concept_reaction": true,
+      "trust_boundary": true,
+      "payment_conditions": true,
+      "retention_repeat_use": true,
+      "founder_assumption_check": true
+    },
+    "missing": [],
+    "coverage_complete": true,
+    "soft_limit_reached": false,
+    "hard_limit_reached": false,
+    "exchange_count": 7
+  },
+  "exchange_count": 7,
+  "facilitator_decision_count": 8
+}

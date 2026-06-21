@@ -1,0 +1,425 @@
+[
+  {
+    "interview_phase": "opening",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "無訪談紀錄，先按概念驗證流程建立一個最近的具體產品或研究決策事件，再之後追問現有做法與痛點；問題保持中性，不提前透露概念。",
+    "message_to_persona": "可唔可以同我講下，你最近一次要幫一個產品諗定位、功能方向或者研究問題嗰陣，當時係咩情況？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次具體產品、定位或研究準備事件係咩？",
+      "當時想釐清嘅核心不確定性係咩？",
+      "佢目前點樣做前期研究、對齊同概念整理？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "event_reconstruction",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "參加者已提供一個最近具體事件與初步判斷。下一步應先重建當時實際點樣判斷，而唔係直接問對概念反應，咁先可以建立現有做法同痛點證據。",
+    "message_to_persona": "嗰朝你最後點樣判斷呢個係咪真係值得做嘅方向？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次相關事件係團隊討論要唔要為中型客戶加一層更細嘅 approvals workflow。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當時 participant 在 standup 前查看 customer call clips 同前一晚抄低嘅 meeting notes。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Founder 認為這項功能會幫 sales close deal。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 當時懷疑這更像幾個大客的特殊要求，而未必代表值得做的定位方向。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢當時實際用咩方法去判斷呢個需求值唔值得做？",
+      "除咗 call clips 同 notes，仲有冇其他現有 workaround 幫佢做前期判斷？",
+      "最後個判斷對決策或者後續溝通有咩實際影響？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround",
+    "probing_strategy": "workaround_probe",
+    "decision_rationale": "參加者已描述點樣收窄問題同作出暫時判斷，下一步應追問當時實際用咩工具或做法去完成呢個前期驗證，補足現有 workaround 證據，未到介紹概念嘅時候。",
+    "message_to_persona": "你嗰次實際靠咩工具或者做法去整理呢個判斷？",
+    "evidence_updates": [
+      {
+        "claim": "Participant 沒有即時判斷是否要做該功能，而是先把問題收窄成核心 segment 的反覆阻力，還是少數 deals 被放大的需求。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 當時檢視了 call 入面邊個角色最在意、事情有沒有真正卡住 rollout，以及是否可先用流程或服務頂住。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "到中午時，participant 認為未有足夠證據把這件事當成定位方向，最多只值得作為幾個 target accounts 的驗證題目。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢當時用咩工具或材料去整理判斷？",
+      "呢套前期判斷做法有咩麻煩、耗時或者盲點？",
+      "類似情況下佢而家通常點樣喺正式接觸更多用戶前先做初步驗證？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround",
+    "probing_strategy": "friction_probe",
+    "decision_rationale": "已經有一個具體事件同現有 workaround，依家先追問呢套土法流程嘅實際摩擦同不足，之後先適合中性介紹概念。",
+    "message_to_persona": "呢種自己砌表再搵人對嘅做法，最磨時間或者最易失真嘅位通常喺邊？",
+    "evidence_updates": [
+      {
+        "claim": "Participant 當時用通話錄音、notes，同一個自己拉的簡單表去分辨 enterprise buyer 真痛點、sales deal pressure，以及現有流程能否頂住。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 會再同 sales 同 implementation lead 對一對，避免把幾個大聲個案誤當成普遍訊號。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 目前的前期判斷方法偏手動和土法。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "現有土法流程最耗時或最易失真的環節是什麼？",
+      "這套做法在決策前留下了哪些未解的不確定性？",
+      "如果要引入新工具，首先要改善的是整理訊號、挑戰假設，還是跨職能對齊？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_introduction",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "已建立最近事件、現有做法同具體 friction，符合概念驗證先講 current reality 再引入概念嘅要求。下一問用中性方式介紹概念，先測第一反應與最想驗證嘅部分。",
+    "message_to_persona": "如果有個 AI Synthetic User Platform，畀你拎概念、pricing 或者 prototype 去同一批唔同背景嘅 synthetic users 做前期訪談，你第一下最想攞佢嚟驗證咩？",
+    "evidence_updates": [
+      {
+        "claim": "現有做法最易失真的地方，是一開始分欄方式已帶入偏見，之後整理只會把原本假設包裝得更有條理。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "跨 sales、product、implementation 對齊時，如果缺少清楚比較框架，討論容易變成交換 anecdotes。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 的現有前期驗證流程同時存在偏見放大與跨職能對齊成本。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢對 synthetic users 嘅第一反應係覺得有用、可疑，定係兩者都有？",
+      "佢最想先用呢類工具驗證邊一種不確定性？",
+      "咩情況下佢會覺得呢類輸出可信，咩情況下一定要搵真人？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "boundary_probe",
+    "decision_rationale": "已取得概念的首個使用場景與價值方向，下一步應測試信任邊界，了解咩輸出會令佢覺得可用 versus 太假，避免太早跳去付款。",
+    "message_to_persona": "咩情況會令你覺得呢啲 synthetic users 嘅回應只係似真，但其實唔可以拎嚟做判斷？",
+    "evidence_updates": [
+      {
+        "claim": "Participant 對 AI Synthetic User Platform 的第一用途是驗證團隊以為最清楚的 target segment 是否真的對同一痛點有反應。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 特別想用這類工具一併測 pricing 與 value prop，觀察不同背景 synthetic users 卡住位是否差很遠。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果不同背景 synthetic users 的卡住位差異很大，participant 會把它視為訊息或 segment definition 不夠紮實的訊號。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢對 synthetic output 的信任邊界喺邊？",
+      "咩類型嘅回應會令佢覺得有用，咩類型會令佢覺得係 AI 戲法？",
+      "邊啲決策佢一定要搵真人先會落判斷？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_conditions",
+    "probing_strategy": "value_probe",
+    "decision_rationale": "已經有概念反應同信任邊界，下一步要測試佢喺咩價值證明下先會進入真實採用或付費判斷，仍然保持一問一事。",
+    "message_to_persona": "要去到你會認真考慮買或者爭取 budget，佢首先要幫你慳到邊一步？",
+    "evidence_updates": [
+      {
+        "claim": "Participant 不信任所有 synthetic users 都講得流暢但分不出 segment 差異的輸出。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 不信任 objection 只是同一套語氣換皮的 synthetic output。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 要求系統交代判斷基於哪些假設，並清楚提醒哪些部分仍需真人驗證，否則只屬似真而不可用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩具體價值先足以令佢認真考慮付費或爭取 budget？",
+      "呢個工具要取代或縮短現有邊一步先算有購買理由？",
+      "之後咩重複使用場景會令佢持續返嚟用？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention",
+    "probing_strategy": "repeat_use_probe",
+    "decision_rationale": "已經有明確的付費前提：要縮短前期收窄問題與排除方向的時間。下一步應測試重複使用場景，確認它會唔會變成一次性工具，之後再收 founder assumption。",
+    "message_to_persona": "如果你真係用咗一次，之後要去到咩情境你先會一個月內再開返佢？",
+    "evidence_updates": [
+      {
+        "claim": "Participant 只有在工具能節省前期收窄問題與 segment 的時間時，才會認真考慮買或爭取 pilot budget。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 現時會花上半日，靠不同人帶來 anecdotes 拉扯，才發現可能一開始就問錯問題。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果工具能更快排除不值得深挖的方向，把真人訪談、設計與工程時間留給更有機會的選項，participant 會開始考慮 pilot budget。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩重複出現嘅工作場景會令佢持續返嚟用？",
+      "如果只係一次性幫手，原因會係咩？",
+      "佢覺得呢個概念最大嘅過度承諾或者最弱假設係咩？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "founder_assumption_check",
+    "probing_strategy": "assumption_probe",
+    "decision_rationale": "大部分必需覆蓋已完成，仲欠 founder assumption check。參加者已講清楚使用價值、信任邊界、付費同重複使用條件，依家適合直接測最弱假設或過度承諾。",
+    "message_to_persona": "你覺得呢個諗法最容易高估咗自己邊一部分？",
+    "evidence_updates": [
+      {
+        "claim": "如果第一次使用後能產出可帶入 roadmap 或 pricing discussion 的內容，並提早排除一兩個不值得做的方向，participant 一個月內多半會再用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "重複使用場景會出現在下一次遇到相似的 segment、packaging 或 prototype 取捨，需要先快速收窄方向的時候。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 期望這類工具替代由零開始拉人開會做前期收窄的部分工作。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢認為呢個概念最可能過度承諾的是什麼？",
+      "佢覺得最弱的產品假設是輸出可信度、persona差異，還是流程嵌入點？",
+      "咩最小真實測試先足以證明呢個工具唔只係好睇輸出？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "closing",
+    "probing_strategy": "sufficiency_check",
+    "decision_rationale": "所需覆蓋已完成，最新回答亦直接提供最弱假設與過度承諾風險。再追問邊際價值有限，適合結束。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "Participant 認為這個概念最容易高估的是：只要回應夠似真人，就等於對真實決策有幫助。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant 認為團隊未必會自然信任這類輸出；若系統不能清楚區分方向感與仍需驗證的假設，輸出會被視為包裝得較靚的意見。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "此概念的關鍵信任門檻在於可追溯假設、清楚標示真人驗證邊界，以及提供可用於收窄方向而非冒充證據的輸出。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_6.persona",
+          "exchange_7.persona",
+          "exchange_8.persona",
+          "exchange_9.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "required_coverage_complete_and_additional_probing_unlikely_to_change_evidence",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eea91-eb04-7d82-966c-d15854c4aa50",
+    "decision_status": "not_asked_at_close"
+  }
+]

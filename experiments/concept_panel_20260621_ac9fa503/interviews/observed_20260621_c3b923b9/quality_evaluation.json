@@ -1,0 +1,132 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "pass",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "warn",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "pass",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and current workaround before introducing the concept, which is appropriate for `concept_validation`.",
+    "Most asked questions keep one conversational focus and avoid facilitator jargon in participant-facing language.",
+    "The concept was introduced with balanced upside and skepticism in the same turn, which reduced sales pressure and elicited a usable trust boundary.",
+    "The stop decision was reasonable: all required coverage areas had participant-facing answers by exchange 7, and further probing would likely have been incremental."
+  ],
+  "findings": [
+    {
+      "category": "synthesis fidelity",
+      "severity": "high",
+      "observation": "The synthesis overstates behavioral evidence in several concept-validation sections by converting hypothetical future-use answers into stronger workflow claims. `retention_risk.workflow_effect` is labeled `replaces_workflow`, but the transcript only says the tool must help quickly feed into the next flow/messaging/interview outline and must not become an extra layer; no observed replacement happened.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.retention_risk.drop_off_reasons"
+      ],
+      "recommendation": "Downgrade workflow-impact claims to hypothetical/stated intent unless the participant describes an actual trial where an existing step was removed or reduced."
+    },
+    {
+      "category": "evidence discipline",
+      "severity": "medium",
+      "observation": "The synthesis marks problem evidence as `strong`, but the underlying evidence is still a single synthetic interview with one concrete recent event and several hypothetical concept reactions. That is too strong a label for platform-level confidence.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "SYNTHESIS.problem_evidence.strength",
+        "SYNTHESIS.synthetic_only_disclaimer"
+      ],
+      "recommendation": "Use a weaker evidence-strength label such as `moderate` or explicitly separate observed problem evidence from hypothetical solution-fit evidence."
+    },
+    {
+      "category": "concept validation rigor",
+      "severity": "medium",
+      "observation": "Curiosity, trial, payment, and month-two retention were mostly separated, but trial readiness was not directly isolated before budget willingness. Exchange 5 jumps to budget proof without first asking what would make the participant try it at all under low-friction conditions.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_5.persona"
+      ],
+      "recommendation": "Add a participant-facing trial-adoption question before budget, such as what would make them willing to test it on one live project even before procurement."
+    },
+    {
+      "category": "evidence reference quality",
+      "severity": "medium",
+      "observation": "Some synthesis claims rely on paraphrase rather than tightly bounded transcript support. For example, `accepted_data_access` introduces a data-access framing that the participant never explicitly discussed; they discussed acceptable use cases and output qualities instead.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "SYNTHESIS.trust_boundary.accepted_data_access",
+        "SYNTHESIS.trust_boundary.rejected_data_access"
+      ],
+      "recommendation": "Rename sections to match what was actually evidenced, for example acceptable use, unacceptable use, and required output properties, unless direct data-access questions were asked."
+    },
+    {
+      "category": "persona realism",
+      "severity": "low",
+      "observation": "The persona stayed mostly natural, but some answers are unusually complete and analytically tidy for spontaneous speech, especially the structured contrast in exchanges 3 and 4.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "recommendation": "Prompt the simulator to allow more partial, uncertain, or messy responses so the facilitator has to clarify rather than receiving polished criteria lists immediately."
+    },
+    {
+      "category": "coverage depth",
+      "severity": "low",
+      "observation": "Pricing remained intentionally weak, but the coverage status treats payment conditions as fully covered even though no price range, buyer process, or approval path was probed.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "COVERAGE STATUS.covered.payment_conditions",
+        "SYNTHESIS.pricing_signal.monthly_comfort_range"
+      ],
+      "recommendation": "Mark payment as only partially covered when the interview establishes value threshold but not procurement mechanics, price sensitivity, or approval route."
+    }
+  ],
+  "required_improvements": [
+    "Tighten synthesis so hypothetical concept reactions are not presented as observed workflow effects or strong market evidence.",
+    "Separate trial trigger, payment condition, and repeat-use condition more explicitly in the interview flow.",
+    "Use evidence labels that reflect one synthetic persona and distinguish recalled behavior from stated future intent.",
+    "Rename or remove synthesis fields whose semantics exceed what was actually asked, especially `accepted_data_access` and `workflow_effect`.",
+    "Treat pricing/payment coverage as partial unless participant-facing questions establish at least one concrete approval or price boundary."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask what would make the participant willing to try the product once on a live project before asking about budget.",
+      "Probe the approval path: who would need to agree, what budget bucket it would come from, and what level of proof is enough for a pilot.",
+      "Ask what existing prep step they would actually reduce, skip, or replace if the tool worked well.",
+      "Test retention with a concrete month-two recall frame, not just a generic second-use hypothetical."
+    ],
+    "coverage_gap_actions": [
+      "Get a direct participant-facing probe on pilot conditions versus paid adoption conditions.",
+      "Ask for one concrete acceptable price shape or budget threshold, even if approximate.",
+      "Ask whether use would shorten or remove any current internal review activity, or merely add another layer.",
+      "If trust is important, ask what artifact or trace would let them defend the output internally."
+    ],
+    "prompt_adjustments": [
+      "In concept validation, require explicit tagging of answers as `recalled behavior`, `stated requirement`, or `hypothetical future use` before synthesis.",
+      "Prevent synthesis fields from implying stronger semantics than the question asked; avoid labels like `data_access` unless that topic was explicitly probed.",
+      "Nudge the simulator away from overly complete evaluative answers so the facilitator must do more natural follow-up.",
+      "Require payment coverage to include either pilot trigger, approval path, or price boundary before marking it complete."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for baseline coverage, but one or two additional turns would improve rigor if reserved specifically for pilot-vs-payment separation and concrete retention/workflow-replacement probes."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview and its artifacts. Findings about evidence strength, product implications, and synthesis confidence should not be treated as human-subject validation."
+}

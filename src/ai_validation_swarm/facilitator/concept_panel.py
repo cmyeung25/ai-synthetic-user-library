@@ -19,6 +19,8 @@ from ai_validation_swarm.storage.files import ensure_dir, read_json, write_json
 DEFAULT_TOPIC_LABEL = "Concept Validation"
 DEFAULT_LANGUAGE = "Natural Cantonese Traditional Chinese"
 DEFAULT_CORE_ASSUMPTION_COUNT = 8
+DEFAULT_CONCEPT_PANEL_SOFT_TURN_LIMIT = 12
+DEFAULT_CONCEPT_PANEL_HARD_TURN_LIMIT = 16
 
 FOLLOWUP_RESEARCH_GOAL = (
     "Interview synthetic personas about follow-up behaviour, trust boundaries, setup tolerance, "
@@ -45,6 +47,28 @@ def _persona_ids(data_dir: Path, selected: list[str] | None = None) -> list[str]
     if missing:
         raise ValueError(f"Personas were not found in the library: {missing}")
     return wanted
+
+
+def _resolve_concept_panel_turn_policy(
+    *,
+    max_turns: int | None = None,
+    soft_turn_limit: int | None = None,
+    hard_turn_limit: int | None = None,
+) -> tuple[int, int]:
+    if soft_turn_limit is None and hard_turn_limit is None and max_turns is None:
+        return DEFAULT_CONCEPT_PANEL_SOFT_TURN_LIMIT, DEFAULT_CONCEPT_PANEL_HARD_TURN_LIMIT
+    baseline = max_turns if max_turns is not None else DEFAULT_CONCEPT_PANEL_SOFT_TURN_LIMIT
+    resolved_soft = soft_turn_limit if soft_turn_limit is not None else (
+        max_turns if max_turns is not None else DEFAULT_CONCEPT_PANEL_SOFT_TURN_LIMIT
+    )
+    resolved_hard = hard_turn_limit if hard_turn_limit is not None else (
+        max_turns if max_turns is not None else max(DEFAULT_CONCEPT_PANEL_HARD_TURN_LIMIT, resolved_soft)
+    )
+    return ObserverControlledInterviewRuntime._resolve_turn_limits(
+        max_turns=baseline,
+        soft_turn_limit=resolved_soft,
+        hard_turn_limit=resolved_hard,
+    )
 
 
 def _summary_payload(
@@ -186,8 +210,15 @@ def run_concept_panel(
     output_language: str = DEFAULT_LANGUAGE,
     core_assumption_count: int = DEFAULT_CORE_ASSUMPTION_COUNT,
     persona_ids: list[str] | None = None,
-    max_turns: int = 12,
+    max_turns: int | None = None,
+    soft_turn_limit: int | None = None,
+    hard_turn_limit: int | None = None,
 ) -> Path:
+    resolved_soft_turn_limit, resolved_hard_turn_limit = _resolve_concept_panel_turn_policy(
+        max_turns=max_turns,
+        soft_turn_limit=soft_turn_limit,
+        hard_turn_limit=hard_turn_limit,
+    )
     run_id = f"concept_panel_{utc_now_iso()[:10].replace('-', '')}_{uuid.uuid4().hex[:8]}"
     run_dir = output_dir / run_id
     interview_dir = run_dir / "interviews"
@@ -209,7 +240,9 @@ def run_concept_panel(
             concept_protocol=concept_protocol,
             concept_label=concept_label or topic_label,
             output_language=output_language,
-            max_turns=max_turns,
+            max_turns=resolved_hard_turn_limit,
+            soft_turn_limit=resolved_soft_turn_limit,
+            hard_turn_limit=resolved_hard_turn_limit,
         )
         while session.status not in {"completed", "failed"}:
             session = runtime.continue_interview(session.interview_id)
@@ -246,7 +279,9 @@ def run_concept_panel(
         "concept_label": concept_label or topic_label,
         "persona_ids": [item["persona_id"] for item in interviews],
         "core_assumption_count": core_assumption_count,
-        "max_turns": max_turns,
+        "max_turns": resolved_hard_turn_limit,
+        "soft_turn_limit": resolved_soft_turn_limit,
+        "hard_turn_limit": resolved_hard_turn_limit,
         "language": output_language,
         "synthetic_only": True,
     })
@@ -260,7 +295,9 @@ def run_ai_followup_copilot_panel(
     facilitator_provider: FacilitatorProvider,
     persona_provider: ConversationProvider,
     quality_provider: FacilitatorProvider,
-    max_turns: int = 12,
+    max_turns: int | None = None,
+    soft_turn_limit: int | None = None,
+    hard_turn_limit: int | None = None,
 ) -> Path:
     return run_concept_panel(
         data_dir=data_dir,
@@ -276,6 +313,8 @@ def run_ai_followup_copilot_panel(
         output_language=DEFAULT_LANGUAGE,
         core_assumption_count=DEFAULT_CORE_ASSUMPTION_COUNT,
         max_turns=max_turns,
+        soft_turn_limit=soft_turn_limit,
+        hard_turn_limit=hard_turn_limit,
     )
 
 

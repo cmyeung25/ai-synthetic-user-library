@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+import tempfile
 import unittest
 
-from ai_validation_swarm.facilitator.concept_panel import _render_summary, _summary_payload
+import ai_validation_swarm.facilitator.concept_panel as concept_panel_module
+from ai_validation_swarm.facilitator.concept_panel import (
+    _render_summary,
+    _summary_payload,
+    _resolve_concept_panel_turn_policy,
+)
 
 
 class ConceptPanelSummaryTests(unittest.TestCase):
@@ -42,6 +50,77 @@ class ConceptPanelSummaryTests(unittest.TestCase):
         self.assertIn("## Additional Persona-Specific Risks", markdown)
         self.assertIn("- First insight", markdown)
         self.assertIn("- Second insight", markdown)
+
+    def test_concept_panel_default_turn_policy_uses_soft_12_hard_16(self) -> None:
+        self.assertEqual(
+            _resolve_concept_panel_turn_policy(),
+            (12, 16),
+        )
+        self.assertEqual(
+            _resolve_concept_panel_turn_policy(max_turns=9),
+            (9, 9),
+        )
+
+    def test_run_concept_panel_persists_default_turn_policy_in_manifest(self) -> None:
+        class FakeRuntime:
+            last_start_kwargs: dict[str, object] | None = None
+
+            def __init__(self, **kwargs):
+                self.session_dir = kwargs["session_dir"]
+
+            def start(self, **kwargs):
+                FakeRuntime.last_start_kwargs = kwargs
+                folder = self.session_dir / "observed_test"
+                folder.mkdir(parents=True, exist_ok=True)
+                insight = {
+                    "problem_evidence": {"strength": "medium"},
+                    "assumption_validation": [],
+                    "key_insights": [],
+                    "pricing_signal": {},
+                    "retention_risk": {},
+                    "next_experiment": "Test with a real concierge flow.",
+                }
+                quality = {"scores": {"overall": 4}}
+                (folder / "insight_report.json").write_text(json.dumps(insight), encoding="utf-8")
+                (folder / "quality_evaluation.json").write_text(json.dumps(quality), encoding="utf-8")
+
+                class Session:
+                    interview_id = "observed_test"
+                    persona_name = "Test Persona"
+                    status = "completed"
+                    last_error = ""
+
+                return folder, Session()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona_dir = root / "data" / "personas" / "su_9999" / "v4"
+            persona_dir.mkdir(parents=True, exist_ok=True)
+            (persona_dir / "profile.json").write_text("{}", encoding="utf-8")
+            output_dir = root / "experiments"
+            original_runtime = concept_panel_module.ObserverControlledInterviewRuntime
+            concept_panel_module.ObserverControlledInterviewRuntime = FakeRuntime
+            try:
+                run_dir = concept_panel_module.run_concept_panel(
+                    data_dir=root / "data" / "personas",
+                    output_dir=output_dir,
+                    facilitator_provider=object(),
+                    persona_provider=object(),
+                    quality_provider=object(),
+                    research_goal="Validate a concept.",
+                    product_context="A neutral concept test.",
+                    topic_label="Test Topic",
+                    persona_ids=["su_9999"],
+                )
+            finally:
+                concept_panel_module.ObserverControlledInterviewRuntime = original_runtime
+
+            self.assertEqual(FakeRuntime.last_start_kwargs["soft_turn_limit"], 12)
+            self.assertEqual(FakeRuntime.last_start_kwargs["hard_turn_limit"], 16)
+            manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["soft_turn_limit"], 12)
+            self.assertEqual(manifest["hard_turn_limit"], 16)
+            self.assertEqual(manifest["max_turns"], 16)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,131 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "pass",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept, with clear behavioural detail in `exchange_1` to `exchange_4`.",
+    "Questions were mostly single-focus, conversational, and non-jargony from the participant's perspective.",
+    "The concept was introduced neutrally enough and the facilitator kept curiosity/trust/payment/repeat-use as separate probes in `exchange_5` to `exchange_8`.",
+    "The facilitator stopped at a reasonable point given the stated coverage and did not continue into low-yield extra probing after `exchange_9`.",
+    "The synthesis preserves an explicit synthetic-only disclaimer and does not present the interview as market proof."
+  ],
+  "findings": [
+    {
+      "category": "synthesis_overreach",
+      "severity": "medium",
+      "observation": "Several synthesis claims convert stated hypothetical concept reactions into stronger product conclusions than the transcript supports. In particular, `retention_risk.workflow_effect = \"replaces_workflow\"` overstates the evidence: the participant said they would reuse it when it helps narrow options faster, but did not say it replaces the workflow; they also explicitly retained human research as necessary.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Rephrase outcome claims as bounded stated intent, e.g. 'may reduce alignment meeting load' or 'could substitute for some early alignment work,' unless a recalled behavioural comparison shows actual replacement."
+    },
+    {
+      "category": "evidence_discipline",
+      "severity": "medium",
+      "observation": "The synthesis includes detailed trust-boundary categories such as `accepted_data_access` and `rejected_data_access`, but the participant was not asked about data access. The evidence supports use-cases and evidentiary boundaries, not data-access permissions.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.trust_boundary.accepted_data_access",
+        "SYNTHESIS.trust_boundary.rejected_data_access"
+      ],
+      "recommendation": "Rename these sections to reflect what was actually tested, such as 'accepted use cases' and 'rejected evidentiary uses,' or add a direct participant-facing probe about what materials they would permit the system to ingest."
+    },
+    {
+      "category": "domain_fit",
+      "severity": "medium",
+      "observation": "The research goal targets five synthetic B2B SaaS buyer personas, but this interview mostly evidences a product/strategy decision-maker use case. The synthesis draws product-shaping implications about platform fit without clearly limiting them to this adjacent role.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "SYNTHESIS.key_insights"
+      ],
+      "recommendation": "Bound the conclusions to this persona type and collect contrast interviews with other buyer roles before promoting broader buyer-domain needs or workflow claims."
+    },
+    {
+      "category": "concept_validation_rigor",
+      "severity": "low",
+      "observation": "The interview separated payment from repeat use, but it did not distinguish curiosity, trial, and payment as cleanly as it could have. `exchange_7` jumps directly to purchase/budget without first isolating what would justify an initial trial.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.facilitator",
+        "exchange_7.persona"
+      ],
+      "recommendation": "Insert a trial-adoption probe before budget, asking what evidence would make them run one real case and what minimal success bar that first run must clear."
+    },
+    {
+      "category": "coverage_gap",
+      "severity": "low",
+      "observation": "A useful contrast case was left untested: when the current process works well, it is unclear whether this tool would still be pulled in or only used for ambiguous/high-stakes cases. The synthesis later flags this as a gap, which is correct.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "SYNTHESIS.evidence_gaps"
+      ],
+      "recommendation": "Add a direct contrast question about a recent case where the current approach was sufficient and whether the concept would still have added value."
+    },
+    {
+      "category": "pricing_evidence",
+      "severity": "low",
+      "observation": "The report appropriately labels pricing evidence as stated, but the interview did not probe any concrete trial structure, pricing model, or willingness boundary, so payment conclusions should remain narrow.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "SYNTHESIS.pricing_signal"
+      ],
+      "recommendation": "Keep payment findings at the level of purchase conditions only, and in the next rerun ask for a concrete pilot shape, buyer, and approval threshold."
+    }
+  ],
+  "required_improvements": [
+    "Tighten synthesis wording so hypothetical concept reactions are not upgraded into workflow-replacement or broad domain-fit conclusions.",
+    "Align evidence labels to what the participant actually discussed; do not label use/evidence boundaries as data-access findings without a direct question.",
+    "Add a direct trial-adoption probe and a contrast-case probe before treating this persona as evidence for retention or broad product fit.",
+    "Keep outputs from this single synthetic interview bounded to persona-specific concept-validation signals, not generalized needs/POV/HMW-level product direction."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one recent case where their existing pre-research process worked well and whether the synthetic platform would still have been used.",
+      "Probe the smallest credible first trial: what exact input, output, and success criterion would justify one live pilot.",
+      "Ask what concrete artifact must come out of the tool to be usable in a roadmap or pricing discussion.",
+      "Test what materials they would actually allow the system to ingest and what they would refuse to share."
+    ],
+    "coverage_gap_actions": [
+      "Add a participant-facing contrast-case question to separate 'general pain' from 'used only in ambiguous cases.'",
+      "Probe trial conditions separately from payment conditions.",
+      "Probe concrete pricing/budget shape only after a clear trial threshold is established.",
+      "If reporting trust boundaries, ask directly about acceptable inputs, evidence trace format, and escalation-to-human rules."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, require an explicit `trial_conditions` probe before `payment_conditions`.",
+      "Constrain synthesis templates so fields like `data_access` can only be populated when directly asked.",
+      "Add a guardrail that hypothetical answers must be labeled as stated intent and cannot justify replacement or retention claims without behavioural comparison.",
+      "Require persona-fit scoping language in synthesis when only one role has been interviewed."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for baseline coverage, but one or two extra turns would improve rigor by adding a contrast case and a separate first-trial probe before closing."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates only the provided synthetic interview materials. Any product, pricing, retention, or domain-fit implication should remain provisional until checked against multiple interviews and real participant research."
+}

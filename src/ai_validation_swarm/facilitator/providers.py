@@ -399,6 +399,58 @@ def _require_list(payload: dict[str, Any], key: str) -> list[Any]:
     return value
 
 
+def normalize_quality_evaluation(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(payload)
+    scores = normalized.get("scores")
+    findings = normalized.get("findings")
+    improvements = normalized.get("required_improvements")
+    hints = normalized.get("improvement_hints")
+    if not isinstance(scores, dict) or not isinstance(findings, list):
+        return normalized
+
+    normalized_scores = dict(scores)
+    normalized["scores"] = normalized_scores
+    overall = normalized_scores.get("overall")
+    verdict = normalized.get("overall_verdict")
+    has_findings = bool(findings)
+    has_high = any(isinstance(item, dict) and item.get("severity") == "high" for item in findings)
+    has_improvements = isinstance(improvements, list) and bool(improvements)
+    actionable_hints = False
+    if isinstance(hints, dict):
+        actionable_hints = any(
+            isinstance(hints.get(key), list) and bool(hints.get(key))
+            for key in ("next_interview_focus", "coverage_gap_actions", "prompt_adjustments")
+        )
+
+    if has_high and isinstance(overall, int) and overall > 3:
+        normalized_scores["overall"] = 3
+        overall = 3
+        if verdict == "pass":
+            normalized["overall_verdict"] = "warn"
+            verdict = "warn"
+
+    score_values = [value for value in normalized_scores.values() if isinstance(value, int)]
+    if has_findings and score_values and all(value == 5 for value in score_values):
+        normalized_scores["overall"] = 4
+        overall = 4
+        if verdict == "pass":
+            normalized["overall_verdict"] = "warn"
+            verdict = "warn"
+
+    if verdict == "warn" and isinstance(overall, int) and overall > 4 and has_improvements:
+        normalized_scores["overall"] = 4
+        overall = 4
+
+    if verdict == "fail" and isinstance(overall, int) and overall > 2 and has_improvements:
+        normalized_scores["overall"] = 2
+        overall = 2
+
+    if verdict == "pass" and has_findings and has_improvements and actionable_hints:
+        normalized["overall_verdict"] = "warn"
+
+    return normalized
+
+
 def validate_quality_evaluation(payload: dict[str, Any]) -> None:
     verdict = payload.get("overall_verdict")
     scores = payload.get("scores")
@@ -585,6 +637,7 @@ class OpenAIFacilitatorProvider:
             codex_session_id=provider_session_id or None,
             persist_codex_session=is_codex,
         )
+        payload = normalize_quality_evaluation(payload)
         for key in FACILITATOR_QUALITY_SCHEMA["required"]:
             if key not in payload:
                 raise ValueError(f"Facilitator quality evaluation is missing '{key}'.")

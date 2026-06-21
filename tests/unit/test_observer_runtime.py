@@ -10,7 +10,7 @@ if str(SRC) not in sys.path:
 
 from ai_validation_swarm.conversation.providers import ChatResult
 from ai_validation_swarm.facilitator.models import FacilitatorDecision
-from ai_validation_swarm.facilitator.providers import validate_quality_evaluation
+from ai_validation_swarm.facilitator.providers import normalize_quality_evaluation, validate_quality_evaluation
 from ai_validation_swarm.observer.runtime import ObserverControlledInterviewRuntime
 from ai_validation_swarm.personas.generator import generate_personas
 from ai_validation_swarm.storage.files import read_json, save_persona
@@ -652,6 +652,18 @@ class ObserverRuntimeTest(unittest.TestCase):
         }
         with self.assertRaisesRegex(ValueError, "actionable improvement hint"):
             validate_quality_evaluation(payload)
+
+    def test_quality_normalizer_demotes_high_severity_inconsistent_overall(self):
+        payload = quality_payload()
+        payload["overall_verdict"] = "pass"
+        payload["scores"]["overall"] = 5
+        payload["findings"][0]["severity"] = "high"
+
+        normalized = normalize_quality_evaluation(payload)
+
+        self.assertEqual(normalized["overall_verdict"], "warn")
+        self.assertEqual(normalized["scores"]["overall"], 3)
+        validate_quality_evaluation(normalized)
 
 
 if __name__ == "__main__":

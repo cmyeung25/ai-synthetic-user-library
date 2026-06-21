@@ -545,6 +545,16 @@ class FacilitatorRuntimeTest(unittest.TestCase):
         self.assertEqual(parsed.soft_turn_limit, 12)
         self.assertEqual(parsed.hard_turn_limit, 16)
 
+        parsed = parser.parse_args([
+            "run-concept-panel",
+            "--research-goal", "Validate a concept",
+            "--product-context", "Neutral concept context",
+            "--topic-label", "Test Topic",
+        ])
+        self.assertIsNone(parsed.max_turns)
+        self.assertIsNone(parsed.soft_turn_limit)
+        self.assertIsNone(parsed.hard_turn_limit)
+
 
 if __name__ == "__main__":
     unittest.main()

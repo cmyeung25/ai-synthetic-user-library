@@ -1,0 +1,315 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "No transcript exists yet, so the first turn should establish domain fit and anchor on one recent concrete pre-research or concept-framing event before introducing the concept or asking hypotheticals.",
+    "message_to_persona": "可唔可以講下你最近一次要為一個B2B SaaS產品諗定位或者研究方向時，當時發生咗咩事？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近有冇一個具體嘅B2B SaaS產品定位、概念整理或研究準備事件？",
+      "當時佢想解答咩不確定性？",
+      "佢目前點樣做前期研究同假設整理？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "The participant has given a concrete recent event and uncertainty. The largest missing evidence before concept introduction is their current workaround, so the next question should reconstruct what they actually used in that event.",
+    "message_to_persona": "嗰次你做呢個sense-check嗰陣，實際上用咗咩方法或者工具去收窄方向？",
+    "evidence_updates": [
+      {
+        "claim": "Participant described a recent concept review for a new workflow automation module where the team had not yet clarified whether the value was time-saving for ops or control for managers.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant quickly sense-checked messaging and flows with a PM and customer success after a morning sync to avoid relying on vague wording.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The immediate outcome was narrowing the research direction toward whether users wanted less manual follow-up or more visibility, rather than fixing positioning immediately.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What concrete tools, artefacts, or conversations did they use in that sense-check workflow?",
+      "What felt insufficient or costly about that current workaround?",
+      "After current workaround evidence is clear, how do they react to the AI Synthetic User Platform concept?",
+      "What trust boundary would they place around synthetic-user outputs?",
+      "What payment or approval conditions would apply?",
+      "What repeat use case would bring them back after month one?",
+      "Which founder assumption feels strongest or weakest to them?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "Current behaviour and workaround are now grounded in a recent event, so it is appropriate to introduce the concept neutrally and capture first reaction before probing trust, payment, or retention.",
+    "message_to_persona": "如果有個AI Synthetic User Platform可以畀你用唔同嘅合成用戶做預先訪談同壓力測試，你第一下會覺得邊部分最有用，邊部分最可疑？",
+    "evidence_updates": [
+      {
+        "claim": "Participant used a rough Figma flow plus a few alternative value proposition lines to sense-check positioning with PM and customer success.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant asked internal stakeholders which explanation felt most truthful to tell customers and which lines would trigger follow-up questions.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant logged the follow-up questions in FigJam and sorted them around ROI, sense of control, and daily operational burden.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What is the participant's first reaction to the concept?",
+      "What trust boundary would make synthetic-user output useful versus fake?",
+      "What conditions would make this worth paying for?",
+      "What repeated use case would bring them back after the first month?",
+      "Which founder assumption feels strongest or weakest to them?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "trust_probe",
+    "decision_rationale": "The participant has given a concrete first reaction and surfaced a clear suspicion about synthetic outputs feeling too polished or shallowly varied. The next best probe is to define the trust boundary by asking what evidence would make the outputs feel actionable rather than like generic AI critique.",
+    "message_to_persona": "咩樣嘅輸出會令你覺得佢真係有參考價值，而唔只係另一種AI評論？",
+    "evidence_updates": [
+      {
+        "claim": "Participant sees value in using synthetic users before real interviews to surface credible objections earlier, especially around messaging gaps and hesitation points in the flow.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant would use early objections from synthetic users to improve interview questions and prototypes before speaking to real users.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant is skeptical if synthetic users all sound too complete, too reasonable, or differ only in tone, because that would feel like polished AI critique rather than distinct decision logics.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What evidence trace or output format would make the participant trust the tool?",
+      "Under what conditions would the participant allow synthetic-user output into real workflow decisions?",
+      "What payment or approval conditions would need to be met?",
+      "What repeat use case would bring them back after the first month?",
+      "Which founder assumption feels strongest or weakest to them?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_probe",
+    "probing_strategy": "commitment_evidence",
+    "decision_rationale": "Trust boundary is now grounded in specific output requirements. The next missing area is payment conditions, so the question should test what concrete value proof would be needed before this enters a paid workflow.",
+    "message_to_persona": "要去到你會願意爭取budget試呢類工具，佢最少要證明到咩價值？",
+    "evidence_updates": [
+      {
+        "claim": "Participant would find the tool more credible if it explains why a specific person pauses at a point and what trade-off they are weighing, rather than giving generic comments about confusion.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant wants different personas to react differently to the same screen, with outputs traceable to background, work context, or risk sensitivity.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant would treat the tool as research preparation rather than polished opinion only if outputs show distinct decision logic tied to context.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What concrete value proof or decision leverage would justify budget for this tool?",
+      "What recurring use case would bring the participant back after initial trial?",
+      "Which founder assumption feels strongest or weakest from the participant's perspective?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "counterfactual",
+    "decision_rationale": "Payment conditions are now grounded in concrete value proof for a live project. The largest missing area is repeat-use logic, so the next question should test what recurring workflow slot would make the tool worth coming back to rather than feeling like extra layer.",
+    "message_to_persona": "如果你真係試過一次，之後要喺咩情況下你先會第二次再開返佢用？",
+    "evidence_updates": [
+      {
+        "claim": "Participant would only seek budget if the tool improves research preparation quality, not just speed.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "In a live project, participant would expect the tool to produce objections more substantive than internal critique and help improve interview questions or messaging.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant needs to be able to explain to a PM why the outputs are worth considering without treating them as evidence.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What recurring workflow moment would trigger repeat use after an initial trial?",
+      "What would make the tool feel like an extra layer instead of replacing an existing step?",
+      "Which founder assumption feels strongest or weakest to the participant?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "founder_assumption_check",
+    "probing_strategy": "founder_assumption_probe",
+    "decision_rationale": "All other required areas are covered. The remaining gap is the founder-assumption check, so the next question should surface the participant's view of the strongest or weakest product assumption without bundling multiple prompts.",
+    "message_to_persona": "如果你要揀一個你覺得呢個產品最容易高估咗嘅位，會係邊一個？",
+    "evidence_updates": [
+      {
+        "claim": "Participant would reuse the tool only if the first use surfaced one or two issues that internal review had not exposed and those insights could be quickly folded into the next flow, messaging, or interview outline.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "A likely repeat-use moment is the start of another ambiguous project, especially when the team tends to become overly certain too early.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "Which product assumption does the participant think is most overestimated?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "closing",
+    "probing_strategy": "stop_rule",
+    "decision_rationale": "All required concept-validation coverage areas are now supported by participant-facing evidence, and another question would likely be incremental rather than materially changing the evidence map.",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "Participant believes the product's most overestimated claim is seeming like real user reaction, because polished synthetic responses could be mistaken for early validation.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant sees the appropriate role of the product as helping teams organize risks and problem awareness, not replacing the contrast that comes from speaking with real humans.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "Required coverage is complete and further probing would likely be repetitive.",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eea8d-7e4e-7d40-995d-22300f90ddae",
+    "decision_status": "not_asked_at_close"
+  }
+]

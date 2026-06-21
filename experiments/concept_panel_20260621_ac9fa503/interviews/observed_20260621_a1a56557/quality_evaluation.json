@@ -1,0 +1,121 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "pass",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview establishes a recent concrete event before introducing the concept, and the first two questions stay anchored in an observed workflow (`exchange_1`, `exchange_2`).",
+    "Concept introduction is relatively neutral and bounded; it does not explicitly sell replacement and the participant independently draws the boundary against real research (`exchange_3`).",
+    "Questions are mostly single-focus, conversational, and non-repetitive across the seven asked turns.",
+    "The facilitator separated trust boundary, payment condition, repeat use, and misuse risk into distinct probes rather than collapsing them into one long questionnaire."
+  ],
+  "findings": [
+    {
+      "category": "evidence_discipline",
+      "severity": "medium",
+      "observation": "Coverage marks `payment_conditions` and `retention_repeat_use` as covered, but the transcript only captures stated hypothetical conditions, not buyer process, budget behavior, or real repeat-use evidence. The synthesis correctly flags some of this as stated/unknown, but coverage completeness overstates what was actually learned.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_5.persona",
+        "exchange_6.facilitator",
+        "exchange_6.persona",
+        "coverage_status"
+      ],
+      "recommendation": "Split behavioural coverage from stated/hypothetical coverage. Require at least one participant-facing probe on budget owner, approval path, or last comparable purchase before marking payment covered, and explicitly label repeat-use as hypothetical unless tied to observed prior tool reuse."
+    },
+    {
+      "category": "synthesis_fidelity",
+      "severity": "medium",
+      "observation": "Some synthesis claims exceed the narrow evidence. `workflow_effect: replaces_workflow` is not supported; the participant described a tool that could assist pre-research scoping, not replace their notes workflow. `research gatekeeper` and similar framing in `key_insights` is plausible but interpretive rather than directly evidenced.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "synthesis.current_workaround",
+        "synthesis.retention_risk",
+        "synthesis.key_insights"
+      ],
+      "recommendation": "Constrain synthesis language to what the participant explicitly said. Use labels like `augments existing scoping workflow` unless the transcript shows replacement, and mark interpretive product framing as inference."
+    },
+    {
+      "category": "domain_fit_alignment",
+      "severity": "medium",
+      "observation": "The interview tests fit around disruption sources and abstract value boundaries, but it does not probe actual changed actions in the participant's workflow after using such a tool. That leaves adoption fit inferred from intent statements rather than workflow change evidence.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "synthesis.assumption_validation"
+      ],
+      "recommendation": "Add a participant-facing action-change probe such as what they would do differently in the same brief, what step would disappear, and what artifact would be produced or skipped if the tool were used."
+    },
+    {
+      "category": "concept_validation",
+      "severity": "low",
+      "observation": "The concept question bundles multiple possible jobs: interviewing synthetic users, testing assumptions, and testing messaging. The participant handled it well, but the prompt still contains more than one evaluative object.",
+      "evidence_refs": [
+        "exchange_3.facilitator"
+      ],
+      "recommendation": "Introduce the concept with one core job first, then probe adjacent jobs separately if needed."
+    },
+    {
+      "category": "pricing_research",
+      "severity": "low",
+      "observation": "The payment probe asks what error or workload reduction would justify paying, but never isolates pricing, trial expectations, or procurement mechanics. The report preserves this as unknown in part, yet still treats payment conditions as covered.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_5.persona",
+        "synthesis.pricing_signal"
+      ],
+      "recommendation": "Follow value justification with one short concrete commercial probe: last similar tool purchase, acceptable pilot format, or who would need to sign off."
+    }
+  ],
+  "required_improvements": [
+    "Do not mark payment or retention fully covered when evidence is only hypothetical; distinguish behavioural proof from stated intent in coverage logic and reporting.",
+    "Tighten synthesis to avoid replacement or workflow-effect claims unless the transcript explicitly shows changed actions or displaced steps.",
+    "Add at least one action-change probe and one concrete commercial/procurement probe in concept-validation runs before closing."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask the participant to walk through the same recent brief and say exactly what they would do differently, earlier, or not do at all if this platform were available.",
+      "Ask for a concrete comparable tool decision: who approved it, what budget line it came from, and what minimum pilot evidence was needed.",
+      "Probe required output format and evidence trace directly: what deliverable would make the synthetic output actionable versus unsafe to circulate."
+    ],
+    "coverage_gap_actions": [
+      "Add a participant-facing probe for current workaround limits, not just the existence of a workaround, by asking where their notes process fails or becomes too slow.",
+      "Add a direct trial probe distinct from payment: what would make them try it once, with what input, and what would count as success.",
+      "Add a direct retention probe tied to workflow recurrence and artifacts, not only a generic 'next month' condition.",
+      "If reporting pricing or trust conclusions, collect explicit participant statements on setup burden, privacy boundary, and acceptable proof format."
+    ],
+    "prompt_adjustments": [
+      "Change coverage rules so `payment_conditions` requires either a concrete purchase-process answer or is tagged `stated_only`.",
+      "Change coverage rules so `retention_repeat_use` requires either prior analogous repeat behavior or an explicit hypothetical label in both coverage and synthesis.",
+      "Prompt the facilitator to ask one `what changes in your workflow` question after positive concept reaction and before closure.",
+      "In concept introduction, describe one primary use first and hold messaging-testing or assumption-testing as follow-up variants instead of combining them in a single sentence."
+    ],
+    "turn_budget_guidance": "The current 7-turn interview is close but slightly tight for concept validation with buyer-fit goals. Keep the soft limit flexible and allow 1-2 extra turns when payment, workflow change, or output-format evidence is still only hypothetical."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates methodological quality of a single synthetic interview and its write-up. Any product, pricing, retention, or design implication should remain bounded to this one synthetic persona unless corroborated by additional interviews."
+}

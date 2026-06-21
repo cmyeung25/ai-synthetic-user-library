@@ -517,7 +517,9 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_generic_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
     concept_panel_generic_cmd.add_argument("--model", default="gpt-5.4")
     concept_panel_generic_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="low")
-    concept_panel_generic_cmd.add_argument("--max-turns", type=int, default=12)
+    concept_panel_generic_cmd.add_argument("--max-turns", type=int)
+    concept_panel_generic_cmd.add_argument("--soft-turn-limit", type=int)
+    concept_panel_generic_cmd.add_argument("--hard-turn-limit", type=int)
 
     concept_panel_cmd = subparsers.add_parser("run-followup-copilot-panel")
     concept_panel_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
@@ -525,7 +527,9 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
     concept_panel_cmd.add_argument("--model", default="gpt-5.4")
     concept_panel_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="low")
-    concept_panel_cmd.add_argument("--max-turns", type=int, default=12)
+    concept_panel_cmd.add_argument("--max-turns", type=int)
+    concept_panel_cmd.add_argument("--soft-turn-limit", type=int)
+    concept_panel_cmd.add_argument("--hard-turn-limit", type=int)
 
     concept_summary_generic_cmd = subparsers.add_parser("summarize-concept-panel")
     concept_summary_generic_cmd.add_argument("--run-dir", type=Path, required=True)
@@ -1738,6 +1742,7 @@ def _cmd_run_concept_panel(args: argparse.Namespace) -> int:
     facilitator_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
     persona_provider = _build_conversation_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
     quality_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=12, default_hard=16)
     print("Running synthetic concept panel in Cantonese; not human market evidence.")
     output = run_concept_panel(
         data_dir=args.data_dir,
@@ -1753,7 +1758,9 @@ def _cmd_run_concept_panel(args: argparse.Namespace) -> int:
         output_language=args.language,
         core_assumption_count=args.core_assumption_count,
         persona_ids=args.persona_ids,
-        max_turns=args.max_turns,
+        max_turns=hard_limit,
+        soft_turn_limit=soft_limit,
+        hard_turn_limit=hard_limit,
     )
     print(f"Panel completed: {output}")
     print(f"Summary: {output / 'panel_summary.md'}")
@@ -1766,6 +1773,7 @@ def _cmd_run_followup_copilot_panel(args: argparse.Namespace) -> int:
     facilitator_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
     persona_provider = _build_conversation_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
     quality_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=12, default_hard=16)
     print("Running AI Follow-up Copilot synthetic panel in Cantonese; not human market evidence.")
     output = run_ai_followup_copilot_panel(
         data_dir=args.data_dir,
@@ -1773,7 +1781,9 @@ def _cmd_run_followup_copilot_panel(args: argparse.Namespace) -> int:
         facilitator_provider=facilitator_provider,
         persona_provider=persona_provider,
         quality_provider=quality_provider,
-        max_turns=args.max_turns,
+        max_turns=hard_limit,
+        soft_turn_limit=soft_limit,
+        hard_turn_limit=hard_limit,
     )
     print(f"Panel completed: {output}")
     print(f"Summary: {output / 'panel_summary.md'}")

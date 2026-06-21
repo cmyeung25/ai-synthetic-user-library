@@ -1,0 +1,119 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "pass",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept, with a clear behavioural setup in `exchange_1` and current workaround detail in `exchange_2`.",
+    "Participant-facing questions were concise, single-focus, and conversational; none were compound or visibly solution-loaded.",
+    "Coverage adapted efficiently across concept reaction, trust, payment, retention, and assumption check without reading out a long questionnaire.",
+    "The facilitator stopped at a reasonable point once required concept-validation coverage was complete and before the interview became repetitive."
+  ],
+  "findings": [
+    {
+      "category": "Synthesis fidelity",
+      "severity": "high",
+      "observation": "The synthesis upgrades hypothetical concept reactions into stronger workflow claims than the transcript supports. `retention_risk.workflow_effect` says `replaces_workflow`, but the persona said the tool would fit before real interviews and help prepare next questions, not replace the workflow. `exchange_6.persona` supports repeated use only conditionally and hypothetically.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Reframe workflow fit as an insertion point inside the existing process, not replacement. Label repeated-use and workflow effects as hypothetical unless tied to observed adoption behaviour."
+    },
+    {
+      "category": "Evidence discipline",
+      "severity": "medium",
+      "observation": "Several synthesis outputs present stated or hypothetical answers with stronger certainty labels than warranted. `problem_evidence.strength` is `strong` from one synthetic interview, and `assumption_validation` marks multiple assumptions `supported` even though concept fit, payment, and retention were only discussed hypothetically after concept introduction.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.problem_evidence.strength",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Downgrade claim strength for concept-fit, adoption, and retention assumptions to stated/hypothetical signal. Reserve `supported` for assumptions tied to observed past behaviour or repeated evidence across interviews."
+    },
+    {
+      "category": "Domain fit",
+      "severity": "medium",
+      "observation": "The synthesis infers product fit from adjacent signals more than changed actions. For example, `adoption 需要清晰 workflow insertion point，同時縮短一個舊步驟` is marked supported, but no actual changed action, trial, or substitution behaviour was observed.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Anchor domain-fit conclusions to observed changed actions only. In concept validation, separate 'where they say it fits' from 'what they actually changed or would trial next'."
+    },
+    {
+      "category": "Coverage gap",
+      "severity": "medium",
+      "observation": "The interview covered payment conditions and retention intent, but it did not directly isolate curiosity, concrete trial threshold, and month-two retention as distinct concepts. Payment and repeated use were asked, but there was no explicit probe for what would trigger a first real trial on current material.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_6.facilitator"
+      ],
+      "recommendation": "Add a participant-facing trial probe such as what exact artifact they would upload first, what output would make them continue, and what would make them abandon after the first session."
+    },
+    {
+      "category": "Pricing evidence",
+      "severity": "low",
+      "observation": "Pricing remained broad. The participant gave affordability language for a small founder, but no bounded willingness-to-pay or procurement threshold was elicited.",
+      "evidence_refs": [
+        "exchange_5.persona"
+      ],
+      "recommendation": "If pricing is in scope, ask for a concrete acceptable range or compare against an existing tool spend, while still labeling it as stated intent rather than proof."
+    }
+  ],
+  "required_improvements": [
+    "Correct synthesis claims that overstate hypothetical workflow fit or replacement effects.",
+    "Label concept-validation outputs more strictly as stated or hypothetical when they are not based on observed behaviour.",
+    "Tighten assumption statuses so single-interview concept reactions do not become broad supported product truths.",
+    "Add a direct first-trial probe in future reruns to distinguish initial curiosity from actual activation and later retention."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask what exact current landing-page draft or artifact they would test first in the platform and what output would make them act on it the same day.",
+      "Probe one concrete first-trial threshold: what must the tool show in session one for them to keep using it.",
+      "Separate month-one curiosity from month-two retention by asking what repeated evidence would make the tool become routine.",
+      "Ask for one lower-stakes case where they would choose not to use the tool, to bound fit and avoid overgeneralization."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct participant-facing trial-behaviour question, not just willingness to pay.",
+      "Ask for a concrete pricing boundary or comparable budget anchor if pricing matters to the study.",
+      "Probe whether the tool changes any real next action beyond reflection, such as editing copy, scheduling interviews, or killing an idea.",
+      "Test whether the platform is useful when ambiguity is low, to check if value is limited to high-uncertainty messaging work."
+    ],
+    "prompt_adjustments": [
+      "Instruct synthesis to mark all post-concept answers as `stated` or `hypothetical` unless tied to recalled behaviour.",
+      "Add a guardrail that forbids workflow replacement or retention claims unless the transcript contains explicit changed-action evidence.",
+      "Require assumption statuses in concept validation to distinguish `problem observed`, `concept interest stated`, and `adoption proven` rather than collapsing them into `supported`.",
+      "Prompt the facilitator to include one explicit first-trial activation probe before closure when payment or retention is discussed."
+    ],
+    "turn_budget_guidance": "Current turn budget was sufficient for this interview. Keep the soft/hard limits roughly the same, but reserve one additional turn for a concrete first-trial probe before closing when concept validation coverage appears complete."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic concept-validation interview. Findings about rigor and evidence strength do not convert the persona's statements into market proof; product, pricing, and retention conclusions still require human interviews and real usage evidence."
+}

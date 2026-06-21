@@ -1,0 +1,186 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "呢個可以用嚟做前期 scoping，但唔好同真實用研混埋講。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "如果佢真係減少錯開研究、問錯問題，呢個先有價值。",
+        "evidence_ref": "exchange_5.persona"
+      },
+      {
+        "quote": "明明只係幫人收窄假設，最後被講成『已經代表用戶聲音』。",
+        "evidence_ref": "exchange_7.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次事件入面，參與者先重寫一份寫得好闊嘅 brief，變成幾個可驗證問題，先決定值唔值得開用研。",
+      "佢會逐句圈低假設，判斷如果今日唔做訪談，係咪仍然可以靠已有資料決定。",
+      "當 brief 鬆散、假設多但團隊已準備直接開 recruit 時，佢視為高風險前期判斷場景。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "先睇 intake，釐清邊個真係做決定。",
+      "刪走『用戶會唔會鍾意』呢類立場題，改寫成可驗證問題。",
+      "用已有數據先判斷有冇部分答案，再決定是否需要真人用研。",
+      "用自己 notes 做前期 scoping，而唔係即刻開研究。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "唔可以混淆真人用研同合成輸出。",
+      "敏感、金融風險、跨市場語境差異大嘅決定仍然要真人證據。",
+      "唔可以令團隊更容易跳過真人驗證。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "前期 scoping",
+      "收窄假設",
+      "提早發現問題問得太闊",
+      "多市場但未值得即刻動用真人研究資源嘅前期整理"
+    ],
+    "rejected_data_access": [
+      "代替真實受訪者",
+      "代表『用戶聲音』作內部背書",
+      "金融選擇或風險理解相關決定",
+      "敏感議題",
+      "需要判斷微妙猶豫與誤解嘅情境"
+    ],
+    "required_trust_explanation": [
+      "必須清楚聲明只係 AI pre-validation，唔係真實市場證據。",
+      "價值要落喺減少錯開研究、問錯問題，而唔係產生順耳摘要。",
+      "結果應該幫團隊知道下一步要點樣做真人驗證，而唔係提供結論終點。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "幫參與者早啲睇到邊啲假設企唔住。",
+      "喺研究開始前篩走問題未定義清楚但已準備 recruit 嘅 request。",
+      "幫手收窄問題範圍，而唔係只係生成內容。"
+    ],
+    "time_to_value": "第一次用就要喺研究開始前提供可行動嘅前期判斷價值。",
+    "abandonment_triggers": [
+      "輸出只係似樣摘要",
+      "暗示可以取代真人用研",
+      "令團隊產生假信心",
+      "冇辦法改善研究問題定義"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "unknown",
+    "monthly_comfort_range": "unknown",
+    "payment_justification": [
+      "減少錯開研究",
+      "減少問錯問題",
+      "及早篩走未定義清楚但已想直接開研究嘅 request",
+      "支援多市場前期 scoping 而唔使即刻用真人資源"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "下個月再遇到一堆鬆散 brief",
+      "上次使用真係幫到早啲識別站唔住腳嘅假設",
+      "要同幾個市場一齊做前期 scoping，但未值得即刻做真人研究"
+    ],
+    "drop_off_reasons": [
+      "只係產生好睇輸出而冇決策幫助",
+      "被包裝成可代表真實用戶",
+      "團隊用佢去合理化跳過真人驗證"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "參與者有真實嘅 pre-research / concept-validation 問題值得解。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "佢已經有一套前期問題整理流程，而且明確指出鬆散 brief 同過早開 recruit 係實際風險。"
+    },
+    {
+      "assumption": "現有 workaround 不足，值得加一個新工具。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "現有方法可運作，但當 brief 鬆散、假設太多、多市場前期 scoping 時仍有缺口；未證明缺口足夠大到必然採用新工具。"
+    },
+    {
+      "assumption": "Synthetic users 只喺能 sharpen real next steps 時先有用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "參與者重複強調用途應是前期 scoping、收窄假設、減少問錯問題，而非代替真人證據。"
+    },
+    {
+      "assumption": "Evidence trace、透明度、synthetic-only framing 會影響信任。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "佢明確要求不要和真人用研混淆，但未具體說明想要哪種 trace 或報告格式。"
+    },
+    {
+      "assumption": "產品必須 fit 喺真人訪談之前，而唔係同真人訪談競爭。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "佢接受前期 scoping，但對任何替代真人研究嘅暗示都會即刻退後。"
+    },
+    {
+      "assumption": "Adoption 需要清楚 workflow insertion point，同時縮短現有一步。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "佢要工具直接減少錯開研究、問錯問題，並在鬆散 brief 和多市場前期整理時反覆使用。"
+    },
+    {
+      "assumption": "最大失敗模式是假信心。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_7.persona"
+      ],
+      "rationale": "參與者直接指出 deadline 緊時，團隊最容易拎住順耳合成回答跳過真人驗證。"
+    },
+    {
+      "assumption": "有明確月費或採購舒適區間。",
+      "status": "unknown",
+      "evidence_refs": [
+        "exchange_5.persona"
+      ],
+      "rationale": "只收集到價值條件，冇收集預算、購買流程或價格範圍。"
+    }
+  ],
+  "key_insights": [
+    "對呢位 persona 而言，AI Synthetic User Platform 唔係 research substitute，而係 research gatekeeper。",
+    "真正價值唔係『更快產生內容』，而係『更早阻止錯誤研究開始』。",
+    "最佳切入位係鬆散 brief、多假設、準備過早 recruit、或多市場前期 scoping。",
+    "最重要嘅信任界線係唔可以被描述成代表真實用戶聲音。",
+    "最大 adoption risk 係 deadline 壓力下被團隊當成跳過真人驗證嘅藉口。"
+  ],
+  "next_experiment": "用一個真實但鬆散嘅產品 brief 做 concierge test，比參與者先用平台收窄假設，再比較佢原本 notes 流程同平台輸出，觀察有冇更早識別『唔應該直接開研究』嘅 request。",
+  "evidence_gaps": [
+    "未問到具體預算、購買者、審批邊界。",
+    "未問到佢需要咩輸出格式先覺得 actionable。",
+    "只得一位 synthetic persona，未能比較唔同 buyer 類型。",
+    "留存仍然係假設性陳述，未有真實 repeated-use 行為。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 嘅概念驗證前測，唔可以當成人類市場證據或因果結論；只適合用嚟收窄下一輪真人研究假設。"
+}

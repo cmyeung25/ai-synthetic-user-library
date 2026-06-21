@@ -1,0 +1,325 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "開始先建立一個近期而具體的概念塑造或研究準備事件，避免過早介紹產品概念，並優先覆蓋 `recent_behaviour`，為之後追問現有做法與痛點建立事件基礎。",
+    "message_to_persona": "可唔可以同我講下你最近一次喺接觸真實用戶之前，要先摸清一個B2B SaaS想法或者產品方向係點做？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次具體的概念塑造或研究準備事件係乜",
+      "當時想釐清嘅核心不確定性係乜",
+      "喺接觸真實用戶之前用咗咩現有方法或工具"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "受訪者已提供一個近期具體事件，並提到用 deck 同 demo 稿逐個比對。下一步應追問當時實際點做，補足 `current_workaround`，仍然留在同一事件內，避免太早引入概念。",
+    "message_to_persona": "你嗰朝逐個比對 deck 同 demo 稿時，實際係點樣判斷邊啲可以帶入會議？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者描述過一個近期、具體的 pre-research 概念拆解事件，發生在正式客戶訪談之前。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會先把內部提出的 B2B workflow 工具方向拆成基本假設，例如目標角色與價值類型。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者曾用現有 deck 與 demo 稿對照，判斷哪些輸出能帶進平時 review 會議，哪些只是聽起來聰明但無法支持下一步。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當時具體用了什麼判斷標準或訊號決定某些輸出可帶入會議",
+      "這套做法是否依賴既有文件與個人判斷作為目前 workaround",
+      "如果某些輸出最後沒帶入會議，實際卡住的是證據不足、可執行性不足，還是與現有流程不合"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_introduction",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "近期事件同現有 workaround 已有足夠基礎，下一步可中性引入概念，先測第一反應與有用/可疑之處，再為後續 trust、pricing、retention 鋪路。問題保持單一焦點，不夾帶購買或價值判斷。",
+    "message_to_persona": "如果有個 AI Synthetic User Platform 俾你喺正式搵真實用戶前，用唔同模擬用戶去挑戰假設同反對點，你第一下會覺得邊部分最有用？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者目前會以『能否幫會議做清楚取捨』作為篩選輸出的主要標準。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會檢查輸出是否清楚說明假設、反對點是否具體、以及不同方案能否用同一把尺比較。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者在帶材料入會議前，會預先判斷自己能否向 finance 或業務負責人清楚解釋背後理由；講不清楚的通常不帶入會議。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者對 AI Synthetic User Platform 的第一反應是什麼",
+      "他最看重的是假設挑戰、反對點質量，還是方案比較能力",
+      "他是否立即對可信度或可解釋性產生疑慮"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_probe",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "受訪者已給出概念的首要價值判準：快啲搵盲點而不是生成相似回應。下一步應直接測試 trust boundary，聚焦他會用咩訊號分辨『有用』同『似真但冇料』，為之後 payment 和 retention 建立可信度門檻。",
+    "message_to_persona": "咁你會睇到啲咩先覺得佢唔係得一堆好似真但其實差唔多嘅回應？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者對概念的首要反應是看它能否更快找出盲點，而不是只生成生動但相似的回應。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為最有用的概念價值，是在同一框架下比較幾個方案，並看見哪些假設最脆弱、反對點集中在哪裡。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者會用『是否值得帶去做下一步真人研究』作為判斷這類工具輸出是否有用的實際標準。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩證據形式會令受訪者相信 synthetic output 真的可用",
+      "哪些輸出特徵會讓他判定這只是 AI theatre",
+      "可信門檻是否與可比較性、可解釋性、或 objection trace 有關"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_probe",
+    "probing_strategy": "adoption_probe",
+    "decision_rationale": "Trust boundary is now concrete enough: the participant wants grounded divergence tied to role, constraints, and assumptions. Next I should test payment conditions by anchoring on workflow value proof rather than abstract willingness to pay.",
+    "message_to_persona": "要去到你公司真係會為呢類工具畀錢，佢首先要幫你做成咩先得？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者判斷這類工具是否可信，會看不同模擬用戶之間的分歧是否有具體根據，而不只是語氣或措辭不同。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者期望反對點差異應來自角色、約束或採用門檻不同，並且能回溯背後假設。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果輸出只是不斷換句話說『太貴、太麻煩、未夠信』，受訪者會認為系統深度不足。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩結果會令受訪者覺得值得付費而不只是有趣",
+      "付款門檻是節省時間、提升會議決策質量，還是減少無效真人研究",
+      "誰會是內部付款或批准的人"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "workflow_insertion",
+    "decision_rationale": "付款條件已具體到改變優先次序與真人研究決策。下一步應測試重複使用條件，確認它會插入哪個固定流程，以及甚麼持續價值會令它唔變成額外一層。",
+    "message_to_persona": "如果你之後會一再用佢，最可能係卡喺邊一類決定前面先會開返出嚟？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者認為公司願意為這類工具付費的前提，是它能在真實 portfolio review 中減少不應繼續推進的概念。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者要求付費等級的輸出必須可比較、可追問、可拿去開會，而不是只提供好看的評論。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對受訪者而言，從『有趣』到『願意付費』的關鍵差別，是工具能否改變團隊如何排優先次序，以及如何決定下一步做哪種真人研究。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "哪一類重複出現的決策情境最可能觸發再次使用",
+      "它會嵌入在概念篩選、review 前準備，還是真人研究設計前",
+      "甚麼情況會令它變成多一層流程而停止使用"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "founder_assumption_check",
+    "probing_strategy": "assumption_probe",
+    "decision_rationale": "只剩 founder assumption check 未覆蓋，而受訪者已清楚表達價值、信任、付費和重複使用條件。下一步用一條中性問題找出他認為最弱的產品假設，能直接補足最後缺口，亦避免重複前面內容。",
+    "message_to_persona": "如果呢個產品最後會做唔成，你覺得最可能係邊個假設一開始就諗得太樂觀？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最可能重複使用這類工具的時點，是正式批研究預算之前，或多個概念仍未夠硬淨但必須先排序的時候。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者不會把這類工具當作最後判斷，而是用來在關鍵決策前做一次有紀律的挑戰與排序。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "這類工具的持續使用價值，在於能穩定支援正式研究前的概念篩選與優先次序安排。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者認為產品最脆弱的核心假設是甚麼",
+      "他擔心的是 synthetic output 深度不足、workflow fit 不清，還是容易帶來假信心",
+      "他會建議先驗證哪個最小真實世界測試"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "closing",
+    "probing_strategy": "stop_rule",
+    "decision_rationale": "所有必需 coverage 已完成，受訪者對近期行為、現有 workaround、概念價值、信任邊界、付費條件、重複使用情境同最弱假設都已提供具體而不重複的 evidence；再追問大機會只會細化而唔會實質改變 evidence map。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "受訪者認為這類產品最容易過度樂觀的假設，是只要模擬回應夠逼真，團隊自然就會相信並採用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在企業環境中，受訪者認為輸出是否 sharp 並不足夠，還必須能說清限制並承受追問。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為產品能否放入現有決策流程，是比輸出表面質量更關鍵的採用條件。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "Required coverage complete and additional probing would likely be repetitive rather than materially changing the evidence map.",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eea9a-e4b6-7db1-bf89-0f2b608ec750",
+    "decision_status": "not_asked_at_close"
+  }
+]
