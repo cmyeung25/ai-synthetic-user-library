@@ -6,37 +6,61 @@ from typing import Any
 import uuid
 
 from ai_validation_swarm.domain.models import utc_now_iso
+from ai_validation_swarm.facilitator.concept_protocols import (
+    DEFAULT_CONCEPT_LABEL,
+    DEFAULT_CONCEPT_PROTOCOL,
+)
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.observer.runtime import ObserverControlledInterviewRuntime
 from ai_validation_swarm.conversation.providers import ConversationProvider
 from ai_validation_swarm.storage.files import ensure_dir, read_json, write_json
 
 
-RESEARCH_GOAL = (
-    "了解 persona 有冇真實 follow-up 遺漏問題、目前點處理，以及 AI Follow-up Copilot 嘅信任、"
-    "首個價值、setup、pricing、retention 同 founder assumptions。"
+DEFAULT_TOPIC_LABEL = "Concept Validation"
+DEFAULT_LANGUAGE = "Natural Cantonese Traditional Chinese"
+DEFAULT_CORE_ASSUMPTION_COUNT = 8
+
+FOLLOWUP_RESEARCH_GOAL = (
+    "Interview synthetic personas about follow-up behaviour, trust boundaries, setup tolerance, "
+    "pricing conditions, retention risk, and founder assumptions for AI Follow-up Copilot."
 )
-PRODUCT_CONTEXT = "AI Follow-up Copilot concept validation；必須依照 versioned protocol，中立介紹，唔可以銷售。"
-CORE_ASSUMPTION_COUNT = 8
+FOLLOWUP_PRODUCT_CONTEXT = (
+    "AI Follow-up Copilot concept validation using the versioned concept interview protocol."
+)
 
 
-def _persona_ids(data_dir: Path) -> list[str]:
-    return sorted(
+def _persona_ids(data_dir: Path, selected: list[str] | None = None) -> list[str]:
+    available = sorted(
         path.name for path in data_dir.iterdir()
         if path.is_dir() and (
-            (path / "v3_3" / "profile.json").exists()
+            (path / "v4" / "profile.json").exists()
+            or (path / "v3_3" / "profile.json").exists()
             or (path / "v3_2" / "profile.json").exists()
         )
     )
+    if not selected:
+        return available
+    wanted = sorted(dict.fromkeys(selected))
+    missing = [persona_id for persona_id in wanted if persona_id not in set(available)]
+    if missing:
+        raise ValueError(f"Personas were not found in the library: {missing}")
+    return wanted
 
 
-def _summary_payload(run_id: str, interviews: list[dict[str, Any]]) -> dict[str, Any]:
+def _summary_payload(
+    run_id: str,
+    interviews: list[dict[str, Any]],
+    *,
+    topic_label: str,
+    language: str,
+    core_assumption_count: int,
+) -> dict[str, Any]:
     assumption_rows: dict[int, dict[str, Any]] = {}
     additional_findings: list[dict[str, Any]] = []
     for interview in interviews:
         report = interview.get("report", {})
         for index, item in enumerate(report.get("assumption_validation", []), start=1):
-            if index > CORE_ASSUMPTION_COUNT:
+            if index > core_assumption_count:
                 additional_findings.append({
                     "persona_id": interview["persona_id"],
                     "persona_name": interview["persona_name"],
@@ -69,8 +93,9 @@ def _summary_payload(run_id: str, interviews: list[dict[str, Any]]) -> dict[str,
     ]
     return {
         "run_id": run_id,
-        "topic": "AI Follow-up Copilot",
-        "language": "Natural Cantonese Traditional Chinese",
+        "topic": topic_label,
+        "language": language,
+        "core_assumption_count": core_assumption_count,
         "persona_count": len(interviews),
         "problem_strength_counts": dict(problem_counts),
         "average_quality_score": round(sum(quality_scores) / len(quality_scores), 2) if quality_scores else None,
@@ -99,7 +124,7 @@ def _summary_payload(run_id: str, interviews: list[dict[str, Any]]) -> dict[str,
 
 def _render_summary(summary: dict[str, Any], interviews: list[dict[str, Any]]) -> str:
     lines = [
-        "# AI Follow-up Copilot Synthetic Persona Panel", "",
+        f"# {summary['topic']} Synthetic Persona Panel", "",
         f"> {summary['synthetic_only_disclaimer']}", "",
         f"- Personas: {summary['persona_count']}",
         f"- Language: {summary['language']}",
@@ -120,9 +145,7 @@ def _render_summary(summary: dict[str, Any], interviews: list[dict[str, Any]]) -
             f"- Quality: {quality.get('overall', 'unknown')}/5", "",
         ])
         for insight in report.get("key_insights", []):
-            # Some providers serialize two list items into one string. Preserve both
-            # observations while keeping the panel report readable.
-            for clean_insight in str(insight).replace("。','", "。\n").splitlines():
+            for clean_insight in str(insight).replace("??,'", "\n").splitlines():
                 clean_insight = clean_insight.strip(" ,'\"")
                 if clean_insight:
                     lines.append(f"- {clean_insight}")
@@ -148,16 +171,24 @@ def _render_summary(summary: dict[str, Any], interviews: list[dict[str, Any]]) -
     return "\n".join(lines).rstrip() + "\n"
 
 
-def run_ai_followup_copilot_panel(
+def run_concept_panel(
     *,
     data_dir: Path,
     output_dir: Path,
     facilitator_provider: FacilitatorProvider,
     persona_provider: ConversationProvider,
     quality_provider: FacilitatorProvider,
+    research_goal: str,
+    product_context: str,
+    topic_label: str,
+    concept_protocol: str = DEFAULT_CONCEPT_PROTOCOL,
+    concept_label: str = "",
+    output_language: str = DEFAULT_LANGUAGE,
+    core_assumption_count: int = DEFAULT_CORE_ASSUMPTION_COUNT,
+    persona_ids: list[str] | None = None,
     max_turns: int = 12,
 ) -> Path:
-    run_id = f"followup_copilot_{utc_now_iso()[:10].replace('-', '')}_{uuid.uuid4().hex[:8]}"
+    run_id = f"concept_panel_{utc_now_iso()[:10].replace('-', '')}_{uuid.uuid4().hex[:8]}"
     run_dir = output_dir / run_id
     interview_dir = run_dir / "interviews"
     ensure_dir(interview_dir)
@@ -169,13 +200,15 @@ def run_ai_followup_copilot_panel(
         quality_provider=quality_provider,
     )
     interviews: list[dict[str, Any]] = []
-    for persona_id in _persona_ids(data_dir):
+    for persona_id in _persona_ids(data_dir, persona_ids):
         folder, session = runtime.start(
             persona_id=persona_id,
-            research_goal=RESEARCH_GOAL,
+            research_goal=research_goal,
             interview_mode="concept_validation",
-            product_context=PRODUCT_CONTEXT,
-            output_language="Natural Cantonese Traditional Chinese",
+            product_context=product_context,
+            concept_protocol=concept_protocol,
+            concept_label=concept_label or topic_label,
+            output_language=output_language,
             max_turns=max_turns,
         )
         while session.status not in {"completed", "failed"}:
@@ -194,21 +227,67 @@ def run_ai_followup_copilot_panel(
         })
         write_json(run_dir / "progress.json", {"run_id": run_id, "interviews": interviews})
 
-    summary = _summary_payload(run_id, interviews)
+    summary = _summary_payload(
+        run_id,
+        interviews,
+        topic_label=topic_label,
+        language=output_language,
+        core_assumption_count=core_assumption_count,
+    )
     write_json(run_dir / "panel_summary.json", summary)
     (run_dir / "panel_summary.md").write_text(_render_summary(summary, interviews), encoding="utf-8")
     write_json(run_dir / "manifest.json", {
         "run_id": run_id,
         "created_at": utc_now_iso(),
+        "topic_label": topic_label,
+        "research_goal": research_goal,
+        "product_context": product_context,
+        "concept_protocol": concept_protocol,
+        "concept_label": concept_label or topic_label,
         "persona_ids": [item["persona_id"] for item in interviews],
+        "core_assumption_count": core_assumption_count,
         "max_turns": max_turns,
-        "language": "Natural Cantonese Traditional Chinese",
+        "language": output_language,
         "synthetic_only": True,
     })
     return run_dir
 
 
-def summarize_existing_concept_panel(*, run_dir: Path, persona_ids: list[str]) -> Path:
+def run_ai_followup_copilot_panel(
+    *,
+    data_dir: Path,
+    output_dir: Path,
+    facilitator_provider: FacilitatorProvider,
+    persona_provider: ConversationProvider,
+    quality_provider: FacilitatorProvider,
+    max_turns: int = 12,
+) -> Path:
+    return run_concept_panel(
+        data_dir=data_dir,
+        output_dir=output_dir,
+        facilitator_provider=facilitator_provider,
+        persona_provider=persona_provider,
+        quality_provider=quality_provider,
+        research_goal=FOLLOWUP_RESEARCH_GOAL,
+        product_context=FOLLOWUP_PRODUCT_CONTEXT,
+        topic_label=DEFAULT_CONCEPT_LABEL,
+        concept_protocol=DEFAULT_CONCEPT_PROTOCOL,
+        concept_label=DEFAULT_CONCEPT_LABEL,
+        output_language=DEFAULT_LANGUAGE,
+        core_assumption_count=DEFAULT_CORE_ASSUMPTION_COUNT,
+        max_turns=max_turns,
+    )
+
+
+def summarize_existing_concept_panel(
+    *,
+    run_dir: Path,
+    persona_ids: list[str],
+    topic_label: str = "",
+    output_language: str = "",
+    core_assumption_count: int | None = None,
+) -> Path:
+    manifest = read_json(run_dir / "manifest.json") if (run_dir / "manifest.json").exists() else {}
     selected = set(persona_ids)
     interviews: list[dict[str, Any]] = []
     for folder in sorted((run_dir / "interviews").iterdir()):
@@ -233,16 +312,29 @@ def summarize_existing_concept_panel(*, run_dir: Path, persona_ids: list[str]) -
     if missing:
         raise ValueError(f"Completed concept interviews were not found for: {sorted(missing)}")
     run_id = run_dir.name
-    summary = _summary_payload(run_id, sorted(interviews, key=lambda item: item["persona_id"]))
+    resolved_topic = topic_label or manifest.get("topic_label") or manifest.get("concept_label") or DEFAULT_TOPIC_LABEL
+    resolved_language = output_language or manifest.get("language") or DEFAULT_LANGUAGE
+    resolved_assumptions = core_assumption_count or int(
+        manifest.get("core_assumption_count", DEFAULT_CORE_ASSUMPTION_COUNT)
+    )
+    summary = _summary_payload(
+        run_id,
+        sorted(interviews, key=lambda item: item["persona_id"]),
+        topic_label=resolved_topic,
+        language=resolved_language,
+        core_assumption_count=resolved_assumptions,
+    )
     write_json(run_dir / "panel_summary.json", summary)
     (run_dir / "panel_summary.md").write_text(_render_summary(summary, interviews), encoding="utf-8")
     write_json(run_dir / "progress.json", {"run_id": run_id, "interviews": interviews})
     write_json(run_dir / "manifest.json", {
         "run_id": run_id,
         "updated_at": utc_now_iso(),
+        "topic_label": resolved_topic,
+        "language": resolved_language,
+        "core_assumption_count": resolved_assumptions,
         "persona_ids": sorted(selected),
         "persona_count": len(interviews),
-        "language": "Natural Cantonese Traditional Chinese",
         "synthetic_only": True,
     })
     return run_dir

@@ -8,6 +8,7 @@ from typing import Any
 from ai_validation_swarm.conversation.providers import ConversationProvider
 from ai_validation_swarm.conversation.runtime import ConversationRuntime, resolve_persona_folder
 from ai_validation_swarm.domain.models import utc_now_iso
+from ai_validation_swarm.facilitator.concept_protocols import load_concept_protocol
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.facilitator.runtime import (
@@ -51,6 +52,8 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         interview_mode: str = "explore_root_cause",
         hypothesis: str = "",
         product_context: str = "",
+        concept_protocol: str = "",
+        concept_label: str = "",
         output_language: str = "Traditional Chinese",
         max_turns: int = 10,
     ) -> tuple[Path, InterviewSession]:
@@ -59,6 +62,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         if max_turns < 1:
             raise ValueError("max_turns must be at least 1.")
         mode = self._validate_interview_brief(interview_mode, hypothesis)
+        concept = load_concept_protocol(concept_protocol, label=concept_label) if mode == "concept_validation" else None
 
         persona_folder = resolve_persona_folder(self.data_dir, persona_id)
         persona = load_persona(persona_folder)
@@ -87,6 +91,8 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             synthesis_prompt_version=(
                 CONCEPT_SYNTHESIS_PROMPT_VERSION if mode == "concept_validation" else SYNTHESIS_PROMPT_VERSION
             ),
+            concept_protocol_version=concept.identifier if concept else "",
+            concept_label=concept.label if concept else "",
             hypothesis_evidence_judge_prompt_version=HYPOTHESIS_EVIDENCE_JUDGE_PROMPT_VERSION,
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
@@ -506,7 +512,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         self._save_controlled(session, folder)
         try:
             decision = self.facilitator_provider.next_turn(
-                system_prompt=self._facilitator_system_prompt(),
+                system_prompt=self._facilitator_system_prompt(session),
                 user_prompt=prompt,
                 provider_session_id=session.facilitator_provider_session_id,
             )
@@ -517,7 +523,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             return
         try:
             decision = self._revise_non_episodic_validation_question(
-                session, decision, self._facilitator_system_prompt()
+                session, decision, self._facilitator_system_prompt(session)
             )
         except Exception as exc:
             payload = dict(failed_payload or {})

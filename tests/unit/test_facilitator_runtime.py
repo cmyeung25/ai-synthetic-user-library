@@ -314,6 +314,11 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             root = Path(tmp)
             persona = generate_personas(count=1, random_seed=73)[0]
             save_persona(persona, root / "personas")
+            protocol_path = root / "go-out-la-v1.md"
+            protocol_path.write_text(
+                "# Test Go Out La Protocol\n\nAsk about activity discovery before concept reactions.\n",
+                encoding="utf-8",
+            )
             provider = RecordedLLMFacilitator()
             runtime = FacilitatedInterviewRuntime(
                 data_dir=root / "personas", session_dir=root / "interviews",
@@ -321,9 +326,11 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             )
             output = runtime.run(
                 persona_id=persona.profile.synthetic_user_id,
-                research_goal="Validate AI Follow-up Copilot.",
+                research_goal="Validate Go Out La!",
                 interview_mode="concept_validation",
-                product_context="Use the AI Follow-up Copilot protocol.",
+                product_context="Use the Go Out La protocol.",
+                concept_protocol=str(protocol_path),
+                concept_label="Go Out La!",
                 output_language="Natural Cantonese Traditional Chinese",
                 max_turns=2,
             )
@@ -331,9 +338,14 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             report = read_json(output / "insight_report.json")
             self.assertEqual(session["interview_mode"], "concept_validation")
             self.assertEqual(session["synthesis_prompt_version"], "concept-synthesis/v1")
+            self.assertEqual(session["concept_label"], "Go Out La!")
+            self.assertEqual(session["concept_protocol_version"], str(protocol_path))
             self.assertEqual(report["problem_evidence"]["strength"], "medium")
             self.assertTrue(any(call[0] == "synthesize_concept" for call in provider.calls))
+            first_turn_prompt = provider.calls[0][1]["system_prompt"]
+            self.assertIn("Test Go Out La Protocol", first_turn_prompt)
             self.assertIn("Assumption Validation", (output / "insights.md").read_text(encoding="utf-8"))
+            self.assertIn("# Go Out La! Interview:", (output / "insights.md").read_text(encoding="utf-8"))
 
     def test_facilitator_provider_rejects_blank_non_terminal_question(self):
         class StubClient:

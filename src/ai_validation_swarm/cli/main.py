@@ -49,6 +49,11 @@ from ai_validation_swarm.personas.v3_3 import (
     generate_v3_3_personas,
     validate_v3_3_persona_folder,
 )
+from ai_validation_swarm.personas.v4 import (
+    OpenAIV4SynthesisAdapter,
+    generate_v4_persona,
+    validate_v4_persona_folder,
+)
 from ai_validation_swarm.personas.validator import validate_personas
 from ai_validation_swarm.providers.factory import build_provider
 from ai_validation_swarm.providers.openai_client import OpenAIProviderError
@@ -327,6 +332,22 @@ def _build_parser() -> argparse.ArgumentParser:
     validate_v3_3_cmd = subparsers.add_parser("validate-personas-v3-3")
     validate_v3_3_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
 
+    generate_v4_cmd = subparsers.add_parser("generate-v4-persona")
+    generate_v4_cmd.add_argument("--persona-id", required=True)
+    generate_v4_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
+    generate_v4_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
+    generate_v4_cmd.add_argument("--guide-file", type=Path)
+    generate_v4_cmd.add_argument("--fixed", action="append", default=[], metavar="KEY=VALUE")
+    generate_v4_cmd.add_argument("--prefer", action="append", default=[], metavar="KEY=VALUE")
+    generate_v4_cmd.add_argument("--interest", action="append", default=[])
+    generate_v4_cmd.add_argument("--random-seed", type=int)
+    generate_v4_cmd.add_argument("--max-transport-attempts", type=int, default=2)
+    generate_v4_cmd.add_argument("--resume-response", action="store_true")
+    generate_v4_cmd.add_argument("--debug-progress", action="store_true")
+
+    validate_v4_cmd = subparsers.add_parser("validate-personas-v4")
+    validate_v4_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
+
     generate_target_cmd = subparsers.add_parser("generate-persona-to-target")
     generate_target_cmd.add_argument("--target-version", choices=["v3", "v3_1", "v3_1_1", "v3_1_2"], required=True)
     generate_target_cmd.add_argument("--persona-id", action="append", dest="persona_ids", required=True)
@@ -431,6 +452,8 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd.add_argument("--interview-mode", choices=["explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     interview_cmd.add_argument("--hypothesis", default="")
     interview_cmd.add_argument("--product-context", default="")
+    interview_cmd.add_argument("--concept-protocol", default="")
+    interview_cmd.add_argument("--concept-label", default="")
     interview_cmd.add_argument("--language", default="Traditional Chinese")
     interview_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     interview_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
@@ -446,6 +469,8 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--interview-mode", choices=["explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     observer_cmd.add_argument("--hypothesis", default="")
     observer_cmd.add_argument("--product-context", default="")
+    observer_cmd.add_argument("--concept-protocol", default="")
+    observer_cmd.add_argument("--concept-label", default="")
     observer_cmd.add_argument("--language", default="Traditional Chinese")
     observer_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     observer_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
@@ -455,6 +480,22 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--max-turns", type=int, default=10)
     observer_cmd.add_argument("--action", action="append", dest="actions")
 
+    concept_panel_generic_cmd = subparsers.add_parser("run-concept-panel")
+    concept_panel_generic_cmd.add_argument("--research-goal", required=True)
+    concept_panel_generic_cmd.add_argument("--product-context", required=True)
+    concept_panel_generic_cmd.add_argument("--topic-label", required=True)
+    concept_panel_generic_cmd.add_argument("--concept-protocol", default="")
+    concept_panel_generic_cmd.add_argument("--concept-label", default="")
+    concept_panel_generic_cmd.add_argument("--language", default="Natural Cantonese Traditional Chinese")
+    concept_panel_generic_cmd.add_argument("--persona-id", action="append", dest="persona_ids")
+    concept_panel_generic_cmd.add_argument("--core-assumption-count", type=int, default=8)
+    concept_panel_generic_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
+    concept_panel_generic_cmd.add_argument("--output-dir", type=Path, default=Path("experiments"))
+    concept_panel_generic_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
+    concept_panel_generic_cmd.add_argument("--model", default="gpt-5.4")
+    concept_panel_generic_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="low")
+    concept_panel_generic_cmd.add_argument("--max-turns", type=int, default=12)
+
     concept_panel_cmd = subparsers.add_parser("run-followup-copilot-panel")
     concept_panel_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     concept_panel_cmd.add_argument("--output-dir", type=Path, default=Path("experiments"))
@@ -462,6 +503,13 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_cmd.add_argument("--model", default="gpt-5.4")
     concept_panel_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="low")
     concept_panel_cmd.add_argument("--max-turns", type=int, default=12)
+
+    concept_summary_generic_cmd = subparsers.add_parser("summarize-concept-panel")
+    concept_summary_generic_cmd.add_argument("--run-dir", type=Path, required=True)
+    concept_summary_generic_cmd.add_argument("--persona-id", action="append", dest="persona_ids", required=True)
+    concept_summary_generic_cmd.add_argument("--topic-label", default="")
+    concept_summary_generic_cmd.add_argument("--language", default="")
+    concept_summary_generic_cmd.add_argument("--core-assumption-count", type=int)
 
     concept_summary_cmd = subparsers.add_parser("summarize-followup-copilot-panel")
     concept_summary_cmd.add_argument("--run-dir", type=Path, required=True)
@@ -746,9 +794,11 @@ def _cmd_generate_v3_2_persona(args: argparse.Namespace) -> int:
         prefer_codex_auth=uses_codex_auth,
         force_transport=forced_transport,
     )
-    client = OpenAIResponsesClient(config)
-    adapter = OpenAIV32SynthesisAdapter(client, config)
+    if args.backend == "codex" and config.transport == "codex_cli" and config.codex_cli_output_mode == "auto":
+        config.codex_cli_output_mode = "direct"
     progress_writer = (lambda message: print(message, flush=True)) if args.debug_progress else None
+    client = OpenAIResponsesClient(config, debug_writer=progress_writer)
+    adapter = OpenAIV32SynthesisAdapter(client, config)
     if progress_writer is not None:
         progress_writer(
             f"[v3.2] backend={args.backend} transport={config.transport} model={config.model} "
@@ -840,8 +890,8 @@ def _cmd_generate_v3_3_persona(args: argparse.Namespace) -> int:
         prefer_codex_auth=uses_codex_auth,
         force_transport=forced_transport,
     )
-    client = OpenAIResponsesClient(config)
     progress_writer = (lambda message: print(message, flush=True)) if args.debug_progress else None
+    client = OpenAIResponsesClient(config, debug_writer=progress_writer)
     if progress_writer is not None:
         progress_writer(
             f"[v3.3] backend={args.backend} transport={config.transport} model={config.model} "
@@ -916,6 +966,106 @@ def _cmd_validate_personas_v3_3(args: argparse.Namespace) -> int:
         print(f"V3.3 validation passed for {len(reports)} personas.")
         return 0
     print(f"V3.3 validation found issues in {len(invalid)} of {len(reports)} personas.")
+    for persona_id, report in invalid:
+        for message in report["missing_fields"]:
+            print(f"- {persona_id} | missing_field | {message}")
+        for message in report["warnings"]:
+            print(f"- {persona_id} | warning | {message}")
+    return 1
+
+
+def _parse_v4_guide_values(items: list[str]) -> dict[str, object]:
+    parsed: dict[str, object] = {}
+    for item in items:
+        if "=" not in item:
+            raise ValueError(f"Invalid guide value '{item}'. Expected KEY=VALUE.")
+        key, raw_value = item.split("=", 1)
+        key = key.strip()
+        if not key:
+            raise ValueError(f"Invalid guide value '{item}'. KEY cannot be empty.")
+        value_text = raw_value.strip()
+        try:
+            value: object = json.loads(value_text)
+        except json.JSONDecodeError:
+            value = value_text
+        parsed[key] = value
+    return parsed
+
+
+def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
+
+    uses_codex_auth = args.backend in {"codex", "codex-sdk"}
+    forced_transport = {"codex": "codex_cli", "codex-sdk": "codex_sdk_node"}.get(args.backend)
+    config = load_openai_provider_config(
+        prefer_codex_auth=uses_codex_auth,
+        force_transport=forced_transport,
+        timeout_default=360,
+    )
+    progress_writer = (lambda message: print(_console_safe(message), flush=True)) if args.debug_progress else None
+    transport_log = args.output_dir / args.persona_id / "v4" / "llm_transport.log"
+    ensure_dir(transport_log.parent)
+
+    def transport_writer(message: str) -> None:
+        with transport_log.open("a", encoding="utf-8") as handle:
+            handle.write(message + "\n")
+        if progress_writer is not None:
+            progress_writer(message)
+
+    client = OpenAIResponsesClient(config, debug_writer=transport_writer)
+
+    guide: dict[str, object] = {"mode": "open", "fixed": {}, "preferred": {}}
+    if args.guide_file:
+        if not args.guide_file.exists():
+            raise ValueError(f"V4 guide file not found: {args.guide_file}")
+        loaded = json.loads(args.guide_file.read_text(encoding="utf-8"))
+        if not isinstance(loaded, dict):
+            raise ValueError("V4 guide file must contain one JSON object.")
+        guide = loaded
+    fixed = dict(guide.get("fixed", {})) if isinstance(guide.get("fixed", {}), dict) else {}
+    preferred = dict(guide.get("preferred", {})) if isinstance(guide.get("preferred", {}), dict) else {}
+    fixed.update(_parse_v4_guide_values(args.fixed))
+    preferred.update(_parse_v4_guide_values(args.prefer))
+    if args.interest:
+        preferred["interests"] = list(args.interest)
+    guide["fixed"] = fixed
+    guide["preferred"] = preferred
+    guide["mode"] = "guided" if fixed or preferred or args.guide_file else "open"
+
+    if progress_writer is not None:
+        progress_writer(
+            f"[v4] backend={args.backend} transport={config.transport} model={config.model} "
+            f"reasoning={config.model_reasoning_effort} timeout={config.timeout_seconds}s guide_mode={guide['mode']}"
+        )
+    target = generate_v4_persona(
+        persona_id=args.persona_id,
+        output_dir=args.output_dir,
+        adapter=OpenAIV4SynthesisAdapter(client, config),
+        guide=guide,
+        random_seed=args.random_seed,
+        max_transport_attempts=args.max_transport_attempts,
+        resume_response=args.resume_response,
+        progress_writer=progress_writer,
+    )
+    print(f"Generated V4 persona {args.persona_id} at {target} using {args.backend}.")
+    return 0
+
+
+def _cmd_validate_personas_v4(args: argparse.Namespace) -> int:
+    reports = []
+    if args.data_dir.exists():
+        for persona_root in sorted(path for path in args.data_dir.iterdir() if path.is_dir()):
+            folder = persona_root / "v4"
+            if folder.exists():
+                reports.append((persona_root.name, validate_v4_persona_folder(folder)))
+    if not reports:
+        print("No V4 personas found.")
+        return 1
+    invalid = [(persona_id, report) for persona_id, report in reports if not report["valid"]]
+    if not invalid:
+        print(f"V4 validation passed for {len(reports)} personas.")
+        return 0
+    print(f"V4 validation found issues in {len(invalid)} of {len(reports)} personas.")
     for persona_id, report in invalid:
         for message in report["missing_fields"]:
             print(f"- {persona_id} | missing_field | {message}")
@@ -1395,6 +1545,8 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
         interview_mode=args.interview_mode,
         hypothesis=args.hypothesis,
         product_context=args.product_context,
+        concept_protocol=args.concept_protocol,
+        concept_label=args.concept_label,
         output_language=args.language,
         max_turns=args.max_turns,
     )
@@ -1480,6 +1632,8 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
             interview_mode=args.interview_mode,
             hypothesis=args.hypothesis,
             product_context=args.product_context,
+            concept_protocol=args.concept_protocol,
+            concept_label=args.concept_label,
             output_language=args.language,
             max_turns=args.max_turns,
         )
@@ -1538,8 +1692,36 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
     print(f"\nSession folder: {folder}")
     if session.status == "completed":
         print(f"Insights: {folder / 'insights.md'}")
-        print(f"Quality: {folder / 'quality_evaluation.md'}")
+    print(f"Quality: {folder / 'quality_evaluation.md'}")
     return 0 if session.status != "failed" else 1
+
+
+def _cmd_run_concept_panel(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.facilitator.concept_panel import run_concept_panel
+
+    facilitator_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    persona_provider = _build_conversation_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    quality_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    print("Running synthetic concept panel in Cantonese; not human market evidence.")
+    output = run_concept_panel(
+        data_dir=args.data_dir,
+        output_dir=args.output_dir,
+        facilitator_provider=facilitator_provider,
+        persona_provider=persona_provider,
+        quality_provider=quality_provider,
+        research_goal=args.research_goal,
+        product_context=args.product_context,
+        topic_label=args.topic_label,
+        concept_protocol=args.concept_protocol,
+        concept_label=args.concept_label,
+        output_language=args.language,
+        core_assumption_count=args.core_assumption_count,
+        persona_ids=args.persona_ids,
+        max_turns=args.max_turns,
+    )
+    print(f"Panel completed: {output}")
+    print(f"Summary: {output / 'panel_summary.md'}")
+    return 0
 
 
 def _cmd_run_followup_copilot_panel(args: argparse.Namespace) -> int:
@@ -1559,6 +1741,20 @@ def _cmd_run_followup_copilot_panel(args: argparse.Namespace) -> int:
     )
     print(f"Panel completed: {output}")
     print(f"Summary: {output / 'panel_summary.md'}")
+    return 0
+
+
+def _cmd_summarize_concept_panel(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.facilitator.concept_panel import summarize_existing_concept_panel
+
+    output = summarize_existing_concept_panel(
+        run_dir=args.run_dir,
+        persona_ids=args.persona_ids,
+        topic_label=args.topic_label,
+        output_language=args.language,
+        core_assumption_count=args.core_assumption_count,
+    )
+    print(f"Panel summary rebuilt for {', '.join(args.persona_ids)}: {output / 'panel_summary.md'}")
     return 0
 
 
@@ -1590,6 +1786,7 @@ def main(argv: list[str] | None = None) -> int:
         "generate-v3-1-2-persona": _cmd_generate_v3_1_2_persona,
         "generate-v3-2-persona": _cmd_generate_v3_2_persona,
         "generate-v3-3-persona": _cmd_generate_v3_3_persona,
+        "generate-v4-persona": _cmd_generate_v4_persona,
         "generate-persona-to-target": _cmd_generate_persona_to_target,
         "run-distinctiveness-check-v3-1-1": _cmd_run_distinctiveness_check_v3_1_1,
         "run-distinctiveness-check-v3-1-2": _cmd_run_distinctiveness_check_v3_1_2,
@@ -1597,6 +1794,7 @@ def main(argv: list[str] | None = None) -> int:
         "validate-personas-v3-1-2": _cmd_validate_personas_v3_1_2,
         "validate-personas-v3-2": _cmd_validate_personas_v3_2,
         "validate-personas-v3-3": _cmd_validate_personas_v3_3,
+        "validate-personas-v4": _cmd_validate_personas_v4,
         "summarize-personas": _cmd_summarize_personas,
         "inspect-openai-auth": _cmd_inspect_openai_auth,
         "probe-codex-auth": _cmd_probe_codex_auth,
@@ -1610,7 +1808,9 @@ def main(argv: list[str] | None = None) -> int:
         "chat-with-persona": _cmd_chat_with_persona,
         "run-facilitated-interview": _cmd_run_facilitated_interview,
         "observe-facilitated-interview": _cmd_observe_facilitated_interview,
+        "run-concept-panel": _cmd_run_concept_panel,
         "run-followup-copilot-panel": _cmd_run_followup_copilot_panel,
+        "summarize-concept-panel": _cmd_summarize_concept_panel,
         "summarize-followup-copilot-panel": _cmd_summarize_followup_copilot_panel,
     }
     try:

@@ -428,6 +428,32 @@ class ObserverRuntimeTest(unittest.TestCase):
             self.assertIn("INTERVIEW MODE:\nvalidate_hypothesis", quality_context)
             self.assertIn(hypothesis, quality_context)
 
+    def test_observed_concept_validation_uses_custom_protocol(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            protocol_path = root / "go-out-la-v1.md"
+            protocol_path.write_text("## Go Out La test protocol", encoding="utf-8")
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate Go Out La.",
+                interview_mode="concept_validation",
+                product_context="Go Out La concept test.",
+                concept_protocol=str(protocol_path),
+                concept_label="Go Out La!",
+            )
+            self.assertEqual(session.concept_label, "Go Out La!")
+            self.assertEqual(session.concept_protocol_version, str(protocol_path))
+            self.assertIn("Go Out La test protocol", facilitator.calls[0]["system_prompt"])
+
     def test_hypothetical_validation_question_is_revised_before_persona_sees_it(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -8,6 +8,7 @@ from typing import Any, Callable
 from ai_validation_swarm.conversation.providers import ConversationProvider
 from ai_validation_swarm.conversation.runtime import ConversationRuntime, resolve_persona_folder
 from ai_validation_swarm.domain.models import utc_now_iso
+from ai_validation_swarm.facilitator.concept_protocols import load_concept_protocol
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.storage.files import ensure_dir, load_persona, write_json
@@ -51,6 +52,8 @@ class FacilitatedInterviewRuntime:
         interview_mode: str = "explore_root_cause",
         hypothesis: str = "",
         product_context: str = "",
+        concept_protocol: str = "",
+        concept_label: str = "",
         output_language: str = "Traditional Chinese",
         max_turns: int = 10,
     ) -> Path:
@@ -59,6 +62,7 @@ class FacilitatedInterviewRuntime:
         if max_turns < 1:
             raise ValueError("max_turns must be at least 1.")
         mode = self._validate_interview_brief(interview_mode, hypothesis)
+        concept = load_concept_protocol(concept_protocol, label=concept_label) if mode == "concept_validation" else None
 
         persona_folder = resolve_persona_folder(self.data_dir, persona_id)
         persona = load_persona(persona_folder)
@@ -88,6 +92,8 @@ class FacilitatedInterviewRuntime:
             synthesis_prompt_version=(
                 CONCEPT_SYNTHESIS_PROMPT_VERSION if mode == "concept_validation" else SYNTHESIS_PROMPT_VERSION
             ),
+            concept_protocol_version=concept.identifier if concept else "",
+            concept_label=concept.label if concept else "",
             hypothesis_evidence_judge_prompt_version=HYPOTHESIS_EVIDENCE_JUDGE_PROMPT_VERSION,
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
@@ -96,7 +102,7 @@ class FacilitatedInterviewRuntime:
         )
         self._save(session, interview_folder)
 
-        facilitator_system = self._facilitator_system_prompt()
+        facilitator_system = self._facilitator_system_prompt(session)
         decision = self.facilitator_provider.next_turn(
             system_prompt=facilitator_system,
             user_prompt=self._opening_prompt(session),
@@ -268,13 +274,14 @@ class FacilitatedInterviewRuntime:
         )
 
     @staticmethod
-    def _facilitator_system_prompt() -> str:
+    def _facilitator_system_prompt(session: InterviewSession) -> str:
         root = _repo_root()
         skill = _read(root / "skills" / "design-research-facilitator" / "SKILL.md")
         prompt = _read(root / "src" / "ai_validation_swarm" / "prompts" / "facilitator-interview" / "v2.md")
-        concept_protocol = _read(
-            root / "src" / "ai_validation_swarm" / "prompts" / "concept-interview" / "ai-followup-copilot-v1.md"
-        )
+        concept_protocol = ""
+        if session.interview_mode == "concept_validation":
+            concept = load_concept_protocol(session.concept_protocol_version, label=session.concept_label)
+            concept_protocol = concept.prompt_text
         return f"{prompt}\n\nFACILITATOR SKILL:\n{skill}\n\nCONCEPT VALIDATION PROTOCOL:\n{concept_protocol}"
 
     @staticmethod
@@ -331,6 +338,7 @@ class FacilitatedInterviewRuntime:
             f"RESEARCH GOAL:\n{session.research_goal}\n\n"
             f"DISCLOSED PRODUCT CONTEXT:\n{session.product_context or '(none; remain in problem discovery)'}\n\n"
             f"OUTPUT LANGUAGE:\n{session.output_language}\n\n"
+            f"CONCEPT LABEL:\n{session.concept_label or '(none)'}\n\n"
             "No interview transcript exists yet. Choose and return the first interview question."
         )
 
@@ -340,6 +348,7 @@ class FacilitatedInterviewRuntime:
             f"INTERVIEW MODE: {session.interview_mode}\n"
             f"HYPOTHESIS TO TEST: {session.hypothesis or '(none)'}\n"
             f"OUTPUT LANGUAGE: {session.output_language}\n\n"
+            f"CONCEPT LABEL: {session.concept_label or '(none)'}\n\n"
             "INTERVIEW TRANSCRIPT TO DATE:\n"
             f"{FacilitatedInterviewRuntime._plain_transcript(session)}\n\n"
             "Use the transcript to choose the next question or end the interview."
@@ -356,6 +365,7 @@ class FacilitatedInterviewRuntime:
             f"RESEARCH GOAL:\n{session.research_goal}\n\n"
             f"DISCLOSED PRODUCT CONTEXT:\n{session.product_context or '(none)'}\n\n"
             f"OUTPUT LANGUAGE:\n{session.output_language}\n\n"
+            f"CONCEPT LABEL:\n{session.concept_label or '(none)'}\n\n"
             f"STOP REASON:\n{session.stop_reason or 'facilitator decision'}\n\n"
             f"TRANSCRIPT:\n{FacilitatedInterviewRuntime._plain_transcript(session)}\n\n"
             f"FACILITATOR EVIDENCE TRACE:\n{trace}\n\n"
@@ -493,6 +503,7 @@ class FacilitatedInterviewRuntime:
             f"> {session.synthetic_only_disclaimer}", "",
             f"Interview mode: {session.interview_mode}",
             *( [f"Hypothesis: {session.hypothesis}"] if session.hypothesis else [] ),
+            *( [f"Concept: {session.concept_label}"] if session.concept_label else [] ),
             "",
             f"Research goal: {session.research_goal}", "",
         ]
@@ -544,8 +555,9 @@ class FacilitatedInterviewRuntime:
         value = report.get("first_value_requirement", {})
         pricing = report.get("pricing_signal", {})
         retention = report.get("retention_risk", {})
+        concept_label = session.concept_label or "Concept Validation"
         lines = [
-            f"# AI Follow-up Copilot Interview: {session.persona_name}", "",
+            f"# {concept_label} Interview: {session.persona_name}", "",
             f"> {report.get('synthetic_only_disclaimer', session.synthetic_only_disclaimer)}", "",
             "## Problem Evidence", "", f"- Strength: {problem.get('strength', 'unknown')}",
         ]

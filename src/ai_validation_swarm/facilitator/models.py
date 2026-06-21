@@ -54,6 +54,8 @@ class InterviewSession:
     persona_model: str
     facilitator_prompt_version: str
     synthesis_prompt_version: str
+    concept_protocol_version: str = ""
+    concept_label: str = ""
     interview_mode: str = "explore_root_cause"
     hypothesis: str = ""
     facilitator_provider_session_id: str = ""

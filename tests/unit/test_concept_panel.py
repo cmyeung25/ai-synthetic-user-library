@@ -18,21 +18,29 @@ class ConceptPanelSummaryTests(unittest.TestCase):
             "report": {
                 "problem_evidence": {"strength": "strong"},
                 "assumption_validation": assumptions,
-                "key_insights": ["First insight。','Second insight"],
+                "key_insights": ["First insight??,'Second insight"],
             },
             "quality": {"scores": {"overall": 4}},
         }]
 
-        summary = _summary_payload("test_run", interviews)
+        summary = _summary_payload(
+            "test_run",
+            interviews,
+            topic_label="Go Out La!",
+            language="Natural Cantonese Traditional Chinese",
+            core_assumption_count=8,
+        )
 
         self.assertEqual(len(summary["assumption_matrix"]), 8)
+        self.assertEqual(summary["topic"], "Go Out La!")
         self.assertEqual(
             summary["additional_persona_specific_findings"][0]["finding"],
             "core 9",
         )
         markdown = _render_summary(summary, interviews)
+        self.assertIn("# Go Out La! Synthetic Persona Panel", markdown)
         self.assertIn("## Additional Persona-Specific Risks", markdown)
-        self.assertIn("- First insight。", markdown)
+        self.assertIn("- First insight", markdown)
         self.assertIn("- Second insight", markdown)
 
 
