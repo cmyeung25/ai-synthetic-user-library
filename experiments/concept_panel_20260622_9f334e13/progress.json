@@ -1,0 +1,2300 @@
+{
+  "run_id": "concept_panel_20260622_9f334e13",
+  "interviews": [
+    {
+      "persona_id": "su_1201",
+      "persona_name": "Chloe Lam Tsz-yan",
+      "interview_id": "observed_20260622_e1ecf08f",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260622_9f334e13\\interviews\\observed_20260622_e1ecf08f",
+      "report": {
+        "problem_evidence": {
+          "strength": "medium",
+          "supporting_quotes": [
+            {
+              "quote": "我啲美股同基金有啲位幾重疊，但我又唔係即刻敢郁",
+              "evidence_ref": "exchange_1.persona"
+            },
+            {
+              "quote": "有時買嗰陣覺得自己分散咗，之後先發現只係用唔同包裝買返差唔多嘅嘢",
+              "evidence_ref": "exchange_2.persona"
+            },
+            {
+              "quote": "知道有問題，但未有把握自己個解法係啱",
+              "evidence_ref": "exchange_3.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "最近一次實際行為係夜晚喺銀行 app 睇持倉，並對返之前 cap 低嘅圖。",
+            "而家判斷重疊主要靠價格同步升跌、基金大持股名稱、同主題分類等手動 heuristic。",
+            "見到疑似重疊後未有即時操作，而係關 app，第二晚再睇。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "用銀行 app 逐個持倉睇",
+            "對返之前 cap 圖做人工比較",
+            "用『都係美股大科技／同一主題』去粗略判斷有冇撞倉"
+          ],
+          "pain_level": "medium",
+          "switching_difficulty": "medium",
+          "what_must_not_change": [
+            "功能要清楚係 read-only",
+            "要先分析而唔係即刻推產品",
+            "要用簡單語言解釋結果對自己持倉代表咩"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "接受銀行先用行內已有持倉資料做基本分析",
+            "有機會連接其他 broker 或銀行持倉",
+            "可以逐個戶口揀住連接"
+          ],
+          "rejected_data_access": [
+            "一開始就要求全綁所有戶口",
+            "未講清資料用途就收集外部資產資料",
+            "用資料做 marketing 或借分析名義 sell 產品"
+          ],
+          "required_trust_explanation": [
+            "清楚寫明 read-only",
+            "清楚寫明會睇到啲乜同連接範圍",
+            "講清壓力測試假設",
+            "先俾用戶慢慢睇分析，再決定下一步"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "一入去就見到邊度重疊",
+            "指出風險集中喺邊，例如美股科技或美元 exposure",
+            "壓力測試唔只顯示跌幅，仲要解釋對呢種持倉代表咩",
+            "唔只話風險高，而係指出可以先由邊個位開始留意"
+          ],
+          "time_to_value": "第一次打開就要見到同自己組合直接相關嘅重點。",
+          "abandonment_triggers": [
+            "報告後即刻彈產品清單",
+            "結論永遠導向某幾隻基金",
+            "只係靚介面但冇新 insight",
+            "分析只睇部分資產而失真"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "基本版應該內建喺銀行 app；額外收費要有更深層價值先成立。",
+          "monthly_comfort_range": "未知",
+          "payment_justification": [
+            "基本風險、重疊、簡單壓力測試被視為銀行 app 應有功能",
+            "願意考慮另外畀錢嘅條件係 deeper report、整合外部 broker、講清假設、同提供買之前用得著嘅解讀"
+          ],
+          "evidence_strength": "stated"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "持續指出自己平時睇唔清嘅盲點",
+            "幫到下次買之前做判斷",
+            "提供可逐步處理嘅建議，而唔係叫一次過大改"
+          ],
+          "drop_off_reasons": [
+            "產品味太重",
+            "分析太 generic",
+            "結果嚇人但冇解釋",
+            "資料接入太重手或私隱界線唔清"
+          ],
+          "workflow_effect": "replaces_workflow"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "好多客戶覺得現有銀行投資指引太 product-led，唔夠 portfolio-led。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者明確區分『先分析自己組合』同『一見完就推產品』，對後者反感明確。"
+          },
+          {
+            "assumption": "客戶能理解簡化版 portfolio risk、集中度、壓力測試、scenario analysis。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者想睇重疊、集中度、美元 exposure、壓力測試，但要求用簡單語言解釋，顯示可接受但需要翻譯層。"
+          },
+          {
+            "assumption": "機構級 analytics 經銀行交付會增加信任多過增加懷疑。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona"
+            ],
+            "rationale": "信任唔係來自『機構級』字眼，而係來自 read-only、假設透明、非銷售導向；品牌加成未被直接證實。"
+          },
+          {
+            "assumption": "客戶願意分享足夠 portfolio data，包括部分非本行資產。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_7.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "受訪者有條件地願意連接外部資產，但前提係 read-only、範圍清楚、可逐戶口選擇、唔做 marketing。"
+          },
+          {
+            "assumption": "功能會提升行動質素或 engagement，而唔只令人更驚或更被動。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者希望用嚟喺下次買之前先睇，但現時行為亦反映佢容易因唔確定而延後行動，所以要靠解釋質素先轉化成行動。"
+          },
+          {
+            "assumption": "有實際 self-serve 或 RM-assisted interpretation 需求，而唔係被忽略。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者想先自己慢慢睇分析，再決定下一步，顯示有明確 self-serve 需求。RM report 本次未被直接驗證。"
+          },
+          {
+            "assumption": "至少部分客戶對 premium analytics 或 advisory support 有可信付費條件。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者講到清楚分層：基本版應內建，深度整合與可操作解讀先值得額外收費。"
+          },
+          {
+            "assumption": "概念可以被視為中立理解工具，而唔係更高級嘅 sales surface。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona"
+            ],
+            "rationale": "概念有機會被接受，但只限於先分析後銷售、而且不能預設產品導流。"
+          }
+        ],
+        "key_insights": [
+          "核心痛點唔止係『睇唔到數據』，而係見到疑似重疊後，唔知道嚴唔嚴重同應唔應該郁。",
+          "Whole-portfolio 價值對呢位受訪者係真實存在，但必須直接對應自己持倉，而唔係 generic 教育內容。",
+          "信任邊界非常清楚：read-only、假設透明、範圍透明、逐戶口控制、唔做 marketing。",
+          "基本 portfolio analytics 被視為 app 應有能力；收費空間喺跨戶整合同更可執行嘅深度解讀。",
+          "如果功能只增加警報感但冇步驟感，可能只會延續現有『知道有問題但唔敢郁』嘅狀態。"
+        ],
+        "next_experiment": "用一個低保真 prototype 測試兩種首頁輸出：A 只顯示風險分數與跌幅，B 直接顯示重疊來源、集中 exposure、假設說明同『可先留意邊個位』。觀察邊個版本更能提升信任、理解同下次使用意願。",
+        "evidence_gaps": [
+          "只得一位 synthetic persona，未能代表香港零售／半零售客群分布。",
+          "未直接測到 RM-assisted 路徑同 report 分享意願。",
+          "未測實際 scenario analysis 介面理解能力，只測概念層反應。",
+          "未有真實付費行為，只係 stated willingness。",
+          "未驗證銀行品牌或『機構級 analytics』字眼本身有冇額外信任加成。"
+        ],
+        "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念驗證前測，屬模擬證據，不能當作真人市場證據或因果定論。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 4,
+          "probing_quality": 3,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 2,
+          "causal_rigor": 4,
+          "hypothesis_validation_rigor": 3,
+          "synthesis_fidelity": 2,
+          "overall": 3
+        },
+        "checks": {
+          "leading_question_risk": "pass",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "warn",
+          "synthesis_overreach_risk": "fail",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "pass",
+          "interviewer_jargon_risk": "pass",
+          "domain_fit_alignment": "warn",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview established a concrete recent event before introducing the concept, using `exchange_1` to ground later probes.",
+          "Most spoken questions had a single conversational focus and sounded natural in Cantonese rather than scripted or analytical.",
+          "The facilitator separated trust boundary, repeat-use value, payment conditions, and external-data sharing into distinct probes instead of collapsing them into one long questionnaire.",
+          "The persona responses were naturalistic and not numbered, framework-like, or self-explanatory about being synthetic.",
+          "The close decision in the trace was reasonable for an 8-exchange concept screen, even though some evidence remained only hypothetical."
+        ],
+        "findings": [
+          {
+            "category": "synthesis_overreach",
+            "severity": "high",
+            "observation": "The synthesis makes product-shaping claims stronger than the evidence allows from one synthetic concept interview. In particular, `retention_risk.workflow_effect: \"replaces_workflow\"` is not supported by the transcript; the participant only said they might check it before a future buy, not that it would replace their existing process.",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "SYNTHESIS.retention_risk.workflow_effect"
+            ],
+            "recommendation": "Downgrade this to a bounded stated possibility such as 'could become a pre-trade check in some cases' and keep it explicitly hypothetical."
+          },
+          {
+            "category": "synthesis_overreach",
+            "severity": "medium",
+            "observation": "Several assumption verdicts are too assertive for single-person stated intent evidence. `assumption_validation` marks premium willingness as `supported`, but `exchange_7.persona` is only conditional stated willingness, not behavioural proof. The report should preserve that this is hypothetical and persona-specific.",
+            "evidence_refs": [
+              "exchange_7.persona",
+              "SYNTHESIS.assumption_validation[6]",
+              "SYNTHESIS.pricing_signal.evidence_strength"
+            ],
+            "recommendation": "Reclassify payment-related assumptions as at most `partially_supported` or 'stated conditional interest' unless backed by observed spend or stronger comparative choice evidence."
+          },
+          {
+            "category": "evidence_discipline",
+            "severity": "medium",
+            "observation": "The report partially blurs behavioural evidence and hypothetical concept reactions. Trust, retention, payment, and external aggregation claims are largely derived from hypothetical answers in `exchange_4` to `exchange_8`, but some synthesis bullets read like validated product truths rather than stated conditions.",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "exchange_7.persona",
+              "exchange_8.persona"
+            ],
+            "recommendation": "Label each concept-era conclusion as `stated`, `hypothetical`, or `observed current behaviour` so downstream teams do not overread the evidence."
+          },
+          {
+            "category": "coverage_quality",
+            "severity": "medium",
+            "observation": "`retention_repeat_use` is marked covered, but the spoken probe only tests immediate reasons to reuse after first exposure. It does not cleanly distinguish curiosity, first trial, ongoing month-two retention, or repeat behaviour over time, which the concept-validation rubric explicitly asks to keep distinct.",
+            "evidence_refs": [
+              "COVERAGE STATUS",
+              "exchange_6.facilitator",
+              "FACILITATOR TRACE[5]"
+            ],
+            "recommendation": "Add a separate participant-facing probe for continued use over time, such as what would make them come back after the novelty wears off and what would stop them after one or two uses."
+          },
+          {
+            "category": "probing_quality",
+            "severity": "low",
+            "observation": "`exchange_2.facilitator` mixes a recalled-event anchor ('嗰晚') with a generalized process question ('通常點樣'). This is not a major flaw, but it weakens the distinction between what happened in the specific incident and the participant's general heuristic.",
+            "evidence_refs": [
+              "exchange_2.facilitator"
+            ],
+            "recommendation": "When reconstructing behaviour, stay on the specific episode first, then explicitly branch to '通常你平時都係咁做？' if needed."
+          },
+          {
+            "category": "domain_fit_alignment",
+            "severity": "medium",
+            "observation": "The research goal is about whether analytics improves trust, understanding, action willingness, and asset retention for Hong Kong retail or semi-retail bank customers. The interview captured stated trust and understanding conditions, but did not produce direct participant evidence on asset retention or actual changed action beyond possible future checking.",
+            "evidence_refs": [
+              "RESEARCH GOAL",
+              "exchange_3.persona",
+              "exchange_6.persona",
+              "SYNTHESIS.key_insights"
+            ],
+            "recommendation": "Avoid translating this run into retention or asset-stickiness conclusions. Next reruns should probe whether the feature would keep assets with the bank, reduce transfers out, or change where future buys happen."
+          },
+          {
+            "category": "concept_validation_reporting",
+            "severity": "medium",
+            "observation": "The concept report does preserve some weak evidence, but it still frames broad founder assumptions as if they were all assessed adequately. Some assumptions, such as trust gains from institutional analytics delivery and willingness to share external data, remain conditional and only lightly tested with one persona.",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_8.persona",
+              "SYNTHESIS.assumption_validation"
+            ],
+            "recommendation": "Present assumption checks as 'this persona's conditions' rather than generalized validations, and separate 'evidence of problem' from 'evidence of concept acceptance conditions'."
+          }
+        ],
+        "required_improvements": [
+          "Bound synthesis claims to one synthetic persona and explicitly mark hypothetical concept reactions versus observed current behaviour.",
+          "Remove or weaken unsupported product conclusions such as `replaces_workflow` and strong `supported` payment/adoption judgments.",
+          "Add a distinct repeat-use or month-two retention probe rather than treating first-use value as sufficient retention evidence.",
+          "Probe bank-specific asset-retention or future-buy-location effects directly if the research goal includes asset retention.",
+          "Tighten event reconstruction questions so specific incident evidence is not blended with general routine too early."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask what the participant did the next day or next purchase after feeling overlap risk, so action impact is grounded in observed behaviour.",
+            "After concept intro, ask separately: would they try it once, what would make them use it again a month later, and what would make them stop after one use.",
+            "Probe whether this feature would change where they keep assets or execute future investments, not just whether they like the analysis.",
+            "Test trust with a concrete mock output and ask what exact line or screen would make it feel analytical versus sales-led."
+          ],
+          "coverage_gap_actions": [
+            "Get a participant-facing probe on actual or likely asset-retention behaviour: keeping assets in-bank, moving assets out, or consolidating elsewhere.",
+            "Separate first-use curiosity from sustained repeat use with a dedicated long-term use question.",
+            "If payment matters, force a bounded tradeoff question against the current workaround or an alternative tool, while still keeping it hypothetical-labeled.",
+            "For external account linking, probe setup friction and privacy boundaries as separate conditions rather than one combined acceptance question."
+          ],
+          "prompt_adjustments": [
+            "Require the synthesis layer to tag every claim as `observed`, `stated`, or `hypothetical` and forbid upgrading stated intent into behavioural proof.",
+            "In concept-validation mode, add an explicit prompt check that month-two retention must be evidenced separately from first reaction or first-use value.",
+            "Add a guardrail that product-shaping outputs, pricing implications, and assumption verdicts must stay persona-bounded in a single synthetic interview.",
+            "Ask the facilitator to keep event reconstruction fully episode-specific before generalizing to habitual behaviour."
+          ],
+          "turn_budget_guidance": "The current soft/hard turn policy is sufficient for a short concept screen, but one or two extra turns should be reserved specifically for long-term repeat use and bank-retention impact before declaring coverage complete."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit reviews a single synthetic concept-validation interview. Any support, risk, pricing, trust, or design implication should be treated as persona-specific simulated evidence, not market proof or a causal product conclusion."
+      }
+    },
+    {
+      "persona_id": "su_1202",
+      "persona_name": "Iris Leung",
+      "interview_id": "observed_20260622_fbc6dad0",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260622_9f334e13\\interviews\\observed_20260622_fbc6dad0",
+      "report": {
+        "problem_evidence": {
+          "strength": "medium",
+          "supporting_quotes": [
+            {
+              "quote": "如果佢連基金、ETF 同直接持股嘅重疊都捉到，呢個係我平時最花時間自己補嘅位。",
+              "evidence_ref": "exchange_4.persona"
+            },
+            {
+              "quote": "唔放埋同一個基準睇就好容易高估或者低估咗個集中度。",
+              "evidence_ref": "exchange_3.persona"
+            },
+            {
+              "quote": "原來幾個戶口加埋之後，某個行業或者幾隻核心名字集中得比我以為更高。",
+              "evidence_ref": "exchange_6.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "上個星期日晚因美股板塊波動，主動用 spreadsheet 加券商持倉對照。",
+            "把 ETF 主要成份與直接持有美股拉埋一齊睇，檢查重複押注。",
+            "發現同一主題倉位分散喺唔同戶口，意識到表面分散未必真分散。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "用 spreadsheet 手動整合資料。",
+            "把大持倉 ETF 主要成份同直接持股逐個對照。",
+            "跨戶口自己估算主題同名字重疊。"
+          ],
+          "pain_level": "high",
+          "switching_difficulty": "medium",
+          "what_must_not_change": [
+            "結果要講清楚點樣計。",
+            "要見到 data 幾時更新。",
+            "唔可以只得紅黃綠燈式黑箱輸出。",
+            "外部資產權限要由用戶細粒度控制，並可隨時取消。"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "銀行內已有持倉整合分析。",
+            "外部資產只用嚟做分析同報告。",
+            "由用戶選擇加邊個戶口、邊類資產。",
+            "可隨時取消外部資產連接。"
+          ],
+          "rejected_data_access": [
+            "因連接外部資產而自動變成 RM 跟進名單。",
+            "把外部資產資料用作產品推銷觸發。",
+            "分析後立即引導約 RM、轉倉或直接配產品。",
+            "用 portfolio health 包裝銀行有分銷利益嘅產品導流。"
+          ],
+          "required_trust_explanation": [
+            "要清楚說明外部資料會點用。",
+            "分析與銷售動作要明確分離。",
+            "輸出要透明可審視，而唔係只畀結論。"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "第一次就要見到本身唔容易即刻睇到嘅跨戶口集中度洞察。",
+            "能捉到基金、ETF、直接持股之間重疊。",
+            "結果要解釋計算方法。",
+            "顯示資料更新時間。"
+          ],
+          "time_to_value": "首次打開即時",
+          "abandonment_triggers": [
+            "只整合本身已經睇到嘅資料。",
+            "只有紅黃綠燈，無解釋。",
+            "分析完即刻帶去銷售或 RM 跟進。",
+            "外部資產用途或權限唔清楚。"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "未明言 free trial，但明確表示銀行內已有資料整合應屬基本功能，不應另外收費。",
+          "monthly_comfort_range": "未知",
+          "payment_justification": [
+            "跨外部資產整合。",
+            "更新夠快。",
+            "情景分析有深度。",
+            "可持續比較 rebalancing 後風險點變。"
+          ],
+          "evidence_strength": "stated"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "持續提供難以自行看到的跨戶口集中度洞察。",
+            "方法透明，講清楚點樣計。",
+            "能追蹤 rebalancing 前後風險變化。"
+          ],
+          "drop_off_reasons": [
+            "功能被視為基本 banking feature，價值不足以獨立留存。",
+            "看起來像 sales funnel。",
+            "黑箱式輸出缺乏可驗證性。"
+          ],
+          "workflow_effect": "replaces_workflow"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "很多客戶覺得現有銀行投資指引偏 product-led 而非 portfolio-led。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "此受訪者明確懷疑 RM/report 會變成銷售前菜，但只有一位 synthetic persona，未能外推很多客戶。"
+          },
+          {
+            "assumption": "客戶能理解簡化後的 portfolio risk、集中度、情景分析。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_1.persona",
+              "exchange_3.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者自發談論集中度、權重、情景分析及計算透明度，顯示至少對核心概念有可用理解能力。"
+          },
+          {
+            "assumption": "機構級 analytics 經由銀行提供，增加的信任會多於懷疑。",
+            "status": "weakened",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "價值感存在，但信任非常有條件，稍有銷售觸發就轉為懷疑。"
+          },
+          {
+            "assumption": "客戶願意分享足夠 portfolio data，包括至少部分外部資產。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_5.persona"
+            ],
+            "rationale": "願意分享，但前提嚴格，只限分析/report、細粒度權限、可撤回、不可作銷售用途。"
+          },
+          {
+            "assumption": "功能可帶來更好行動或互動，而不只是令客戶更被動。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者重視可比較 rebalancing 後風險變化，暗示可支持行動；但未直接證明會採取具體操作。"
+          },
+          {
+            "assumption": "至少部分客戶對 self-serve 或 RM-assisted interpretation 有需求。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "對 self-serve 分析需求清楚；RM-assisted 只有在不被感知為銷售導流時才可能接受。"
+          },
+          {
+            "assumption": "部分客戶對 premium analytics 或 advisory support 有可信付費條件。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者給出明確付費門檻，不會為基本整合付費，但會為跨外部資產、快更新、深度情景分析與持續比較功能考慮付費。"
+          },
+          {
+            "assumption": "概念可被視為中立理解工具，而非更高級的銷售介面。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "存在明確中立工具價值，但只要介面或後續流程靠近產品推薦，就會立即被歸類為 sales funnel。"
+          }
+        ],
+        "key_insights": [
+          "核心需求唔係『睇到重複名字』，而係用同一基準量化跨 ETF、個股、跨戶口的真實集中度。",
+          "Portfolio Health Check 對這位受訪者有明顯問題對準度，因為正好補他現時用 spreadsheet 手補的缺口。",
+          "信任唔係來自『機構級 analytics』字眼本身，而係來自資料用途受限、權限可控、方法透明、同銷售分離。",
+          "銀行內已有資料的整合被視為 table stakes，不足以支撐獨立收費。",
+          "可收費價值來自更深層能力：外部資產整合、較快更新、深度情景分析、以及 rebalancing 前後風險變化追蹤。"
+        ],
+        "next_experiment": "用另一位相近但對銀行 RM 較信任或較不信任的香港投資者做對比訪談，並展示兩個低保真概念變體：一個純 self-serve 無任何 RM CTA，另一個可選擇生成 report 再自行決定是否聯絡 RM，測試同一分析輸出下銷售感知如何改變。",
+        "evidence_gaps": [
+          "只有一位 synthetic persona，不能代表香港零售或半零售銀行客群。",
+          "未測試實際 UI/報表樣式，對『講清楚點樣計』的具體要求仍未具象化。",
+          "未取得真實行動證據，例如看完分析後是否真的 rebalancing、聯絡 RM 或增加資產留存。",
+          "未得出可接受價格區間，只知道付費門檻條件。",
+          "未驗證對壓力測試、貨幣風險、風險取向匹配等其他功能模塊的實際理解與價值排序。"
+        ],
+        "synthetic_only_disclaimer": "以上只係單一 synthetic persona 的概念預驗證，不可當作真人市場證據或因果結論；最多用嚟收斂下一輪真人訪談與原型測試重點。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 3,
+          "probing_quality": 4,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 2,
+          "causal_rigor": 3,
+          "hypothesis_validation_rigor": 3,
+          "synthesis_fidelity": 2,
+          "overall": 3
+        },
+        "checks": {
+          "leading_question_risk": "warn",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "warn",
+          "synthesis_overreach_risk": "fail",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "pass",
+          "interviewer_jargon_risk": "pass",
+          "domain_fit_alignment": "warn",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview established a recent concrete event and the current workaround before introducing the concept, which fits `concept_validation` sequencing.",
+          "Most asked questions had a single practical purpose and avoided causal pressure or mechanical root-cause probing.",
+          "The facilitator separated trust boundary, repeat-use, payment, and sales-funnel risk into distinct exchanges rather than collapsing them into one omnibus prompt.",
+          "The stop decision was reasonable: all required coverage fields were participant-facing and the last answer materially tested the sales-boundary assumption."
+        ],
+        "findings": [
+          {
+            "category": "Concept introduction neutrality",
+            "severity": "medium",
+            "observation": "The concept intro is overly long and partially solution-loaded. It bundles aggregation, risk, concentration, scenario analysis, optional external assets, report generation, RM handoff, and a no-auto-trading reassurance in one turn, which makes it hard to know which element drives the reaction.",
+            "evidence_refs": [
+              "exchange_4.facilitator",
+              "FACILITATOR TRACE[3]"
+            ],
+            "recommendation": "Split concept exposure into a shorter neutral core first, then add one capability at a time. Ask for reaction to the core portfolio-view concept before introducing RM/report and external-data options."
+          },
+          {
+            "category": "Question focus",
+            "severity": "medium",
+            "observation": "Two questions are compound from the participant’s perspective. `邊部分最有用，邊部分最可疑？` asks for both attraction and suspicion at once, and `基本功能，定係...另外畀錢？` mixes table-stakes classification with willingness-to-pay conditions.",
+            "evidence_refs": [
+              "exchange_4.facilitator",
+              "exchange_7.facilitator"
+            ],
+            "recommendation": "Use one natural focus per spoken question. For example, first ask what stands out as useful, then separately ask what raises concern; first ask whether it feels table-stakes, then separately ask what would justify payment."
+          },
+          {
+            "category": "Evidence discipline",
+            "severity": "high",
+            "observation": "The synthesis treats hypothetical concept reactions as problem evidence and behavioral proof. `problem_evidence.supporting_quotes` includes `exchange_4.persona`, which is post-concept, and `retention_risk.workflow_effect = replaces_workflow` overstates what was actually said. The participant described a current manual workaround, not observed replacement behavior.",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_6.persona",
+              "SYNTHESIS.problem_evidence",
+              "SYNTHESIS.retention_risk"
+            ],
+            "recommendation": "Keep pre-concept problem evidence separate from post-concept concept evaluation. Mark claims such as replacement, retention, action, and trust lift as hypothetical until observed in behavior or tested with usage evidence."
+          },
+          {
+            "category": "Assumption grading overreach",
+            "severity": "high",
+            "observation": "Several assumption statuses are stronger than the evidence allows from one synthetic interview and mostly hypothetical answers. `supported` for understanding analytics and premium payment conditions is too strong for broad founder assumptions; `partially_supported` is safer unless backed by observed behavior or repeated cases.",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "exchange_7.persona",
+              "SYNTHESIS.assumption_validation"
+            ],
+            "recommendation": "Downgrade broad assumption verdicts when evidence comes from a single synthetic persona or stated intent. Reserve `supported` for tightly scoped persona-level claims, and explicitly note when the evidence is hypothetical rather than behavioral."
+          },
+          {
+            "category": "Concept-validation rigor",
+            "severity": "medium",
+            "observation": "The interview covered curiosity, trust, payment, and repeat-use, but did not explicitly separate trial behavior from month-two retention behavior. Repeat-use was inferred from first-use value conditions rather than probed as a later habit or return pattern.",
+            "evidence_refs": [
+              "exchange_6.facilitator",
+              "exchange_6.persona",
+              "COVERAGE STATUS"
+            ],
+            "recommendation": "Add a direct follow-up about what would make the participant come back in week 2 or month 2, and what would make the tool fade after initial curiosity."
+          },
+          {
+            "category": "Pricing and design bounds",
+            "severity": "medium",
+            "observation": "The synthesis mostly preserves uncertainty on pricing, but it still derives fairly specific product-shaping conclusions from one synthetic persona, such as what is chargeable versus table stakes. Those are useful hypotheses, not validated segmentation truths.",
+            "evidence_refs": [
+              "exchange_7.persona",
+              "SYNTHESIS.pricing_signal",
+              "SYNTHESIS.key_insights"
+            ],
+            "recommendation": "Label pricing and design implications as persona-bounded hypotheses. Avoid treating one persona’s table-stakes judgment as a market rule for Hong Kong retail or semi-retail banking customers."
+          },
+          {
+            "category": "Reference quality",
+            "severity": "medium",
+            "observation": "Some synthesis claims lack tight transcript anchoring. `pain_level: high`, `switching_difficulty: medium`, and `time_to_value: 首次打開即時` are plausible interpretations but not direct participant statements with explicit refs.",
+            "evidence_refs": [
+              "SYNTHESIS.current_workaround",
+              "SYNTHESIS.first_value_requirement"
+            ],
+            "recommendation": "Either attach explicit exchange refs and note these are analyst inferences, or remove the scalar labels when the participant did not state them directly."
+          },
+          {
+            "category": "Domain-fit interpretation",
+            "severity": "medium",
+            "observation": "The interview was rightly centered on changed investing behavior, but the synthesis risks collapsing multiple motivations into a single `portfolio-led vs product-led` frame. The participant also cared about transparency, data freshness, and cross-account normalization, not only anti-sales positioning.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "exchange_8.persona"
+            ],
+            "recommendation": "Preserve the behavioral job separately from the disruption source: cross-account concentration understanding is the core job; sales-funnel concern is one adoption boundary, not the whole need."
+          }
+        ],
+        "required_improvements": [
+          "Shorten and decompose the concept introduction so each participant-facing question has one clear focus.",
+          "Separate pre-concept problem evidence from post-concept hypothetical reactions in the synthesis.",
+          "Downgrade broad assumption verdicts that rely on a single synthetic persona and stated intent rather than observed behavior.",
+          "Add an explicit month-two retention probe instead of inferring ongoing use from first-use value.",
+          "Stop assigning analyst scalar labels such as `pain_level`, `switching_difficulty`, or `replaces_workflow` without direct participant evidence or clearly marked inference."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask for one more concrete recent portfolio-review event to confirm whether cross-account concentration checking is recurring or occasional.",
+            "After the core concept reaction, ask separately what would make them try it once, what would make them return in month two, and what would make them ignore it after first use.",
+            "Probe what a transparent output must literally show: holdings roll-up, factor breakdown, scenario math, update timestamps, or audit trail.",
+            "Test a stripped self-serve version before adding RM/report workflow to isolate whether value survives without sales-adjacent cues."
+          ],
+          "coverage_gap_actions": [
+            "Add a direct participant-facing probe for trial behavior: what exact trigger would make them open or connect accounts the first time.",
+            "Add a direct month-two retention probe: in what recurring situation would they come back, and how often.",
+            "Ask what concrete action they would take after a strong concentration alert, and whether they have ever taken a similar action before.",
+            "Probe one acceptable and one unacceptable example of RM involvement so the trust boundary is behaviorally specific rather than principle-only."
+          ],
+          "prompt_adjustments": [
+            "In `concept_validation`, enforce a shorter neutral concept script with no more than 2-3 capability elements before the first reaction probe.",
+            "Add a guardrail that synthesis must tag each claim as `observed_behavior`, `stated_preference`, or `analyst_inference`.",
+            "Prevent `supported` assumption statuses when evidence is from a single synthetic interview unless the claim is explicitly persona-scoped.",
+            "Require retention to be split into `initial curiosity`, `first trial`, `repeat use`, and `month-two retention` rather than collapsing them."
+          ],
+          "turn_budget_guidance": "The current turn budget was sufficient for required coverage, but one or two extra turns would improve rigor if reserved specifically for trial-vs-retention separation and for isolating RM involvement from the core concept. No major widening is needed; a slightly larger soft limit is enough."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit evaluates a single synthetic concept-validation interview. Any support, pricing implication, trust boundary, or product-direction conclusion should be treated as persona-bounded prompt-quality evidence, not market evidence or causal proof."
+      }
+    },
+    {
+      "persona_id": "su_1203",
+      "persona_name": "Lau Mei-ling",
+      "interview_id": "observed_20260622_b06ae151",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260622_9f334e13\\interviews\\observed_20260622_b06ae151",
+      "report": {
+        "problem_evidence": {
+          "strength": "strong",
+          "supporting_quotes": [
+            {
+              "quote": "如果個畫面只係逐隻產品分開列，我其實唔容易判斷",
+              "evidence_ref": "exchange_2.persona"
+            },
+            {
+              "quote": "我多數會自己截圖或者抄低，先按產品類別分一分",
+              "evidence_ref": "exchange_3.persona"
+            },
+            {
+              "quote": "好容易覺得買咗幾樣就等於分散，其實可能只係換咗幾個名",
+              "evidence_ref": "exchange_3.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "最近一次真實事件係定期差唔多到期時，用銀行 app 睇債券、收息基金同存款分布，再判斷應否再放入類似收息產品。",
+            "判斷時會看收入是否過度靠同一類產品、到期日是否太接近、發行人或類別是否重複。",
+            "當 app 缺乏整體分布視圖時，會自行截圖或抄低再分類重組。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "用銀行 app 逐項看持倉。",
+            "自己截圖或抄低資料。",
+            "按產品類別手動分組，粗略估算佔比。",
+            "再看每月收入主要由哪些產品支撐。"
+          ],
+          "pain_level": "high",
+          "switching_difficulty": "medium",
+          "what_must_not_change": [
+            "分析要針對現有持倉，不可以只是籠統分數。",
+            "結果要用人話解釋情景影響。",
+            "不要一出分析就推產品。",
+            "要讓用戶先自行消化，再決定是否找 RM。"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "先用本行內持倉做分析。",
+            "若先證明有用，之後可考慮連接其他銀行或券商持倉。",
+            "前提是清楚交代誰可看到資料、只作分析用途、可隨時取消。"
+          ],
+          "rejected_data_access": [
+            "一開始就要求開放全部資料。",
+            "資料用途不清楚。",
+            "分析完成後容易引來推銷。"
+          ],
+          "required_trust_explanation": [
+            "先指出現有持倉的集中位與情景風險。",
+            "提供書面摘要。",
+            "把是否聯絡 RM 交給用戶選擇。",
+            "避免在分析結果旁直接彈出產品推介。"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "看見自己平時未必一眼見到的重複風險。",
+            "把風險連到下一個真實決策，例如定期到期、債券換馬、每月現金流影響。",
+            "顯示幾個情景下對現金流和本金的具體影響。",
+            "提供可以留後慢慢看的書面摘要。"
+          ],
+          "time_to_value": "第一次看結果就要明顯比現時手動拼資料更有洞察。",
+          "abandonment_triggers": [
+            "每次只是同一套大路說話。",
+            "分析不跟持倉變化更新。",
+            "分析後立即開始推產品。",
+            "變成月費模式。"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "高；較像要先證明本行內持倉分析已有用，才可能接受之後連更多資料或付費。",
+          "monthly_comfort_range": "傾向不接受月費；較可接受一次性、幾百港幣內，最好包一次 RM 對談。",
+          "payment_justification": [
+            "能提供自己平時拼不出的集中風險洞察。",
+            "能量化幾個情景對每月現金流與本金的影響。",
+            "有可回看的書面摘要。",
+            "最好附帶一次之後的 RM 討論。"
+          ],
+          "evidence_strength": "stated"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "每次都能指出新出現或平時看不到的重複風險。",
+            "分析會跟住持倉變化更新。",
+            "內容直接支援下一次資金部署決定。"
+          ],
+          "drop_off_reasons": [
+            "內容泛泛而談。",
+            "沒有新的 portfolio 層級洞察。",
+            "結果太像銷售前置。",
+            "要持續月費。"
+          ],
+          "workflow_effect": "replaces_workflow"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "很多客戶覺得現有銀行投資資訊太產品導向，而非 portfolio 導向。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_3.persona"
+            ],
+            "rationale": "受訪者明確表示逐項產品列表不足以判斷整體集中風險，並需要自己手動重組。"
+          },
+          {
+            "assumption": "客戶能理解簡化後的 portfolio risk、集中度、壓力測試與情景分析。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者主動要求情景分析用人話解釋，並能把風險連到現金流與本金，但未證明他對更完整分析框架都能持續理解。"
+          },
+          {
+            "assumption": "銀行提供機構級 analytics 會提升信任，多於引起懷疑。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_5.persona"
+            ],
+            "rationale": "有條件地可提升信任，但前提嚴格：先分析、後選擇是否找 RM、不能立即推產品。"
+          },
+          {
+            "assumption": "客戶願意分享足夠資料，包括部分外部資產，令 whole-portfolio 分析有用。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_8.persona"
+            ],
+            "rationale": "只在先證明本行內分析已有價值、權限透明且可撤回的前提下，才可能連接外部資產。"
+          },
+          {
+            "assumption": "功能可帶動更好的行動或參與，而不只是令客戶更被動。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者表示若分析能連到即將面對的定期到期、換馬與現金流決策，會再開並可能採取後續行動。"
+          },
+          {
+            "assumption": "至少部分客戶對 self-serve 或 RM-assisted interpretation 有需求。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者想先自行消化，再選擇是否找 RM，且一次性付費若包一次 RM 對談更有吸引力。"
+          },
+          {
+            "assumption": "存在可信的付費條件。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_7.persona"
+            ],
+            "rationale": "已提出具體價值門檻與價格形式，但屬陳述性、未經真實購買驗證。"
+          },
+          {
+            "assumption": "概念可以被視為中立理解工具，而非更高級的銷售介面。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_7.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "可達成，但非常依賴呈現方式、資料邊界與銷售節奏控制；稍有偏差就會被當成銷售。"
+          }
+        ],
+        "key_insights": [
+          "核心需求不是更多產品資訊，而是把現有持倉重組成 portfolio 視角，特別是集中度、收入來源重疊與到期結構。",
+          "概念有吸引力，但信任條件比功能條件更硬；一旦分析後立即推產品，價值感會迅速崩塌。",
+          "最有價值的輸出不是抽象風險分數，而是『幾個具體情景下，現金流同本金會點變』。",
+          "外部資產連接不是第一步；先靠本行內資料證明 value，才有機會爭取更深資料授權。",
+          "付費可能存在，但更像一次性分析加一次 RM 討論，而不是訂閱工具。"
+        ],
+        "next_experiment": "用一個可點擊原型或靜態 mock，先只展示本行內持倉的集中風險、兩到三個情景下的現金流/本金影響、書面摘要與『稍後再找 RM』選項，然後觀察用戶是否願意基於該輸出做下一步決策或預約一次 RM 討論。",
+        "evidence_gaps": [
+          "只有一位 synthetic persona，不能代表香港零售或半零售銀行客群。",
+          "未測試弱痛點或完全不重視 portfolio 視角的客戶。",
+          "未觀察真實介面下對『壓力測試』『情景分析』的理解程度。",
+          "未測試不同銀行品牌或 RM 關係深淺對信任的影響。",
+          "付費與外部資產連接都屬假設性陳述，未經真實行為驗證。"
+        ],
+        "synthetic_only_disclaimer": "以上只屬 synthetic interview 的前期方向性訊號，不可當成人類用戶已驗證證據；所有因果與需求判斷都需要再用真實香港銀行客戶訪談或行為測試驗證。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 4,
+          "probing_quality": 4,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 3,
+          "causal_rigor": 4,
+          "hypothesis_validation_rigor": 4,
+          "synthesis_fidelity": 3,
+          "overall": 4
+        },
+        "checks": {
+          "leading_question_risk": "warn",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "warn",
+          "synthesis_overreach_risk": "warn",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "warn",
+          "interviewer_jargon_risk": "pass",
+          "domain_fit_alignment": "pass",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview establishes a recent concrete event and current workaround before concept introduction, which is methodologically appropriate for `concept_validation` (`exchange_1` to `exchange_3`).",
+          "Most asked questions have one conversational focus and avoid mechanical causal pressure; the flow separates concept reaction, trust boundary, retention, payment, and external-data boundary cleanly (`exchange_4` to `exchange_8`).",
+          "The facilitator stopped at a reasonable point because all required coverage areas were participant-facing and covered, and there is no sign of obvious unasked high-value gaps in the current turn budget (`FACILITATOR TRACE` closing decision).",
+          "The synthesis generally preserves that payment, retention, and external-linking evidence are stated or conditional rather than behavioral proof, especially in `pricing_signal.evidence_strength` and the final disclaimer."
+        ],
+        "findings": [
+          {
+            "category": "question_design",
+            "severity": "medium",
+            "observation": "The concept introduction is somewhat solution-loaded. It names a polished feature (`Portfolio Health Check`) and embeds two value-bearing mechanisms (`整體風險分布` and `情景分析`) before the participant reacts, which can pull answers toward evaluating the supplied framing instead of surfacing their own language for the desired output.",
+            "evidence_refs": [
+              "exchange_4.facilitator",
+              "FACILITATOR TRACE[3]"
+            ],
+            "recommendation": "Introduce the concept in a more neutral prototype-style form first, for example describing 'a new portfolio view' without branding or bundled benefit terms, then probe what they would want to see and what would make it useful or untrustworthy."
+          },
+          {
+            "category": "evidence_discipline",
+            "severity": "medium",
+            "observation": "Some synthesis claims go beyond what this transcript directly supports. `retention_risk.workflow_effect` says the tool 'replaces_workflow', but the participant only said they currently patch things together manually and would reopen the feature if it stayed useful; they did not say the old workflow would be replaced.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_6.persona",
+              "SYNTHESIS.retention_risk.workflow_effect"
+            ],
+            "recommendation": "Downgrade replacement claims to 'could reduce manual stitching' unless the participant explicitly says they would stop using the workaround."
+          },
+          {
+            "category": "synthesis_overreach",
+            "severity": "medium",
+            "observation": "The assumption `銀行提供機構級 analytics 會提升信任，多於引起懷疑` is marked `partially_supported`, but the transcript shows conditional non-rejection rather than actual trust increase. The participant described what would prevent the feature from feeling like sales, not a recalled or observed rise in trust.",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "SYNTHESIS.assumption_validation[2]"
+            ],
+            "recommendation": "Reframe this as 'trust is conditional and fragile' or mark it weaker unless a participant explicitly says the analysis would increase confidence in the bank or make them more willing to act."
+          },
+          {
+            "category": "evidence_reference_quality",
+            "severity": "low",
+            "observation": "Several synthesis sections mix strong persona-specific evidence with broader language that sounds segment-level, such as `problem_evidence.strength: strong` and some `key_insights`, while the interview is one synthetic case. The disclaimer helps, but the section labels still overstate generality.",
+            "evidence_refs": [
+              "SYNTHESIS.problem_evidence.strength",
+              "SYNTHESIS.key_insights",
+              "SYNTHESIS.synthetic_only_disclaimer"
+            ],
+            "recommendation": "Keep section labels explicitly persona-bounded, for example 'strong within this persona' or 'directional signal from one synthetic case'."
+          },
+          {
+            "category": "persona_realism",
+            "severity": "low",
+            "observation": "The persona is mostly natural, but answers are unusually complete and consistently well-structured across all turns, with little hesitation, ambiguity, or tradeoff discovery. That reduces stress-testing value for adaptive facilitation.",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_5.persona",
+              "exchange_7.persona"
+            ],
+            "recommendation": "In future synthetic runs, vary answer completeness and include occasional uncertainty, conflicting motives, or partial recall so the facilitator must probe rather than harvest polished statements."
+          }
+        ],
+        "required_improvements": [
+          "Make concept introduction more neutral and less feature-packaged before asking for reaction.",
+          "Tighten synthesis so behavioral claims do not exceed stated hypothetical evidence from one synthetic participant.",
+          "Reclassify trust-related findings to reflect conditional acceptance rather than demonstrated trust uplift.",
+          "Keep persona-level outputs explicitly bounded to one synthetic case, especially in strength labels and design implications."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask the participant to react to a lower-framing concept description or simple mock before naming analytics features.",
+            "Probe what they would do immediately after seeing the analysis: ignore it, save it, contact RM, move money, or compare products.",
+            "Ask what, if anything, they currently trust more than the bank app for portfolio-level understanding, to surface alternatives and competitive baselines.",
+            "Test whether the participant would still value the feature if it offered only portfolio aggregation without scenario analysis, and separately only scenario analysis without cross-holding rollup."
+          ],
+          "coverage_gap_actions": [
+            "Add a participant-facing probe that isolates curiosity from actual trial intent, such as what they would click first or whether they would open it on their next maturity event.",
+            "Add a direct probe for month-two retention conditions versus first-use appeal, since current retention evidence is still stated intention.",
+            "Ask for a concrete privacy failure or sales-trigger example that would make them refuse external account linking, to sharpen trust-boundary evidence.",
+            "Probe a counterexample persona condition: when would simple product-level views already be enough, making portfolio analytics unnecessary?"
+          ],
+          "prompt_adjustments": [
+            "In concept-validation prompt instructions, explicitly discourage branded concept names and bundled benefit phrasing in the first concept-intro question.",
+            "Add a synthesis rule that any claim about replacement, trust increase, retention, payment, or asset retention must be tagged as `stated`, `behavioral`, or `observed` and downgraded when only hypothetical.",
+            "Add an observer check that asks for at least one disconfirming or boundary probe against the concept's value, not just conditions under which it works.",
+            "Nudge synthetic persona generation toward more uneven recall and less perfectly packaged answers to better test facilitation quality."
+          ],
+          "turn_budget_guidance": "The current soft/hard turn policy was sufficient for this run. Keep the baseline budget, but reserve 1-2 extra turns in reruns for counterexample probing and separating first-use curiosity from repeat-use and payment intent."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview and its artifacts. Any apparent needs, trust dynamics, pricing signals, or product implications remain directional only until confirmed with real participant evidence."
+      }
+    },
+    {
+      "persona_id": "su_1204",
+      "persona_name": "Lau Mei-yan",
+      "interview_id": "observed_20260622_4862149e",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260622_9f334e13\\interviews\\observed_20260622_4862149e",
+      "report": {
+        "problem_evidence": {
+          "strength": "strong",
+          "supporting_quotes": [
+            {
+              "quote": "股票一個戶口、基金一個戶口、MPF又另一邊，分開睇好似唔算太重，但拼埋先知係咪其實都係同一個方向。",
+              "evidence_ref": "exchange_3.persona"
+            },
+            {
+              "quote": "而家多數都仲係逐樣產品咁睇...我要自己喺個腦或者另外記低先拼到成個圖。",
+              "evidence_ref": "exchange_7.persona"
+            },
+            {
+              "quote": "最可疑就係如果個 Health Check 睇完即刻帶我去某啲產品...我就會當佢比較似銷售。",
+              "evidence_ref": "exchange_4.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "最近一次真實事件係星期日晚喺銀行 app 睇 portfolio，考慮應否再加美股基金。",
+            "受訪者會自己對持倉比重、美股曝險、基金重疊，再對現金同未來用錢安排。",
+            "實際痛點唔係冇資訊，而係跨股票、基金、MPF 後睇唔清真正重疊同整體方向。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "逐樣睇股票、基金同 MPF 持倉比重。",
+            "自己估算美股相關比重同基金重疊。",
+            "再用戶口現金同未來教育、按揭支出安排做判斷。",
+            "靠自己喺個腦或者另外記低，先拼成整體 portfolio 圖像。"
+          ],
+          "pain_level": "high",
+          "switching_difficulty": "medium",
+          "what_must_not_change": [
+            "唔可以一睇完就即刻推產品。",
+            "一定要講清楚點計、用咗咩資料。",
+            "要用白話解釋，唔可以淨係俾分數同圖表。",
+            "要保留自己消化同自行決定嘅空間。"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "銀行內已有嘅股票、基金、MPF 持倉整合分析。",
+            "用現有持倉去解釋市場、貨幣、板塊集中風險。",
+            "將風險情景連到教育儲備、供樓、退休時間表等實際目標。"
+          ],
+          "rejected_data_access": [
+            "分析後即時導流去指定產品。",
+            "只俾風險分數但唔交代算法或資料來源。",
+            "以分析包裝銷售，而唔係中立講清楚維持現狀或減少集中嘅不同後果。"
+          ],
+          "required_trust_explanation": [
+            "先解釋目前組合有咩重疊。",
+            "講清楚邊種情景會點影響教育儲備、供樓或退休安排。",
+            "提供幾個實際選項同各自後果，而唔係直接指去某隻基金。",
+            "如有人手解讀，必須唔太 sales。"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "一次過拼埋股票、基金同 MPF。",
+            "清楚指出市場、貨幣、板塊重疊風險。",
+            "用白話講對教育、按揭、退休時間表有咩影響。",
+            "唔止靚圖表，而係幫到做更清楚決定。"
+          ],
+          "time_to_value": "第一次使用就要睇到可行決策價值；第二次打開要更省時間，直接指出有咩變化同需唔需要理。",
+          "abandonment_triggers": [
+            "只係多幾個圖表或分數。",
+            "睇完即刻彈產品建議。",
+            "冇講清楚計法、資料來源或情景影響。",
+            "每次都要由頭自己再拼資料。"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "未有明講免費試用，但明顯要先見到真實決策價值先可能付費。",
+          "monthly_comfort_range": "unknown",
+          "payment_justification": [
+            "真係幫佢做成更清楚嘅決定。",
+            "整合股票、基金、MPF 後，用白話解釋重疊風險。",
+            "清楚連到教育同退休時間表影響。",
+            "最好包一次唔太 sales 嘅人手解讀。"
+          ],
+          "evidence_strength": "stated"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "有變化時主動提醒，例如加咗某類資產後更集中。",
+            "市場一郁時，能即時連到教育或退休時間表影響。",
+            "第二次之後更省時間，直接指出變化同是否需要處理。"
+          ],
+          "drop_off_reasons": [
+            "一次性睇完就算，之後冇持續提醒。",
+            "每次都只係靜態報告，冇講邊度變咗。",
+            "分析太 sales 或太抽象。"
+          ],
+          "workflow_effect": "replaces_workflow"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "Many customers feel current bank investment guidance is too product-led and not portfolio-led.",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者明確表示現時多數係逐樣產品咁睇，並對分析後即時導向產品高度敏感。"
+          },
+          {
+            "assumption": "Customers can understand simplified portfolio risk, concentration, stress test, and scenario analysis well enough for decision support.",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "受訪者對市場、貨幣、板塊集中同情景影響有明確興趣，但要求必須用白話講清楚，顯示可理解但解釋方式很關鍵。"
+          },
+          {
+            "assumption": "Institutional-grade analytics delivered through a bank can increase trust more than it increases suspicion.",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona"
+            ],
+            "rationale": "有實用價值感，但同時有強烈銷售懷疑；信任取決於中立呈現、透明算法同非導購式設計。"
+          },
+          {
+            "assumption": "Customers are willing to share enough portfolio data, including at least some non-bank assets, to make whole-portfolio analysis useful.",
+            "status": "unknown",
+            "evidence_refs": [],
+            "rationale": "今次訪談未直接測到外部資產連接或資料分享邊界。"
+          },
+          {
+            "assumption": "The feature can drive action quality or engagement rather than only making customers more fearful or passive.",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "受訪者想要可比較嘅選項、後果同變化提醒，顯示有機會提升決策質素；但未見真實使用後行動證據。"
+          },
+          {
+            "assumption": "There is meaningful demand for either self-serve interpretation or RM-assisted interpretation, rather than the feature being ignored.",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "受訪者想先自己消化，再接受一次唔太 sales 嘅人手解讀，顯示 hybrid 模式有吸引力。"
+          },
+          {
+            "assumption": "At least some customers have a credible willingness-to-pay condition for premium analytics or advisory support after seeing value.",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_8.persona"
+            ],
+            "rationale": "有清楚條件式 WTP，但屬陳述性、假設性證據，未有實際付費行為。"
+          },
+          {
+            "assumption": "The concept can feel like a neutral understanding tool instead of being dismissed as a more sophisticated sales surface.",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona"
+            ],
+            "rationale": "概念本身有明顯吸引力，但只要導向產品、缺乏解釋，就會立即被歸類為 sales surface。"
+          }
+        ],
+        "key_insights": [
+          "核心痛點唔係缺少單一產品資訊，而係跨股票、基金、MPF 後無法睇清真正重疊與整體風險。",
+          "Portfolio Health Check 對呢位受訪者有明顯吸引力，前提係它首先係理解工具，而唔係升級版導購。",
+          "信任並唔自動來自『機構級 analytics』，而係來自透明解釋、非即時推銷、同可比較嘅實際選項。",
+          "留存關鍵係持續變化提醒同第二次之後更省時間，而唔係一次性靜態報告。",
+          "付費意願存在，但門檻高；只靠圖表、分數或 branding 不足以收費。"
+        ],
+        "next_experiment": "用下一位受訪者先直接測資料分享邊界，特別係願唔願意連接外部資產；之後用一頁低保真 mock 測兩種呈現：A. 純分析解釋，B. 分析後附產品建議，觀察信任同 sales 感知點樣分叉。",
+        "evidence_gaps": [
+          "未測外部資產連接意願同具體 privacy 條件。",
+          "未測對『機構級』或特定品牌背書本身有冇額外信任加成。",
+          "未測 RM report 或 RM 互動會否增加採用，定反而加深 sales 疑慮。",
+          "未有真實價格帶，只知價值條件。",
+          "只有一位 synthetic persona，不能代表香港零售或半零售銀行客戶整體。"
+        ],
+        "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念前驗證，唔可以當成人類市場證據；所有因果同需求判斷都需要再用真人訪談驗證。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 3,
+          "probing_quality": 4,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 2,
+          "causal_rigor": 3,
+          "hypothesis_validation_rigor": 3,
+          "synthesis_fidelity": 2,
+          "overall": 3
+        },
+        "checks": {
+          "leading_question_risk": "warn",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "pass",
+          "synthesis_overreach_risk": "fail",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "pass",
+          "interviewer_jargon_risk": "pass",
+          "domain_fit_alignment": "warn",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview established a concrete recent event before introducing the concept, with usable behaviour evidence in `exchange_1` to `exchange_3`.",
+          "The facilitator mostly kept one conversational focus per turn and avoided mechanical causal drilling or Five Whys pressure.",
+          "Concept introduction was reasonably neutral and separated from payment and retention until later turns.",
+          "The synthesis preserves important trust-boundary negatives from `exchange_4.persona` and `exchange_5.persona` instead of reporting only enthusiasm.",
+          "Coverage closure was reasonable once all required concept-validation areas were touched and further turns would likely have produced more hypothetical material."
+        ],
+        "findings": [
+          {
+            "category": "synthesis overreach",
+            "severity": "high",
+            "observation": "The synthesis converts one synthetic, largely hypothetical concept reaction into product-shaping conclusions that read stronger than the evidence allows. Examples include `problem_evidence.strength: strong`, `retention_risk.workflow_effect: replaces_workflow`, and assumption statuses such as meaningful demand being `supported`. The transcript contains stated preferences about a proposed tool, not observed adoption, replacement, or demand behaviour.",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "exchange_8.persona"
+            ],
+            "recommendation": "Downgrade claims to bounded, persona-specific statements such as 'this persona expressed conditional interest' and avoid replacement, demand, or strength labels unless backed by observed behaviour or multiple interviews."
+          },
+          {
+            "category": "leading / forced framing",
+            "severity": "medium",
+            "observation": "A few questions constrain the answer space by making the participant choose within researcher-supplied frames. `exchange_5.facilitator` asks when the analysis feels like understanding risk rather than product selling, which presumes those are the salient interpretations. `exchange_7.facilitator` offers a portfolio-vs-product contrast instead of first asking how the bank information currently feels in the participant's own words.",
+            "evidence_refs": [
+              "exchange_5.facilitator",
+              "exchange_7.facilitator"
+            ],
+            "recommendation": "Use an open-first version before contrast probes, for example ask how the current bank view feels or what makes a tool feel trustworthy, then follow with a contrast only if needed."
+          },
+          {
+            "category": "compound question design",
+            "severity": "medium",
+            "observation": "The concept-introduction question asks for both the most useful and most suspicious part in one turn. That is manageable here, but it creates two response tasks and can blur which dimension drove the answer.",
+            "evidence_refs": [
+              "exchange_4.facilitator"
+            ],
+            "recommendation": "Split initial concept reaction into two turns when budget allows: first what stands out as useful, then what would make them cautious."
+          },
+          {
+            "category": "coverage gap on data-sharing/privacy specifics",
+            "severity": "medium",
+            "observation": "Coverage was marked complete, but participant-facing evidence for privacy and external-asset sharing is absent. The research goal concerns understanding the whole portfolio, yet the transcript never directly tests willingness to connect non-bank assets or concrete privacy boundaries. The synthesis correctly marks one assumption `unknown`, but the interview still stopped without probing it.",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "facilitator_trace[8]"
+            ],
+            "recommendation": "Add a direct probe on what accounts/assets they would or would not connect, what data use is acceptable, and what would block linkage before closing concept-validation interviews."
+          },
+          {
+            "category": "domain-fit inference",
+            "severity": "medium",
+            "observation": "The research goal includes trust, understanding, action willingness, and asset retention, but the interview mostly gathered reactions to reporting and explanation quality. Claims about action quality, engagement, and retention remain hypothetical because no changed action or repeat-use behaviour with such a tool was observed.",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "exchange_8.persona"
+            ],
+            "recommendation": "Report trust/understanding as stated concept reactions, and keep action and retention as unvalidated hypotheses until tested through recalled analogous behaviour, diary follow-up, or prototype interaction."
+          },
+          {
+            "category": "single-persona output breadth",
+            "severity": "medium",
+            "observation": "The synthesis produces broad assumptions, next experiments, and design implications from one synthetic interview. Although a disclaimer is present, labels like `supported` and `strong` still overstate what a single synthetic persona can authorize.",
+            "evidence_refs": [
+              "SYNTHESIS.assumption_validation",
+              "SYNTHESIS.next_experiment",
+              "SYNTHESIS.problem_evidence"
+            ],
+            "recommendation": "Keep outputs explicitly bounded to 'for this synthetic persona' and avoid strong validation labels or market-level phrasing from a single run."
+          }
+        ],
+        "required_improvements": [
+          "Reduce synthesis claim strength so hypothetical concept reactions are not presented as strong demand, replacement behaviour, or validated retention effects.",
+          "Add participant-facing probes for external asset linking and privacy/data-sharing boundaries before closing this concept-validation flow.",
+          "Rewrite trust and founder-assumption questions to start open, then use contrast probes only if the participant has not surfaced the dimension unaided.",
+          "Keep design implications and assumption verdicts explicitly limited to one synthetic persona unless corroborated by additional interviews or observed prototype behaviour."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask which assets/accounts they would actually connect, including non-bank holdings, and which they would refuse to share.",
+            "Probe a concrete acceptable vs unacceptable data-use boundary, not just general sales suspicion.",
+            "Test whether they have ever paid for, ignored, or reused any financial-analysis aid to ground action and retention in analogous behaviour.",
+            "Show a neutral low-fidelity concept and ask what they would do next, before asking price or RM-assisted interpretation."
+          ],
+          "coverage_gap_actions": [
+            "Add a direct privacy probe covering data sources, consent, storage concerns, and whether cross-bank aggregation is acceptable.",
+            "Add an external-assets probe to isolate whether whole-portfolio value survives if only bank-held assets are included.",
+            "If retention is important, ask for a recalled example of a financial tool/report they revisited and what made them return.",
+            "If willingness to pay is important, ask for comparable paid behaviours or thresholds rather than relying only on stated conditions."
+          ],
+          "prompt_adjustments": [
+            "In concept-validation mode, require an explicit privacy/data-linkage probe whenever the concept depends on whole-portfolio aggregation.",
+            "Instruct the facilitator to prefer open-first trust and founder-assumption questions before using binary contrasts like portfolio-led vs product-led.",
+            "Constrain synthesis labels so `supported` is reserved for bounded persona-level support and forbid market-level wording from a single synthetic interview.",
+            "Add a guardrail that design implications about retention, action quality, or asset retention must be tagged `hypothetical` unless backed by observed or analogous behaviour."
+          ],
+          "turn_budget_guidance": "Current turn budget was enough for core coverage, but it should be widened by 1-2 exchanges in concept-validation interviews that depend on data aggregation so privacy/linkage boundaries can be tested before closure."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit reviews a synthetic interview and synthetic synthesis only. Any positive or negative product implication should be treated as method-quality feedback, not real market evidence, until validated with human participants."
+      }
+    },
+    {
+      "persona_id": "su_1205",
+      "persona_name": "Clara Wong",
+      "interview_id": "observed_20260622_14ccf582",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260622_9f334e13\\interviews\\observed_20260622_14ccf582",
+      "report": {
+        "problem_evidence": {
+          "strength": "medium",
+          "supporting_quotes": [
+            {
+              "quote": "其實最睇唔清係基金入面再疊基金嗰層",
+              "evidence_ref": "exchange_3.persona"
+            },
+            {
+              "quote": "個總體風險圖如果本身已經唔完整，其實好容易誤導",
+              "evidence_ref": "exchange_4.persona"
+            },
+            {
+              "quote": "第一次最少要畀到我一兩個我本身喺月結單睇唔出、但又講得通嘅發現",
+              "evidence_ref": "exchange_6.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "上個月尾一個星期日夜晚，受訪者主動逐份對銀行月結單、保單通知，同時打開手機銀行檢查外幣部位。",
+            "受訪者會手動寫低基金類型、幣種，同大概受邊類市場影響，再同 RM 提過嘅重疊位對照。",
+            "受訪者想確認自己有冇不知不覺押得太埋同一個方向，反映有 whole-portfolio 檢查動機。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "手動比對銀行月結單、保單通知、手機銀行資料。",
+            "自己記錄基金類型、幣種、受哪類市場影響。",
+            "參考 RM 提醒嘅重疊位，再用幾個訊號交叉判斷。"
+          ],
+          "pain_level": "medium",
+          "switching_difficulty": "low",
+          "what_must_not_change": [
+            "要先見到完整現況先開始分析。",
+            "分析邏輯要清楚。",
+            "『觀察』同『可考慮行動』要分開呈現。",
+            "唔可以一打開就變成產品銷售對話。"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "銀行內現有持倉資料。",
+            "有限度外部資料輸入，例如手動加總額、資產類別。",
+            "一次性上載一兩份月結單做分析。"
+          ],
+          "rejected_data_access": [
+            "一開始就開長期同步權限。",
+            "資料保留範圍、可見對象、停止機制唔清楚嘅情況。",
+            "只用唔完整持倉就產生總體風險結論。"
+          ],
+          "required_trust_explanation": [
+            "先完整展示已納入與未納入的持倉範圍。",
+            "先講風險、重疊、貨幣曝險、情景影響，再決定要唔要傾產品。",
+            "清楚解釋分析邏輯。",
+            "交代邊啲資料會留低、邊個睇到、同可以隨時停。"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "第一次就要有一兩個月結單睇唔出、但講得通的新發現。",
+            "例子包括基金重疊程度高過預期，或者貨幣風險比估計高。",
+            "結果要容易留底，方便下次快速對照有冇改善。"
+          ],
+          "time_to_value": "第一次使用就要見到明確新發現，否則難以建立再用動機。",
+          "abandonment_triggers": [
+            "分析只係重排銀行已知資料。",
+            "總體圖唔完整而可能誤導。",
+            "一開就接產品建議。",
+            "分析解釋唔清，或者無法留底比較。"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "高；從回答看，受訪者會先把這類功能視為銀行應提供的基本理解工具，除非多次證明有額外價值。",
+          "monthly_comfort_range": "未知",
+          "payment_justification": [
+            "要整合埋外部資產，而唔係只整理銀行內資料。",
+            "要出到會留底做年度檢視嘅報告。",
+            "要有幾次都實際幫到避開重疊或者睇清風險。"
+          ],
+          "evidence_strength": "stated"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "每次都能提供月結單以外、但可信的新洞察。",
+            "可以快速同上次結果比較，有改善追蹤感。",
+            "分析維持中立，唔急住推產品。"
+          ],
+          "drop_off_reasons": [
+            "只係把已有資料排靚少少。",
+            "分析範圍唔完整。",
+            "過早導向 RM 銷售對話。",
+            "要長期同步外部資料先用得好。"
+          ],
+          "workflow_effect": "replaces_workflow"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "好多客戶覺得銀行投資建議太 product-led，唔夠 portfolio-led。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona"
+            ],
+            "rationale": "受訪者明確擔心分析會好快變成引去同 RM 做產品對話，並要求先解釋後決定下一步；但只得一位受訪者，未足以外推『好多客戶』。"
+          },
+          {
+            "assumption": "客戶理解到簡化後嘅 portfolio risk、集中度、情景分析，足以支援決策。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_5.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者能清楚描述重疊、貨幣曝險、情景影響等概念，亦知道想睇咩；但未直接測到他對壓力測試或情景分析畫面嘅即時理解。"
+          },
+          {
+            "assumption": "由銀行提供機構級 analytics，增加信任多過增加懷疑。",
+            "status": "weakened",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "受訪者對銀行角色有明顯戒心，尤其怕分析變 sales，同對資料權限十分保守。信任可以建立，但要靠呈現方式同權限透明，不是品牌本身自動帶來。"
+          },
+          {
+            "assumption": "客戶願意分享足夠 portfolio data，包括部分非本行資產，令 whole-portfolio 分析有用。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_7.persona",
+              "exchange_8.persona"
+            ],
+            "rationale": "受訪者接受有限度、一次性、手動式外部資料輸入，但拒絕一開始就長期同步，所以『願意分享』成立得有限。"
+          },
+          {
+            "assumption": "功能可提升行動質量或 engagement，而唔只係令客戶更驚或者更被動。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者認為若能指出可信的新風險發現，可支持後續檢查同年度檢視；但未出現真實行動案例，仍屬概念層。"
+          },
+          {
+            "assumption": "至少有部分客戶對自助解讀或 RM 輔助解讀有實際需求，而唔係完全唔理。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_1.persona",
+              "exchange_5.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者本身已有主動自助檢視行為，並接受『先自己理解，再決定要唔要同 RM 傾』的流程。"
+          },
+          {
+            "assumption": "至少有部分客戶存在可信的付費條件。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者提出清楚付費門檻，但仍屬陳述式條件，未有對照實際付費行為。"
+          },
+          {
+            "assumption": "個概念可以被視為中立理解工具，而唔係升級版銷售介面。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona"
+            ],
+            "rationale": "受訪者明確講出令其感到中立的呈現條件，代表概念有機會達成；但預設心態仍帶懷疑。"
+          }
+        ],
+        "key_insights": [
+          "受訪者已有真實 whole-portfolio 檢查行為，核心痛點唔係『冇資料』，而係睇唔穿基金底層重疊同結構性產品風險傳導。",
+          "概念有吸引力，但前提係分析範圍完整；唔完整的總體風險圖反而會削弱信任。",
+          "最大信任風險唔係 analytics 太複雜，而係銀行會唔會借分析包裝 sales。",
+          "首個價值時刻必須係立即揭示一兩個原本睇唔出的、但可信的新發現。",
+          "留存需要可比較性；受訪者想留底結果，之後快速對返有冇改善。\",\"付費門檻高，只有當功能跨越『銀行本來應該提供』的基本服務，並能整合外部資產且反覆證明價值，先可能成立。\",\"外部資料分享只接受低承諾模式：手動、一次性、可撤回。"
+        ],
+        "next_experiment": "用可點擊原型測兩個版本：A 只分析本行資產，B 額外支援手動/一次性外部資產輸入；讓受訪者完成『判斷有冇重疊過高』同『決定要唔要約 RM』兩個任務，觀察哪個版本先建立信任、理解同下一步行動。",
+        "evidence_gaps": [
+          "只訪問了一位 synthetic persona，唔能代表香港零售或半零售銀行客群。",
+          "未測真實畫面下對壓力測試、情景分析、風險取向匹配的理解程度。",
+          "未取得實際價格帶或 bundling 偏好。",
+          "未測如果只覆蓋本行資產、不加外部資產時，最低可接受價值點在哪。",
+          "未有對照不同財富層級、是否有 RM、是否多銀行分散持倉的差異。"
+        ],
+        "synthetic_only_disclaimer": "以上只係單一 synthetic participant 的概念預驗證，屬方向性訊號，唔可以當成人類市場證據或需求規模判斷。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 3,
+          "probing_quality": 3,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 2,
+          "causal_rigor": 4,
+          "hypothesis_validation_rigor": 4,
+          "synthesis_fidelity": 2,
+          "overall": 3
+        },
+        "checks": {
+          "leading_question_risk": "warn",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "warn",
+          "synthesis_overreach_risk": "fail",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "pass",
+          "interviewer_jargon_risk": "warn",
+          "domain_fit_alignment": "warn",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview established a concrete recent portfolio-review event before introducing the concept, using specific recalled behavior in `exchange_1.persona` and `exchange_2.persona`.",
+          "The facilitator avoided mechanical causal pressure and did not run a Five Whys sequence; questions stayed mostly behavior-first until the concept was introduced.",
+          "Trust, payment, repeat-use, and external-data-boundary topics were all covered with participant-facing questions rather than inferred only from internal planning."
+        ],
+        "findings": [
+          {
+            "category": "Question design",
+            "severity": "high",
+            "observation": "The concept introduction is solution-loaded and compound. `exchange_4.facilitator` bundles aggregation scope, multiple analytics outputs, reporting, RM handoff, and a reassurance about not auto-trading before asking for a reaction. That gives the participant several researcher-supplied value cues at once and weakens the neutrality and single-focus standard.",
+            "evidence_refs": [
+              "exchange_4.facilitator",
+              "FACILITATOR TRACE[3]"
+            ],
+            "recommendation": "Introduce the concept in a thinner form first, then layer features only after the participant reacts. Ask one focus at a time, for example: what they think it is for, what feels useful, and what feels risky."
+          },
+          {
+            "category": "Synthesis fidelity",
+            "severity": "high",
+            "observation": "Several synthesis claims exceed the evidence and are presented as stronger than the transcript supports. `retention_risk.workflow_effect` says `replaces_workflow`, but the participant only described a possible future tool, not an observed replacement. `first_value_requirement.time_to_value` and multiple `continuation_reasons`/`drop_off_reasons` are hypothetical statements from `exchange_6.persona` to `exchange_8.persona`, not behavioral proof. The report sometimes labels this correctly as `stated`, but not consistently.",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "exchange_7.persona",
+              "exchange_8.persona",
+              "SYNTHESIS.retention_risk.workflow_effect",
+              "SYNTHESIS.first_value_requirement.time_to_value",
+              "SYNTHESIS.pricing_signal.evidence_strength"
+            ],
+            "recommendation": "Relabel hypothetical reactions consistently as stated conditions or claimed preferences, and remove deterministic product-behavior claims unless an observed action changed in a real or simulated task."
+          },
+          {
+            "category": "Outcome coverage",
+            "severity": "medium",
+            "observation": "The interview did not directly test the research-goal outcomes of action willingness or asset-retention implications. Repeat-use and payment conditions were asked, but there was no concrete participant-facing probe such as what action they would take after seeing a result, what they would postpone, or whether this would keep assets with the bank versus elsewhere.",
+            "evidence_refs": [
+              "exchange_6.facilitator",
+              "exchange_7.facilitator",
+              "FACILITATOR TRACE[8]"
+            ],
+            "recommendation": "Add explicit post-result action probes and retention probes before closing, such as what decision the participant would make next, whether they would move assets, consolidate, or merely read the report and do nothing."
+          },
+          {
+            "category": "Concept-validation rigor",
+            "severity": "medium",
+            "observation": "Curiosity, first trial, payment, and month-two retention were not kept fully distinct. The flow separates repeat-use and payment, but there is no dedicated activation/adoption question about what would make them try the feature the first time in-app, and repeat-use is still framed as a hypothetical threshold rather than a distinct month-two behavior.",
+            "evidence_refs": [
+              "exchange_4.facilitator",
+              "exchange_6.facilitator",
+              "exchange_7.facilitator"
+            ],
+            "recommendation": "Add one activation question before pricing, one first-session-success question, and one month-two return trigger question. Keep each as a separate decision, not one generalized 'value' bucket."
+          },
+          {
+            "category": "Evidence discipline",
+            "severity": "medium",
+            "observation": "The synthesis makes broad product-shaping moves from one synthetic interview. For example, `assumption_validation` marks one assumption as `supported`, and `key_insights` plus `next_experiment` imply fairly stable directional conclusions. With a single synthetic participant, these should stay tightly persona-bounded and tentative.",
+            "evidence_refs": [
+              "SYNTHESIS.assumption_validation[5]",
+              "SYNTHESIS.key_insights",
+              "SYNTHESIS.next_experiment",
+              "SYNTHESIS.synthetic_only_disclaimer"
+            ],
+            "recommendation": "Downgrade stronger verdicts to persona-specific signals, and explicitly separate 'this persona said' from 'cross-segment implication'. Keep experiment recommendations framed as evidence-generation, not direction confirmation."
+          },
+          {
+            "category": "Participant-facing language",
+            "severity": "low",
+            "observation": "The interview was generally conversational, but `exchange_4.facilitator` introduces branded and fairly dense product framing (`Portfolio Health Check`, `集中度`, `貨幣風險`, `情景分析`, `report`, `RM`) in one turn. For a concept screen this may be acceptable, but as a spoken prompt it increases framing load.",
+            "evidence_refs": [
+              "exchange_4.facilitator"
+            ],
+            "recommendation": "Use plainer spoken framing first, then clarify specific analytics terms only if the participant asks or after their initial reaction."
+          }
+        ],
+        "required_improvements": [
+          "Rewrite the concept-introduction turn to be shorter, more neutral, and single-focus.",
+          "Separate adoption, first-use value, payment, and month-two repeat-use into distinct probes.",
+          "Add participant-facing probes for concrete next actions and any asset-retention effect before closing.",
+          "Constrain synthesis to transcript-supported claims and label hypothetical answers consistently as stated rather than observed behavior.",
+          "Keep conclusions persona-bounded; avoid `supported` or workflow-replacement claims from one synthetic interview."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask what the participant would actually do immediately after seeing the analysis: rebalance, contact RM, ignore it, or compare elsewhere.",
+            "Probe whether a bank-internal-only version is useful enough to try before asking about external-asset ingestion.",
+            "Test understanding with one concrete output example and ask the participant to explain it back in their own words.",
+            "Ask what would make them open the feature the first time in-app, separately from what would make them return next month.",
+            "Ask whether this would increase the chance they keep or consolidate assets with the bank, and under what conditions."
+          ],
+          "coverage_gap_actions": [
+            "Add a direct activation probe: what would trigger first trial now, not just abstract interest.",
+            "Add an action probe tied to one recalled portfolio problem: what decision would this change, if any.",
+            "Add an asset-retention probe: would better portfolio visibility keep money at the bank or just inform decisions elsewhere.",
+            "Add a bounded comprehension probe using a mock finding to distinguish stated trust from actual understanding.",
+            "Add a comparison probe for partial coverage: if only bank-held assets are included, is the output still worth using."
+          ],
+          "prompt_adjustments": [
+            "In concept-validation mode, cap concept intro to one-sentence core value plus one-sentence boundary; defer feature list expansion until after initial reaction.",
+            "Require the facilitator to tag synthesis statements as `observed`, `stated`, or `hypothetical` and forbid mixing them in the same evidence bucket.",
+            "Add a rule that no assumption may be marked `supported` from a single synthetic interview unless the claim is explicitly persona-scoped.",
+            "Add observer guidance to interrupt when a question bundles more than one feature or benefit claim.",
+            "Add a closure gate requiring participant-facing evidence on activation, action-after-output, and month-two repeat trigger for concept studies tied to adoption outcomes."
+          ],
+          "turn_budget_guidance": "The current turn budget was sufficient for baseline coverage, but not for the research goal as stated. Keep the soft limit similar and widen the hard limit by 2-3 exchanges so the facilitator can separately cover activation, action willingness, and retention/consolidation effects without compressing them into existing value questions."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit evaluates only the provided synthetic transcript, trace, and synthesis artifacts. It should not be treated as evidence about real Hong Kong banking customers or market demand."
+      }
+    },
+    {
+      "persona_id": "su_1206",
+      "persona_name": "Chloe Ng",
+      "interview_id": "observed_20260622_0390d58b",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260622_9f334e13\\interviews\\observed_20260622_0390d58b",
+      "report": {
+        "problem_evidence": {
+          "strength": "strong",
+          "supporting_quotes": [
+            {
+              "quote": "我冇真係完整拼到",
+              "evidence_ref": "exchange_2.persona"
+            },
+            {
+              "quote": "最後我嗰晚冇郁",
+              "evidence_ref": "exchange_2.persona"
+            },
+            {
+              "quote": "原來幾個戶口加埋美元或者科技曝險比我以為更高，我之後會再開返嚟睇",
+              "evidence_ref": "exchange_5.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "最近一次具體行為係想決定要唔要將部分 USD 現金再放入美股 ETF。",
+            "參與者因為未睇清幾個戶口合併後嘅美元同科技曝險而卡住。",
+            "現時 workaround 係逐個 app 截圖，再喺 Notes 粗略整理，最後因為唔肯定而冇落決定。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "逐個 app 截圖。",
+            "喺 Notes 手動記低大概幾多係 USD、美股 ETF，同埋偏科技持倉。",
+            "遇到唔清楚就暫停唔郁。"
+          ],
+          "pain_level": "high",
+          "switching_difficulty": "medium",
+          "what_must_not_change": [
+            "外部資料連接必須係 read-only。",
+            "要可以逐個戶口揀同隨時斷開。",
+            "要清楚寫明銀行內部邊個睇到資料。",
+            "唔可以一開始就導去產品建議。"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "銀行內已有持倉資料。",
+            "外部券商或其他銀行資料，但前提係 read-only。",
+            "可逐個戶口選擇連接。",
+            "可隨時 revoke/斷開。"
+          ],
+          "rejected_data_access": [
+            "連接後先至發現分析方式或用途。",
+            "分析結果後面直接連住銷售。",
+            "資料可見範圍唔清楚。"
+          ],
+          "required_trust_explanation": [
+            "連接前要有 sample view 或 demo。",
+            "要解釋清楚風險分數同分析點樣得出。",
+            "第一版應先講現有風險、重疊、集中，而唔係產品建議。"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "清楚指出本身未察覺嘅跨戶口重疊。",
+            "清楚指出美元或科技集中度比想像中高。",
+            "情景分析要講得明白，唔可以只係靚但空泛。"
+          ],
+          "time_to_value": "第一次用就要見到具體新資訊，否則大機會唔會再用。",
+          "abandonment_triggers": [
+            "只係包裝返本身已經見到嘅嘢。",
+            "風險分數冇解釋。",
+            "仲要自己做大半整合。",
+            "一入去就推產品。"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "高。參與者明確要功能先證明唔只係靚 dashboard，仲提到最好連接前有 demo。",
+          "monthly_comfort_range": "可接受唔高嘅月費或者季度費，但只喺證明到有決策價值之後。",
+          "payment_justification": [
+            "真係幫佢避開會做錯嘅決定。",
+            "指出跨戶口重疊同 FX 集中。",
+            "節省自己拼資料嘅時間。",
+            "冇長約。"
+          ],
+          "evidence_strength": "stated"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "每次可以更快睇到整體 portfolio 風險。",
+            "能持續指出未知重疊或集中位。",
+            "可成為星期日定期檢視工具。"
+          ],
+          "drop_off_reasons": [
+            "變成銷售前置介面。",
+            "分析空泛或唔透明。",
+            "整合外部資產做得唔完整。",
+            "仍然要自己手動補好多資料。"
+          ],
+          "workflow_effect": "replaces_workflow"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "好多客戶覺得現時銀行投資指引太產品導向，而唔係 portfolio 導向。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_4.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "呢位參與者多次表達對『好快就帶去產品建議』嘅戒心，但未直接比較現有 RM 或銀行建議體驗。"
+          },
+          {
+            "assumption": "客戶理解到簡化版 portfolio risk、集中度、壓力測試同情景分析，足以支持決策。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_5.persona"
+            ],
+            "rationale": "參與者主動用到『重疊、集中、情景分析』語言，亦要求解釋清楚，顯示有理解意願；但未證明複雜輸出一定睇得明。"
+          },
+          {
+            "assumption": "由銀行提供機構級 analytics 會提升信任，多過增加懷疑。",
+            "status": "weakened",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_4.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "信任唔係自動成立，要靠 read-only、可 revoke、可見範圍透明同 demo；否則參與者會偏向懷疑係銷售工具。"
+          },
+          {
+            "assumption": "客戶願意分享足夠 portfolio data，包括部分非本行資產，令 whole-portfolio analysis 有用。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_4.persona"
+            ],
+            "rationale": "有條件支持。參與者願意考慮外部資料，但前提非常嚴格，並非無條件接受。"
+          },
+          {
+            "assumption": "功能可以提升行動質素或 engagement，而唔係只令客戶更驚或更被動。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_5.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "現時佢因資訊不足而唔郁；若功能能指出未知風險並節省整合時間，佢預期會重用同幫助避免錯決定。但未見真實使用後行動證據。"
+          },
+          {
+            "assumption": "會有明確 self-serve 或 RM-assisted demand，而唔係被忽略。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_5.persona"
+            ],
+            "rationale": "參與者明確表示如果首用有新洞察，會變成星期日會再用嘅工具，顯示至少 self-serve 路徑有吸引力。"
+          },
+          {
+            "assumption": "有一部分客戶對 premium analytics 或相關 advisory 有可信付費條件。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_6.persona"
+            ],
+            "rationale": "參與者明確提出可接受唔高、冇長約嘅月費或季度費，條件係功能真係幫到決策同節省時間。"
+          },
+          {
+            "assumption": "呢個概念可以被視為中立理解工具，而唔係更高級嘅銷售介面。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "可以做到，但非常脆弱。第一版輸出若先講風險同重疊，較有機會被視為中立；若很快導向產品，就會被歸類為銷售。"
+          }
+        ],
+        "key_insights": [
+          "痛點唔係『冇資訊』，而係跨戶口、跨機構之後睇唔清整體曝險，直接令投資決定延後。",
+          "概念有吸引力，但核心價值係真正整合與解釋，不係『機構級 analytics』呢個標籤本身。",
+          "信任門檻高，而且首先要解決銷售動機懷疑；透明權限、demo、可撤回，比品牌背書更重要。",
+          "首用價值要即時且具體：指出未知重疊、FX/科技集中，先有機會形成每週重用。",
+          "付費意願存在，但建立喺明確決策價值同省時之上；如果仲要自己手動整合，大概率唔會付費。"
+        ],
+        "next_experiment": "用可點擊原型測兩個首屏版本：A 版先顯示跨戶口重疊、FX/科技集中同簡明情景解釋；B 版較早帶出產品/建議入口。比較參與者對中立性、信任、連接外部資產意願，同埋是否願意繼續完成連接。",
+        "evidence_gaps": [
+          "只有一位 synthetic persona，唔代表香港零售/半零售客群。",
+          "未測到真實 UI、真實數據連接流程同實際 comprehension。",
+          "未區分純 self-serve 與 RM-assisted report 哪一條更強。",
+          "未知道對唔同資產複雜度、AUM 水平、年齡或銀行關係深度會否有明顯差異。"
+        ],
+        "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅前測訊號，用嚟幫你收窄假設同下一輪真人訪談/原型測試重點，唔可以當成人類市場證據。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 3,
+          "probing_quality": 3,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 2,
+          "causal_rigor": 3,
+          "hypothesis_validation_rigor": 3,
+          "synthesis_fidelity": 2,
+          "overall": 3
+        },
+        "checks": {
+          "leading_question_risk": "warn",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "warn",
+          "synthesis_overreach_risk": "fail",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "pass",
+          "interviewer_jargon_risk": "warn",
+          "domain_fit_alignment": "warn",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview established a concrete recent event and current workaround before introducing the concept, which fits concept-validation sequencing.",
+          "Most asked questions were short, participant-facing, and stayed conversational in Cantonese rather than sounding like an interview script.",
+          "Coverage was adapted in a reasonable order: recent behavior, workaround, concept reaction, trust boundary, retention, payment, then assumption check.",
+          "The runtime stopped at a plausible point once all required coverage fields were touched and no major participant-facing gap remained."
+        ],
+        "findings": [
+          {
+            "category": "Synthesis overreach",
+            "severity": "high",
+            "observation": "The synthesis turns hypothetical stated intent from one synthetic concept interview into overly strong support claims. `assumption_validation` marks self-serve demand and paid demand as `supported`, and `retention_risk.workflow_effect` says `replaces_workflow`, but the transcript only shows conditional future intent after a concept description, not observed adoption or workflow replacement.",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "SYNTHESIS.assumption_validation[5]",
+              "SYNTHESIS.assumption_validation[6]",
+              "SYNTHESIS.retention_risk.workflow_effect"
+            ],
+            "recommendation": "Downgrade these to stated or conditional signals from a single synthetic persona, and avoid product-shaping verbs like `supported` or `replaces_workflow` unless backed by observed repeated use or behavior change."
+          },
+          {
+            "category": "Forced-choice framing",
+            "severity": "medium",
+            "observation": "The final question constrains the participant to the researcher's supplied dichotomy: real portfolio help versus another sales method. That invites classification into preselected frames instead of letting the participant describe how they would recognize the difference in their own terms.",
+            "evidence_refs": [
+              "exchange_7.facilitator"
+            ],
+            "recommendation": "Replace with an open contrast probe such as asking what would make it feel trustworthy versus sales-led, then use any later binary summary only as a brief recap if needed."
+          },
+          {
+            "category": "Solution-loaded concept intro",
+            "severity": "medium",
+            "observation": "The concept introduction bundles multiple promised benefits in one turn: integration, overall risk, and scenario impact. That is more sell-shaped than neutral and makes it hard to isolate which part drives interest or resistance.",
+            "evidence_refs": [
+              "exchange_3.facilitator"
+            ],
+            "recommendation": "Introduce the concept more minimally, then probe specific components separately: aggregation, explanation style, scenarios, and recommendation behavior."
+          },
+          {
+            "category": "Participant-facing jargon",
+            "severity": "medium",
+            "observation": "The facilitator speaks in product and finance framing that may outpace a retail participant's natural language, including `Portfolio Health Check`, `整合持倉`, `整體風險`, and `情景影響`. The persona handles it, but the wording still imports the product frame rather than eliciting the participant's own vocabulary first.",
+            "evidence_refs": [
+              "exchange_3.facilitator"
+            ],
+            "recommendation": "Use plainer wording first, then mirror the participant's own terms. For example, ask about seeing everything together and understanding what they are already exposed to before naming analytics features."
+          },
+          {
+            "category": "Weak evidence labeling in concept report",
+            "severity": "medium",
+            "observation": "Several report statements blur behavioural evidence and hypothetical claims. `problem_evidence.strength` is `strong`, `pricing_signal.free_trial_need` is inferred rather than directly stated, and `problem_evidence` uses exchange 5 future-use language as support for the current problem.",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_5.persona",
+              "SYNTHESIS.problem_evidence",
+              "SYNTHESIS.pricing_signal.free_trial_need"
+            ],
+            "recommendation": "Separate observed pain from hypothetical concept response. Mark pricing, retention, and trust claims as stated preferences unless tied to actual behavior in the recalled event."
+          },
+          {
+            "category": "Domain-fit inference breadth",
+            "severity": "low",
+            "observation": "The research goal targets trust, understanding, action willingness, and asset retention, but this single interview only directly evidences a stalled decision and conditional willingness to try or maybe pay. Asset-retention implications are not participant-evidenced here.",
+            "evidence_refs": [
+              "RESEARCH GOAL",
+              "exchange_1.persona",
+              "exchange_2.persona",
+              "exchange_5.persona",
+              "exchange_6.persona"
+            ],
+            "recommendation": "Keep outputs bounded to decision support, trust conditions, and repeat-use hypotheses. Do not infer retention or broad banking relationship effects from this interview alone."
+          }
+        ],
+        "required_improvements": [
+          "Reduce synthesis confidence: re-label hypothetical future intent as conditional stated evidence, not support for demand, payment, or workflow replacement.",
+          "Rewrite the concept intro to remove bundled benefits and product framing so the participant can react to a more neutral concept.",
+          "Replace the forced-choice founder-assumption question with an open probe that elicits participant-defined signals of neutrality versus sales intent.",
+          "Tighten evidence discipline in the report by separating recalled-event evidence from hypothetical concept reactions and by limiting claims to one synthetic persona."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask the participant to describe, in their own words, what they would need to see on the first screen before trusting the tool.",
+            "Probe a concrete current example of how they judge whether a bank feature is advisory versus sales-led.",
+            "Test one narrower concept at a time: cross-account exposure summary first, then scenario analysis, then any recommendation layer.",
+            "Ask what they would do immediately after seeing a meaningful risk overlap, to distinguish curiosity from action intent."
+          ],
+          "coverage_gap_actions": [
+            "Add a direct participant-facing probe on what specific next action they would take after a useful output, rather than only whether they would revisit the tool.",
+            "Probe comprehension explicitly: what parts of the output they expect to understand easily and what would be confusing.",
+            "If retention is important, ask what would make them return in week two or month two versus using it once and stopping.",
+            "If payment is important, isolate price sensitivity from trust and setup by asking what makes it worth paying for even if the bank is not selling anything."
+          ],
+          "prompt_adjustments": [
+            "In concept-validation mode, instruct the facilitator to introduce the concept in one sentence without naming multiple benefits at once.",
+            "Add a guardrail against binary founder-assumption questions unless preceded by an open probe in the participant's own language.",
+            "Require the synthesis layer to tag every claim as `observed`, `stated_intent`, or `inference` and prevent `supported` labels when only stated intent exists.",
+            "Add a check that pricing, retention, and design implications remain explicitly bounded to a single synthetic persona and do not imply market-level demand."
+          ],
+          "turn_budget_guidance": "The current turn budget was sufficient for basic coverage, but one or two extra turns would improve quality if used to unpack sales-trust cues and concrete post-output actions rather than adding more broad concept questions."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview. Any positive demand, pricing, trust, retention, or product-direction conclusion should be treated as provisional prompt-quality feedback, not human market evidence."
+      }
+    },
+    {
+      "persona_id": "su_1207",
+      "persona_name": "Maggie Leung",
+      "interview_id": "observed_20260622_5417329c",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260622_9f334e13\\interviews\\observed_20260622_5417329c",
+      "report": {
+        "problem_evidence": {
+          "strength": "medium",
+          "supporting_quotes": [
+            {
+              "quote": "主要都係土法。開住幾個app同月結單，自己寫低大概持倉",
+              "evidence_ref": "exchange_2.persona"
+            },
+            {
+              "quote": "基金入面嗰層重疊...自己最難一眼睇清",
+              "evidence_ref": "exchange_3.persona"
+            },
+            {
+              "quote": "跨銀行擺住嗰啲持倉，唔放埋一齊望，好容易低估咗其實自己個風險",
+              "evidence_ref": "exchange_3.persona"
+            },
+            {
+              "quote": "好少真係幫你當成一個完整portfolio去睇",
+              "evidence_ref": "exchange_7.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "上個月美股急跌當晚，受訪者主動逐樣核對美股、基金同 MPF 風險。",
+            "實際做法係同時開幾個 app 同月結單，再手寫持倉做比對。",
+            "受訪者唔係淨係睇升跌，而係主動檢查重複集中同情景下同步受壓。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "同時開幾個 app 同月結單。",
+            "自己寫低大概持倉，再對基金重倉地區、公司類型同直接持股。",
+            "用肉眼判斷係咪表面分散、實際集中。"
+          ],
+          "pain_level": "high",
+          "switching_difficulty": "medium",
+          "what_must_not_change": [
+            "分析同銷售要分開。",
+            "要畀佢先睇完整分析同計法。",
+            "要標示資料唔完整嘅地方。",
+            "結果可以保存，之後再返去睇。"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "銀行內持倉整合做整體風險分析。",
+            "在受訪者主動加入情況下，整合部分外部資產。",
+            "保存分析結果，之後自行再睇。"
+          ],
+          "rejected_data_access": [
+            "分析一出就推自家基金。",
+            "睇完即刻被引導約 RM。",
+            "用分析做銷售鋪路但唔講清楚計法或資料缺口。"
+          ],
+          "required_trust_explanation": [
+            "先畀完整分析，唔好一開始帶去解決方案。",
+            "清楚講集中度、重疊、情景測試係點計。",
+            "明示資料唔完整之處。",
+            "容許自助消化，唔好有人追住約 RM。"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "指出一樣佢平時未必即刻睇到嘅風險。",
+            "清楚顯示兩三樣持倉其實重疊得幾勁。",
+            "顯示某個情景下邊部分會一齊受壓。",
+            "解釋要清楚唔誇張。"
+          ],
+          "time_to_value": "第一次用就要見到新資訊同可行解釋，否則價值感會低。",
+          "abandonment_triggers": [
+            "每次都只係引去睇產品。",
+            "結果冇變化可跟。",
+            "分析唔透明或太誇張。",
+            "月費模式令佢覺得唔值，因為唔係日日用。"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "未有直接講 free trial，但明確表示要先證明功能真係做到預期效果先會接受收費。",
+          "monthly_comfort_range": "抗拒月費；較接受一次性報告費或唔太高年費；如果已包入 priority banking 最順眼。",
+          "payment_justification": [
+            "真係幫到佢睇到平時未必即刻見到嘅重疊風險。",
+            "分析同銷售分得開。",
+            "結果可保存同持續追蹤變化。"
+          ],
+          "evidence_strength": "stated"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "每次有新發現，而唔係重複已知資訊。",
+            "可追蹤上次到今次有咩變化。",
+            "保持中立分析定位。"
+          ],
+          "drop_off_reasons": [
+            "變成產品推薦入口。",
+            "缺乏新 insight。",
+            "需要月費但使用頻率低。",
+            "分析不透明或誇大。"
+          ],
+          "workflow_effect": "replaces_workflow"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "好多客戶覺得現有銀行投資建議太 product-led，唔夠 portfolio-led。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者直接指出現有銀行內容多數逐樣產品講，好少當完整 portfolio 去睇，並對銷售導向高度敏感。"
+          },
+          {
+            "assumption": "客戶對 whole-portfolio risk understanding 有明顯缺口。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_3.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "受訪者現時靠土法跨 app、月結單同手寫整合，最難看清基金底層重疊同跨銀行總風險。"
+          },
+          {
+            "assumption": "銀行提供嘅 portfolio analytics 可以提升信任。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona"
+            ],
+            "rationale": "有價值感明確，但信任唔係自動產生；必須先滿足分析透明、中立、唔追銷售等條件。"
+          },
+          {
+            "assumption": "客戶願意分享足夠資料，包括部分外部資產，令 whole-portfolio analysis 有用。",
+            "status": "unknown",
+            "evidence_refs": [
+              "exchange_4.persona"
+            ],
+            "rationale": "受訪者只對『你加進去嘅部分外部資產』表示概念上接受，未直接測試實際願意分享邊類外部資產同邊界。"
+          },
+          {
+            "assumption": "功能可以帶動行動質素或互動，而唔係只令人更驚或更被動。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "受訪者想用嚟更快看清風險，同願意下月再用；但未直接證明會否調倉、找 RM 或採取具體行動。"
+          },
+          {
+            "assumption": "有可成立嘅收費條件。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_8.persona"
+            ],
+            "rationale": "受訪者講到可接受一次性報告費、低年費或 priority banking bundle，但月費唔可行。"
+          },
+          {
+            "assumption": "概念可以被視為中立理解工具，而唔係升級版銷售頁。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_6.persona"
+            ],
+            "rationale": "可以，但條件嚴格；一有產品推薦或 RM push，立即被視為銷售。"
+          }
+        ],
+        "key_insights": [
+          "最強痛點唔係『睇唔到價格』，而係睇唔清基金底層重疊同跨銀行合併後嘅總風險。",
+          "Portfolio Health Check 對呢位受訪者有明顯 value proposition，但前提係節省手動整合時間，同指出佢平時未即刻見到嘅風險。",
+          "信任核心唔在於『機構級 analytics』四個字，而在於分析是否透明、會否標示資料缺口，同分析後會否立即轉去賣產品。",
+          "留存條件好清晰：要有新 insight、有歷史結果可保存、有變化可跟。",
+          "收費訊號偏向低頻、高價值模式：一次性報告費、低年費或高端客戶 bundled；月費明顯有阻力。"
+        ],
+        "next_experiment": "下一輪用真人訪談專門測資料分享邊界同 action path：先問最近一次跨銀行檢視事件，再中性展示一頁 sample output，分開測試 1) 願唔願意連接外部資產及哪些資產，2) 睇完後會自己調整、約 RM、定完全唔行動，3) 在有/冇產品推薦 CTA 兩個版本下，信任感點變。",
+        "evidence_gaps": [
+          "未直接測試外部資產連接同資料私隱邊界。",
+          "未測 comprehension：壓力測試、情景分析、貨幣風險等術語是否真係易明。",
+          "未有 contrast case：對現有銀行 portfolio support 已滿意嘅客戶會點睇。",
+          "未驗證實際行動效果，只知再用意願，未知會否調倉或提高資產留存。",
+          "只有一位 synthetic persona，唔足以代表香港零售或半零售銀行客群。"
+        ],
+        "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念預驗證，屬方向性訊號，唔可以當成人類用戶研究結論或市場證據。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 4,
+          "probing_quality": 4,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 3,
+          "causal_rigor": 3,
+          "hypothesis_validation_rigor": 4,
+          "synthesis_fidelity": 3,
+          "overall": 3
+        },
+        "checks": {
+          "leading_question_risk": "warn",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "warn",
+          "synthesis_overreach_risk": "warn",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "pass",
+          "interviewer_jargon_risk": "warn",
+          "domain_fit_alignment": "warn",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview established a concrete recent event and the participant's current workaround before introducing the concept (exchange_1 to exchange_3).",
+          "Coverage adapted fairly tightly to the participant's answers rather than reading a long questionnaire; eight exchanges covered event, workaround, concept reaction, trust boundary, retention, current bank experience, and pricing.",
+          "Several concept answers are correctly treated as conditional or stated rather than behavioural proof, especially pricing_signal.evidence_strength='stated' and the synthetic-only disclaimer."
+        ],
+        "findings": [
+          {
+            "category": "Question design",
+            "severity": "medium",
+            "observation": "The concept-introduction question is mildly compound and partially solution-loaded. It bundles internal holdings, added external assets, overall risk, concentration, and scenario impact, then asks both 'most useful' and 'most suspicious' in one turn. That reduces single-focus naturalness and may compress distinct reactions into one answer.",
+            "evidence_refs": [
+              "exchange_4.facilitator",
+              "FACILITATOR TRACE[3]"
+            ],
+            "recommendation": "Split concept exposure into one neutral description plus one immediate reaction question, then follow separately on usefulness and concern."
+          },
+          {
+            "category": "Participant-facing jargon",
+            "severity": "medium",
+            "observation": "Some facilitator wording uses product and analytical jargon directly with the participant, including 'Portfolio Health Check', '集中度', and '情景影響'. In concept validation this can shape interpretation and make comprehension harder to distinguish from politeness or inferred meaning.",
+            "evidence_refs": [
+              "exchange_4.facilitator"
+            ],
+            "recommendation": "Use plainer participant language first, then probe whether terms like scenario impact or concentration are understood rather than assuming they are."
+          },
+          {
+            "category": "Concept validation rigor",
+            "severity": "high",
+            "observation": "The interview did not separate curiosity, trial, payment, and month-two retention cleanly enough. Exchange_6 asks about reopening next month, but no direct probe isolates initial trial willingness versus ongoing repeat use, and no question tests whether the participant would actually try the feature now versus merely describing conditions for value.",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_6.facilitator",
+              "exchange_6.persona",
+              "exchange_8.facilitator"
+            ],
+            "recommendation": "Add distinct participant-facing probes for: whether they would try it at all, what would make them return after one use, and what payment would be acceptable only after value is proven."
+          },
+          {
+            "category": "Synthesis overreach",
+            "severity": "high",
+            "observation": "The synthesis infers stronger product implications than the evidence supports. 'workflow_effect':'replaces_workflow' is not directly supported; the participant said the tool would be useful and save time, but did not say it would replace the current workflow. The research goal also includes action willingness and asset retention, but the synthesis can imply broader product value despite no observed action or retention behavior.",
+            "evidence_refs": [
+              "exchange_4.persona",
+              "exchange_6.persona",
+              "SYNTHESIS.current_workaround.switching_difficulty",
+              "SYNTHESIS.retention_risk.workflow_effect"
+            ],
+            "recommendation": "Limit synthesis to observed or clearly stated conditions. Replace replacement claims with softer language like 'could reduce manual comparison effort' unless the participant explicitly says they would switch."
+          },
+          {
+            "category": "Evidence discipline",
+            "severity": "medium",
+            "observation": "Some assumption judgments are weakly grounded. '客戶對 whole-portfolio risk understanding 有明顯缺口' is marked supported, but the evidence is from one persona describing effort and visibility gaps, not necessarily a broader understanding deficit. '銀行提供嘅 portfolio analytics 可以提升信任' is framed as partial support, but the participant only described trust conditions, not improved trust after use.",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_3.persona",
+              "exchange_5.persona",
+              "SYNTHESIS.assumption_validation"
+            ],
+            "recommendation": "Downgrade broader assumptions to persona-scoped directional signal unless the transcript contains direct evidence of trust increase or understanding improvement."
+          },
+          {
+            "category": "Domain fit",
+            "severity": "medium",
+            "observation": "Domain fit is mostly inferred from the trigger event and stated concern, but not from a changed action outcome. The participant did inspect the portfolio, yet the interview does not establish whether this led to any real decision, adjustment, or retained assets. Given the research goal mentions action willingness and asset retention, the fit to those target outcomes remains incomplete.",
+            "evidence_refs": [
+              "exchange_1.persona",
+              "exchange_2.persona",
+              "exchange_6.persona"
+            ],
+            "recommendation": "Probe what, if anything, the participant actually changed after the recent review, and whether better portfolio understanding has ever influenced moving or keeping assets with a bank."
+          },
+          {
+            "category": "Coverage depth",
+            "severity": "medium",
+            "observation": "Coverage is marked complete, but privacy/data-boundary evidence is still thin. The participant only reacted to 'you add some external assets' conceptually; there was no direct probe on which external accounts/assets they would connect, what data they would refuse, or whether read-only import changes trust.",
+            "evidence_refs": [
+              "exchange_4.facilitator",
+              "exchange_4.persona",
+              "SYNTHESIS.evidence_gaps"
+            ],
+            "recommendation": "Do not treat trust boundary as fully covered without a concrete data-sharing boundary probe."
+          }
+        ],
+        "required_improvements": [
+          "Separate concept introduction from evaluation, and avoid double-barreled usefulness-plus-suspicion questions.",
+          "Add direct participant-facing probes for actual trial willingness, privacy/data-sharing boundaries, and any real post-analysis action or asset-retention behavior.",
+          "Tighten synthesis so persona-scoped stated preferences are not turned into stronger product or market conclusions such as workflow replacement or trust uplift."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask whether the participant would actually try the feature now if it appeared in their banking app, before asking about payment.",
+            "Probe exactly which external assets/accounts they would add, which they would not, and whether read-only import versus full linking changes acceptance.",
+            "Ask for one real past case where better understanding of overlap or concentration changed a portfolio action, or confirm that it usually does not.",
+            "Check whether terms like scenario analysis, concentration, and currency exposure are clear in the participant's own words."
+          ],
+          "coverage_gap_actions": [
+            "Add a dedicated privacy boundary question tied to specific data types and connection methods.",
+            "Add a direct trial question distinct from repeat-use and pricing.",
+            "Add an action-outcome question: after spotting concentration, what did you actually do, if anything?",
+            "Add a bank-retention probe only if grounded in behavior, such as whether better analysis would keep more assets with the bank versus just increase interest."
+          ],
+          "prompt_adjustments": [
+            "In concept_validation mode, enforce one concept attribute per question after introduction: value, trust, trial, payment, retention.",
+            "Add a prompt rule to avoid participant-facing analytical jargon unless followed by a comprehension check.",
+            "Add a synthesis guardrail that forbids workflow replacement, trust uplift, action intent, or retention claims unless directly stated with transcript refs.",
+            "Require assumption validation labels to remain persona-scoped unless multiple interviews or direct behavior evidence justify broader wording."
+          ],
+          "turn_budget_guidance": "The current turn budget is close to sufficient for a lightweight concept screen, but one or two extra turns should be reserved for privacy/data-boundary and actual action/trial probes before declaring coverage complete."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit reviews a single synthetic interview. Any product, pricing, trust, or retention implication should be treated as persona-specific directional signal only, not as validated market evidence."
+      }
+    }
+  ]
+}

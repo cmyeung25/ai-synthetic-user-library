@@ -1,0 +1,185 @@
+{
+  "problem_evidence": {
+    "strength": "strong",
+    "supporting_quotes": [
+      {
+        "quote": "股票一個戶口、基金一個戶口、MPF又另一邊，分開睇好似唔算太重，但拼埋先知係咪其實都係同一個方向。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "而家多數都仲係逐樣產品咁睇...我要自己喺個腦或者另外記低先拼到成個圖。",
+        "evidence_ref": "exchange_7.persona"
+      },
+      {
+        "quote": "最可疑就係如果個 Health Check 睇完即刻帶我去某啲產品...我就會當佢比較似銷售。",
+        "evidence_ref": "exchange_4.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次真實事件係星期日晚喺銀行 app 睇 portfolio，考慮應否再加美股基金。",
+      "受訪者會自己對持倉比重、美股曝險、基金重疊，再對現金同未來用錢安排。",
+      "實際痛點唔係冇資訊，而係跨股票、基金、MPF 後睇唔清真正重疊同整體方向。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "逐樣睇股票、基金同 MPF 持倉比重。",
+      "自己估算美股相關比重同基金重疊。",
+      "再用戶口現金同未來教育、按揭支出安排做判斷。",
+      "靠自己喺個腦或者另外記低，先拼成整體 portfolio 圖像。"
+    ],
+    "pain_level": "high",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "唔可以一睇完就即刻推產品。",
+      "一定要講清楚點計、用咗咩資料。",
+      "要用白話解釋，唔可以淨係俾分數同圖表。",
+      "要保留自己消化同自行決定嘅空間。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行內已有嘅股票、基金、MPF 持倉整合分析。",
+      "用現有持倉去解釋市場、貨幣、板塊集中風險。",
+      "將風險情景連到教育儲備、供樓、退休時間表等實際目標。"
+    ],
+    "rejected_data_access": [
+      "分析後即時導流去指定產品。",
+      "只俾風險分數但唔交代算法或資料來源。",
+      "以分析包裝銷售，而唔係中立講清楚維持現狀或減少集中嘅不同後果。"
+    ],
+    "required_trust_explanation": [
+      "先解釋目前組合有咩重疊。",
+      "講清楚邊種情景會點影響教育儲備、供樓或退休安排。",
+      "提供幾個實際選項同各自後果，而唔係直接指去某隻基金。",
+      "如有人手解讀，必須唔太 sales。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一次過拼埋股票、基金同 MPF。",
+      "清楚指出市場、貨幣、板塊重疊風險。",
+      "用白話講對教育、按揭、退休時間表有咩影響。",
+      "唔止靚圖表，而係幫到做更清楚決定。"
+    ],
+    "time_to_value": "第一次使用就要睇到可行決策價值；第二次打開要更省時間，直接指出有咩變化同需唔需要理。",
+    "abandonment_triggers": [
+      "只係多幾個圖表或分數。",
+      "睇完即刻彈產品建議。",
+      "冇講清楚計法、資料來源或情景影響。",
+      "每次都要由頭自己再拼資料。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "未有明講免費試用，但明顯要先見到真實決策價值先可能付費。",
+    "monthly_comfort_range": "unknown",
+    "payment_justification": [
+      "真係幫佢做成更清楚嘅決定。",
+      "整合股票、基金、MPF 後，用白話解釋重疊風險。",
+      "清楚連到教育同退休時間表影響。",
+      "最好包一次唔太 sales 嘅人手解讀。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "有變化時主動提醒，例如加咗某類資產後更集中。",
+      "市場一郁時，能即時連到教育或退休時間表影響。",
+      "第二次之後更省時間，直接指出變化同是否需要處理。"
+    ],
+    "drop_off_reasons": [
+      "一次性睇完就算，之後冇持續提醒。",
+      "每次都只係靜態報告，冇講邊度變咗。",
+      "分析太 sales 或太抽象。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "Many customers feel current bank investment guidance is too product-led and not portfolio-led.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者明確表示現時多數係逐樣產品咁睇，並對分析後即時導向產品高度敏感。"
+    },
+    {
+      "assumption": "Customers can understand simplified portfolio risk, concentration, stress test, and scenario analysis well enough for decision support.",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者對市場、貨幣、板塊集中同情景影響有明確興趣，但要求必須用白話講清楚，顯示可理解但解釋方式很關鍵。"
+    },
+    {
+      "assumption": "Institutional-grade analytics delivered through a bank can increase trust more than it increases suspicion.",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "有實用價值感，但同時有強烈銷售懷疑；信任取決於中立呈現、透明算法同非導購式設計。"
+    },
+    {
+      "assumption": "Customers are willing to share enough portfolio data, including at least some non-bank assets, to make whole-portfolio analysis useful.",
+      "status": "unknown",
+      "evidence_refs": [],
+      "rationale": "今次訪談未直接測到外部資產連接或資料分享邊界。"
+    },
+    {
+      "assumption": "The feature can drive action quality or engagement rather than only making customers more fearful or passive.",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者想要可比較嘅選項、後果同變化提醒，顯示有機會提升決策質素；但未見真實使用後行動證據。"
+    },
+    {
+      "assumption": "There is meaningful demand for either self-serve interpretation or RM-assisted interpretation, rather than the feature being ignored.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者想先自己消化，再接受一次唔太 sales 嘅人手解讀，顯示 hybrid 模式有吸引力。"
+    },
+    {
+      "assumption": "At least some customers have a credible willingness-to-pay condition for premium analytics or advisory support after seeing value.",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "有清楚條件式 WTP，但屬陳述性、假設性證據，未有實際付費行為。"
+    },
+    {
+      "assumption": "The concept can feel like a neutral understanding tool instead of being dismissed as a more sophisticated sales surface.",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "概念本身有明顯吸引力，但只要導向產品、缺乏解釋，就會立即被歸類為 sales surface。"
+    }
+  ],
+  "key_insights": [
+    "核心痛點唔係缺少單一產品資訊，而係跨股票、基金、MPF 後無法睇清真正重疊與整體風險。",
+    "Portfolio Health Check 對呢位受訪者有明顯吸引力，前提係它首先係理解工具，而唔係升級版導購。",
+    "信任並唔自動來自『機構級 analytics』，而係來自透明解釋、非即時推銷、同可比較嘅實際選項。",
+    "留存關鍵係持續變化提醒同第二次之後更省時間，而唔係一次性靜態報告。",
+    "付費意願存在，但門檻高；只靠圖表、分數或 branding 不足以收費。"
+  ],
+  "next_experiment": "用下一位受訪者先直接測資料分享邊界，特別係願唔願意連接外部資產；之後用一頁低保真 mock 測兩種呈現：A. 純分析解釋，B. 分析後附產品建議，觀察信任同 sales 感知點樣分叉。",
+  "evidence_gaps": [
+    "未測外部資產連接意願同具體 privacy 條件。",
+    "未測對『機構級』或特定品牌背書本身有冇額外信任加成。",
+    "未測 RM report 或 RM 互動會否增加採用，定反而加深 sales 疑慮。",
+    "未有真實價格帶，只知價值條件。",
+    "只有一位 synthetic persona，不能代表香港零售或半零售銀行客戶整體。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念前驗證，唔可以當成人類市場證據；所有因果同需求判斷都需要再用真人訪談驗證。"
+}

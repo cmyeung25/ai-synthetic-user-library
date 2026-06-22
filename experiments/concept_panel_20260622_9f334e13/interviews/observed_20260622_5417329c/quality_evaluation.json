@@ -1,0 +1,139 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "warn",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and the participant's current workaround before introducing the concept (exchange_1 to exchange_3).",
+    "Coverage adapted fairly tightly to the participant's answers rather than reading a long questionnaire; eight exchanges covered event, workaround, concept reaction, trust boundary, retention, current bank experience, and pricing.",
+    "Several concept answers are correctly treated as conditional or stated rather than behavioural proof, especially pricing_signal.evidence_strength='stated' and the synthetic-only disclaimer."
+  ],
+  "findings": [
+    {
+      "category": "Question design",
+      "severity": "medium",
+      "observation": "The concept-introduction question is mildly compound and partially solution-loaded. It bundles internal holdings, added external assets, overall risk, concentration, and scenario impact, then asks both 'most useful' and 'most suspicious' in one turn. That reduces single-focus naturalness and may compress distinct reactions into one answer.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "FACILITATOR TRACE[3]"
+      ],
+      "recommendation": "Split concept exposure into one neutral description plus one immediate reaction question, then follow separately on usefulness and concern."
+    },
+    {
+      "category": "Participant-facing jargon",
+      "severity": "medium",
+      "observation": "Some facilitator wording uses product and analytical jargon directly with the participant, including 'Portfolio Health Check', '集中度', and '情景影響'. In concept validation this can shape interpretation and make comprehension harder to distinguish from politeness or inferred meaning.",
+      "evidence_refs": [
+        "exchange_4.facilitator"
+      ],
+      "recommendation": "Use plainer participant language first, then probe whether terms like scenario impact or concentration are understood rather than assuming they are."
+    },
+    {
+      "category": "Concept validation rigor",
+      "severity": "high",
+      "observation": "The interview did not separate curiosity, trial, payment, and month-two retention cleanly enough. Exchange_6 asks about reopening next month, but no direct probe isolates initial trial willingness versus ongoing repeat use, and no question tests whether the participant would actually try the feature now versus merely describing conditions for value.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.facilitator",
+        "exchange_6.persona",
+        "exchange_8.facilitator"
+      ],
+      "recommendation": "Add distinct participant-facing probes for: whether they would try it at all, what would make them return after one use, and what payment would be acceptable only after value is proven."
+    },
+    {
+      "category": "Synthesis overreach",
+      "severity": "high",
+      "observation": "The synthesis infers stronger product implications than the evidence supports. 'workflow_effect':'replaces_workflow' is not directly supported; the participant said the tool would be useful and save time, but did not say it would replace the current workflow. The research goal also includes action willingness and asset retention, but the synthesis can imply broader product value despite no observed action or retention behavior.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.current_workaround.switching_difficulty",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Limit synthesis to observed or clearly stated conditions. Replace replacement claims with softer language like 'could reduce manual comparison effort' unless the participant explicitly says they would switch."
+    },
+    {
+      "category": "Evidence discipline",
+      "severity": "medium",
+      "observation": "Some assumption judgments are weakly grounded. '客戶對 whole-portfolio risk understanding 有明顯缺口' is marked supported, but the evidence is from one persona describing effort and visibility gaps, not necessarily a broader understanding deficit. '銀行提供嘅 portfolio analytics 可以提升信任' is framed as partial support, but the participant only described trust conditions, not improved trust after use.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Downgrade broader assumptions to persona-scoped directional signal unless the transcript contains direct evidence of trust increase or understanding improvement."
+    },
+    {
+      "category": "Domain fit",
+      "severity": "medium",
+      "observation": "Domain fit is mostly inferred from the trigger event and stated concern, but not from a changed action outcome. The participant did inspect the portfolio, yet the interview does not establish whether this led to any real decision, adjustment, or retained assets. Given the research goal mentions action willingness and asset retention, the fit to those target outcomes remains incomplete.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_6.persona"
+      ],
+      "recommendation": "Probe what, if anything, the participant actually changed after the recent review, and whether better portfolio understanding has ever influenced moving or keeping assets with a bank."
+    },
+    {
+      "category": "Coverage depth",
+      "severity": "medium",
+      "observation": "Coverage is marked complete, but privacy/data-boundary evidence is still thin. The participant only reacted to 'you add some external assets' conceptually; there was no direct probe on which external accounts/assets they would connect, what data they would refuse, or whether read-only import changes trust.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "exchange_4.persona",
+        "SYNTHESIS.evidence_gaps"
+      ],
+      "recommendation": "Do not treat trust boundary as fully covered without a concrete data-sharing boundary probe."
+    }
+  ],
+  "required_improvements": [
+    "Separate concept introduction from evaluation, and avoid double-barreled usefulness-plus-suspicion questions.",
+    "Add direct participant-facing probes for actual trial willingness, privacy/data-sharing boundaries, and any real post-analysis action or asset-retention behavior.",
+    "Tighten synthesis so persona-scoped stated preferences are not turned into stronger product or market conclusions such as workflow replacement or trust uplift."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask whether the participant would actually try the feature now if it appeared in their banking app, before asking about payment.",
+      "Probe exactly which external assets/accounts they would add, which they would not, and whether read-only import versus full linking changes acceptance.",
+      "Ask for one real past case where better understanding of overlap or concentration changed a portfolio action, or confirm that it usually does not.",
+      "Check whether terms like scenario analysis, concentration, and currency exposure are clear in the participant's own words."
+    ],
+    "coverage_gap_actions": [
+      "Add a dedicated privacy boundary question tied to specific data types and connection methods.",
+      "Add a direct trial question distinct from repeat-use and pricing.",
+      "Add an action-outcome question: after spotting concentration, what did you actually do, if anything?",
+      "Add a bank-retention probe only if grounded in behavior, such as whether better analysis would keep more assets with the bank versus just increase interest."
+    ],
+    "prompt_adjustments": [
+      "In concept_validation mode, enforce one concept attribute per question after introduction: value, trust, trial, payment, retention.",
+      "Add a prompt rule to avoid participant-facing analytical jargon unless followed by a comprehension check.",
+      "Add a synthesis guardrail that forbids workflow replacement, trust uplift, action intent, or retention claims unless directly stated with transcript refs.",
+      "Require assumption validation labels to remain persona-scoped unless multiple interviews or direct behavior evidence justify broader wording."
+    ],
+    "turn_budget_guidance": "The current turn budget is close to sufficient for a lightweight concept screen, but one or two extra turns should be reserved for privacy/data-boundary and actual action/trial probes before declaring coverage complete."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit reviews a single synthetic interview. Any product, pricing, trust, or retention implication should be treated as persona-specific directional signal only, not as validated market evidence."
+}

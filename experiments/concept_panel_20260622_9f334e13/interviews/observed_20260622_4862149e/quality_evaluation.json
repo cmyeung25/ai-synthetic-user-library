@@ -1,0 +1,127 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "pass",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept, with usable behaviour evidence in `exchange_1` to `exchange_3`.",
+    "The facilitator mostly kept one conversational focus per turn and avoided mechanical causal drilling or Five Whys pressure.",
+    "Concept introduction was reasonably neutral and separated from payment and retention until later turns.",
+    "The synthesis preserves important trust-boundary negatives from `exchange_4.persona` and `exchange_5.persona` instead of reporting only enthusiasm.",
+    "Coverage closure was reasonable once all required concept-validation areas were touched and further turns would likely have produced more hypothetical material."
+  ],
+  "findings": [
+    {
+      "category": "synthesis overreach",
+      "severity": "high",
+      "observation": "The synthesis converts one synthetic, largely hypothetical concept reaction into product-shaping conclusions that read stronger than the evidence allows. Examples include `problem_evidence.strength: strong`, `retention_risk.workflow_effect: replaces_workflow`, and assumption statuses such as meaningful demand being `supported`. The transcript contains stated preferences about a proposed tool, not observed adoption, replacement, or demand behaviour.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Downgrade claims to bounded, persona-specific statements such as 'this persona expressed conditional interest' and avoid replacement, demand, or strength labels unless backed by observed behaviour or multiple interviews."
+    },
+    {
+      "category": "leading / forced framing",
+      "severity": "medium",
+      "observation": "A few questions constrain the answer space by making the participant choose within researcher-supplied frames. `exchange_5.facilitator` asks when the analysis feels like understanding risk rather than product selling, which presumes those are the salient interpretations. `exchange_7.facilitator` offers a portfolio-vs-product contrast instead of first asking how the bank information currently feels in the participant's own words.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_7.facilitator"
+      ],
+      "recommendation": "Use an open-first version before contrast probes, for example ask how the current bank view feels or what makes a tool feel trustworthy, then follow with a contrast only if needed."
+    },
+    {
+      "category": "compound question design",
+      "severity": "medium",
+      "observation": "The concept-introduction question asks for both the most useful and most suspicious part in one turn. That is manageable here, but it creates two response tasks and can blur which dimension drove the answer.",
+      "evidence_refs": [
+        "exchange_4.facilitator"
+      ],
+      "recommendation": "Split initial concept reaction into two turns when budget allows: first what stands out as useful, then what would make them cautious."
+    },
+    {
+      "category": "coverage gap on data-sharing/privacy specifics",
+      "severity": "medium",
+      "observation": "Coverage was marked complete, but participant-facing evidence for privacy and external-asset sharing is absent. The research goal concerns understanding the whole portfolio, yet the transcript never directly tests willingness to connect non-bank assets or concrete privacy boundaries. The synthesis correctly marks one assumption `unknown`, but the interview still stopped without probing it.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "facilitator_trace[8]"
+      ],
+      "recommendation": "Add a direct probe on what accounts/assets they would or would not connect, what data use is acceptable, and what would block linkage before closing concept-validation interviews."
+    },
+    {
+      "category": "domain-fit inference",
+      "severity": "medium",
+      "observation": "The research goal includes trust, understanding, action willingness, and asset retention, but the interview mostly gathered reactions to reporting and explanation quality. Claims about action quality, engagement, and retention remain hypothetical because no changed action or repeat-use behaviour with such a tool was observed.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Report trust/understanding as stated concept reactions, and keep action and retention as unvalidated hypotheses until tested through recalled analogous behaviour, diary follow-up, or prototype interaction."
+    },
+    {
+      "category": "single-persona output breadth",
+      "severity": "medium",
+      "observation": "The synthesis produces broad assumptions, next experiments, and design implications from one synthetic interview. Although a disclaimer is present, labels like `supported` and `strong` still overstate what a single synthetic persona can authorize.",
+      "evidence_refs": [
+        "SYNTHESIS.assumption_validation",
+        "SYNTHESIS.next_experiment",
+        "SYNTHESIS.problem_evidence"
+      ],
+      "recommendation": "Keep outputs explicitly bounded to 'for this synthetic persona' and avoid strong validation labels or market-level phrasing from a single run."
+    }
+  ],
+  "required_improvements": [
+    "Reduce synthesis claim strength so hypothetical concept reactions are not presented as strong demand, replacement behaviour, or validated retention effects.",
+    "Add participant-facing probes for external asset linking and privacy/data-sharing boundaries before closing this concept-validation flow.",
+    "Rewrite trust and founder-assumption questions to start open, then use contrast probes only if the participant has not surfaced the dimension unaided.",
+    "Keep design implications and assumption verdicts explicitly limited to one synthetic persona unless corroborated by additional interviews or observed prototype behaviour."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask which assets/accounts they would actually connect, including non-bank holdings, and which they would refuse to share.",
+      "Probe a concrete acceptable vs unacceptable data-use boundary, not just general sales suspicion.",
+      "Test whether they have ever paid for, ignored, or reused any financial-analysis aid to ground action and retention in analogous behaviour.",
+      "Show a neutral low-fidelity concept and ask what they would do next, before asking price or RM-assisted interpretation."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct privacy probe covering data sources, consent, storage concerns, and whether cross-bank aggregation is acceptable.",
+      "Add an external-assets probe to isolate whether whole-portfolio value survives if only bank-held assets are included.",
+      "If retention is important, ask for a recalled example of a financial tool/report they revisited and what made them return.",
+      "If willingness to pay is important, ask for comparable paid behaviours or thresholds rather than relying only on stated conditions."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, require an explicit privacy/data-linkage probe whenever the concept depends on whole-portfolio aggregation.",
+      "Instruct the facilitator to prefer open-first trust and founder-assumption questions before using binary contrasts like portfolio-led vs product-led.",
+      "Constrain synthesis labels so `supported` is reserved for bounded persona-level support and forbid market-level wording from a single synthetic interview.",
+      "Add a guardrail that design implications about retention, action quality, or asset retention must be tagged `hypothetical` unless backed by observed or analogous behaviour."
+    ],
+    "turn_budget_guidance": "Current turn budget was enough for core coverage, but it should be widened by 1-2 exchanges in concept-validation interviews that depend on data aggregation so privacy/linkage boundaries can be tested before closure."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit reviews a synthetic interview and synthetic synthesis only. Any positive or negative product implication should be treated as method-quality feedback, not real market evidence, until validated with human participants."
+}

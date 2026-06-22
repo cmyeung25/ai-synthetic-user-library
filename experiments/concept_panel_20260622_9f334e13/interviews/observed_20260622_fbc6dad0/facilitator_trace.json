@@ -1,0 +1,388 @@
+[
+  {
+    "interview_phase": "opening_recent_behaviour",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "先用中性開場建立目標範圍，聚焦最近一次真實投資或檢視組合行為，先取到具體事件，再跟進現時做法與痛點，未到介紹概念階段。",
+    "message_to_persona": "你最近一次認真睇自己投資組合係咩情況？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當時你想決定乜嘢？",
+      "你當時睇咗邊啲資料或工具？",
+      "你係睇成個組合定逐隻產品去睇？",
+      "你而家點樣理解整體風險同分散程度？",
+      "有冇咩位你平時其實睇唔清或者要自己湊？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "參加者已提供最近事件與目標，下一步要重建當時點樣用現有方法判斷是否重複押注，先補 current_workaround，再決定何時引入概念。問題錨定佢提到的 spreadsheet 同券商持倉，避免抽象談法。",
+    "message_to_persona": "你當晚實際點樣用個 spreadsheet 同券商持倉去判斷有冇重複押注？",
+    "evidence_updates": [
+      {
+        "claim": "上星期日晚因為見到美股幾個板塊波動大，參加者主動檢視投資組合。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者當時把 spreadsheet 與券商持倉對照。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者想確認 ETF 與個股之間是否存在表面分散但實際集中的重複押注。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢而家用咩欄位或方法理解整體風險同集中度？",
+      "現有做法邊一步最花時間或最唔確定？",
+      "佢係睇成個組合定先逐隻產品再自己拼返埋？",
+      "如果要介紹概念，最自然切入點會係咩現有缺口？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround_gap",
+    "probing_strategy": "consequence_probe",
+    "decision_rationale": "雖然已有現時做法，但未知這個做法有幾夠用、邊度卡住。先釐清現有 workaround 的不足，再中性引入概念會更可判斷 value，而家仍未適合直接測 concept reaction。",
+    "message_to_persona": "你發現啲名字重複之後，最難搞清楚嗰 part 係咩？",
+    "evidence_updates": [
+      {
+        "claim": "參加者平時用較簡單的方法，把大持倉 ETF 主要成份與自己直接持有的美股放在一起看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在最近一次檢視中，參加者見到兩三個名字重複出現。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "同一主題的倉位分散在不同戶口，令參加者意識到以為分散其實未必真的分得開。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "現有方法最花時間的是資料整合、風險判斷，還是跨戶口對照？",
+      "參加者而家能否清楚理解整體集中度與風險來源？",
+      "現時銀行或券商提供的資料是否已經足夠？",
+      "介紹 Portfolio Health Check 後，參加者會否覺得是解決真問題還是包裝較好的銷售介面？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "最近行為同現時 workaround 已建立，亦已見到具體缺口在於缺乏同一基準去判斷重疊程度，現在可中性引入概念並先測第一反應與是否對準真實問題。",
+    "message_to_persona": "想請你反應一個概念: 如果你個銀行 app 有個 Portfolio Health Check，會將你銀行內嘅基金、股票、ETF、債券等持倉整合埋一齊睇整體風險、集中度同情景分析，你亦可以選擇加部分外部資產資料，仲可以出 report 同 RM 傾，但唔會自動幫你買賣；你第一下聽落，邊部分最有用，邊部分最可疑？",
+    "evidence_updates": [
+      {
+        "claim": "參加者現時最難的不是看見名字重複，而是判斷重複到甚麼程度才有意義。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者需要把 ETF 權重、直持倉位大小和不同戶口資產放在同一基準下比較，否則容易高估或低估集中度。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者目前的 workaround 只能部分識別重複持倉，對整體集中度的判斷仍不穩定。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢會覺得呢個概念係真係 portfolio-oriented 定似升級版銷售介面？",
+      "銀行提供機構級分析會增加信任定引起利益衝突疑慮？",
+      "對連接外部資產資料有咩界線或顧慮？",
+      "咩 first output 先會令佢覺得值得再用？",
+      "有冇可能為呢類分析付費，定只會接受 bundled 形式？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "boundary_probe",
+    "decision_rationale": "參加者已表達兩個明確疑慮：外部資產資料點用，以及 report 可能通向銷售。下一步先拆開測 trust/data boundary，避免把信任、銷售同付費混在一題。",
+    "message_to_persona": "如果要你加外部資產資料，你會接受銀行點樣用先過到你嗰關？",
+    "evidence_updates": [
+      {
+        "claim": "參加者認為把不同持倉放在一起看，尤其集中度和情景分析，對自己有用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若功能能捉到基金、ETF和直接持股的重疊，會對應到參加者平時最花時間自己補的缺口。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者對加入外部資產後資料如何被使用有疑慮。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者覺得可出 report 同 RM 傾，容易令人懷疑分析只是帶去銷售的前菜。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "銀行提供分析會在什麼條件下增加信任，而不是增加利益衝突疑慮？",
+      "外部資產連接的資料、權限和保存範圍界線在哪裡？",
+      "什麼 first output 會令他覺得值得再用？",
+      "他會否願意為這類分析付費，還是只接受 bundled 形式？",
+      "這功能會令他更願意自己調整、找RM，還是反而先觀望不動？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_repeat_use",
+    "probing_strategy": "first_use_success",
+    "decision_rationale": "信任與資料界線已較清楚，下一步先測什麼首次輸出能帶來持續使用或行動，這比直接問付費更接近真實採用，也能檢驗功能是否只引起好奇而非持續價值。",
+    "message_to_persona": "如果你第一次打開呢個 Portfolio Health Check，見到咩結果先會令你之後繼續用落去？",
+    "evidence_updates": [
+      {
+        "claim": "參加者接受銀行使用外部資產資料的前提是資料只用於分析和報告。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者希望外部資產連接的權限可細分到戶口和資產類別，並可隨時取消。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者不接受因連接外部資產而自動成為RM跟進名單或產品推銷觸發。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "什麼首次輸出會讓他覺得這工具值得重複使用，而不是看一次就算？",
+      "這功能會促使他自己調整持倉、找RM討論，還是先觀望不動？",
+      "他對銀行提供portfolio-level分析的信任是否能高於對銷售動機的懷疑？",
+      "什麼情況下他會願意為這類分析付費，或只接受作為現有服務一部分？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_conditions",
+    "probing_strategy": "pricing_probe",
+    "decision_rationale": "目前已知道要有可驗證的新洞察與透明解釋先會重複使用，下一步補足付費條件最直接；問題用具體價值前提作錨點，可同時看出參加者是把它當基本分析工具還是高價值服務。",
+    "message_to_persona": "如果佢真係可以穩定咁畀到你頭先講嗰種跨戶口集中度洞察，你會覺得呢個係銀行 app 應該包埋嘅基本功能，定係有啲情況下你會肯另外畀錢？",
+    "evidence_updates": [
+      {
+        "claim": "參加者認為首次使用若能顯示跨戶口合併後，比自己原先認知更高的行業或核心名字集中度，會構成持續使用價值。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者要求結果解釋清楚計算方式及資料更新時間，而不接受只有紅黃綠燈式提示。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者對可持續使用的條件是可提供難以自行即時看見的新洞察，加上可審視的方法透明度。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢是否只接受作為既有銀行服務一部分，而不願為此額外付費？",
+      "若肯付費，門檻會來自更深入分析、報告、還是有人解讀？",
+      "佢最終會把這功能視為中立理解工具，還是仍覺得偏向銷售包裝？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "founder_assumption_check",
+    "probing_strategy": "assumption_probe",
+    "decision_rationale": "未補的是 founder assumption check。現有證據已顯示功能價值與付費邊界，現在要直接測這工具最終在他眼中會否仍被視為銷售包裝，這可驗證『portfolio-led 而非 product-led』的核心假設。",
+    "message_to_persona": "就算個分析做得幾完整都好，咩情況下你仍然會覺得佢本質上都係一個賣產品介面？",
+    "evidence_updates": [
+      {
+        "claim": "若功能只整合銀行內原本已可見的持倉，參加者認為應屬基本功能，不應額外收費。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者只有在涵蓋外部資產、更新夠快、情景分析有深度，並可持續比較 rebalancing 後風險變化時，才認為有額外實質價值。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者對付費的門檻是持續、跨資產且可追蹤變化的分析能力，而非單次整合展示。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "銀行提供這類分析時，哪些設計或後續動作會令它看起來仍然偏向 product-led？",
+      "要怎樣的呈現與跟進方式，參加者才會視它為中立理解工具而非銷售前菜？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "close",
+    "probing_strategy": "sufficiency_check",
+    "decision_rationale": "所需 coverage 已完成，最新回答亦直接測到 founder assumption 邊界。再追問大概率只會重覆 trust 與銷售界線，未必再實質改變證據圖。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "若分析後很快彈出約 RM、轉倉或直接推薦產品，參加者即使覺得分析做得好，也會視之為銷售介面。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若整個設計把 portfolio health 包裝成引導客戶購買銀行具分銷利益產品的流程，參加者會視之為 sales funnel。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參加者對 Portfolio Health Check 的接受度取決於分析價值是否與銷售觸發清晰分離。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_4.persona",
+          "exchange_5.persona",
+          "exchange_8.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "required_coverage_complete_and_latest_answer_confirms_key_boundary_conditions",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eee49-cc8e-7f32-90a8-ba3b4c79944b",
+    "decision_status": "not_asked_at_close"
+  }
+]

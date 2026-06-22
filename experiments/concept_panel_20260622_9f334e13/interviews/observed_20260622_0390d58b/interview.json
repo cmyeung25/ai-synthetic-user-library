@@ -1,0 +1,760 @@
+{
+  "interview_id": "observed_20260622_0390d58b",
+  "persona_id": "su_1206",
+  "persona_name": "Chloe Ng",
+  "research_goal": "驗證香港零售或半零售銀行客戶是否願意接受銀行用機構級 portfolio risk analytics 幫自己理解整體投資組合，並觀察這是否提升信任、理解、行動意願與資產留存。",
+  "product_context": "銀行 App 內的 Portfolio Health Check，由銀行引入類似 BlackRock Aladdin 或 Aladdin Wealth 的機構級 portfolio analytics 能力，讓客戶查看全 portfolio risk、集中度、壓力測試、情景分析、風險取向匹配與簡單語言解釋，並可選擇生成 RM review report；這不是自動買賣工具。",
+  "output_language": "Natural Cantonese Traditional Chinese",
+  "facilitator_provider": "codex",
+  "facilitator_model": "gpt-5.4",
+  "persona_provider": "codex",
+  "persona_model": "gpt-5.4",
+  "facilitator_prompt_version": "facilitator-interview/v2",
+  "synthesis_prompt_version": "concept-synthesis/v1",
+  "concept_protocol_version": "src/ai_validation_swarm/prompts/concept-interview/hk-bank-portfolio-health-check-v1.md",
+  "concept_label": "Portfolio Health Check",
+  "interview_mode": "concept_validation",
+  "hypothesis": "",
+  "facilitator_provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+  "persona_provider_session_id": "019eee61-7500-7971-a4f7-f8dc481bd63f",
+  "persona_conversation_session_id": "chat_20260622_5f84c123",
+  "quality_provider": "codex",
+  "quality_model": "gpt-5.4",
+  "quality_prompt_version": "facilitator-quality-evaluator/v2",
+  "quality_provider_session_id": "019eee65-4530-7011-a981-dfe6dd38c639",
+  "hypothesis_evidence_judge_prompt_version": "hypothesis-evidence-judge/v1",
+  "hypothesis_evidence_judge_provider_session_id": "",
+  "max_turns": 16,
+  "soft_turn_limit": 12,
+  "hard_turn_limit": 16,
+  "created_at": "2026-06-22T08:09:53+00:00",
+  "updated_at": "2026-06-22T08:15:24+00:00",
+  "status": "completed",
+  "stop_reason": "required coverage complete and additional probing would likely be repetitive",
+  "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+  "facilitator_decisions": [
+    {
+      "interview_phase": "opening_recent_behaviour",
+      "probing_strategy": "recent_event",
+      "decision_rationale": "未能讀取本機的 design-research-facilitator 技能檔，但用戶已提供完整協議與概念驗證流程；首題先用中性、具領域指向的近期行為題，為 `recent_behaviour` 與後續 `current_workaround` 建立具體事件，未提前引入概念或假設需求。",
+      "message_to_persona": "你最近一次喺銀行 app 或其他地方睇自己投資組合，係想決定咩？",
+      "evidence_updates": [],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "最近一次具體的投資組合檢視事件是什麼？",
+        "當時他是看整體組合還是逐個產品看？",
+        "他目前用什麼方法理解風險或分散度？",
+        "現有做法有沒有明顯不足，還是其實已經足夠？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "workaround_probe",
+      "probing_strategy": "sequence_probe",
+      "decision_rationale": "參與者已提供一個具體近期事件，並暴露出未能看清跨戶口美元與科技曝險的問題。下一步先追問當晚實際怎樣補足資訊，建立 current_workaround，再決定是否需要引入概念。",
+      "message_to_persona": "嗰晚你最後點樣拼返自己幾個戶口嘅曝險？",
+      "evidence_updates": [
+        {
+          "claim": "參與者最近一次檢視投資組合，是想決定是否把部分 USD 現金投入美股 ETF。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "該次事件中，參與者因未能看清合併幾個戶口後的美元與科技相關曝險是否偏重而卡住。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "當晚他用什麼具體方法整合不同戶口的持倉與風險？",
+        "他目前是看整體組合還是逐個產品判斷？",
+        "現有方法的時間成本、可信度和困難點是什麼？",
+        "他是否已覺得現有銀行資訊太產品導向，還是只是資料分散？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "concept_intro",
+      "probing_strategy": "concept_reaction",
+      "decision_rationale": "近期行為與現有 workaround 已建立，現在可中性引入概念並先收集第一反應，避免過早追問信任、付款或留存。問題聚焦在參與者剛提到的跨戶口整合困難。",
+      "message_to_persona": "如果銀行 app 有個 Portfolio Health Check，幫你整合持倉再顯示整體風險同幾個情景影響，你第一個反應係咩？",
+      "evidence_updates": [
+        {
+          "claim": "參與者未能完整整合多個戶口的曝險，只能逐個 app 截圖並在 Notes 粗略記錄 USD、美股 ETF 和科技偏重。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "外部券商與銀行基金持倉資訊不易一眼看清，令參與者對整體曝險判斷不確定。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "因無法清楚掌握整體曝險，參與者當晚最終沒有調整持倉。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "參與者對 Portfolio Health Check 的第一反應是有用、懷疑，還是無感？",
+        "他覺得這種功能是否真係幫到整體 portfolio 理解，而不只是另一種產品銷售包裝？",
+        "他對銀行提供這類分析的信任邊界是什麼？",
+        "什麼首屏輸出才足以令他願意試一次並持續再用？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "trust_boundary",
+      "probing_strategy": "boundary_probe",
+      "decision_rationale": "參與者已給出清晰的概念首反應，並主動提到 read-only、可 revoke 與對產品推銷的戒心。下一題應直接收窄到信任邊界，釐清哪些資料權限與呈現方式會令他願意或不願意使用。",
+      "message_to_persona": "咩情況下你先會放心連埋外面券商嗰啲資料？",
+      "evidence_updates": [
+        {
+          "claim": "參與者對概念的第一反應取決於能否真正整合外部券商和其他銀行持倉，而不只是重包裝已有資訊。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果資料連接是 read-only 且可隨時 revoke，參與者有興趣試用。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "若一開始就出現產品建議，或風險分數缺乏解釋，參與者會立即停止使用。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "參與者可接受的外部資料連接權限、授權方式和撤回條件是什麼？",
+        "他對銀行提供這類分析的主要懷疑是推銷動機、資料私隱，還是分析可信度？",
+        "什麼解釋方式會令風險分數看起來可信而不是黑盒？",
+        "若信任門檻達標，他會否因此採取行動或找 RM 討論？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "retention_value_probe",
+      "probing_strategy": "first_use_success",
+      "decision_rationale": "信任邊界已具體到權限、可見性與 demo。下一步先測首用成功與重複使用條件，比直接問付款更有行為基礎，也能檢查這功能會否被視為真有用還是只看一次。",
+      "message_to_persona": "第一次用完要見到咩，你先會之後再開返嚟睇？",
+      "evidence_updates": [
+        {
+          "claim": "參與者接受外部資料連接的前提包括清楚說明 read-only、可逐個戶口選擇、可隨時斷開，以及銀行內部誰可看到資料。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者希望在連接外部資料前先看到 sample view 或 demo，以理解分析外部持倉的方式。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者擔心連接外部資料後才開始被推產品。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "什麼首用輸出會令參與者覺得值得重複使用？",
+        "他會在什麼頻率或觸發情境下再打開這功能？",
+        "若功能有價值，他是否只接受免費或理財服務綑綁，還是存在付費條件？",
+        "這功能在他眼中較像中立分析工具，還是高級版銷售介面？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "payment_probe",
+      "probing_strategy": "pricing_condition",
+      "decision_rationale": "留存條件已具體到可發現未知重疊風險及可每週重用。下一題可直接測付款門檻，並以條件式問法避免把興趣誤當願付費。",
+      "message_to_persona": "如果呢個功能要另外收費，去到咩情況你先會肯畀錢？",
+      "evidence_updates": [
+        {
+          "claim": "參與者只有在第一次使用後看到自己原本不清楚的重疊或集中風險時，才會再次使用這功能。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者希望情景分析解釋清楚而不空泛，這樣功能才可能成為他每週日會再打開的工具。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "參與者對這功能的付費門檻是什麼？",
+        "他只接受免費或綑綁式提供，還是存在單獨付費條件？",
+        "他眼中的價值更來自中立風險理解，還是可帶來後續決策或與 RM 討論的幫助？",
+        "這功能最終會被他視為分析工具還是銷售前置介面？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "assumption_check",
+      "probing_strategy": "alternative_condition",
+      "decision_rationale": "付款條件已清楚，尚欠 founder assumption 檢查。參與者多次提到對『包裝／推產品』的戒心，下一題應直接測這功能在他心中究竟是中立 portfolio 工具還是銷售介面。",
+      "message_to_persona": "對你嚟講，呢個比較似真係幫你睇成個 portfolio，定係銀行另一種賣產品方法？",
+      "evidence_updates": [
+        {
+          "claim": "參與者只會在功能證明自己不只是漂亮 dashboard，而是真能避免錯誤決定、指出跨戶口重疊與 FX 集中，或節省自行整合資料時間時，才接受付費。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者可接受不高、無長約的月費或季度費。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果仍需自行完成大部分整合，或分析背後連著銷售，參與者不願另外付費。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "參與者最終會把這功能視為中立 portfolio 分析工具還是銷售前置介面？",
+        "什麼具體訊號會令他把銀行的分析解讀為真中立而非推銷？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "alternative_condition",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "close",
+      "probing_strategy": "coverage_complete",
+      "decision_rationale": "所需 coverage 已完成，最後一題已直接測到關鍵 founder assumption：功能會否被視為中立 portfolio 工具或銷售介面。再追問大機會只會重複既有信任與價值條件，邊際證據有限。",
+      "message_to_persona": "",
+      "evidence_updates": [
+        {
+          "claim": "參與者不會自動把 Portfolio Health Check 視為真正幫他看整體 portfolio 的工具。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者會根據第一版輸出是先呈現現有風險與重疊，還是很快導向產品建議，來判斷這功能是中立分析工具還是銷售工具。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [],
+      "should_end": true,
+      "end_reason": "required coverage complete and additional probing would likely be repetitive",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "alternative_condition",
+      "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+      "decision_status": "not_asked_at_close"
+    }
+  ],
+  "exchanges": [
+    {
+      "exchange_id": 1,
+      "facilitator_question": "你最近一次喺銀行 app 或其他地方睇自己投資組合，係想決定咩？",
+      "persona_response": "最近一次係晚飯後喺屋企睇，主要係想唔想將一部分 USD 現金再放入美股 ETF。嗰晚我其實卡住咗，因為睇到美國市場郁得幾快，但我又未完全睇清自己喺幾個戶口加埋之後，美元同科技相關曝險係咪已經偏重。",
+      "facilitator_phase": "opening_recent_behaviour",
+      "probing_strategy": "recent_event",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-22T08:10:37+00:00"
+    },
+    {
+      "exchange_id": 2,
+      "facilitator_question": "嗰晚你最後點樣拼返自己幾個戶口嘅曝險？",
+      "persona_response": "我冇真係完整拼到，只係用最笨的方法逐個 app 截圖，再喺 Notes 記返大概幾多係 USD、幾多係美股 ETF，同埋邊啲其實已經好似都偏科技。去到後面有啲位我都唔太肯定，尤其外面券商嗰部分同銀行入面基金持倉唔係一眼睇得清，所以最後我嗰晚冇郁。",
+      "facilitator_phase": "workaround_probe",
+      "probing_strategy": "sequence_probe",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "created_at": "2026-06-22T08:11:03+00:00"
+    },
+    {
+      "exchange_id": 3,
+      "facilitator_question": "如果銀行 app 有個 Portfolio Health Check，幫你整合持倉再顯示整體風險同幾個情景影響，你第一個反應係咩？",
+      "persona_response": "我第一個反應會係睇佢係咪真係整合到外面券商同其他銀行啲持倉，定其實只係包裝返你本身已經見到嘅嘢。如果佢做得到，而且係 read-only、可以隨時 revoke，我會有興趣試，但如果一入去就先講產品建議或者個風險分數冇解釋，我會即刻收手。",
+      "facilitator_phase": "concept_intro",
+      "probing_strategy": "concept_reaction",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-22T08:11:36+00:00"
+    },
+    {
+      "exchange_id": 4,
+      "facilitator_question": "咩情況下你先會放心連埋外面券商嗰啲資料？",
+      "persona_response": "要先講得好清楚係 read-only、可以逐個戶口揀、隨時斷開，而且要寫明邊個喺銀行內部睇到。最好仲有 sample view 或 demo，等我未連之前已經知道佢真係會點樣分析外部持倉，而唔係連完先開始推產品。",
+      "facilitator_phase": "trust_boundary",
+      "probing_strategy": "boundary_probe",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-22T08:12:09+00:00"
+    },
+    {
+      "exchange_id": 5,
+      "facilitator_question": "第一次用完要見到咩，你先會之後再開返嚟睇？",
+      "persona_response": "第一次用完，如果佢真係指出到一個我本身冇咁清楚嘅重疊或者集中位，例如原來幾個戶口加埋美元或者科技曝險比我以為更高，我之後會再開返嚟睇。仲有個情景分析要講得明白，唔係好靚但空泛嗰種，咁先會變成我星期日會再用嘅工具。",
+      "facilitator_phase": "retention_value_probe",
+      "probing_strategy": "first_use_success",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-22T08:12:37+00:00"
+    },
+    {
+      "exchange_id": 6,
+      "facilitator_question": "如果呢個功能要另外收費，去到咩情況你先會肯畀錢？",
+      "persona_response": "要佢先證明到唔係普通靚 dashboard，而係真係幫我避開一啲會做錯嘅決定，例如清楚指出跨戶口重疊、FX 集中，或者情景分析令我少咗自己拼資料嗰啲時間。我會接受一個唔高、冇長約嘅月費或者季度費，但如果我仲要自己做大半整合，或者分析後面其實連住銷售，我唔會另外畀錢。",
+      "facilitator_phase": "payment_probe",
+      "probing_strategy": "pricing_condition",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-22T08:13:05+00:00"
+    },
+    {
+      "exchange_id": 7,
+      "facilitator_question": "對你嚟講，呢個比較似真係幫你睇成個 portfolio，定係銀行另一種賣產品方法？",
+      "persona_response": "而家聽落兩邊都有可能，我唔會自動當佢係真係幫我睇全個 portfolio。要睇佢第一版係先講我而家有咩風險同重疊，定係好快就帶我去產品建議，如果係後者，我會當佢主要都係銷售工具。",
+      "facilitator_phase": "assumption_check",
+      "probing_strategy": "alternative_condition",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "alternative_condition",
+      "created_at": "2026-06-22T08:13:32+00:00"
+    }
+  ],
+  "pending_facilitator_decision": {},
+  "observer_interventions": [],
+  "last_error": "",
+  "failed_operation": "",
+  "failed_payload": {},
+  "insight_report": {
+    "problem_evidence": {
+      "strength": "strong",
+      "supporting_quotes": [
+        {
+          "quote": "我冇真係完整拼到",
+          "evidence_ref": "exchange_2.persona"
+        },
+        {
+          "quote": "最後我嗰晚冇郁",
+          "evidence_ref": "exchange_2.persona"
+        },
+        {
+          "quote": "原來幾個戶口加埋美元或者科技曝險比我以為更高，我之後會再開返嚟睇",
+          "evidence_ref": "exchange_5.persona"
+        }
+      ],
+      "recent_behavior_evidence": [
+        "最近一次具體行為係想決定要唔要將部分 USD 現金再放入美股 ETF。",
+        "參與者因為未睇清幾個戶口合併後嘅美元同科技曝險而卡住。",
+        "現時 workaround 係逐個 app 截圖，再喺 Notes 粗略整理，最後因為唔肯定而冇落決定。"
+      ]
+    },
+    "current_workaround": {
+      "existing_workaround": [
+        "逐個 app 截圖。",
+        "喺 Notes 手動記低大概幾多係 USD、美股 ETF，同埋偏科技持倉。",
+        "遇到唔清楚就暫停唔郁。"
+      ],
+      "pain_level": "high",
+      "switching_difficulty": "medium",
+      "what_must_not_change": [
+        "外部資料連接必須係 read-only。",
+        "要可以逐個戶口揀同隨時斷開。",
+        "要清楚寫明銀行內部邊個睇到資料。",
+        "唔可以一開始就導去產品建議。"
+      ]
+    },
+    "trust_boundary": {
+      "accepted_data_access": [
+        "銀行內已有持倉資料。",
+        "外部券商或其他銀行資料，但前提係 read-only。",
+        "可逐個戶口選擇連接。",
+        "可隨時 revoke/斷開。"
+      ],
+      "rejected_data_access": [
+        "連接後先至發現分析方式或用途。",
+        "分析結果後面直接連住銷售。",
+        "資料可見範圍唔清楚。"
+      ],
+      "required_trust_explanation": [
+        "連接前要有 sample view 或 demo。",
+        "要解釋清楚風險分數同分析點樣得出。",
+        "第一版應先講現有風險、重疊、集中，而唔係產品建議。"
+      ]
+    },
+    "first_value_requirement": {
+      "first_use_success": [
+        "清楚指出本身未察覺嘅跨戶口重疊。",
+        "清楚指出美元或科技集中度比想像中高。",
+        "情景分析要講得明白，唔可以只係靚但空泛。"
+      ],
+      "time_to_value": "第一次用就要見到具體新資訊，否則大機會唔會再用。",
+      "abandonment_triggers": [
+        "只係包裝返本身已經見到嘅嘢。",
+        "風險分數冇解釋。",
+        "仲要自己做大半整合。",
+        "一入去就推產品。"
+      ]
+    },
+    "pricing_signal": {
+      "free_trial_need": "高。參與者明確要功能先證明唔只係靚 dashboard，仲提到最好連接前有 demo。",
+      "monthly_comfort_range": "可接受唔高嘅月費或者季度費，但只喺證明到有決策價值之後。",
+      "payment_justification": [
+        "真係幫佢避開會做錯嘅決定。",
+        "指出跨戶口重疊同 FX 集中。",
+        "節省自己拼資料嘅時間。",
+        "冇長約。"
+      ],
+      "evidence_strength": "stated"
+    },
+    "retention_risk": {
+      "continuation_reasons": [
+        "每次可以更快睇到整體 portfolio 風險。",
+        "能持續指出未知重疊或集中位。",
+        "可成為星期日定期檢視工具。"
+      ],
+      "drop_off_reasons": [
+        "變成銷售前置介面。",
+        "分析空泛或唔透明。",
+        "整合外部資產做得唔完整。",
+        "仍然要自己手動補好多資料。"
+      ],
+      "workflow_effect": "replaces_workflow"
+    },
+    "assumption_validation": [
+      {
+        "assumption": "好多客戶覺得現時銀行投資指引太產品導向，而唔係 portfolio 導向。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "呢位參與者多次表達對『好快就帶去產品建議』嘅戒心，但未直接比較現有 RM 或銀行建議體驗。"
+      },
+      {
+        "assumption": "客戶理解到簡化版 portfolio risk、集中度、壓力測試同情景分析，足以支持決策。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_5.persona"
+        ],
+        "rationale": "參與者主動用到『重疊、集中、情景分析』語言，亦要求解釋清楚，顯示有理解意願；但未證明複雜輸出一定睇得明。"
+      },
+      {
+        "assumption": "由銀行提供機構級 analytics 會提升信任，多過增加懷疑。",
+        "status": "weakened",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "信任唔係自動成立，要靠 read-only、可 revoke、可見範圍透明同 demo；否則參與者會偏向懷疑係銷售工具。"
+      },
+      {
+        "assumption": "客戶願意分享足夠 portfolio data，包括部分非本行資產，令 whole-portfolio analysis 有用。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "rationale": "有條件支持。參與者願意考慮外部資料，但前提非常嚴格，並非無條件接受。"
+      },
+      {
+        "assumption": "功能可以提升行動質素或 engagement，而唔係只令客戶更驚或更被動。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_2.persona",
+          "exchange_5.persona",
+          "exchange_6.persona"
+        ],
+        "rationale": "現時佢因資訊不足而唔郁；若功能能指出未知風險並節省整合時間，佢預期會重用同幫助避免錯決定。但未見真實使用後行動證據。"
+      },
+      {
+        "assumption": "會有明確 self-serve 或 RM-assisted demand，而唔係被忽略。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_5.persona"
+        ],
+        "rationale": "參與者明確表示如果首用有新洞察，會變成星期日會再用嘅工具，顯示至少 self-serve 路徑有吸引力。"
+      },
+      {
+        "assumption": "有一部分客戶對 premium analytics 或相關 advisory 有可信付費條件。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_6.persona"
+        ],
+        "rationale": "參與者明確提出可接受唔高、冇長約嘅月費或季度費，條件係功能真係幫到決策同節省時間。"
+      },
+      {
+        "assumption": "呢個概念可以被視為中立理解工具，而唔係更高級嘅銷售介面。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "可以做到，但非常脆弱。第一版輸出若先講風險同重疊，較有機會被視為中立；若很快導向產品，就會被歸類為銷售。"
+      }
+    ],
+    "key_insights": [
+      "痛點唔係『冇資訊』，而係跨戶口、跨機構之後睇唔清整體曝險，直接令投資決定延後。",
+      "概念有吸引力，但核心價值係真正整合與解釋，不係『機構級 analytics』呢個標籤本身。",
+      "信任門檻高，而且首先要解決銷售動機懷疑；透明權限、demo、可撤回，比品牌背書更重要。",
+      "首用價值要即時且具體：指出未知重疊、FX/科技集中，先有機會形成每週重用。",
+      "付費意願存在，但建立喺明確決策價值同省時之上；如果仲要自己手動整合，大概率唔會付費。"
+    ],
+    "next_experiment": "用可點擊原型測兩個首屏版本：A 版先顯示跨戶口重疊、FX/科技集中同簡明情景解釋；B 版較早帶出產品/建議入口。比較參與者對中立性、信任、連接外部資產意願，同埋是否願意繼續完成連接。",
+    "evidence_gaps": [
+      "只有一位 synthetic persona，唔代表香港零售/半零售客群。",
+      "未測到真實 UI、真實數據連接流程同實際 comprehension。",
+      "未區分純 self-serve 與 RM-assisted report 哪一條更強。",
+      "未知道對唔同資產複雜度、AUM 水平、年齡或銀行關係深度會否有明顯差異。"
+    ],
+    "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅前測訊號，用嚟幫你收窄假設同下一輪真人訪談/原型測試重點，唔可以當成人類市場證據。"
+  },
+  "quality_evaluation": {
+    "overall_verdict": "warn",
+    "scores": {
+      "neutrality": 3,
+      "probing_quality": 3,
+      "conversation_naturalness": 4,
+      "evidence_discipline": 2,
+      "causal_rigor": 3,
+      "hypothesis_validation_rigor": 3,
+      "synthesis_fidelity": 2,
+      "overall": 3
+    },
+    "checks": {
+      "leading_question_risk": "warn",
+      "repetition_risk": "pass",
+      "premature_root_cause_risk": "pass",
+      "mechanical_five_whys_risk": "pass",
+      "evidence_reference_quality": "warn",
+      "synthesis_overreach_risk": "fail",
+      "conversation_naturalness": "pass",
+      "persona_over_structuring_risk": "pass",
+      "interviewer_jargon_risk": "warn",
+      "domain_fit_alignment": "warn",
+      "hypothesis_confirmation_bias_risk": "pass",
+      "hypothesis_judge_alignment": "pass"
+    },
+    "strengths": [
+      "The interview established a concrete recent event and current workaround before introducing the concept, which fits concept-validation sequencing.",
+      "Most asked questions were short, participant-facing, and stayed conversational in Cantonese rather than sounding like an interview script.",
+      "Coverage was adapted in a reasonable order: recent behavior, workaround, concept reaction, trust boundary, retention, payment, then assumption check.",
+      "The runtime stopped at a plausible point once all required coverage fields were touched and no major participant-facing gap remained."
+    ],
+    "findings": [
+      {
+        "category": "Synthesis overreach",
+        "severity": "high",
+        "observation": "The synthesis turns hypothetical stated intent from one synthetic concept interview into overly strong support claims. `assumption_validation` marks self-serve demand and paid demand as `supported`, and `retention_risk.workflow_effect` says `replaces_workflow`, but the transcript only shows conditional future intent after a concept description, not observed adoption or workflow replacement.",
+        "evidence_refs": [
+          "exchange_5.persona",
+          "exchange_6.persona",
+          "SYNTHESIS.assumption_validation[5]",
+          "SYNTHESIS.assumption_validation[6]",
+          "SYNTHESIS.retention_risk.workflow_effect"
+        ],
+        "recommendation": "Downgrade these to stated or conditional signals from a single synthetic persona, and avoid product-shaping verbs like `supported` or `replaces_workflow` unless backed by observed repeated use or behavior change."
+      },
+      {
+        "category": "Forced-choice framing",
+        "severity": "medium",
+        "observation": "The final question constrains the participant to the researcher's supplied dichotomy: real portfolio help versus another sales method. That invites classification into preselected frames instead of letting the participant describe how they would recognize the difference in their own terms.",
+        "evidence_refs": [
+          "exchange_7.facilitator"
+        ],
+        "recommendation": "Replace with an open contrast probe such as asking what would make it feel trustworthy versus sales-led, then use any later binary summary only as a brief recap if needed."
+      },
+      {
+        "category": "Solution-loaded concept intro",
+        "severity": "medium",
+        "observation": "The concept introduction bundles multiple promised benefits in one turn: integration, overall risk, and scenario impact. That is more sell-shaped than neutral and makes it hard to isolate which part drives interest or resistance.",
+        "evidence_refs": [
+          "exchange_3.facilitator"
+        ],
+        "recommendation": "Introduce the concept more minimally, then probe specific components separately: aggregation, explanation style, scenarios, and recommendation behavior."
+      },
+      {
+        "category": "Participant-facing jargon",
+        "severity": "medium",
+        "observation": "The facilitator speaks in product and finance framing that may outpace a retail participant's natural language, including `Portfolio Health Check`, `整合持倉`, `整體風險`, and `情景影響`. The persona handles it, but the wording still imports the product frame rather than eliciting the participant's own vocabulary first.",
+        "evidence_refs": [
+          "exchange_3.facilitator"
+        ],
+        "recommendation": "Use plainer wording first, then mirror the participant's own terms. For example, ask about seeing everything together and understanding what they are already exposed to before naming analytics features."
+      },
+      {
+        "category": "Weak evidence labeling in concept report",
+        "severity": "medium",
+        "observation": "Several report statements blur behavioural evidence and hypothetical claims. `problem_evidence.strength` is `strong`, `pricing_signal.free_trial_need` is inferred rather than directly stated, and `problem_evidence` uses exchange 5 future-use language as support for the current problem.",
+        "evidence_refs": [
+          "exchange_2.persona",
+          "exchange_5.persona",
+          "SYNTHESIS.problem_evidence",
+          "SYNTHESIS.pricing_signal.free_trial_need"
+        ],
+        "recommendation": "Separate observed pain from hypothetical concept response. Mark pricing, retention, and trust claims as stated preferences unless tied to actual behavior in the recalled event."
+      },
+      {
+        "category": "Domain-fit inference breadth",
+        "severity": "low",
+        "observation": "The research goal targets trust, understanding, action willingness, and asset retention, but this single interview only directly evidences a stalled decision and conditional willingness to try or maybe pay. Asset-retention implications are not participant-evidenced here.",
+        "evidence_refs": [
+          "RESEARCH GOAL",
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_5.persona",
+          "exchange_6.persona"
+        ],
+        "recommendation": "Keep outputs bounded to decision support, trust conditions, and repeat-use hypotheses. Do not infer retention or broad banking relationship effects from this interview alone."
+      }
+    ],
+    "required_improvements": [
+      "Reduce synthesis confidence: re-label hypothetical future intent as conditional stated evidence, not support for demand, payment, or workflow replacement.",
+      "Rewrite the concept intro to remove bundled benefits and product framing so the participant can react to a more neutral concept.",
+      "Replace the forced-choice founder-assumption question with an open probe that elicits participant-defined signals of neutrality versus sales intent.",
+      "Tighten evidence discipline in the report by separating recalled-event evidence from hypothetical concept reactions and by limiting claims to one synthetic persona."
+    ],
+    "improvement_hints": {
+      "next_interview_focus": [
+        "Ask the participant to describe, in their own words, what they would need to see on the first screen before trusting the tool.",
+        "Probe a concrete current example of how they judge whether a bank feature is advisory versus sales-led.",
+        "Test one narrower concept at a time: cross-account exposure summary first, then scenario analysis, then any recommendation layer.",
+        "Ask what they would do immediately after seeing a meaningful risk overlap, to distinguish curiosity from action intent."
+      ],
+      "coverage_gap_actions": [
+        "Add a direct participant-facing probe on what specific next action they would take after a useful output, rather than only whether they would revisit the tool.",
+        "Probe comprehension explicitly: what parts of the output they expect to understand easily and what would be confusing.",
+        "If retention is important, ask what would make them return in week two or month two versus using it once and stopping.",
+        "If payment is important, isolate price sensitivity from trust and setup by asking what makes it worth paying for even if the bank is not selling anything."
+      ],
+      "prompt_adjustments": [
+        "In concept-validation mode, instruct the facilitator to introduce the concept in one sentence without naming multiple benefits at once.",
+        "Add a guardrail against binary founder-assumption questions unless preceded by an open probe in the participant's own language.",
+        "Require the synthesis layer to tag every claim as `observed`, `stated_intent`, or `inference` and prevent `supported` labels when only stated intent exists.",
+        "Add a check that pricing, retention, and design implications remain explicitly bounded to a single synthetic persona and do not imply market-level demand."
+      ],
+      "turn_budget_guidance": "The current turn budget was sufficient for basic coverage, but one or two extra turns would improve quality if used to unpack sales-trust cues and concrete post-output actions rather than adding more broad concept questions."
+    },
+    "human_review_needed": false,
+    "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview. Any positive demand, pricing, trust, retention, or product-direction conclusion should be treated as provisional prompt-quality feedback, not human market evidence."
+  },
+  "hypothesis_evidence_judgment": {},
+  "coverage_status": {
+    "requirements": [
+      "recent_behaviour",
+      "current_workaround",
+      "concept_reaction",
+      "trust_boundary",
+      "payment_conditions",
+      "retention_repeat_use",
+      "founder_assumption_check"
+    ],
+    "covered": {
+      "recent_behaviour": true,
+      "current_workaround": true,
+      "concept_reaction": true,
+      "trust_boundary": true,
+      "payment_conditions": true,
+      "retention_repeat_use": true,
+      "founder_assumption_check": true
+    },
+    "missing": [],
+    "coverage_complete": true,
+    "soft_limit_reached": false,
+    "hard_limit_reached": false,
+    "exchange_count": 7
+  },
+  "exchange_count": 7,
+  "facilitator_decision_count": 8
+}
