@@ -346,12 +346,14 @@ class ObserverRuntimeTest(unittest.TestCase):
             facilitator = ObserverFacilitatorFixture()
             quality = ObserverQualityFixture()
             persona_provider = ObserverPersonaFixture()
+            progress = []
             runtime = ObserverControlledInterviewRuntime(
                 data_dir=root / "personas",
                 session_dir=root / "interviews",
                 facilitator_provider=facilitator,
                 persona_provider=persona_provider,
                 quality_provider=quality,
+                progress_writer=progress.append,
             )
             folder, session = runtime.start(
                 persona_id=persona.profile.synthetic_user_id,
@@ -414,6 +416,11 @@ class ObserverRuntimeTest(unittest.TestCase):
             quality_md = (folder / "quality_evaluation.md").read_text(encoding="utf-8")
             self.assertIn("Improvement Hints", quality_md)
             self.assertIn("Turn budget:", quality_md)
+            self.assertTrue(any("start_observed" in item for item in progress))
+            self.assertTrue(any("requesting_facilitator" in item for item in progress))
+            self.assertTrue(any("asking_persona" in item for item in progress))
+            self.assertTrue(any("evaluating_quality" in item for item in progress))
+            self.assertTrue(any("completed_observed" in item for item in progress))
 
             session = runtime.reevaluate_quality(session.interview_id)
             self.assertEqual(session.status, "completed")

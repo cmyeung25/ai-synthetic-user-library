@@ -59,12 +59,18 @@ class FacilitatedInterviewRuntime:
         facilitator_provider: FacilitatorProvider,
         persona_provider: ConversationProvider,
         observer: Callable[[str, str], None] | None = None,
+        progress_writer: Callable[[str], None] | None = None,
     ) -> None:
         self.data_dir = data_dir
         self.session_dir = session_dir
         self.facilitator_provider = facilitator_provider
         self.persona_provider = persona_provider
         self.observer = observer or (lambda role, message: None)
+        self.progress_writer = progress_writer
+
+    def _progress(self, message: str) -> None:
+        if self.progress_writer is not None:
+            self.progress_writer(f"[interview] {message}")
 
     def run(
         self,
@@ -131,8 +137,13 @@ class FacilitatedInterviewRuntime:
         )
         self._update_coverage_status(session)
         self._save(session, interview_folder)
+        self._progress(
+            f"start interview_id={interview_id} persona={persona_id} mode={mode} "
+            f"soft={soft_limit} hard={hard_limit}"
+        )
 
         facilitator_system = self._facilitator_system_prompt(session)
+        self._progress("requesting_initial_facilitator_question")
         decision = self.facilitator_provider.next_turn(
             system_prompt=facilitator_system,
             user_prompt=self._opening_prompt(session),
@@ -147,6 +158,10 @@ class FacilitatedInterviewRuntime:
                 break
 
             self.observer("facilitator", decision.message_to_persona)
+            self._progress(
+                f"asking_persona exchange={len(session.exchanges) + 1} "
+                f"phase={decision.interview_phase} strategy={decision.probing_strategy}"
+            )
             persona_reply = persona_runtime.send(
                 persona_session,
                 persona,
@@ -155,6 +170,9 @@ class FacilitatedInterviewRuntime:
                 runtime_instruction=self._persona_interview_instruction(),
             )
             self.observer("persona", persona_reply)
+            self._progress(
+                f"received_persona_response exchange={len(session.exchanges) + 1} chars={len(persona_reply)}"
+            )
             exchange = InterviewExchange(
                 exchange_id=len(session.exchanges) + 1,
                 facilitator_question=decision.message_to_persona,
@@ -174,8 +192,10 @@ class FacilitatedInterviewRuntime:
             self._save(session, interview_folder)
 
             if self._should_finalize_after_exchange(session):
+                self._progress(f"coverage_complete stop_reason={session.stop_reason}")
                 break
 
+            self._progress("requesting_next_facilitator_question")
             decision = self.facilitator_provider.next_turn(
                 system_prompt=facilitator_system,
                 user_prompt=self._continuation_prompt(session),
@@ -184,12 +204,14 @@ class FacilitatedInterviewRuntime:
             decision = self._revise_non_episodic_validation_question(session, decision, facilitator_system)
 
         if session.interview_mode == "validate_hypothesis":
+            self._progress("judging_hypothesis_evidence")
             judgment, judge_session_id = self._judge_hypothesis_evidence(session)
             session.hypothesis_evidence_judgment = judgment
             session.hypothesis_evidence_judge_provider_session_id = judge_session_id
             write_json(interview_folder / "hypothesis_evidence_judgment.json", judgment)
 
         session.status = "synthesizing"
+        self._progress("synthesizing_insights")
         if session.interview_mode == "concept_validation":
             synthesis, facilitator_session_id = self.facilitator_provider.synthesize_concept(
                 system_prompt=self._synthesis_system_prompt("concept_validation"),
@@ -211,6 +233,7 @@ class FacilitatedInterviewRuntime:
         self._save(session, interview_folder)
         write_json(interview_folder / "insight_report.json", synthesis)
         (interview_folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
+        self._progress(f"completed interview_id={interview_id}")
         return interview_folder
 
     @staticmethod

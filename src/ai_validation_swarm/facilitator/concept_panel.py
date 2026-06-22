@@ -213,6 +213,7 @@ def run_concept_panel(
     max_turns: int | None = None,
     soft_turn_limit: int | None = None,
     hard_turn_limit: int | None = None,
+    progress_writer=None,
 ) -> Path:
     resolved_soft_turn_limit, resolved_hard_turn_limit = _resolve_concept_panel_turn_policy(
         max_turns=max_turns,
@@ -229,9 +230,12 @@ def run_concept_panel(
         facilitator_provider=facilitator_provider,
         persona_provider=persona_provider,
         quality_provider=quality_provider,
+        progress_writer=progress_writer,
     )
     interviews: list[dict[str, Any]] = []
     for persona_id in _persona_ids(data_dir, persona_ids):
+        if progress_writer is not None:
+            progress_writer(f"[panel] start persona={persona_id}")
         folder, session = runtime.start(
             persona_id=persona_id,
             research_goal=research_goal,
@@ -258,6 +262,10 @@ def run_concept_panel(
             "report": report,
             "quality": quality,
         })
+        if progress_writer is not None:
+            progress_writer(
+                f"[panel] done persona={persona_id} status={session.status} interview_id={session.interview_id}"
+            )
         write_json(run_dir / "progress.json", {"run_id": run_id, "interviews": interviews})
 
     summary = _summary_payload(
@@ -298,6 +306,7 @@ def run_ai_followup_copilot_panel(
     max_turns: int | None = None,
     soft_turn_limit: int | None = None,
     hard_turn_limit: int | None = None,
+    progress_writer=None,
 ) -> Path:
     return run_concept_panel(
         data_dir=data_dir,
@@ -315,6 +324,7 @@ def run_ai_followup_copilot_panel(
         max_turns=max_turns,
         soft_turn_limit=soft_turn_limit,
         hard_turn_limit=hard_turn_limit,
+        progress_writer=progress_writer,
     )
 
 

@@ -532,8 +532,10 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "--research-goal", "Test a cause",
             "--interview-mode", "validate_hypothesis",
             "--hypothesis", "People recheck because ownership is unclear.",
+            "--debug-progress",
         ])
         self.assertEqual(parsed.interview_mode, "validate_hypothesis")
+        self.assertTrue(parsed.debug_progress)
 
         parsed = parser.parse_args([
             "observe-facilitated-interview",
@@ -541,19 +543,23 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "--research-goal", "Test",
             "--soft-turn-limit", "12",
             "--hard-turn-limit", "16",
+            "--debug-progress",
         ])
         self.assertEqual(parsed.soft_turn_limit, 12)
         self.assertEqual(parsed.hard_turn_limit, 16)
+        self.assertTrue(parsed.debug_progress)
 
         parsed = parser.parse_args([
             "run-concept-panel",
             "--research-goal", "Validate a concept",
             "--product-context", "Neutral concept context",
             "--topic-label", "Test Topic",
+            "--debug-progress",
         ])
         self.assertIsNone(parsed.max_turns)
         self.assertIsNone(parsed.soft_turn_limit)
         self.assertIsNone(parsed.hard_turn_limit)
+        self.assertTrue(parsed.debug_progress)
 
 
 if __name__ == "__main__":

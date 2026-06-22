@@ -35,12 +35,14 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         facilitator_provider: FacilitatorProvider,
         persona_provider: ConversationProvider,
         quality_provider: FacilitatorProvider,
+        progress_writer=None,
     ) -> None:
         super().__init__(
             data_dir=data_dir,
             session_dir=session_dir,
             facilitator_provider=facilitator_provider,
             persona_provider=persona_provider,
+            progress_writer=progress_writer,
         )
         self.quality_provider = quality_provider
 
@@ -112,6 +114,10 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         )
         self._update_coverage_status(session)
         self._save_controlled(session, folder)
+        self._progress(
+            f"start_observed interview_id={interview_id} persona={persona_id} mode={mode} "
+            f"soft={soft_limit} hard={hard_limit}"
+        )
         self._request_facilitator(
             session,
             folder,
@@ -281,6 +287,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
                 failed_payload=payload,
             )
         if operation in {"judge_hypothesis_evidence", "synthesize", "evaluate_quality"}:
+            self._progress(f"retry_failed_stage operation={operation} interview_id={interview_id}")
             return self.finalize(interview_id, stop_reason=session.stop_reason or "observer_stop")
         raise ValueError(f"Unsupported failed operation '{operation}'.")
 
@@ -295,6 +302,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         if session.interview_mode == "validate_hypothesis" and not session.hypothesis_evidence_judgment:
             session.status = "judging_hypothesis_evidence"
             self._save_controlled(session, folder)
+            self._progress(f"judging_hypothesis_evidence interview_id={interview_id}")
             try:
                 judgment, judge_session_id = self._judge_hypothesis_evidence(session)
             except Exception as exc:
@@ -306,6 +314,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         if not session.insight_report:
             session.status = "synthesizing"
             self._save_controlled(session, folder)
+            self._progress(f"synthesizing_insights interview_id={interview_id}")
             try:
                 if session.interview_mode == "concept_validation":
                     synthesis, facilitator_session_id = self.facilitator_provider.synthesize_concept(
@@ -329,6 +338,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
 
         session.status = "evaluating_quality"
         self._save_controlled(session, folder)
+        self._progress(f"evaluating_quality interview_id={interview_id}")
         try:
             quality, quality_session_id = self.quality_provider.evaluate_quality(
                 system_prompt=self._quality_system_prompt(),
@@ -346,6 +356,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
         (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        self._progress(f"completed_observed interview_id={interview_id}")
         return session
 
     def reevaluate_quality(self, interview_id: str) -> InterviewSession:
@@ -359,6 +370,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.quality_evaluation = {}
         session.quality_provider_session_id = ""
         self._save_controlled(session, folder)
+        self._progress(f"reevaluating_quality interview_id={interview_id}")
         try:
             quality, quality_session_id = self.quality_provider.evaluate_quality(
                 system_prompt=self._quality_system_prompt(),
@@ -376,6 +388,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
         (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        self._progress(f"completed_quality_reevaluation interview_id={interview_id}")
         return session
 
     def resynthesize(self, interview_id: str) -> InterviewSession:
@@ -398,6 +411,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.failed_operation = ""
         session.failed_payload = {}
         self._save_controlled(session, folder)
+        self._progress(f"resynthesizing interview_id={interview_id}")
         if session.interview_mode == "validate_hypothesis":
             try:
                 judgment, judge_session_id = self._judge_hypothesis_evidence(session)
@@ -429,6 +443,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
 
         session.status = "evaluating_quality"
         self._save_controlled(session, folder)
+        self._progress(f"evaluating_quality interview_id={interview_id}")
         try:
             quality, quality_session_id = self.quality_provider.evaluate_quality(
                 system_prompt=self._quality_system_prompt(),
@@ -443,6 +458,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
         (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        self._progress(f"completed_resynthesis interview_id={interview_id}")
         return session
 
     def _ask_persona(
@@ -467,6 +483,10 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         persona_session, _, _ = persona_runtime.resume(session.persona_conversation_session_id)
         session.status = "asking_persona"
         self._save_controlled(session, folder)
+        self._progress(
+            f"asking_persona interview_id={session.interview_id} exchange={len(session.exchanges) + 1} "
+            f"phase={phase} strategy={strategy}"
+        )
         try:
             response = persona_runtime.send(
                 persona_session,
@@ -497,8 +517,13 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         self._update_coverage_status(session)
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
+        self._progress(
+            f"received_persona_response interview_id={session.interview_id} "
+            f"exchange={len(session.exchanges)} chars={len(response)}"
+        )
 
         if self._should_finalize_after_exchange(session):
+            self._progress(f"coverage_complete stop_reason={session.stop_reason}")
             return self.finalize(session.interview_id, stop_reason=session.stop_reason)
         self._request_facilitator(
             session,
@@ -519,6 +544,10 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
     ) -> None:
         session.status = "requesting_facilitator"
         self._save_controlled(session, folder)
+        self._progress(
+            f"requesting_facilitator interview_id={session.interview_id} "
+            f"turn={len(session.exchanges) + 1}"
+        )
         try:
             decision = self.facilitator_provider.next_turn(
                 system_prompt=self._facilitator_system_prompt(session),
@@ -546,6 +575,10 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.failed_payload = {}
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
+        self._progress(
+            f"facilitator_decision_ready interview_id={session.interview_id} "
+            f"phase={decision.interview_phase} should_end={decision.should_end}"
+        )
 
     @staticmethod
     def _intervention(session: InterviewSession, action: str, content: str) -> dict[str, Any]:
@@ -572,6 +605,9 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.failed_payload = dict(payload or {})
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
+        self._progress(
+            f"failed interview_id={session.interview_id} operation={operation} error={session.last_error}"
+        )
         return session
 
     def _save_controlled(self, session: InterviewSession, folder: Path) -> None:
