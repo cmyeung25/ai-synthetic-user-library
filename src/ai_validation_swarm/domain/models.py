@@ -85,6 +85,7 @@ class SyntheticUser:
     persona_voiceprint: dict[str, Any] = field(default_factory=dict)
     identity_language: dict[str, Any] = field(default_factory=dict)
     small_business_context: dict[str, Any] = field(default_factory=dict)
+    banking_context: dict[str, Any] = field(default_factory=dict)
     consistency_exceptions: list[dict[str, Any]] = field(default_factory=list)
     generation_status: dict[str, Any] = field(default_factory=dict)
     extensions: dict[str, Any] = field(default_factory=dict)

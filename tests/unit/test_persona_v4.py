@@ -20,6 +20,7 @@ from ai_validation_swarm.personas.v4 import (
     V4SynthesisResult,
     build_v4_output_schema,
     generate_v4_persona,
+    normalize_v4_result_structure,
     validate_v4_persona_folder,
     validate_v4_result,
 )
@@ -65,6 +66,7 @@ class FixtureV4Adapter:
 
     def synthesize(self, request):
         self.requests.append(copy.deepcopy(request))
+        contract = request.contract() if hasattr(request, "contract") else {}
         seed = build_seed(index=1000, rng=random.Random(request.random_seed))
         persona = upgrade_persona_to_v3_1_2(
             enrich_seed(seed=seed, index=1000, rng=random.Random(request.random_seed + 1)),
@@ -89,10 +91,48 @@ class FixtureV4Adapter:
             block.setdefault("trust_requirement", "Clear limits and evidence.")
             block.setdefault("likely_objection", "The benefit may not survive normal use.")
             block.setdefault("persona_specific_example", f"They would test {category.replace('_', ' ')} in one bounded situation.")
+        if "banking_context" in contract.get("profile_sections", []):
+            profile["banking_context"] = {
+                "bank_relationship": "Uses one main Hong Kong retail bank app.",
+                "investment_experience": "Early-stage but active enough to compare options.",
+                "investment_products_held": "ETF, fund, and a few direct stocks.",
+                "investable_assets_band": "HKD 500k-1m",
+                "monthly_income_band": "Mid-career salary earner.",
+                "primary_financial_goal": "Grow wealth while understanding downside better.",
+                "current_investment_decision_process": "Self-research first, then checks bank views.",
+                "relationship_manager_usage": "Occasional RM contact.",
+                "digital_banking_usage": "High mobile app usage.",
+                "trust_in_bank": "Moderate and conditional.",
+                "trust_in_blackrock_or_institutional_brand": "Moderately positive but still checks incentives.",
+                "risk_understanding_level": "Can follow basic portfolio risk explanations.",
+                "portfolio_complexity": "Moderate multi-asset portfolio.",
+                "external_asset_fragmentation": "Some holdings sit outside the bank.",
+                "data_sharing_comfort": "Conditional on clear limits and value.",
+                "advisory_preference": "Hybrid self-serve plus optional RM explanation.",
+                "fee_sensitivity": "Will pay only if the insight feels materially better.",
+                "past_bad_investment_experience": "Has one past regret from following momentum too late.",
+                "suitability_sensitivity": "Wants recommendations to match stated risk appetite.",
+            }
         profile.pop("audit_evidence_layer", None)
         profile.pop("generation_status", None)
         profile.pop("extensions", None)
         profile.pop("consistency_exceptions", None)
+        concept_outputs = {}
+        if contract.get("concept_outputs", {}).get("mode") == "required_when_declared":
+            concept_outputs["portfolio_health_check"] = {
+                "first_reaction": "Interesting if it helps me see the whole picture, not just more sales prompts.",
+                "strongest_appeal": "Whole-portfolio scenario visibility.",
+                "biggest_concern": "Whether the bank will use it to push products.",
+                "what_they_understand": "It looks like a risk interpretation tool, not auto-trading.",
+                "what_they_misunderstand": "Unclear how much of the model is truly independent from product incentives.",
+                "data_they_would_share": "Bank-held positions and selected outside holdings.",
+                "data_they_would_not_share": "Anything that feels unrelated to risk analysis.",
+                "preferred_explanation_format": "Plain-language summary with one or two charts.",
+                "whether_rm_needed": "RM optional but useful for larger reallocations.",
+                "whether_they_would_pay": "Maybe for premium review depth, not for a basic dashboard.",
+                "what_would_make_them_try": "A clear sample report and optional external holding sync.",
+                "what_would_make_them_abandon": "If the feature turns into product pushing or noisy warnings.",
+            }
         return V4SynthesisResult(
             profile=profile,
             decision_policy=persona.decision_policy,
@@ -105,6 +145,7 @@ class FixtureV4Adapter:
                 "uncertainties": ["Some spending details are inferred"],
                 "human_review_priorities": ["Review local realism"],
             },
+            concept_outputs=concept_outputs,
             provider="fixture",
             model="fixture-v4",
             metadata={
@@ -143,6 +184,28 @@ class PersonaV4Test(unittest.TestCase):
         result.profile.pop("persona_voiceprint")
         findings = validate_v4_result(result, "su_1001")
         self.assertIn("profile_section_type:persona_voiceprint:object", findings)
+
+    def test_flexible_profile_sections_accept_non_object_payloads(self) -> None:
+        result = FixtureV4Adapter().synthesize(type("Request", (), {"random_seed": 9, "contract": lambda self: {}})())
+        result.profile["daily_micro_behaviours"] = "Checks finance apps in short bursts."
+        result.profile["identity_symbols"] = ["Uses one main bank app as the default money home."]
+        result.profile["sensitive_scenario_salience"] = ["privacy_and_data", "financial_vulnerability"]
+        findings = validate_v4_result(result, "su_1001")
+        self.assertNotIn("profile_section_type:daily_micro_behaviours:object", findings)
+        self.assertNotIn("profile_section_type:identity_symbols:object", findings)
+        self.assertNotIn("profile_section_type:sensitive_scenario_salience:object", findings)
+
+    def test_normalize_wraps_domain_fit_and_sensitive_scenario_strings(self) -> None:
+        result = FixtureV4Adapter().synthesize(type("Request", (), {"random_seed": 9, "contract": lambda self: {}})())
+        result.profile["domain_fit"] = "Strong fit for the target panel."
+        result.profile["sensitive_scenario_reactions"] = {
+            "identity_disclosure": "Prefers minimal identity disclosure.",
+            "privacy_and_data": "Wants read-only sharing.",
+        }
+        changes = normalize_v4_result_structure(result)
+        self.assertIn("wrapped_string_as_object:domain_fit", changes)
+        self.assertEqual(result.profile["domain_fit"]["summary"], "Strong fit for the target panel.")
+        self.assertEqual(result.profile["sensitive_scenario_reactions"]["identity_disclosure"]["reaction"], "Prefers minimal identity disclosure.")
 
     def test_generation_writes_trace_usage_and_guided_brief(self) -> None:
         adapter = FixtureV4Adapter()
@@ -183,6 +246,46 @@ class PersonaV4Test(unittest.TestCase):
             duplicate_report = read_json(target / "duplicate_report.json")
             self.assertEqual(duplicate_report["synthetic_user_id"], "su_1002")
             self.assertTrue(duplicate_report["compared_against"])
+
+    def test_generation_writes_concept_sidecar_and_banking_context_when_guide_requires_them(self) -> None:
+        guide = {
+            "mode": "guided",
+            "required_profile_sections": ["banking_context"],
+            "concept_output_contracts": {
+                "portfolio_health_check": {
+                    "required_fields": [
+                        "first_reaction",
+                        "strongest_appeal",
+                        "biggest_concern",
+                        "what_they_understand",
+                        "what_they_misunderstand",
+                        "data_they_would_share",
+                        "data_they_would_not_share",
+                        "preferred_explanation_format",
+                        "whether_rm_needed",
+                        "whether_they_would_pay",
+                        "what_would_make_them_try",
+                        "what_would_make_them_abandon",
+                    ]
+                }
+            },
+            "fixed": {"location": "Hong Kong"},
+            "preferred": {"persona_focus": "Portfolio Health Check test"},
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            target = generate_v4_persona(
+                persona_id="su_1003",
+                output_dir=Path(tmp),
+                adapter=FixtureV4Adapter(),
+                guide=guide,
+                random_seed=1003,
+            )
+            report = validate_v4_persona_folder(target)
+            self.assertTrue(report["valid"], report)
+            profile = read_json(target / "profile.json")
+            self.assertIn("banking_context", profile)
+            concept_outputs = read_json(target / "concept_outputs.json")
+            self.assertIn("portfolio_health_check", concept_outputs)
 
     def test_resume_response_preserves_existing_guided_brief(self) -> None:
         guide = {"mode": "guided", "fixed": {"location": "Hong Kong urban districts"}, "preferred": {"persona_role": "spontaneous_free_time_explorer"}}

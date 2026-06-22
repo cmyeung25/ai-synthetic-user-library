@@ -54,6 +54,10 @@ from ai_validation_swarm.personas.v4 import (
     generate_v4_persona,
     validate_v4_persona_folder,
 )
+from ai_validation_swarm.personas.v4_panels import (
+    HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK,
+    build_v4_panel_preset,
+)
 from ai_validation_swarm.personas.validator import validate_personas
 from ai_validation_swarm.providers.factory import build_provider
 from ai_validation_swarm.providers.openai_client import OpenAIProviderError
@@ -65,7 +69,13 @@ from ai_validation_swarm.validation.runner import run_validation
 from ai_validation_swarm.domain.models import PanelSpec
 
 
-def _build_conversation_provider(backend: str, *, model: str | None = None, reasoning_effort: str | None = None):
+def _build_conversation_provider(
+    backend: str,
+    *,
+    model: str | None = None,
+    reasoning_effort: str | None = None,
+    debug_writer=None,
+):
     from ai_validation_swarm.conversation.providers import MockConversationProvider, OpenAIConversationProvider
     from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
 
@@ -79,10 +89,16 @@ def _build_conversation_provider(backend: str, *, model: str | None = None, reas
         config.model = model
     if reasoning_effort:
         config.model_reasoning_effort = reasoning_effort
-    return OpenAIConversationProvider(OpenAIResponsesClient(config))
+    return OpenAIConversationProvider(OpenAIResponsesClient(config, debug_writer=debug_writer))
 
 
-def _build_facilitator_provider(backend: str, *, model: str | None = None, reasoning_effort: str | None = None):
+def _build_facilitator_provider(
+    backend: str,
+    *,
+    model: str | None = None,
+    reasoning_effort: str | None = None,
+    debug_writer=None,
+):
     from ai_validation_swarm.facilitator.providers import OpenAIFacilitatorProvider
     from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
 
@@ -94,13 +110,17 @@ def _build_facilitator_provider(backend: str, *, model: str | None = None, reaso
         config.model = model
     if reasoning_effort:
         config.model_reasoning_effort = reasoning_effort
-    return OpenAIFacilitatorProvider(OpenAIResponsesClient(config))
+    return OpenAIFacilitatorProvider(OpenAIResponsesClient(config, debug_writer=debug_writer))
 
 
 def _console_safe(value: object) -> str:
     text = str(value)
     encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
     return text.encode(encoding, errors="replace").decode(encoding, errors="replace")
+
+
+def _make_progress_writer(enabled: bool):
+    return (lambda message: print(_console_safe(message), flush=True)) if enabled else None
 
 
 def _build_persona_generation_components(args: argparse.Namespace) -> tuple[object | None, object | None]:
@@ -364,6 +384,19 @@ def _build_parser() -> argparse.ArgumentParser:
     generate_v4_cmd.add_argument("--resume-response", action="store_true")
     generate_v4_cmd.add_argument("--debug-progress", action="store_true")
 
+    generate_v4_panel_cmd = subparsers.add_parser("generate-v4-panel")
+    generate_v4_panel_cmd.add_argument(
+        "--panel-preset",
+        choices=[HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK],
+        default=HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK,
+    )
+    generate_v4_panel_cmd.add_argument("--starting-id", type=int, default=1201)
+    generate_v4_panel_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
+    generate_v4_panel_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
+    generate_v4_panel_cmd.add_argument("--random-seed", type=int)
+    generate_v4_panel_cmd.add_argument("--max-transport-attempts", type=int, default=2)
+    generate_v4_panel_cmd.add_argument("--debug-progress", action="store_true")
+
     validate_v4_cmd = subparsers.add_parser("validate-personas-v4")
     validate_v4_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
 
@@ -482,6 +515,7 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd.add_argument("--max-turns", type=int)
     interview_cmd.add_argument("--soft-turn-limit", type=int)
     interview_cmd.add_argument("--hard-turn-limit", type=int)
+    interview_cmd.add_argument("--debug-progress", action="store_true")
 
     observer_cmd = subparsers.add_parser("observe-facilitated-interview")
     observer_cmd.add_argument("--persona-id")
@@ -502,6 +536,7 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--soft-turn-limit", type=int)
     observer_cmd.add_argument("--hard-turn-limit", type=int)
     observer_cmd.add_argument("--action", action="append", dest="actions")
+    observer_cmd.add_argument("--debug-progress", action="store_true")
 
     concept_panel_generic_cmd = subparsers.add_parser("run-concept-panel")
     concept_panel_generic_cmd.add_argument("--research-goal", required=True)
@@ -520,6 +555,7 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_generic_cmd.add_argument("--max-turns", type=int)
     concept_panel_generic_cmd.add_argument("--soft-turn-limit", type=int)
     concept_panel_generic_cmd.add_argument("--hard-turn-limit", type=int)
+    concept_panel_generic_cmd.add_argument("--debug-progress", action="store_true")
 
     concept_panel_cmd = subparsers.add_parser("run-followup-copilot-panel")
     concept_panel_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
@@ -530,6 +566,7 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_cmd.add_argument("--max-turns", type=int)
     concept_panel_cmd.add_argument("--soft-turn-limit", type=int)
     concept_panel_cmd.add_argument("--hard-turn-limit", type=int)
+    concept_panel_cmd.add_argument("--debug-progress", action="store_true")
 
     concept_summary_generic_cmd = subparsers.add_parser("summarize-concept-panel")
     concept_summary_generic_cmd.add_argument("--run-dir", type=Path, required=True)
@@ -1019,18 +1056,23 @@ def _parse_v4_guide_values(items: list[str]) -> dict[str, object]:
     return parsed
 
 
-def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
+def _build_v4_adapter_components(
+    *,
+    backend: str,
+    output_dir: Path,
+    persona_id: str,
+    progress_writer,
+):
     from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
 
-    uses_codex_auth = args.backend in {"codex", "codex-sdk"}
-    forced_transport = {"codex": "codex_cli", "codex-sdk": "codex_sdk_node"}.get(args.backend)
+    uses_codex_auth = backend in {"codex", "codex-sdk"}
+    forced_transport = {"codex": "codex_cli", "codex-sdk": "codex_sdk_node"}.get(backend)
     config = load_openai_provider_config(
         prefer_codex_auth=uses_codex_auth,
         force_transport=forced_transport,
         timeout_default=360,
     )
-    progress_writer = (lambda message: print(_console_safe(message), flush=True)) if args.debug_progress else None
-    transport_log = args.output_dir / args.persona_id / "v4" / "llm_transport.log"
+    transport_log = output_dir / persona_id / "v4" / "llm_transport.log"
     ensure_dir(transport_log.parent)
 
     def transport_writer(message: str) -> None:
@@ -1040,6 +1082,17 @@ def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
             progress_writer(message)
 
     client = OpenAIResponsesClient(config, debug_writer=transport_writer)
+    return config, OpenAIV4SynthesisAdapter(client, config)
+
+
+def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
+    progress_writer = (lambda message: print(_console_safe(message), flush=True)) if args.debug_progress else None
+    config, adapter = _build_v4_adapter_components(
+        backend=args.backend,
+        output_dir=args.output_dir,
+        persona_id=args.persona_id,
+        progress_writer=progress_writer,
+    )
 
     guide: dict[str, object] = {"mode": "open", "fixed": {}, "preferred": {}}
     if args.guide_file:
@@ -1067,7 +1120,7 @@ def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
     target = generate_v4_persona(
         persona_id=args.persona_id,
         output_dir=args.output_dir,
-        adapter=OpenAIV4SynthesisAdapter(client, config),
+        adapter=adapter,
         guide=guide,
         random_seed=args.random_seed,
         max_transport_attempts=args.max_transport_attempts,
@@ -1075,6 +1128,61 @@ def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
         progress_writer=progress_writer,
     )
     print(f"Generated V4 persona {args.persona_id} at {target} using {args.backend}.")
+    return 0
+
+
+def _cmd_generate_v4_panel(args: argparse.Namespace) -> int:
+    progress_writer = (lambda message: print(_console_safe(message), flush=True)) if args.debug_progress else None
+    panel = build_v4_panel_preset(args.panel_preset, starting_id=args.starting_id)
+    generated: list[dict[str, str]] = []
+
+    for offset, persona_spec in enumerate(panel["personas"]):
+        persona_id = str(persona_spec["persona_id"])
+        persona_seed = args.random_seed + offset if args.random_seed is not None else None
+        config, adapter = _build_v4_adapter_components(
+            backend=args.backend,
+            output_dir=args.output_dir,
+            persona_id=persona_id,
+            progress_writer=progress_writer,
+        )
+        guide = dict(persona_spec["guide"])
+        if progress_writer is not None:
+            progress_writer(
+                f"[v4-panel] preset={args.panel_preset} persona_id={persona_id} "
+                f"label={persona_spec['label']} transport={config.transport}"
+            )
+        target = generate_v4_persona(
+            persona_id=persona_id,
+            output_dir=args.output_dir,
+            adapter=adapter,
+            guide=guide,
+            random_seed=persona_seed,
+            max_transport_attempts=args.max_transport_attempts,
+            progress_writer=progress_writer,
+        )
+        generated.append(
+            {
+                "persona_id": persona_id,
+                "label": str(persona_spec["label"]),
+                "archetype": str(persona_spec["archetype"]),
+                "path": str(target),
+            }
+        )
+
+    manifest_dir = args.output_dir / "_panel_runs"
+    ensure_dir(manifest_dir)
+    manifest_path = manifest_dir / f"{args.panel_preset}_{args.starting_id}.json"
+    write_json(
+        manifest_path,
+        {
+            "preset_name": panel["preset_name"],
+            "starting_id": panel["starting_id"],
+            "persona_count": panel["persona_count"],
+            "generated": generated,
+        },
+    )
+    print(f"Generated V4 panel {args.panel_preset} with {len(generated)} personas.")
+    print(f"Manifest: {manifest_path}")
     return 0
 
 
@@ -1543,15 +1651,18 @@ def _cmd_chat_with_persona(args: argparse.Namespace) -> int:
 def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
     from ai_validation_swarm.facilitator.runtime import FacilitatedInterviewRuntime
 
+    progress_writer = _make_progress_writer(getattr(args, "debug_progress", False))
     facilitator_provider = _build_facilitator_provider(
         args.backend,
         model=args.model,
         reasoning_effort=args.reasoning_effort,
+        debug_writer=progress_writer,
     )
     persona_provider = _build_conversation_provider(
         args.backend,
         model=args.model,
         reasoning_effort=args.reasoning_effort,
+        debug_writer=progress_writer,
     )
 
     def observer(role: str, message: str) -> None:
@@ -1565,6 +1676,7 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
         facilitator_provider=facilitator_provider,
         persona_provider=persona_provider,
         observer=observer,
+        progress_writer=progress_writer,
     )
     print("Synthetic-user interview for AI pre-validation only; not human market evidence.")
     output = runtime.run(
@@ -1650,15 +1762,23 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
     if not args.interview_id and not args.research_goal:
         raise ValueError("--research-goal is required when starting an observed interview.")
 
-    facilitator_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
-    persona_provider = _build_conversation_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
-    quality_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    progress_writer = _make_progress_writer(getattr(args, "debug_progress", False))
+    facilitator_provider = _build_facilitator_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
+    persona_provider = _build_conversation_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
+    quality_provider = _build_facilitator_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
     runtime = ObserverControlledInterviewRuntime(
         data_dir=args.data_dir,
         session_dir=args.session_dir,
         facilitator_provider=facilitator_provider,
         persona_provider=persona_provider,
         quality_provider=quality_provider,
+        progress_writer=progress_writer,
     )
     soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=12, default_hard=16)
     if args.interview_id:
@@ -1739,9 +1859,16 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
 def _cmd_run_concept_panel(args: argparse.Namespace) -> int:
     from ai_validation_swarm.facilitator.concept_panel import run_concept_panel
 
-    facilitator_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
-    persona_provider = _build_conversation_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
-    quality_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    progress_writer = _make_progress_writer(getattr(args, "debug_progress", False))
+    facilitator_provider = _build_facilitator_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
+    persona_provider = _build_conversation_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
+    quality_provider = _build_facilitator_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
     soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=12, default_hard=16)
     print("Running synthetic concept panel in Cantonese; not human market evidence.")
     output = run_concept_panel(
@@ -1761,6 +1888,7 @@ def _cmd_run_concept_panel(args: argparse.Namespace) -> int:
         max_turns=hard_limit,
         soft_turn_limit=soft_limit,
         hard_turn_limit=hard_limit,
+        progress_writer=progress_writer,
     )
     print(f"Panel completed: {output}")
     print(f"Summary: {output / 'panel_summary.md'}")
@@ -1770,9 +1898,16 @@ def _cmd_run_concept_panel(args: argparse.Namespace) -> int:
 def _cmd_run_followup_copilot_panel(args: argparse.Namespace) -> int:
     from ai_validation_swarm.facilitator.concept_panel import run_ai_followup_copilot_panel
 
-    facilitator_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
-    persona_provider = _build_conversation_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
-    quality_provider = _build_facilitator_provider(args.backend, model=args.model, reasoning_effort=args.reasoning_effort)
+    progress_writer = _make_progress_writer(getattr(args, "debug_progress", False))
+    facilitator_provider = _build_facilitator_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
+    persona_provider = _build_conversation_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
+    quality_provider = _build_facilitator_provider(
+        args.backend, model=args.model, reasoning_effort=args.reasoning_effort, debug_writer=progress_writer
+    )
     soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=12, default_hard=16)
     print("Running AI Follow-up Copilot synthetic panel in Cantonese; not human market evidence.")
     output = run_ai_followup_copilot_panel(
@@ -1784,6 +1919,7 @@ def _cmd_run_followup_copilot_panel(args: argparse.Namespace) -> int:
         max_turns=hard_limit,
         soft_turn_limit=soft_limit,
         hard_turn_limit=hard_limit,
+        progress_writer=progress_writer,
     )
     print(f"Panel completed: {output}")
     print(f"Summary: {output / 'panel_summary.md'}")
@@ -1833,6 +1969,7 @@ def main(argv: list[str] | None = None) -> int:
         "generate-v3-2-persona": _cmd_generate_v3_2_persona,
         "generate-v3-3-persona": _cmd_generate_v3_3_persona,
         "generate-v4-persona": _cmd_generate_v4_persona,
+        "generate-v4-panel": _cmd_generate_v4_panel,
         "generate-persona-to-target": _cmd_generate_persona_to_target,
         "run-distinctiveness-check-v3-1-1": _cmd_run_distinctiveness_check_v3_1_1,
         "run-distinctiveness-check-v3-1-2": _cmd_run_distinctiveness_check_v3_1_2,

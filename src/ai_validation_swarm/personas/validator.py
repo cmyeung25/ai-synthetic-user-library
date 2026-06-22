@@ -171,6 +171,35 @@ def _non_empty_string_or_object(value: object) -> bool:
     return _non_empty_string(value) or (isinstance(value, dict) and bool(value))
 
 
+def _non_empty_string_or_object_or_string_list(value: object) -> bool:
+    return _non_empty_string(value) or _non_empty_string_list(value) or (isinstance(value, dict) and bool(value))
+
+
+OPTIONAL_STRUCTURED_SECTIONS: dict[str, tuple[str, ...]] = {
+    "banking_context": (
+        "bank_relationship",
+        "investment_experience",
+        "investment_products_held",
+        "investable_assets_band",
+        "monthly_income_band",
+        "primary_financial_goal",
+        "current_investment_decision_process",
+        "relationship_manager_usage",
+        "digital_banking_usage",
+        "trust_in_bank",
+        "trust_in_blackrock_or_institutional_brand",
+        "risk_understanding_level",
+        "portfolio_complexity",
+        "external_asset_fragmentation",
+        "data_sharing_comfort",
+        "advisory_preference",
+        "fee_sensitivity",
+        "past_bad_investment_experience",
+        "suitability_sensitivity",
+    ),
+}
+
+
 def validate_persona_artifact(persona: PersonaSkill) -> list[PersonaValidationIssue]:
     issues: list[PersonaValidationIssue] = []
     persona_id = _persona_id(persona)
@@ -381,6 +410,29 @@ def validate_persona_artifact(persona: PersonaSkill) -> list[PersonaValidationIs
                 message="do_not_use_for differs between profile and audit payload.",
             )
         )
+
+    for section_name, required_fields in OPTIONAL_STRUCTURED_SECTIONS.items():
+        section_payload = getattr(persona.profile, section_name, {})
+        if section_payload in ({}, None):
+            continue
+        if not isinstance(section_payload, dict):
+            issues.append(
+                PersonaValidationIssue(
+                    persona_id=persona_id,
+                    check_name="section_type",
+                    message=f"Optional section '{section_name}' must be an object when present.",
+                )
+            )
+            continue
+        for field_name in required_fields:
+            if not _non_empty_string_or_object_or_string_list(section_payload.get(field_name)):
+                issues.append(
+                    PersonaValidationIssue(
+                        persona_id=persona_id,
+                        check_name="required_field",
+                        message=f"Optional section '{section_name}' has invalid or missing field '{field_name}'.",
+                    )
+                )
 
     return issues
 

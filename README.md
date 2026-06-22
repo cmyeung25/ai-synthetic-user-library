@@ -27,6 +27,8 @@ This is not a market-proof engine. It is an AI pre-validation system designed to
 - sensitive-topic risks
 - next-step real-world validation questions
 
+See [PERSONA_MODELING_GUIDE.md](/C:/Users/user/OneDrive/文件/AI Synthetic User Library/PERSONA_MODELING_GUIDE.md) for the rule on what belongs in reusable persona core versus concept-specific sidecar outputs.
+
 ## Commands
 
 The CLI exposes these commands:
@@ -40,7 +42,10 @@ The CLI exposes these commands:
 - `probe-codex-auth`
 - `enrich-personas`
 - `generate-v3-2-persona`
+- `generate-v4-persona`
+- `generate-v4-panel`
 - `validate-personas-v3-2`
+- `validate-personas-v4`
 - `validate-brief`
 - `run-validation`
 - `audit-report`
@@ -81,6 +86,22 @@ $env:PYTHONPATH='src'
 The V3.2 production command requires `codex` or `openai`; deterministic adapters are reserved for tests. Each output records provider, model, prompts, seed, attempt count, input hash, section hash, and section ownership in `generation_notes.json` and `section_manifest.json`. Similarity is written as `duplicate_report.json` for reporting and panel composition, not used to force every persona to be different.
 
 Use `--backend codex-sdk` to reuse Codex Auth through a locally installed `@openai/codex-sdk` when the Codex CLI websocket transport is unavailable. Set `AI_VALIDATION_CODEX_SDK_MODULE` when the SDK is not installed under the workspace or the known sibling project path.
+
+### V4 direct persona synthesis
+
+`generate-v4-persona` keeps one reusable core persona profile and can optionally require domain-specific profile sections such as `banking_context`. Concept-specific reactions are written as sidecar `concept_outputs.json` artifacts instead of polluting the reusable profile.
+
+```powershell
+$env:PYTHONPATH='src'
+& 'C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
+  -m ai_validation_swarm.cli.main generate-v4-panel `
+  --panel-preset hk_retail_bank_portfolio_health_check `
+  --starting-id 1201 `
+  --backend codex-sdk `
+  --output-dir data/personas
+```
+
+This preset generates seven Hong Kong banking-investment personas for the `Portfolio Health Check` concept. Each persona stores reusable `banking_context` inside `profile.json`, while concept-specific reactions are stored in `concept_outputs.json`.
 
 Example:
 

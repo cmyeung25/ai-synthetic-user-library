@@ -66,6 +66,40 @@ class PersonaValidatorTest(unittest.TestCase):
         }
         self.assertEqual(validate_personas([persona]), [])
 
+    def test_validate_personas_requires_complete_banking_context_when_present(self) -> None:
+        persona = generate_personas(count=1, random_seed=43)[0]
+        persona.profile.banking_context = {
+            "bank_relationship": "Primary retail bank customer.",
+            "investment_experience": "Basic fund and ETF exposure.",
+        }
+        issues = validate_personas([persona])
+        self.assertTrue(any(issue.check_name == "required_field" and "banking_context" in issue.message for issue in issues))
+
+    def test_validate_personas_accepts_list_values_in_banking_context(self) -> None:
+        persona = generate_personas(count=1, random_seed=47)[0]
+        persona.profile.banking_context = {
+            "bank_relationship": "Primary retail bank customer.",
+            "investment_experience": "Basic but growing.",
+            "investment_products_held": ["ETF", "fund"],
+            "investable_assets_band": "HKD 50k-200k",
+            "monthly_income_band": "HKD 25k-30k",
+            "primary_financial_goal": "Grow savings carefully.",
+            "current_investment_decision_process": "Idea first, verify later.",
+            "relationship_manager_usage": "Rare.",
+            "digital_banking_usage": "High.",
+            "trust_in_bank": "Moderate.",
+            "trust_in_blackrock_or_institutional_brand": "Cautiously positive.",
+            "risk_understanding_level": "Basic.",
+            "portfolio_complexity": "Simple but fragmented.",
+            "external_asset_fragmentation": "Some outside-bank holdings.",
+            "data_sharing_comfort": "Conditional.",
+            "advisory_preference": "Self-serve first.",
+            "fee_sensitivity": "High.",
+            "past_bad_investment_experience": "One prior regret.",
+            "suitability_sensitivity": "Meaningful.",
+        }
+        self.assertEqual(validate_personas([persona]), [])
+
     def test_validate_personas_cli_returns_zero_for_clean_library(self) -> None:
         import tempfile
 

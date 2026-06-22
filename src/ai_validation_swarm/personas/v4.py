@@ -31,12 +31,20 @@ DO_NOT_USE_FOR = [
     "discriminatory targeting or exclusion",
     "high-stakes decisions without human evidence",
 ]
-
-LLM_PROFILE_FIELDS = tuple(
+BASE_PROFILE_SECTIONS = tuple(
     field.name
     for field in fields(SyntheticUser)
-    if field.name not in {"audit_evidence_layer", "generation_status", "extensions", "consistency_exceptions"}
+    if field.name not in {
+        "audit_evidence_layer",
+        "generation_status",
+        "extensions",
+        "consistency_exceptions",
+        "banking_context",
+    }
 )
+OPTIONAL_GUIDED_PROFILE_SECTIONS = ("banking_context",)
+
+LLM_PROFILE_FIELDS = BASE_PROFILE_SECTIONS
 
 PROFILE_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
     "basic_identity": (
@@ -51,6 +59,30 @@ PROFILE_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
     "behavior_profile": ("buying_behavior", "decision_blockers"),
     "problem_context": ("active_pain_points", "jobs_to_be_done", "willingness_to_pay"),
     "sensitive_reality_layer": ("fairness_and_inclusion_profile", "response_boundaries"),
+}
+
+OPTIONAL_GUIDED_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
+    "banking_context": (
+        "bank_relationship",
+        "investment_experience",
+        "investment_products_held",
+        "investable_assets_band",
+        "monthly_income_band",
+        "primary_financial_goal",
+        "current_investment_decision_process",
+        "relationship_manager_usage",
+        "digital_banking_usage",
+        "trust_in_bank",
+        "trust_in_blackrock_or_institutional_brand",
+        "risk_understanding_level",
+        "portfolio_complexity",
+        "external_asset_fragmentation",
+        "data_sharing_comfort",
+        "advisory_preference",
+        "fee_sensitivity",
+        "past_bad_investment_experience",
+        "suitability_sensitivity",
+    ),
 }
 
 DEEP_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
@@ -99,6 +131,45 @@ CROSS_DOMAIN_CATEGORIES = (
     "health_or_wellbeing_product", "financial_product", "education_or_child_product",
     "workflow_or_productivity_product", "identity_sensitive_product", "high_friction_onboarding",
 )
+FLEXIBLE_PROFILE_SECTIONS = {
+    "daily_micro_behaviours",
+    "identity_symbols",
+    "sensitive_scenario_salience",
+}
+
+
+def _contract_profile_sections(guide: dict[str, Any]) -> tuple[str, ...]:
+    requested = guide.get("required_profile_sections", [])
+    if not isinstance(requested, list):
+        requested = []
+    extras = [
+        section
+        for section in requested
+        if section in OPTIONAL_GUIDED_PROFILE_SECTIONS
+    ]
+    return tuple(dict.fromkeys((*BASE_PROFILE_SECTIONS, *extras)))
+
+
+def _contract_required_profile_fields(guide: dict[str, Any]) -> dict[str, tuple[str, ...]]:
+    required = dict(PROFILE_REQUIRED_FIELDS)
+    for section in _contract_profile_sections(guide):
+        if section in OPTIONAL_GUIDED_REQUIRED_FIELDS:
+            required[section] = OPTIONAL_GUIDED_REQUIRED_FIELDS[section]
+    return required
+
+
+def _contract_concept_output_fields(guide: dict[str, Any]) -> dict[str, tuple[str, ...]]:
+    contracts = guide.get("concept_output_contracts", {})
+    if not isinstance(contracts, dict):
+        return {}
+    output: dict[str, tuple[str, ...]] = {}
+    for concept_key, raw_contract in contracts.items():
+        if not isinstance(concept_key, str) or not isinstance(raw_contract, dict):
+            continue
+        required_fields = raw_contract.get("required_fields", [])
+        if isinstance(required_fields, list) and all(isinstance(item, str) and item.strip() for item in required_fields):
+            output[concept_key] = tuple(required_fields)
+    return output
 
 
 def _timestamp() -> str:
@@ -181,9 +252,12 @@ class V4SynthesisRequest:
     attempt: int = 1
 
     def contract(self) -> dict[str, Any]:
+        profile_sections = _contract_profile_sections(self.guide)
+        required_profile_fields = _contract_required_profile_fields(self.guide)
+        concept_output_fields = _contract_concept_output_fields(self.guide)
         return {
-            "profile_sections": list(LLM_PROFILE_FIELDS),
-            "required_profile_fields": {key: list(value) for key, value in PROFILE_REQUIRED_FIELDS.items()},
+            "profile_sections": list(profile_sections),
+            "required_profile_fields": {key: list(value) for key, value in required_profile_fields.items()},
             "required_depth_fields": {key: list(value) for key, value in DEEP_REQUIRED_FIELDS.items()},
             "childhood": {"minimum_scenes": 3, "minimum_adult_decision_links": 4},
             "nested_shapes": {
@@ -239,6 +313,14 @@ class V4SynthesisRequest:
             "sensitive_scenario_reactions": {"categories": list(SENSITIVE_SCENARIOS)},
             "decision_policy": ["adoption_style", "trust_requirements", "rejection_triggers", "proof_requirements"],
             "response_style": ["articulation_level", "directness", "detail_tendency"],
+            "concept_outputs": (
+                {
+                    "mode": "required_when_declared",
+                    "contracts": {key: list(value) for key, value in concept_output_fields.items()},
+                }
+                if concept_output_fields
+                else {"mode": "none"}
+            ),
         }
 
     def payload(self) -> dict[str, Any]:
@@ -265,6 +347,7 @@ class V4SynthesisResult:
     narrative: str
     generation_rationale: str
     quality_self_review: dict[str, Any]
+    concept_outputs: dict[str, Any]
     provider: str
     model: str
     metadata: dict[str, Any]
@@ -288,6 +371,7 @@ def build_v4_output_schema() -> dict[str, Any]:
             "narrative": {"type": "string"},
             "generation_rationale": {"type": "string"},
             "quality_self_review": {"type": "object"},
+            "concept_outputs": {"type": "object"},
         },
     }
 
@@ -311,6 +395,7 @@ class OpenAIV4SynthesisAdapter:
             narrative=str(payload.get("narrative", "")).strip(),
             generation_rationale=str(payload.get("generation_rationale", "")).strip(),
             quality_self_review=dict(payload.get("quality_self_review", {})),
+            concept_outputs=dict(payload.get("concept_outputs", {})),
             provider="codex" if self.config.transport.startswith("codex") else "openai",
             model=self.config.model,
             metadata={
@@ -330,6 +415,7 @@ def _result_from_payload(payload: dict[str, Any]) -> V4SynthesisResult:
         narrative=str(payload.get("narrative", "")).strip(),
         generation_rationale=str(payload.get("generation_rationale", "")).strip(),
         quality_self_review=dict(payload.get("quality_self_review", {})),
+        concept_outputs=dict(payload.get("concept_outputs", {})),
         provider=str(payload.get("provider", "")),
         model=str(payload.get("model", "")),
         metadata=dict(payload.get("metadata", {})),
@@ -357,19 +443,35 @@ def normalize_v4_result_structure(result: V4SynthesisResult) -> list[str]:
         if isinstance(container, dict) and isinstance(container.get(key), str) and container[key].strip():
             container[key] = [container[key].strip()]
             changes.append(f"wrapped_single_string_as_list:{path}")
+    domain_fit = result.profile.get("domain_fit")
+    if isinstance(domain_fit, str) and domain_fit.strip():
+        result.profile["domain_fit"] = {"summary": domain_fit.strip()}
+        changes.append("wrapped_string_as_object:domain_fit")
+    scenarios = result.profile.get("sensitive_scenario_reactions")
+    if isinstance(scenarios, dict):
+        for key, value in list(scenarios.items()):
+            if isinstance(value, str) and value.strip():
+                scenarios[key] = {"reaction": value.strip()}
+                changes.append(f"wrapped_string_as_object:sensitive_scenario_reactions.{key}")
     return changes
 
 
-def validate_v4_result(result: V4SynthesisResult, persona_id: str) -> list[str]:
+def validate_v4_result(result: V4SynthesisResult, persona_id: str, guide: dict[str, Any] | None = None) -> list[str]:
     findings: list[str] = []
-    for section in LLM_PROFILE_FIELDS:
+    guide = guide or {}
+    profile_sections = _contract_profile_sections(guide)
+    required_profile_fields = _contract_required_profile_fields(guide)
+    concept_output_fields = _contract_concept_output_fields(guide)
+    for section in profile_sections:
         value = result.profile.get(section)
         expected_list = section == "contradiction_map"
         if expected_list and not isinstance(value, list):
             findings.append(f"profile_section_type:{section}:list")
-        elif not expected_list and not isinstance(value, dict):
+        elif section in FLEXIBLE_PROFILE_SECTIONS and not _is_present(value):
+            findings.append(f"profile_section_type:{section}:present")
+        elif not expected_list and section not in FLEXIBLE_PROFILE_SECTIONS and not isinstance(value, dict):
             findings.append(f"profile_section_type:{section}:object")
-    for section, required in {**PROFILE_REQUIRED_FIELDS, **DEEP_REQUIRED_FIELDS}.items():
+    for section, required in {**required_profile_fields, **DEEP_REQUIRED_FIELDS}.items():
         payload = result.profile.get(section, {})
         if not isinstance(payload, dict):
             continue
@@ -441,9 +543,21 @@ def validate_v4_result(result: V4SynthesisResult, persona_id: str) -> list[str]:
     for field_name in ("articulation_level", "directness", "detail_tendency"):
         if not _is_present(result.response_style.get(field_name)):
             findings.append(f"missing:response_style.{field_name}")
+    if concept_output_fields:
+        if not isinstance(result.concept_outputs, dict):
+            findings.append("invalid:concept_outputs")
+        else:
+            for concept_key, required_fields in concept_output_fields.items():
+                payload = result.concept_outputs.get(concept_key, {})
+                if not isinstance(payload, dict):
+                    findings.append(f"missing:concept_outputs.{concept_key}")
+                    continue
+                for field_name in required_fields:
+                    if not _is_present(payload.get(field_name)):
+                        findings.append(f"missing:concept_outputs.{concept_key}.{field_name}")
     if not result.narrative:
         findings.append("missing:narrative")
-    prose = "\n".join(_string_values(result.profile) + [result.narrative])
+    prose = "\n".join(_string_values(result.profile) + _string_values(result.concept_outputs) + [result.narrative])
     leaked = sorted(token for token in RAW_ENUM_TOKENS if token in prose)
     if leaked:
         findings.append(f"enum_leakage:{','.join(leaked)}")
@@ -454,6 +568,13 @@ def _age_band(age: int) -> str:
     lower = max(18, (age // 10) * 10)
     upper = lower + 9
     return f"{lower}-{upper}"
+
+
+def _mapping_value_text(payload: Any, key: str, default: str = "") -> str:
+    if isinstance(payload, dict):
+        value = payload.get(key)
+        return str(value) if _is_present(value) else default
+    return default
 
 
 def _build_seed(persona_id: str, profile: dict[str, Any]) -> PersonaSeed:
@@ -475,9 +596,9 @@ def _build_seed(persona_id: str, profile: dict[str, Any]) -> PersonaSeed:
         language=list(identity["language"]),
         device_environment=str(technology.get("device_environment") or technology.get("tech_savviness")),
         payment_environment=str(economics.get("payment_environment") or "locally typical digital and bank payments"),
-        schedule_pressure=str(profile.get("daily_micro_behaviours", {}).get("stress_moments") or "context dependent"),
+        schedule_pressure=_mapping_value_text(profile.get("daily_micro_behaviours"), "stress_moments", "context dependent"),
         budget_flexibility=str(economics.get("budget_flexibility") or economics.get("price_sensitivity")),
-        caregiving_load=str(profile.get("life_story", {}).get("caregiving_context") or "context dependent"),
+        caregiving_load=_mapping_value_text(profile.get("life_story"), "caregiving_context", "context dependent"),
         trust_threshold=str(profile["personality_belief"].get("trust_orientation")),
         switching_cost_level=str(economics.get("switching_cost")),
         privacy_risk_tolerance=str(technology.get("privacy_concern")),
@@ -486,9 +607,9 @@ def _build_seed(persona_id: str, profile: dict[str, Any]) -> PersonaSeed:
         life_stage=str(identity.get("life_stage") or f"adult age {age}"),
         purchase_authority_type=str(economics.get("purchase_authority_type") or "context dependent"),
         employment_stability=str(economics.get("employment_stability") or "not specified"),
-        workflow_maturity=str(profile.get("workflow_adoption_model", {}).get("setup_tolerance") or "context dependent"),
+        workflow_maturity=_mapping_value_text(profile.get("workflow_adoption_model"), "setup_tolerance", "context dependent"),
         decision_speed=str(profile["personality_belief"].get("decision_style")),
-        proof_threshold=str(profile["product_reaction_rules"].get("evidence_that_changes_their_mind") or "context dependent"),
+        proof_threshold=_mapping_value_text(profile.get("product_reaction_rules"), "evidence_that_changes_their_mind", "context dependent"),
         cash_flow_volatility=str(economics.get("cash_flow_volatility") or "not specified"),
     )
 
@@ -497,6 +618,7 @@ def result_to_persona(result: V4SynthesisResult, persona_id: str) -> PersonaSkil
     profile_payload = copy.deepcopy(result.profile)
     identity = profile_payload.setdefault("basic_identity", {})
     identity["synthetic_user_id"] = persona_id
+    profile_payload.setdefault("banking_context", {})
     profile_payload["audit_evidence_layer"] = {
         "persona_generation_method": "single_pass_llm_v4_synthesis",
         "persona_version": "v4",
@@ -618,6 +740,7 @@ def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
     biography = profile.canonical_biography
     childhood = profile.childhood_environment
     voice = profile.persona_voiceprint
+    banking_context = profile.banking_context
     disclaimer = f"> {SYNTHETIC_DISCLAIMER}"
 
     persona_md = "\n".join([
@@ -627,6 +750,8 @@ def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
         f"**Research role:** {_as_text(profile.panel_role_profile.get('research_function') or profile.panel_role_profile.get('panel_role'))}",
         "",
     ])
+    if banking_context:
+        persona_md += "\n".join(["**Banking Context:**", _as_text(banking_context), "", ""])
 
     bio_lines = [f"# {name} - Level 3 Synthetic User Biography", "", disclaimer, "", "## Life Arc Summary", "", _as_text(biography.get("life_arc_summary")), ""]
     bio_lines.extend(["## Childhood Environment", "", _as_text(childhood.get("family_structure_and_stability")), ""])
@@ -671,8 +796,10 @@ def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
         "## Technology Attitude", "", _as_text(profile.technology_profile), "",
         "## Interests That Affect Buying", "", _as_text(profile.interests_and_hobbies.get("interest_depth")), "",
         "## Discovery Path & Daily Friction", "", _as_text(profile.product_discovery_paths), "", _as_text(profile.daily_micro_behaviours), "",
-        "## Contradictions", "",
     ]
+    if banking_context:
+        kernel_lines.extend(["## Banking Context", "", _as_text(banking_context), ""])
+    kernel_lines.extend(["## Contradictions", ""])
     kernel_lines.extend(_bullet_lines(profile.contradiction_map))
     kernel_lines.extend(["", "## Objection Language", "", _as_text(profile.objection_language_style), "", "## Founder Misread Risk", "", _as_text(profile.deep_research_notes.get("what_a_founder_might_misread_about_them")), "", "## Response Rule", "", "Do not flatter the founder. Separate curiosity, trial, payment, and durable adoption.", ""])
 
@@ -688,8 +815,11 @@ def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
         "## Pricing Logic", "", _as_text(profile.pricing_logic), "", "## Technology & AI Attitude", "", _as_text(profile.technology_profile), "",
         "## Cross-Domain Product Reaction Model", "", _as_text(profile.cross_domain_product_reaction_model), "",
         "## Sensitive Topic Handling", "", _as_text(profile.sensitive_scenario_reactions), "",
-        "## Objection Language", "", _as_text(profile.objection_language_style), "", "## Hidden Contradictions", "",
+        "## Objection Language", "", _as_text(profile.objection_language_style), "",
     ]
+    if banking_context:
+        skill_lines.extend(["## Banking Context", "", _as_text(banking_context), ""])
+    skill_lines.extend(["## Hidden Contradictions", ""])
     skill_lines.extend(_bullet_lines(profile.contradiction_map))
     skill_lines.extend([
         "", "## Founder Misread Risk", "", _as_text(profile.deep_research_notes.get("what_a_founder_might_misread_about_them")), "",
@@ -818,13 +948,14 @@ def generate_v4_persona(
         "narrative": result.narrative,
         "generation_rationale": result.generation_rationale,
         "quality_self_review": result.quality_self_review,
+        "concept_outputs": result.concept_outputs,
         "provider": result.provider,
         "model": result.model,
         "metadata": result.metadata,
     }
     write_json(target_dir / "llm_response.json", raw_response)
     write_json(work_dir / "completed_response.json", raw_response)
-    findings = validate_v4_result(result, persona_id)
+    findings = validate_v4_result(result, persona_id, normalized_guide)
     if findings:
         write_json(target_dir / "contract_report.json", {"status": "rejected", "findings": findings})
         log.emit("generation.rejected", stage="contract", finding_count=len(findings), detail=findings)
@@ -878,6 +1009,8 @@ def generate_v4_persona(
     write_json(target_dir / "contract_report.json", {"status": "pass", "findings": []})
     write_json(target_dir / "quality_report.json", quality_report)
     write_json(target_dir / "duplicate_report.json", duplicate_report)
+    if result.concept_outputs:
+        write_json(target_dir / "concept_outputs.json", result.concept_outputs)
     for filename, content in rendered.items():
         (target_dir / filename).write_text(content, encoding="utf-8")
     log.emit(
@@ -911,6 +1044,9 @@ def validate_v4_persona_folder(folder: Path) -> dict[str, Any]:
                 warnings.append("token usage is missing")
             if json.loads((folder / "contract_report.json").read_text(encoding="utf-8")).get("status") != "pass":
                 warnings.append("contract report did not pass")
+            brief = json.loads((folder / "generation_brief.json").read_text(encoding="utf-8"))
+            if _contract_concept_output_fields(brief) and not (folder / "concept_outputs.json").exists():
+                warnings.append("concept outputs are missing")
         except Exception as exc:
             warnings.append(f"runtime artifact validation failed: {exc}")
     return {"valid": not missing and not warnings, "missing_fields": missing, "warnings": warnings}

@@ -1,0 +1,92 @@
+{
+  "mode": "guided",
+  "required_profile_sections": [
+    "banking_context"
+  ],
+  "panel_preset": "hk_retail_bank_portfolio_health_check",
+  "research_context": {
+    "market": "Hong Kong retail and affluent retail banking",
+    "poc_goal": "Test whether Hong Kong retail banking customers accept bank-delivered institutional-grade portfolio risk analytics to understand their investments before making decisions.",
+    "positioning": "Bank app Portfolio Health Check with institutional-grade investment risk analysis, not direct Aladdin retail selling and not AI auto-trading.",
+    "core_assumptions": [
+      "Customers may feel current bank advice is too product-led rather than portfolio-led.",
+      "Customers may struggle to interpret portfolio risk, stress tests, and scenario analysis.",
+      "Institutional brands such as BlackRock may increase trust for some customers and trigger conflict concerns for others.",
+      "Customers may hesitate to let the bank aggregate external holdings across stocks, funds, ETFs, bonds, insurance, and MPF.",
+      "Risk analysis may either encourage action or make customers more conservative.",
+      "Some customers want RM interpretation while others prefer self-serve app analysis.",
+      "Premium analytics or advisory may be chargeable for some segments.",
+      "Skeptical customers may fear the tool is just a more sophisticated sales engine."
+    ],
+    "concept_card": {
+      "name": "Portfolio Health Check",
+      "description": "A bank app feature that uses institutional-grade portfolio analytics, similar to BlackRock Aladdin or Aladdin Wealth capabilities, to show total portfolio risk, concentration, stress tests, scenario analysis, risk-profile mismatch, plain-language explanations, and an optional RM review report.",
+      "non_goals": [
+        "Not auto-trading",
+        "Not direct execution without customer confirmation",
+        "Not sold as a pure Aladdin retail product"
+      ]
+    }
+  },
+  "concept_output_contracts": {
+    "portfolio_health_check": {
+      "description": "Concept-specific reaction to the bank app Portfolio Health Check stimulus. This is not a stable persona trait and should be returned as sidecar concept output.",
+      "required_fields": [
+        "first_reaction",
+        "strongest_appeal",
+        "biggest_concern",
+        "what_they_understand",
+        "what_they_misunderstand",
+        "data_they_would_share",
+        "data_they_would_not_share",
+        "preferred_explanation_format",
+        "whether_rm_needed",
+        "whether_they_would_pay",
+        "what_would_make_them_try",
+        "what_would_make_them_abandon"
+      ]
+    }
+  },
+  "fixed": {
+    "location": "Hong Kong",
+    "market_scope": "retail_or_affluent_retail_banking",
+    "preferred_languages": [
+      "Cantonese",
+      "English"
+    ],
+    "concept_frame": "institutional_grade_portfolio_risk_analytics_in_bank_app",
+    "age_range": "35-50",
+    "investable_assets_band": "HKD 1m-5m",
+    "persona_focus": "Family Wealth Planner"
+  },
+  "preferred": {
+    "portfolio_health_check_must_cover": [
+      "whole-portfolio risk",
+      "sector and geography concentration",
+      "currency exposure",
+      "stress testing",
+      "scenario analysis",
+      "risk-profile mismatch explanation"
+    ],
+    "response_rule": "Distinguish what this person understands, what still confuses them, and whether the feature would increase trust, action, or avoidance.",
+    "bank_relationship": "Uses the bank as a household financial hub across savings, mortgage, insurance, and investments.",
+    "investment_experience": "Practical rather than hobbyist; invests for family milestones.",
+    "investment_products_held": [
+      "insurance",
+      "education savings fund",
+      "stock",
+      "fund",
+      "MPF"
+    ],
+    "primary_financial_goal": "Protect education, housing, and retirement goals for the family.",
+    "current_investment_decision_process": "Balances goal progress, family obligations, and risk tolerance.",
+    "relationship_manager_usage": "Selective; wants advice connected to goals, not just products.",
+    "digital_banking_usage": "High for household admin and monitoring.",
+    "risk_understanding_level": "Understands risk better when tied to life goals and downside consequences.",
+    "interview_focus": [
+      "Whether goal-success framing beats abstract risk framing",
+      "Whether they will aggregate MPF, insurance, and family assets",
+      "Whether shared household visibility matters"
+    ]
+  }
+}
