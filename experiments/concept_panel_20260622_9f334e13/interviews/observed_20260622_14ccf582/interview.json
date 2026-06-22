@@ -1,0 +1,840 @@
+{
+  "interview_id": "observed_20260622_14ccf582",
+  "persona_id": "su_1205",
+  "persona_name": "Clara Wong",
+  "research_goal": "驗證香港零售或半零售銀行客戶是否願意接受銀行用機構級 portfolio risk analytics 幫自己理解整體投資組合，並觀察這是否提升信任、理解、行動意願與資產留存。",
+  "product_context": "銀行 App 內的 Portfolio Health Check，由銀行引入類似 BlackRock Aladdin 或 Aladdin Wealth 的機構級 portfolio analytics 能力，讓客戶查看全 portfolio risk、集中度、壓力測試、情景分析、風險取向匹配與簡單語言解釋，並可選擇生成 RM review report；這不是自動買賣工具。",
+  "output_language": "Natural Cantonese Traditional Chinese",
+  "facilitator_provider": "codex",
+  "facilitator_model": "gpt-5.4",
+  "persona_provider": "codex",
+  "persona_model": "gpt-5.4",
+  "facilitator_prompt_version": "facilitator-interview/v2",
+  "synthesis_prompt_version": "concept-synthesis/v1",
+  "concept_protocol_version": "src/ai_validation_swarm/prompts/concept-interview/hk-bank-portfolio-health-check-v1.md",
+  "concept_label": "Portfolio Health Check",
+  "interview_mode": "concept_validation",
+  "hypothesis": "",
+  "facilitator_provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+  "persona_provider_session_id": "019eee5a-d418-7733-b1cd-9e6b80373ba4",
+  "persona_conversation_session_id": "chat_20260622_12124d28",
+  "quality_provider": "codex",
+  "quality_model": "gpt-5.4",
+  "quality_prompt_version": "facilitator-quality-evaluator/v2",
+  "quality_provider_session_id": "019eee5f-f766-7f52-a39a-a97d0b168eae",
+  "hypothesis_evidence_judge_prompt_version": "hypothesis-evidence-judge/v1",
+  "hypothesis_evidence_judge_provider_session_id": "",
+  "max_turns": 16,
+  "soft_turn_limit": 12,
+  "hard_turn_limit": 16,
+  "created_at": "2026-06-22T08:02:48+00:00",
+  "updated_at": "2026-06-22T08:09:53+00:00",
+  "status": "completed",
+  "stop_reason": "required_coverage_complete_and_additional_probing_unlikely_to_change_evidence",
+  "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+  "facilitator_decisions": [
+    {
+      "interview_phase": "opening_recent_behaviour",
+      "probing_strategy": "recent_event",
+      "decision_rationale": "首題先用中性、具體的最近一次投資檢視事件開場，建立是否有相關 portfolio 檢視行為，再按回答追問 workaround 與痛點；未到介紹概念的時機。",
+      "message_to_persona": "你最近一次認真睇自己成個投資組合係幾時，當時發生咗咩事？",
+      "evidence_updates": [],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "最近一次實際投資或檢視 portfolio 的具體事件是什麼？",
+        "當時係逐個產品睇，定係有用方法睇整體風險？",
+        "而家理解風險同集中度嘅 workaround 係乜？",
+        "現有銀行資訊或 RM 建議係咪已經足夠？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "workaround_probe",
+      "probing_strategy": "sequence_probe",
+      "decision_rationale": "受訪者已提供最近一次具體檢視 portfolio 事件，下一步先追問當時實際用咩方法判斷是否過度集中，以建立 current workaround，未應過早介紹概念。",
+      "message_to_persona": "你嗰晚最後係用咩方法判斷自己有冇押得太埋同一個方向？",
+      "evidence_updates": [
+        {
+          "claim": "受訪者最近一次認真檢視整體投資組合是在上個月尾一個星期日夜晚，場景是在家中逐份比對銀行月結單、保單通知和手機銀行資料。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "觸發該次檢視的直接原因之一，是 RM 早前提醒有兩個基金持倉重疊。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者當時主動開手機銀行查看外幣部位，想確認自己是否不知不覺押注過度集中於同一方向。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "受訪者當晚實際用什麼方法或資訊去判斷整體風險和集中度？",
+        "現時理解整體 portfolio risk 的 workaround 是否主要依賴手動比對文件和 app 資料？",
+        "受訪者是否覺得現有銀行資訊或 RM 提示已足夠，還是仍有看不清的地方？",
+        "受訪者是否真的以 whole portfolio 角度作判斷，還是仍然逐個產品分開看？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "problem_strength_probe",
+      "probing_strategy": "consequence_probe",
+      "decision_rationale": "概念未應太早引入；雖然 workaround 已見到，但仍需先確認現有方法有咩看不清或麻煩，先知道問題力度，避免為概念製造需求。",
+      "message_to_persona": "用呢個方法去睇嗰陣，你覺得最睇唔清嘅係邊一部分？",
+      "evidence_updates": [
+        {
+          "claim": "受訪者在最近一次 portfolio 檢視中，沒有使用複雜工具，而是手動記下基金類型、幣種及受哪些市場影響。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者會用不同產品是否同時指向同一風險，作為判斷是否過度集中於同一方向的方法。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者會把自己的手動整理結果與 RM 先前指出的重疊位互相對照。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "受訪者現有手動比對方法最難看清的是什麼？",
+        "受訪者是否覺得現有銀行資訊與 RM 提示已足夠，還是仍偏向逐個產品看？",
+        "受訪者對『整體 portfolio 視角』是否有明確需求，還是只是偶爾檢查一下？",
+        "在理解風險時，受訪者更卡在資訊分散、解釋太難，還是擔心 RM 建議太 product-led？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "concept_introduction",
+      "probing_strategy": "first_reaction",
+      "decision_rationale": "已建立最近實際檢視行為、手動 workaround 同看不清位，依家可以中性引入概念，先測第一反應，避免未理解現況就過早評價方案。",
+      "message_to_persona": "如果你銀行 app 有個 Portfolio Health Check，會整合你啲基金、股票、ETF、債券同可選外部資產，畀你睇整體風險、集中度、貨幣風險同情景分析，仲可以出 report 同 RM 傾，但唔會自動幫你買賣，你第一下最在意會係咩？",
+      "evidence_updates": [
+        {
+          "claim": "受訪者目前最看不清的，是基金持倉內再疊基金的底層重複曝險。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者擔心表面分散的基金，底層實際可能仍集中於少數板塊或大型股。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者對結構性產品只能掌握大方向影響，難以從月結單看清中間風險傳導。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "受訪者對 whole-portfolio risk analytics 的第一反應是有用、懷疑，還是覺得似銷售包裝？",
+        "哪一類輸出最能對應受訪者現時看不清的底層重疊與風險傳導問題？",
+        "受訪者對銀行提供這類分析的信任邊界在哪裡？",
+        "受訪者之後會否願意用、付費或持續看，仍未測試。"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "trust_boundary_probe",
+      "probing_strategy": "clarification",
+      "decision_rationale": "受訪者已明確提出兩個第一反應，其中較大的未解位是銀行分析會否變成產品銷售對話；下一題先釐清信任邊界，比付款或留存更優先。",
+      "message_to_persona": "要令你覺得呢個分析真係中立唔係 sales 鋪排，佢要點樣呈現先得？",
+      "evidence_updates": [
+        {
+          "claim": "受訪者對概念的第一個關注，是分析是否涵蓋完整持倉，因為不完整的總體風險圖可能造成誤導。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者會先檢查哪些持倉被納入、哪些未被納入分析，才判斷輸出是否可信。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者擔心銀行提供的分析可能很快演變成導向與 RM 討論產品的對話，而非純粹解釋現有組合。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "什麼呈現方式或訊號會令受訪者相信分析是中立而非 product-led？",
+        "受訪者對銀行使用其現有持倉資料與外部資產資料的信任邊界在哪裡？",
+        "什麼條件下受訪者會持續回看這類分析，而不是只看一次？",
+        "是否存在可接受的付費或 bundled 條件仍未測試。"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "hypothesis_condition",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "retention_probe",
+      "probing_strategy": "first_use_success",
+      "decision_rationale": "信任邊界已較清楚，下一步先問什麼首輪輸出會令他覺得值得再用，能同時收集 repeat-use 與 founder assumption（是否真有持續 whole-portfolio 需求）；付款放後一題較合適。",
+      "message_to_persona": "如果你第一次用完之後會想下個月再開返呢個功能，第一次最少要畀到你咩先得？",
+      "evidence_updates": [
+        {
+          "claim": "受訪者要求分析先完整呈現現況，再解釋風險、重疊、貨幣曝險和情景影響，而不是一開始就接產品建議。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者希望分析邏輯清楚，並把『觀察』與『可考慮行動』分開呈現。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者較能接受『先解釋、後決定是否與RM討論』的互動方式，而非直接導向銷售。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "什麼首輪輸出會令受訪者覺得這功能值得持續回看？",
+        "受訪者會偏向自己看完就算，還是會因此約RM，仍未釐清。",
+        "受訪者是否存在可接受的付費或 bundle 條件仍未測試。",
+        "受訪者對 whole-portfolio 視角是否只是一次性檢查需求，還是有重複需求，仍需確認。"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "payment_probe",
+      "probing_strategy": "pricing_condition",
+      "decision_rationale": "留存條件已具體，下一步直接測試付費門檻最有效；用條件式提問而非直接問價值觀，可避免把好奇誤當成願付費。",
+      "message_to_persona": "咩情況下你會覺得呢個功能值得另外畀錢，而唔係只係當銀行本身應該提供？",
+      "evidence_updates": [
+        {
+          "claim": "受訪者表示，若第一次使用能提供一兩個原本在月結單看不出的、但合理可信的新發現，他才會覺得功能有價值。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者舉例希望看到基金重疊程度或實際貨幣風險高於原先估計等新發現。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者希望結果可被保留，讓他下次能快速對照是否有改善，這是再次使用的重要條件。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "受訪者在什麼條件下會願意為這類分析另外付費，而不是視為基本銀行服務？",
+        "若不願付費，較可能接受 bundling、RM 服務附帶，還是完全免費？",
+        "whole-portfolio 分析對受訪者是否構成持續需求而非一次性檢查，仍可再確認。"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "founder_assumption_check",
+      "probing_strategy": "assumption_probe",
+      "decision_rationale": "大部分核心範圍已覆蓋，最後用受訪者剛提到的外部資產整合作為切入，直接測試一個關鍵 founder assumption：他是否真的願意提供足夠外部資料，避免只憑概念興趣作結論。",
+      "message_to_persona": "如果真係要你加埋銀行外面啲資產資料，你會願意去到邊一步？",
+      "evidence_updates": [
+        {
+          "claim": "受訪者只會在功能不只是重新包裝銀行已見資料，而是能整合外部資產、產出可留底做年度檢視的報告，且多次實際幫助避開重疊或看清風險時，才認為值得額外付費。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者的付費門檻建立在重複驗證過的實際價值，而非單次好奇或介面整理。",
+          "evidence_type": "facilitator_hypothesis",
+          "transcript_refs": [
+            "exchange_6.persona",
+            "exchange_7.persona"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "受訪者願意提供多少外部資產資料，及其容忍的資料輸入方式是什麼？",
+        "若只分析銀行內資產，受訪者是否仍覺得有足夠價值？",
+        "受訪者對自助理解與RM輔助之間的偏好仍可再細化。"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "alternative_condition",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "end",
+      "probing_strategy": "coverage_complete",
+      "decision_rationale": "所需 coverage 已完成，最新一輪亦已補到外部資產資料分享邊界；再追問大多只會細化而不會實質改變證據圖。",
+      "message_to_persona": "",
+      "evidence_updates": [
+        {
+          "claim": "受訪者只接受有限度的外部資產輸入方式，例如手動加入總額與資產類別，或上載一兩份月結單作一次性分析。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_8.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "受訪者不願一開始就開啟長期同步權限。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_8.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "若要進一步分享外部資料，受訪者要求銀行清楚交代哪些資料會被保留、誰可查看，以及自己可隨時停止。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_8.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [],
+      "should_end": true,
+      "end_reason": "required_coverage_complete_and_additional_probing_unlikely_to_change_evidence",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019eee5a-7da1-75c3-8cc2-cc0aa214779d",
+      "decision_status": "not_asked_at_close"
+    }
+  ],
+  "exchanges": [
+    {
+      "exchange_id": 1,
+      "facilitator_question": "你最近一次認真睇自己成個投資組合係幾時，當時發生咗咩事？",
+      "persona_response": "應該係上個月尾一個星期日夜晚，我喺飯枱邊飲茶邊逐份對銀行月結單同保單通知，因為RM之前打過嚟提我有兩個基金其實持倉幾重疊。我嗰陣仲特登開埋手機銀行睇外幣部位，想確認自己係咪不知不覺同一個方向押得太多。",
+      "facilitator_phase": "opening_recent_behaviour",
+      "probing_strategy": "recent_event",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-22T08:03:25+00:00"
+    },
+    {
+      "exchange_id": 2,
+      "facilitator_question": "你嗰晚最後係用咩方法判斷自己有冇押得太埋同一個方向？",
+      "persona_response": "我嗰晚冇做得好複雜，主要係逐樣寫低基金類型、幣種，同埋大概受邊類市場影響，睇下有冇其實名唔同但都係跟住同一批資產走。之後再對返RM之前講嘅重疊位，如果兩三項都指向同一個風險，我就當自己真係押得比較埋。",
+      "facilitator_phase": "workaround_probe",
+      "probing_strategy": "sequence_probe",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "created_at": "2026-06-22T08:04:02+00:00"
+    },
+    {
+      "exchange_id": 3,
+      "facilitator_question": "用呢個方法去睇嗰陣，你覺得最睇唔清嘅係邊一部分？",
+      "persona_response": "其實最睇唔清係基金入面再疊基金嗰層，表面睇好似分散咗，但入面可能最後都係集中喺幾個板塊或者同一批大型股。仲有啲結構性產品，我知道自己受咩大方向影響，但中間點樣傳落去，單靠月結單唔係咁容易睇得透。",
+      "facilitator_phase": "problem_strength_probe",
+      "probing_strategy": "consequence_probe",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-22T08:04:37+00:00"
+    },
+    {
+      "exchange_id": 4,
+      "facilitator_question": "如果你銀行 app 有個 Portfolio Health Check，會整合你啲基金、股票、ETF、債券同可選外部資產，畀你睇整體風險、集中度、貨幣風險同情景分析，仲可以出 report 同 RM 傾，但唔會自動幫你買賣，你第一下最在意會係咩？",
+      "persona_response": "我第一下會睇佢到底包咗我邊啲持倉，邊啲係冇包，因為個總體風險圖如果本身已經唔完整，其實好容易誤導。跟住我會想知道啲分析係真係解釋我而家個組合，定係好快就變成引去同RM做產品對話。",
+      "facilitator_phase": "concept_introduction",
+      "probing_strategy": "first_reaction",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-22T08:05:13+00:00"
+    },
+    {
+      "exchange_id": 5,
+      "facilitator_question": "要令你覺得呢個分析真係中立唔係 sales 鋪排，佢要點樣呈現先得？",
+      "persona_response": "首先要畀我睇完整嘅現況，先講風險、重疊、貨幣曝險同幾個情景會點影響，唔好一打開就接住產品建議。仲有個分析邏輯要講清楚，最好分開『觀察』同『可考慮行動』，咁我先會覺得佢係先解釋，再決定要唔要同RM傾下一步。",
+      "facilitator_phase": "trust_boundary_probe",
+      "probing_strategy": "clarification",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "hypothesis_condition",
+      "created_at": "2026-06-22T08:05:50+00:00"
+    },
+    {
+      "exchange_id": 6,
+      "facilitator_question": "如果你第一次用完之後會想下個月再開返呢個功能，第一次最少要畀到你咩先得？",
+      "persona_response": "第一次最少要畀到我一兩個我本身喺月結單睇唔出、但又講得通嘅發現，例如原來兩個基金其實重疊得幾多，或者個貨幣風險比我估計高。再加埋個結果要容易留底，下次我可以好快對返有冇改善，咁我先會覺得值得下個月再開。",
+      "facilitator_phase": "retention_probe",
+      "probing_strategy": "first_use_success",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-22T08:06:25+00:00"
+    },
+    {
+      "exchange_id": 7,
+      "facilitator_question": "咩情況下你會覺得呢個功能值得另外畀錢，而唔係只係當銀行本身應該提供？",
+      "persona_response": "要去到另外畀錢，佢唔可以只係把銀行已經見到嘅資料重新排靚少少。要係真係幫我整合埋外部資產、出到一份我會留底做年度檢視嘅報告，而且內容有幾次都實際幫到我避開重疊或者睇清風險，咁我先會覺得有額外價值。",
+      "facilitator_phase": "payment_probe",
+      "probing_strategy": "pricing_condition",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-22T08:07:00+00:00"
+    },
+    {
+      "exchange_id": 8,
+      "facilitator_question": "如果真係要你加埋銀行外面啲資產資料，你會願意去到邊一步？",
+      "persona_response": "我會先接受好有限度嗰種，例如手動加總額、資產類別，或者上載一兩份月結單做一次性分析，而唔係一開始就開長期同步權限。要再行前一步，就要佢講清楚邊啲資料會留低、邊個睇到，同埋我可以隨時停。",
+      "facilitator_phase": "founder_assumption_check",
+      "probing_strategy": "assumption_probe",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "alternative_condition",
+      "created_at": "2026-06-22T08:07:37+00:00"
+    }
+  ],
+  "pending_facilitator_decision": {},
+  "observer_interventions": [],
+  "last_error": "",
+  "failed_operation": "",
+  "failed_payload": {},
+  "insight_report": {
+    "problem_evidence": {
+      "strength": "medium",
+      "supporting_quotes": [
+        {
+          "quote": "其實最睇唔清係基金入面再疊基金嗰層",
+          "evidence_ref": "exchange_3.persona"
+        },
+        {
+          "quote": "個總體風險圖如果本身已經唔完整，其實好容易誤導",
+          "evidence_ref": "exchange_4.persona"
+        },
+        {
+          "quote": "第一次最少要畀到我一兩個我本身喺月結單睇唔出、但又講得通嘅發現",
+          "evidence_ref": "exchange_6.persona"
+        }
+      ],
+      "recent_behavior_evidence": [
+        "上個月尾一個星期日夜晚，受訪者主動逐份對銀行月結單、保單通知，同時打開手機銀行檢查外幣部位。",
+        "受訪者會手動寫低基金類型、幣種，同大概受邊類市場影響，再同 RM 提過嘅重疊位對照。",
+        "受訪者想確認自己有冇不知不覺押得太埋同一個方向，反映有 whole-portfolio 檢查動機。"
+      ]
+    },
+    "current_workaround": {
+      "existing_workaround": [
+        "手動比對銀行月結單、保單通知、手機銀行資料。",
+        "自己記錄基金類型、幣種、受哪類市場影響。",
+        "參考 RM 提醒嘅重疊位，再用幾個訊號交叉判斷。"
+      ],
+      "pain_level": "medium",
+      "switching_difficulty": "low",
+      "what_must_not_change": [
+        "要先見到完整現況先開始分析。",
+        "分析邏輯要清楚。",
+        "『觀察』同『可考慮行動』要分開呈現。",
+        "唔可以一打開就變成產品銷售對話。"
+      ]
+    },
+    "trust_boundary": {
+      "accepted_data_access": [
+        "銀行內現有持倉資料。",
+        "有限度外部資料輸入，例如手動加總額、資產類別。",
+        "一次性上載一兩份月結單做分析。"
+      ],
+      "rejected_data_access": [
+        "一開始就開長期同步權限。",
+        "資料保留範圍、可見對象、停止機制唔清楚嘅情況。",
+        "只用唔完整持倉就產生總體風險結論。"
+      ],
+      "required_trust_explanation": [
+        "先完整展示已納入與未納入的持倉範圍。",
+        "先講風險、重疊、貨幣曝險、情景影響，再決定要唔要傾產品。",
+        "清楚解釋分析邏輯。",
+        "交代邊啲資料會留低、邊個睇到、同可以隨時停。"
+      ]
+    },
+    "first_value_requirement": {
+      "first_use_success": [
+        "第一次就要有一兩個月結單睇唔出、但講得通的新發現。",
+        "例子包括基金重疊程度高過預期，或者貨幣風險比估計高。",
+        "結果要容易留底，方便下次快速對照有冇改善。"
+      ],
+      "time_to_value": "第一次使用就要見到明確新發現，否則難以建立再用動機。",
+      "abandonment_triggers": [
+        "分析只係重排銀行已知資料。",
+        "總體圖唔完整而可能誤導。",
+        "一開就接產品建議。",
+        "分析解釋唔清，或者無法留底比較。"
+      ]
+    },
+    "pricing_signal": {
+      "free_trial_need": "高；從回答看，受訪者會先把這類功能視為銀行應提供的基本理解工具，除非多次證明有額外價值。",
+      "monthly_comfort_range": "未知",
+      "payment_justification": [
+        "要整合埋外部資產，而唔係只整理銀行內資料。",
+        "要出到會留底做年度檢視嘅報告。",
+        "要有幾次都實際幫到避開重疊或者睇清風險。"
+      ],
+      "evidence_strength": "stated"
+    },
+    "retention_risk": {
+      "continuation_reasons": [
+        "每次都能提供月結單以外、但可信的新洞察。",
+        "可以快速同上次結果比較，有改善追蹤感。",
+        "分析維持中立，唔急住推產品。"
+      ],
+      "drop_off_reasons": [
+        "只係把已有資料排靚少少。",
+        "分析範圍唔完整。",
+        "過早導向 RM 銷售對話。",
+        "要長期同步外部資料先用得好。"
+      ],
+      "workflow_effect": "replaces_workflow"
+    },
+    "assumption_validation": [
+      {
+        "assumption": "好多客戶覺得銀行投資建議太 product-led，唔夠 portfolio-led。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_4.persona",
+          "exchange_5.persona"
+        ],
+        "rationale": "受訪者明確擔心分析會好快變成引去同 RM 做產品對話，並要求先解釋後決定下一步；但只得一位受訪者，未足以外推『好多客戶』。"
+      },
+      {
+        "assumption": "客戶理解到簡化後嘅 portfolio risk、集中度、情景分析，足以支援決策。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_5.persona",
+          "exchange_6.persona"
+        ],
+        "rationale": "受訪者能清楚描述重疊、貨幣曝險、情景影響等概念，亦知道想睇咩；但未直接測到他對壓力測試或情景分析畫面嘅即時理解。"
+      },
+      {
+        "assumption": "由銀行提供機構級 analytics，增加信任多過增加懷疑。",
+        "status": "weakened",
+        "evidence_refs": [
+          "exchange_4.persona",
+          "exchange_5.persona",
+          "exchange_8.persona"
+        ],
+        "rationale": "受訪者對銀行角色有明顯戒心，尤其怕分析變 sales，同對資料權限十分保守。信任可以建立，但要靠呈現方式同權限透明，不是品牌本身自動帶來。"
+      },
+      {
+        "assumption": "客戶願意分享足夠 portfolio data，包括部分非本行資產，令 whole-portfolio 分析有用。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_7.persona",
+          "exchange_8.persona"
+        ],
+        "rationale": "受訪者接受有限度、一次性、手動式外部資料輸入，但拒絕一開始就長期同步，所以『願意分享』成立得有限。"
+      },
+      {
+        "assumption": "功能可提升行動質量或 engagement，而唔只係令客戶更驚或者更被動。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_5.persona",
+          "exchange_6.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "受訪者認為若能指出可信的新風險發現，可支持後續檢查同年度檢視；但未出現真實行動案例，仍屬概念層。"
+      },
+      {
+        "assumption": "至少有部分客戶對自助解讀或 RM 輔助解讀有實際需求，而唔係完全唔理。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_1.persona",
+          "exchange_5.persona",
+          "exchange_6.persona"
+        ],
+        "rationale": "受訪者本身已有主動自助檢視行為，並接受『先自己理解，再決定要唔要同 RM 傾』的流程。"
+      },
+      {
+        "assumption": "至少有部分客戶存在可信的付費條件。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_7.persona"
+        ],
+        "rationale": "受訪者提出清楚付費門檻，但仍屬陳述式條件，未有對照實際付費行為。"
+      },
+      {
+        "assumption": "個概念可以被視為中立理解工具，而唔係升級版銷售介面。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_4.persona",
+          "exchange_5.persona"
+        ],
+        "rationale": "受訪者明確講出令其感到中立的呈現條件，代表概念有機會達成；但預設心態仍帶懷疑。"
+      }
+    ],
+    "key_insights": [
+      "受訪者已有真實 whole-portfolio 檢查行為，核心痛點唔係『冇資料』，而係睇唔穿基金底層重疊同結構性產品風險傳導。",
+      "概念有吸引力，但前提係分析範圍完整；唔完整的總體風險圖反而會削弱信任。",
+      "最大信任風險唔係 analytics 太複雜，而係銀行會唔會借分析包裝 sales。",
+      "首個價值時刻必須係立即揭示一兩個原本睇唔出的、但可信的新發現。",
+      "留存需要可比較性；受訪者想留底結果，之後快速對返有冇改善。\",\"付費門檻高，只有當功能跨越『銀行本來應該提供』的基本服務，並能整合外部資產且反覆證明價值，先可能成立。\",\"外部資料分享只接受低承諾模式：手動、一次性、可撤回。"
+    ],
+    "next_experiment": "用可點擊原型測兩個版本：A 只分析本行資產，B 額外支援手動/一次性外部資產輸入；讓受訪者完成『判斷有冇重疊過高』同『決定要唔要約 RM』兩個任務，觀察哪個版本先建立信任、理解同下一步行動。",
+    "evidence_gaps": [
+      "只訪問了一位 synthetic persona，唔能代表香港零售或半零售銀行客群。",
+      "未測真實畫面下對壓力測試、情景分析、風險取向匹配的理解程度。",
+      "未取得實際價格帶或 bundling 偏好。",
+      "未測如果只覆蓋本行資產、不加外部資產時，最低可接受價值點在哪。",
+      "未有對照不同財富層級、是否有 RM、是否多銀行分散持倉的差異。"
+    ],
+    "synthetic_only_disclaimer": "以上只係單一 synthetic participant 的概念預驗證，屬方向性訊號，唔可以當成人類市場證據或需求規模判斷。"
+  },
+  "quality_evaluation": {
+    "overall_verdict": "warn",
+    "scores": {
+      "neutrality": 3,
+      "probing_quality": 3,
+      "conversation_naturalness": 4,
+      "evidence_discipline": 2,
+      "causal_rigor": 4,
+      "hypothesis_validation_rigor": 4,
+      "synthesis_fidelity": 2,
+      "overall": 3
+    },
+    "checks": {
+      "leading_question_risk": "warn",
+      "repetition_risk": "pass",
+      "premature_root_cause_risk": "pass",
+      "mechanical_five_whys_risk": "pass",
+      "evidence_reference_quality": "warn",
+      "synthesis_overreach_risk": "fail",
+      "conversation_naturalness": "pass",
+      "persona_over_structuring_risk": "pass",
+      "interviewer_jargon_risk": "warn",
+      "domain_fit_alignment": "warn",
+      "hypothesis_confirmation_bias_risk": "pass",
+      "hypothesis_judge_alignment": "pass"
+    },
+    "strengths": [
+      "The interview established a concrete recent portfolio-review event before introducing the concept, using specific recalled behavior in `exchange_1.persona` and `exchange_2.persona`.",
+      "The facilitator avoided mechanical causal pressure and did not run a Five Whys sequence; questions stayed mostly behavior-first until the concept was introduced.",
+      "Trust, payment, repeat-use, and external-data-boundary topics were all covered with participant-facing questions rather than inferred only from internal planning."
+    ],
+    "findings": [
+      {
+        "category": "Question design",
+        "severity": "high",
+        "observation": "The concept introduction is solution-loaded and compound. `exchange_4.facilitator` bundles aggregation scope, multiple analytics outputs, reporting, RM handoff, and a reassurance about not auto-trading before asking for a reaction. That gives the participant several researcher-supplied value cues at once and weakens the neutrality and single-focus standard.",
+        "evidence_refs": [
+          "exchange_4.facilitator",
+          "FACILITATOR TRACE[3]"
+        ],
+        "recommendation": "Introduce the concept in a thinner form first, then layer features only after the participant reacts. Ask one focus at a time, for example: what they think it is for, what feels useful, and what feels risky."
+      },
+      {
+        "category": "Synthesis fidelity",
+        "severity": "high",
+        "observation": "Several synthesis claims exceed the evidence and are presented as stronger than the transcript supports. `retention_risk.workflow_effect` says `replaces_workflow`, but the participant only described a possible future tool, not an observed replacement. `first_value_requirement.time_to_value` and multiple `continuation_reasons`/`drop_off_reasons` are hypothetical statements from `exchange_6.persona` to `exchange_8.persona`, not behavioral proof. The report sometimes labels this correctly as `stated`, but not consistently.",
+        "evidence_refs": [
+          "exchange_6.persona",
+          "exchange_7.persona",
+          "exchange_8.persona",
+          "SYNTHESIS.retention_risk.workflow_effect",
+          "SYNTHESIS.first_value_requirement.time_to_value",
+          "SYNTHESIS.pricing_signal.evidence_strength"
+        ],
+        "recommendation": "Relabel hypothetical reactions consistently as stated conditions or claimed preferences, and remove deterministic product-behavior claims unless an observed action changed in a real or simulated task."
+      },
+      {
+        "category": "Outcome coverage",
+        "severity": "medium",
+        "observation": "The interview did not directly test the research-goal outcomes of action willingness or asset-retention implications. Repeat-use and payment conditions were asked, but there was no concrete participant-facing probe such as what action they would take after seeing a result, what they would postpone, or whether this would keep assets with the bank versus elsewhere.",
+        "evidence_refs": [
+          "exchange_6.facilitator",
+          "exchange_7.facilitator",
+          "FACILITATOR TRACE[8]"
+        ],
+        "recommendation": "Add explicit post-result action probes and retention probes before closing, such as what decision the participant would make next, whether they would move assets, consolidate, or merely read the report and do nothing."
+      },
+      {
+        "category": "Concept-validation rigor",
+        "severity": "medium",
+        "observation": "Curiosity, first trial, payment, and month-two retention were not kept fully distinct. The flow separates repeat-use and payment, but there is no dedicated activation/adoption question about what would make them try the feature the first time in-app, and repeat-use is still framed as a hypothetical threshold rather than a distinct month-two behavior.",
+        "evidence_refs": [
+          "exchange_4.facilitator",
+          "exchange_6.facilitator",
+          "exchange_7.facilitator"
+        ],
+        "recommendation": "Add one activation question before pricing, one first-session-success question, and one month-two return trigger question. Keep each as a separate decision, not one generalized 'value' bucket."
+      },
+      {
+        "category": "Evidence discipline",
+        "severity": "medium",
+        "observation": "The synthesis makes broad product-shaping moves from one synthetic interview. For example, `assumption_validation` marks one assumption as `supported`, and `key_insights` plus `next_experiment` imply fairly stable directional conclusions. With a single synthetic participant, these should stay tightly persona-bounded and tentative.",
+        "evidence_refs": [
+          "SYNTHESIS.assumption_validation[5]",
+          "SYNTHESIS.key_insights",
+          "SYNTHESIS.next_experiment",
+          "SYNTHESIS.synthetic_only_disclaimer"
+        ],
+        "recommendation": "Downgrade stronger verdicts to persona-specific signals, and explicitly separate 'this persona said' from 'cross-segment implication'. Keep experiment recommendations framed as evidence-generation, not direction confirmation."
+      },
+      {
+        "category": "Participant-facing language",
+        "severity": "low",
+        "observation": "The interview was generally conversational, but `exchange_4.facilitator` introduces branded and fairly dense product framing (`Portfolio Health Check`, `集中度`, `貨幣風險`, `情景分析`, `report`, `RM`) in one turn. For a concept screen this may be acceptable, but as a spoken prompt it increases framing load.",
+        "evidence_refs": [
+          "exchange_4.facilitator"
+        ],
+        "recommendation": "Use plainer spoken framing first, then clarify specific analytics terms only if the participant asks or after their initial reaction."
+      }
+    ],
+    "required_improvements": [
+      "Rewrite the concept-introduction turn to be shorter, more neutral, and single-focus.",
+      "Separate adoption, first-use value, payment, and month-two repeat-use into distinct probes.",
+      "Add participant-facing probes for concrete next actions and any asset-retention effect before closing.",
+      "Constrain synthesis to transcript-supported claims and label hypothetical answers consistently as stated rather than observed behavior.",
+      "Keep conclusions persona-bounded; avoid `supported` or workflow-replacement claims from one synthetic interview."
+    ],
+    "improvement_hints": {
+      "next_interview_focus": [
+        "Ask what the participant would actually do immediately after seeing the analysis: rebalance, contact RM, ignore it, or compare elsewhere.",
+        "Probe whether a bank-internal-only version is useful enough to try before asking about external-asset ingestion.",
+        "Test understanding with one concrete output example and ask the participant to explain it back in their own words.",
+        "Ask what would make them open the feature the first time in-app, separately from what would make them return next month.",
+        "Ask whether this would increase the chance they keep or consolidate assets with the bank, and under what conditions."
+      ],
+      "coverage_gap_actions": [
+        "Add a direct activation probe: what would trigger first trial now, not just abstract interest.",
+        "Add an action probe tied to one recalled portfolio problem: what decision would this change, if any.",
+        "Add an asset-retention probe: would better portfolio visibility keep money at the bank or just inform decisions elsewhere.",
+        "Add a bounded comprehension probe using a mock finding to distinguish stated trust from actual understanding.",
+        "Add a comparison probe for partial coverage: if only bank-held assets are included, is the output still worth using."
+      ],
+      "prompt_adjustments": [
+        "In concept-validation mode, cap concept intro to one-sentence core value plus one-sentence boundary; defer feature list expansion until after initial reaction.",
+        "Require the facilitator to tag synthesis statements as `observed`, `stated`, or `hypothetical` and forbid mixing them in the same evidence bucket.",
+        "Add a rule that no assumption may be marked `supported` from a single synthetic interview unless the claim is explicitly persona-scoped.",
+        "Add observer guidance to interrupt when a question bundles more than one feature or benefit claim.",
+        "Add a closure gate requiring participant-facing evidence on activation, action-after-output, and month-two repeat trigger for concept studies tied to adoption outcomes."
+      ],
+      "turn_budget_guidance": "The current turn budget was sufficient for baseline coverage, but not for the research goal as stated. Keep the soft limit similar and widen the hard limit by 2-3 exchanges so the facilitator can separately cover activation, action willingness, and retention/consolidation effects without compressing them into existing value questions."
+    },
+    "human_review_needed": false,
+    "synthetic_only_disclaimer": "This audit evaluates only the provided synthetic transcript, trace, and synthesis artifacts. It should not be treated as evidence about real Hong Kong banking customers or market demand."
+  },
+  "hypothesis_evidence_judgment": {},
+  "coverage_status": {
+    "requirements": [
+      "recent_behaviour",
+      "current_workaround",
+      "concept_reaction",
+      "trust_boundary",
+      "payment_conditions",
+      "retention_repeat_use",
+      "founder_assumption_check"
+    ],
+    "covered": {
+      "recent_behaviour": true,
+      "current_workaround": true,
+      "concept_reaction": true,
+      "trust_boundary": true,
+      "payment_conditions": true,
+      "retention_repeat_use": true,
+      "founder_assumption_check": true
+    },
+    "missing": [],
+    "coverage_complete": true,
+    "soft_limit_reached": false,
+    "hard_limit_reached": false,
+    "exchange_count": 8
+  },
+  "exchange_count": 8,
+  "facilitator_decision_count": 9
+}

@@ -1,0 +1,129 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 3,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "warn",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and current workaround before introducing the concept, which fits concept-validation sequencing.",
+    "Most asked questions were short, participant-facing, and stayed conversational in Cantonese rather than sounding like an interview script.",
+    "Coverage was adapted in a reasonable order: recent behavior, workaround, concept reaction, trust boundary, retention, payment, then assumption check.",
+    "The runtime stopped at a plausible point once all required coverage fields were touched and no major participant-facing gap remained."
+  ],
+  "findings": [
+    {
+      "category": "Synthesis overreach",
+      "severity": "high",
+      "observation": "The synthesis turns hypothetical stated intent from one synthetic concept interview into overly strong support claims. `assumption_validation` marks self-serve demand and paid demand as `supported`, and `retention_risk.workflow_effect` says `replaces_workflow`, but the transcript only shows conditional future intent after a concept description, not observed adoption or workflow replacement.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.assumption_validation[5]",
+        "SYNTHESIS.assumption_validation[6]",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Downgrade these to stated or conditional signals from a single synthetic persona, and avoid product-shaping verbs like `supported` or `replaces_workflow` unless backed by observed repeated use or behavior change."
+    },
+    {
+      "category": "Forced-choice framing",
+      "severity": "medium",
+      "observation": "The final question constrains the participant to the researcher's supplied dichotomy: real portfolio help versus another sales method. That invites classification into preselected frames instead of letting the participant describe how they would recognize the difference in their own terms.",
+      "evidence_refs": [
+        "exchange_7.facilitator"
+      ],
+      "recommendation": "Replace with an open contrast probe such as asking what would make it feel trustworthy versus sales-led, then use any later binary summary only as a brief recap if needed."
+    },
+    {
+      "category": "Solution-loaded concept intro",
+      "severity": "medium",
+      "observation": "The concept introduction bundles multiple promised benefits in one turn: integration, overall risk, and scenario impact. That is more sell-shaped than neutral and makes it hard to isolate which part drives interest or resistance.",
+      "evidence_refs": [
+        "exchange_3.facilitator"
+      ],
+      "recommendation": "Introduce the concept more minimally, then probe specific components separately: aggregation, explanation style, scenarios, and recommendation behavior."
+    },
+    {
+      "category": "Participant-facing jargon",
+      "severity": "medium",
+      "observation": "The facilitator speaks in product and finance framing that may outpace a retail participant's natural language, including `Portfolio Health Check`, `整合持倉`, `整體風險`, and `情景影響`. The persona handles it, but the wording still imports the product frame rather than eliciting the participant's own vocabulary first.",
+      "evidence_refs": [
+        "exchange_3.facilitator"
+      ],
+      "recommendation": "Use plainer wording first, then mirror the participant's own terms. For example, ask about seeing everything together and understanding what they are already exposed to before naming analytics features."
+    },
+    {
+      "category": "Weak evidence labeling in concept report",
+      "severity": "medium",
+      "observation": "Several report statements blur behavioural evidence and hypothetical claims. `problem_evidence.strength` is `strong`, `pricing_signal.free_trial_need` is inferred rather than directly stated, and `problem_evidence` uses exchange 5 future-use language as support for the current problem.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_5.persona",
+        "SYNTHESIS.problem_evidence",
+        "SYNTHESIS.pricing_signal.free_trial_need"
+      ],
+      "recommendation": "Separate observed pain from hypothetical concept response. Mark pricing, retention, and trust claims as stated preferences unless tied to actual behavior in the recalled event."
+    },
+    {
+      "category": "Domain-fit inference breadth",
+      "severity": "low",
+      "observation": "The research goal targets trust, understanding, action willingness, and asset retention, but this single interview only directly evidences a stalled decision and conditional willingness to try or maybe pay. Asset-retention implications are not participant-evidenced here.",
+      "evidence_refs": [
+        "RESEARCH GOAL",
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "recommendation": "Keep outputs bounded to decision support, trust conditions, and repeat-use hypotheses. Do not infer retention or broad banking relationship effects from this interview alone."
+    }
+  ],
+  "required_improvements": [
+    "Reduce synthesis confidence: re-label hypothetical future intent as conditional stated evidence, not support for demand, payment, or workflow replacement.",
+    "Rewrite the concept intro to remove bundled benefits and product framing so the participant can react to a more neutral concept.",
+    "Replace the forced-choice founder-assumption question with an open probe that elicits participant-defined signals of neutrality versus sales intent.",
+    "Tighten evidence discipline in the report by separating recalled-event evidence from hypothetical concept reactions and by limiting claims to one synthetic persona."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask the participant to describe, in their own words, what they would need to see on the first screen before trusting the tool.",
+      "Probe a concrete current example of how they judge whether a bank feature is advisory versus sales-led.",
+      "Test one narrower concept at a time: cross-account exposure summary first, then scenario analysis, then any recommendation layer.",
+      "Ask what they would do immediately after seeing a meaningful risk overlap, to distinguish curiosity from action intent."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct participant-facing probe on what specific next action they would take after a useful output, rather than only whether they would revisit the tool.",
+      "Probe comprehension explicitly: what parts of the output they expect to understand easily and what would be confusing.",
+      "If retention is important, ask what would make them return in week two or month two versus using it once and stopping.",
+      "If payment is important, isolate price sensitivity from trust and setup by asking what makes it worth paying for even if the bank is not selling anything."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, instruct the facilitator to introduce the concept in one sentence without naming multiple benefits at once.",
+      "Add a guardrail against binary founder-assumption questions unless preceded by an open probe in the participant's own language.",
+      "Require the synthesis layer to tag every claim as `observed`, `stated_intent`, or `inference` and prevent `supported` labels when only stated intent exists.",
+      "Add a check that pricing, retention, and design implications remain explicitly bounded to a single synthetic persona and do not imply market-level demand."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for basic coverage, but one or two extra turns would improve quality if used to unpack sales-trust cues and concrete post-output actions rather than adding more broad concept questions."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview. Any positive demand, pricing, trust, retention, or product-direction conclusion should be treated as provisional prompt-quality feedback, not human market evidence."
+}

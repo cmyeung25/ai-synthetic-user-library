@@ -1,0 +1,306 @@
+[
+  {
+    "interview_phase": "opening_recent_behaviour",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "未能讀取本機的 design-research-facilitator 技能檔，但用戶已提供完整協議與概念驗證流程；首題先用中性、具領域指向的近期行為題，為 `recent_behaviour` 與後續 `current_workaround` 建立具體事件，未提前引入概念或假設需求。",
+    "message_to_persona": "你最近一次喺銀行 app 或其他地方睇自己投資組合，係想決定咩？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次具體的投資組合檢視事件是什麼？",
+      "當時他是看整體組合還是逐個產品看？",
+      "他目前用什麼方法理解風險或分散度？",
+      "現有做法有沒有明顯不足，還是其實已經足夠？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "參與者已提供一個具體近期事件，並暴露出未能看清跨戶口美元與科技曝險的問題。下一步先追問當晚實際怎樣補足資訊，建立 current_workaround，再決定是否需要引入概念。",
+    "message_to_persona": "嗰晚你最後點樣拼返自己幾個戶口嘅曝險？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次檢視投資組合，是想決定是否把部分 USD 現金投入美股 ETF。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "該次事件中，參與者因未能看清合併幾個戶口後的美元與科技相關曝險是否偏重而卡住。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當晚他用什麼具體方法整合不同戶口的持倉與風險？",
+      "他目前是看整體組合還是逐個產品判斷？",
+      "現有方法的時間成本、可信度和困難點是什麼？",
+      "他是否已覺得現有銀行資訊太產品導向，還是只是資料分散？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "近期行為與現有 workaround 已建立，現在可中性引入概念並先收集第一反應，避免過早追問信任、付款或留存。問題聚焦在參與者剛提到的跨戶口整合困難。",
+    "message_to_persona": "如果銀行 app 有個 Portfolio Health Check，幫你整合持倉再顯示整體風險同幾個情景影響，你第一個反應係咩？",
+    "evidence_updates": [
+      {
+        "claim": "參與者未能完整整合多個戶口的曝險，只能逐個 app 截圖並在 Notes 粗略記錄 USD、美股 ETF 和科技偏重。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "外部券商與銀行基金持倉資訊不易一眼看清，令參與者對整體曝險判斷不確定。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "因無法清楚掌握整體曝險，參與者當晚最終沒有調整持倉。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者對 Portfolio Health Check 的第一反應是有用、懷疑，還是無感？",
+      "他覺得這種功能是否真係幫到整體 portfolio 理解，而不只是另一種產品銷售包裝？",
+      "他對銀行提供這類分析的信任邊界是什麼？",
+      "什麼首屏輸出才足以令他願意試一次並持續再用？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "boundary_probe",
+    "decision_rationale": "參與者已給出清晰的概念首反應，並主動提到 read-only、可 revoke 與對產品推銷的戒心。下一題應直接收窄到信任邊界，釐清哪些資料權限與呈現方式會令他願意或不願意使用。",
+    "message_to_persona": "咩情況下你先會放心連埋外面券商嗰啲資料？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對概念的第一反應取決於能否真正整合外部券商和其他銀行持倉，而不只是重包裝已有資訊。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果資料連接是 read-only 且可隨時 revoke，參與者有興趣試用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若一開始就出現產品建議，或風險分數缺乏解釋，參與者會立即停止使用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者可接受的外部資料連接權限、授權方式和撤回條件是什麼？",
+      "他對銀行提供這類分析的主要懷疑是推銷動機、資料私隱，還是分析可信度？",
+      "什麼解釋方式會令風險分數看起來可信而不是黑盒？",
+      "若信任門檻達標，他會否因此採取行動或找 RM 討論？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_value_probe",
+    "probing_strategy": "first_use_success",
+    "decision_rationale": "信任邊界已具體到權限、可見性與 demo。下一步先測首用成功與重複使用條件，比直接問付款更有行為基礎，也能檢查這功能會否被視為真有用還是只看一次。",
+    "message_to_persona": "第一次用完要見到咩，你先會之後再開返嚟睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者接受外部資料連接的前提包括清楚說明 read-only、可逐個戶口選擇、可隨時斷開，以及銀行內部誰可看到資料。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望在連接外部資料前先看到 sample view 或 demo，以理解分析外部持倉的方式。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者擔心連接外部資料後才開始被推產品。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "什麼首用輸出會令參與者覺得值得重複使用？",
+      "他會在什麼頻率或觸發情境下再打開這功能？",
+      "若功能有價值，他是否只接受免費或理財服務綑綁，還是存在付費條件？",
+      "這功能在他眼中較像中立分析工具，還是高級版銷售介面？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_probe",
+    "probing_strategy": "pricing_condition",
+    "decision_rationale": "留存條件已具體到可發現未知重疊風險及可每週重用。下一題可直接測付款門檻，並以條件式問法避免把興趣誤當願付費。",
+    "message_to_persona": "如果呢個功能要另外收費，去到咩情況你先會肯畀錢？",
+    "evidence_updates": [
+      {
+        "claim": "參與者只有在第一次使用後看到自己原本不清楚的重疊或集中風險時，才會再次使用這功能。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望情景分析解釋清楚而不空泛，這樣功能才可能成為他每週日會再打開的工具。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者對這功能的付費門檻是什麼？",
+      "他只接受免費或綑綁式提供，還是存在單獨付費條件？",
+      "他眼中的價值更來自中立風險理解，還是可帶來後續決策或與 RM 討論的幫助？",
+      "這功能最終會被他視為分析工具還是銷售前置介面？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "assumption_check",
+    "probing_strategy": "alternative_condition",
+    "decision_rationale": "付款條件已清楚，尚欠 founder assumption 檢查。參與者多次提到對『包裝／推產品』的戒心，下一題應直接測這功能在他心中究竟是中立 portfolio 工具還是銷售介面。",
+    "message_to_persona": "對你嚟講，呢個比較似真係幫你睇成個 portfolio，定係銀行另一種賣產品方法？",
+    "evidence_updates": [
+      {
+        "claim": "參與者只會在功能證明自己不只是漂亮 dashboard，而是真能避免錯誤決定、指出跨戶口重疊與 FX 集中，或節省自行整合資料時間時，才接受付費。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者可接受不高、無長約的月費或季度費。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果仍需自行完成大部分整合，或分析背後連著銷售，參與者不願另外付費。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者最終會把這功能視為中立 portfolio 分析工具還是銷售前置介面？",
+      "什麼具體訊號會令他把銀行的分析解讀為真中立而非推銷？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "close",
+    "probing_strategy": "coverage_complete",
+    "decision_rationale": "所需 coverage 已完成，最後一題已直接測到關鍵 founder assumption：功能會否被視為中立 portfolio 工具或銷售介面。再追問大機會只會重複既有信任與價值條件，邊際證據有限。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "參與者不會自動把 Portfolio Health Check 視為真正幫他看整體 portfolio 的工具。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會根據第一版輸出是先呈現現有風險與重疊，還是很快導向產品建議，來判斷這功能是中立分析工具還是銷售工具。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "required coverage complete and additional probing would likely be repetitive",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019eee60-fbee-7c91-ad76-26ebf4f19f51",
+    "decision_status": "not_asked_at_close"
+  }
+]

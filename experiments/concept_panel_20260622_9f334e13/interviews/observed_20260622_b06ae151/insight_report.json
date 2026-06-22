@@ -1,0 +1,186 @@
+{
+  "problem_evidence": {
+    "strength": "strong",
+    "supporting_quotes": [
+      {
+        "quote": "如果個畫面只係逐隻產品分開列，我其實唔容易判斷",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "我多數會自己截圖或者抄低，先按產品類別分一分",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "好容易覺得買咗幾樣就等於分散，其實可能只係換咗幾個名",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次真實事件係定期差唔多到期時，用銀行 app 睇債券、收息基金同存款分布，再判斷應否再放入類似收息產品。",
+      "判斷時會看收入是否過度靠同一類產品、到期日是否太接近、發行人或類別是否重複。",
+      "當 app 缺乏整體分布視圖時，會自行截圖或抄低再分類重組。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 逐項看持倉。",
+      "自己截圖或抄低資料。",
+      "按產品類別手動分組，粗略估算佔比。",
+      "再看每月收入主要由哪些產品支撐。"
+    ],
+    "pain_level": "high",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "分析要針對現有持倉，不可以只是籠統分數。",
+      "結果要用人話解釋情景影響。",
+      "不要一出分析就推產品。",
+      "要讓用戶先自行消化，再決定是否找 RM。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "先用本行內持倉做分析。",
+      "若先證明有用，之後可考慮連接其他銀行或券商持倉。",
+      "前提是清楚交代誰可看到資料、只作分析用途、可隨時取消。"
+    ],
+    "rejected_data_access": [
+      "一開始就要求開放全部資料。",
+      "資料用途不清楚。",
+      "分析完成後容易引來推銷。"
+    ],
+    "required_trust_explanation": [
+      "先指出現有持倉的集中位與情景風險。",
+      "提供書面摘要。",
+      "把是否聯絡 RM 交給用戶選擇。",
+      "避免在分析結果旁直接彈出產品推介。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "看見自己平時未必一眼見到的重複風險。",
+      "把風險連到下一個真實決策，例如定期到期、債券換馬、每月現金流影響。",
+      "顯示幾個情景下對現金流和本金的具體影響。",
+      "提供可以留後慢慢看的書面摘要。"
+    ],
+    "time_to_value": "第一次看結果就要明顯比現時手動拼資料更有洞察。",
+    "abandonment_triggers": [
+      "每次只是同一套大路說話。",
+      "分析不跟持倉變化更新。",
+      "分析後立即開始推產品。",
+      "變成月費模式。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "高；較像要先證明本行內持倉分析已有用，才可能接受之後連更多資料或付費。",
+    "monthly_comfort_range": "傾向不接受月費；較可接受一次性、幾百港幣內，最好包一次 RM 對談。",
+    "payment_justification": [
+      "能提供自己平時拼不出的集中風險洞察。",
+      "能量化幾個情景對每月現金流與本金的影響。",
+      "有可回看的書面摘要。",
+      "最好附帶一次之後的 RM 討論。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次都能指出新出現或平時看不到的重複風險。",
+      "分析會跟住持倉變化更新。",
+      "內容直接支援下一次資金部署決定。"
+    ],
+    "drop_off_reasons": [
+      "內容泛泛而談。",
+      "沒有新的 portfolio 層級洞察。",
+      "結果太像銷售前置。",
+      "要持續月費。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多客戶覺得現有銀行投資資訊太產品導向，而非 portfolio 導向。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "受訪者明確表示逐項產品列表不足以判斷整體集中風險，並需要自己手動重組。"
+    },
+    {
+      "assumption": "客戶能理解簡化後的 portfolio risk、集中度、壓力測試與情景分析。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者主動要求情景分析用人話解釋，並能把風險連到現金流與本金，但未證明他對更完整分析框架都能持續理解。"
+    },
+    {
+      "assumption": "銀行提供機構級 analytics 會提升信任，多於引起懷疑。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona"
+      ],
+      "rationale": "有條件地可提升信任，但前提嚴格：先分析、後選擇是否找 RM、不能立即推產品。"
+    },
+    {
+      "assumption": "客戶願意分享足夠資料，包括部分外部資產，令 whole-portfolio 分析有用。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "只在先證明本行內分析已有價值、權限透明且可撤回的前提下，才可能連接外部資產。"
+    },
+    {
+      "assumption": "功能可帶動更好的行動或參與，而不只是令客戶更被動。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者表示若分析能連到即將面對的定期到期、換馬與現金流決策，會再開並可能採取後續行動。"
+    },
+    {
+      "assumption": "至少部分客戶對 self-serve 或 RM-assisted interpretation 有需求。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者想先自行消化，再選擇是否找 RM，且一次性付費若包一次 RM 對談更有吸引力。"
+    },
+    {
+      "assumption": "存在可信的付費條件。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_7.persona"
+      ],
+      "rationale": "已提出具體價值門檻與價格形式，但屬陳述性、未經真實購買驗證。"
+    },
+    {
+      "assumption": "概念可以被視為中立理解工具，而非更高級的銷售介面。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "可達成，但非常依賴呈現方式、資料邊界與銷售節奏控制；稍有偏差就會被當成銷售。"
+    }
+  ],
+  "key_insights": [
+    "核心需求不是更多產品資訊，而是把現有持倉重組成 portfolio 視角，特別是集中度、收入來源重疊與到期結構。",
+    "概念有吸引力，但信任條件比功能條件更硬；一旦分析後立即推產品，價值感會迅速崩塌。",
+    "最有價值的輸出不是抽象風險分數，而是『幾個具體情景下，現金流同本金會點變』。",
+    "外部資產連接不是第一步；先靠本行內資料證明 value，才有機會爭取更深資料授權。",
+    "付費可能存在，但更像一次性分析加一次 RM 討論，而不是訂閱工具。"
+  ],
+  "next_experiment": "用一個可點擊原型或靜態 mock，先只展示本行內持倉的集中風險、兩到三個情景下的現金流/本金影響、書面摘要與『稍後再找 RM』選項，然後觀察用戶是否願意基於該輸出做下一步決策或預約一次 RM 討論。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，不能代表香港零售或半零售銀行客群。",
+    "未測試弱痛點或完全不重視 portfolio 視角的客戶。",
+    "未觀察真實介面下對『壓力測試』『情景分析』的理解程度。",
+    "未測試不同銀行品牌或 RM 關係深淺對信任的影響。",
+    "付費與外部資產連接都屬假設性陳述，未經真實行為驗證。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬 synthetic interview 的前期方向性訊號，不可當成人類用戶已驗證證據；所有因果與需求判斷都需要再用真實香港銀行客戶訪談或行為測試驗證。"
+}

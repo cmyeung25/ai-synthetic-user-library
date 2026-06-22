@@ -1,0 +1,188 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "如果佢連基金、ETF 同直接持股嘅重疊都捉到，呢個係我平時最花時間自己補嘅位。",
+        "evidence_ref": "exchange_4.persona"
+      },
+      {
+        "quote": "唔放埋同一個基準睇就好容易高估或者低估咗個集中度。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "原來幾個戶口加埋之後，某個行業或者幾隻核心名字集中得比我以為更高。",
+        "evidence_ref": "exchange_6.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個星期日晚因美股板塊波動，主動用 spreadsheet 加券商持倉對照。",
+      "把 ETF 主要成份與直接持有美股拉埋一齊睇，檢查重複押注。",
+      "發現同一主題倉位分散喺唔同戶口，意識到表面分散未必真分散。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用 spreadsheet 手動整合資料。",
+      "把大持倉 ETF 主要成份同直接持股逐個對照。",
+      "跨戶口自己估算主題同名字重疊。"
+    ],
+    "pain_level": "high",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "結果要講清楚點樣計。",
+      "要見到 data 幾時更新。",
+      "唔可以只得紅黃綠燈式黑箱輸出。",
+      "外部資產權限要由用戶細粒度控制，並可隨時取消。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行內已有持倉整合分析。",
+      "外部資產只用嚟做分析同報告。",
+      "由用戶選擇加邊個戶口、邊類資產。",
+      "可隨時取消外部資產連接。"
+    ],
+    "rejected_data_access": [
+      "因連接外部資產而自動變成 RM 跟進名單。",
+      "把外部資產資料用作產品推銷觸發。",
+      "分析後立即引導約 RM、轉倉或直接配產品。",
+      "用 portfolio health 包裝銀行有分銷利益嘅產品導流。"
+    ],
+    "required_trust_explanation": [
+      "要清楚說明外部資料會點用。",
+      "分析與銷售動作要明確分離。",
+      "輸出要透明可審視，而唔係只畀結論。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "第一次就要見到本身唔容易即刻睇到嘅跨戶口集中度洞察。",
+      "能捉到基金、ETF、直接持股之間重疊。",
+      "結果要解釋計算方法。",
+      "顯示資料更新時間。"
+    ],
+    "time_to_value": "首次打開即時",
+    "abandonment_triggers": [
+      "只整合本身已經睇到嘅資料。",
+      "只有紅黃綠燈，無解釋。",
+      "分析完即刻帶去銷售或 RM 跟進。",
+      "外部資產用途或權限唔清楚。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "未明言 free trial，但明確表示銀行內已有資料整合應屬基本功能，不應另外收費。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "跨外部資產整合。",
+      "更新夠快。",
+      "情景分析有深度。",
+      "可持續比較 rebalancing 後風險點變。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "持續提供難以自行看到的跨戶口集中度洞察。",
+      "方法透明，講清楚點樣計。",
+      "能追蹤 rebalancing 前後風險變化。"
+    ],
+    "drop_off_reasons": [
+      "功能被視為基本 banking feature，價值不足以獨立留存。",
+      "看起來像 sales funnel。",
+      "黑箱式輸出缺乏可驗證性。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多客戶覺得現有銀行投資指引偏 product-led 而非 portfolio-led。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "此受訪者明確懷疑 RM/report 會變成銷售前菜，但只有一位 synthetic persona，未能外推很多客戶。"
+    },
+    {
+      "assumption": "客戶能理解簡化後的 portfolio risk、集中度、情景分析。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者自發談論集中度、權重、情景分析及計算透明度，顯示至少對核心概念有可用理解能力。"
+    },
+    {
+      "assumption": "機構級 analytics 經由銀行提供，增加的信任會多於懷疑。",
+      "status": "weakened",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "價值感存在，但信任非常有條件，稍有銷售觸發就轉為懷疑。"
+    },
+    {
+      "assumption": "客戶願意分享足夠 portfolio data，包括至少部分外部資產。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona"
+      ],
+      "rationale": "願意分享，但前提嚴格，只限分析/report、細粒度權限、可撤回、不可作銷售用途。"
+    },
+    {
+      "assumption": "功能可帶來更好行動或互動，而不只是令客戶更被動。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者重視可比較 rebalancing 後風險變化，暗示可支持行動；但未直接證明會採取具體操作。"
+    },
+    {
+      "assumption": "至少部分客戶對 self-serve 或 RM-assisted interpretation 有需求。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "對 self-serve 分析需求清楚；RM-assisted 只有在不被感知為銷售導流時才可能接受。"
+    },
+    {
+      "assumption": "部分客戶對 premium analytics 或 advisory support 有可信付費條件。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者給出明確付費門檻，不會為基本整合付費，但會為跨外部資產、快更新、深度情景分析與持續比較功能考慮付費。"
+    },
+    {
+      "assumption": "概念可被視為中立理解工具，而非更高級的銷售介面。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "存在明確中立工具價值，但只要介面或後續流程靠近產品推薦，就會立即被歸類為 sales funnel。"
+    }
+  ],
+  "key_insights": [
+    "核心需求唔係『睇到重複名字』，而係用同一基準量化跨 ETF、個股、跨戶口的真實集中度。",
+    "Portfolio Health Check 對這位受訪者有明顯問題對準度，因為正好補他現時用 spreadsheet 手補的缺口。",
+    "信任唔係來自『機構級 analytics』字眼本身，而係來自資料用途受限、權限可控、方法透明、同銷售分離。",
+    "銀行內已有資料的整合被視為 table stakes，不足以支撐獨立收費。",
+    "可收費價值來自更深層能力：外部資產整合、較快更新、深度情景分析、以及 rebalancing 前後風險變化追蹤。"
+  ],
+  "next_experiment": "用另一位相近但對銀行 RM 較信任或較不信任的香港投資者做對比訪談，並展示兩個低保真概念變體：一個純 self-serve 無任何 RM CTA，另一個可選擇生成 report 再自行決定是否聯絡 RM，測試同一分析輸出下銷售感知如何改變。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，不能代表香港零售或半零售銀行客群。",
+    "未測試實際 UI/報表樣式，對『講清楚點樣計』的具體要求仍未具象化。",
+    "未取得真實行動證據，例如看完分析後是否真的 rebalancing、聯絡 RM 或增加資產留存。",
+    "未得出可接受價格區間，只知道付費門檻條件。",
+    "未驗證對壓力測試、貨幣風險、風險取向匹配等其他功能模塊的實際理解與價值排序。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 的概念預驗證，不可當作真人市場證據或因果結論；最多用嚟收斂下一輪真人訪談與原型測試重點。"
+}

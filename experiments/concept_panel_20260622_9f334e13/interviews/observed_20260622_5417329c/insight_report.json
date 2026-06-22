@@ -1,0 +1,181 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "主要都係土法。開住幾個app同月結單，自己寫低大概持倉",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "基金入面嗰層重疊...自己最難一眼睇清",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "跨銀行擺住嗰啲持倉，唔放埋一齊望，好容易低估咗其實自己個風險",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "好少真係幫你當成一個完整portfolio去睇",
+        "evidence_ref": "exchange_7.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月美股急跌當晚，受訪者主動逐樣核對美股、基金同 MPF 風險。",
+      "實際做法係同時開幾個 app 同月結單，再手寫持倉做比對。",
+      "受訪者唔係淨係睇升跌，而係主動檢查重複集中同情景下同步受壓。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "同時開幾個 app 同月結單。",
+      "自己寫低大概持倉，再對基金重倉地區、公司類型同直接持股。",
+      "用肉眼判斷係咪表面分散、實際集中。"
+    ],
+    "pain_level": "high",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "分析同銷售要分開。",
+      "要畀佢先睇完整分析同計法。",
+      "要標示資料唔完整嘅地方。",
+      "結果可以保存，之後再返去睇。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行內持倉整合做整體風險分析。",
+      "在受訪者主動加入情況下，整合部分外部資產。",
+      "保存分析結果，之後自行再睇。"
+    ],
+    "rejected_data_access": [
+      "分析一出就推自家基金。",
+      "睇完即刻被引導約 RM。",
+      "用分析做銷售鋪路但唔講清楚計法或資料缺口。"
+    ],
+    "required_trust_explanation": [
+      "先畀完整分析，唔好一開始帶去解決方案。",
+      "清楚講集中度、重疊、情景測試係點計。",
+      "明示資料唔完整之處。",
+      "容許自助消化，唔好有人追住約 RM。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "指出一樣佢平時未必即刻睇到嘅風險。",
+      "清楚顯示兩三樣持倉其實重疊得幾勁。",
+      "顯示某個情景下邊部分會一齊受壓。",
+      "解釋要清楚唔誇張。"
+    ],
+    "time_to_value": "第一次用就要見到新資訊同可行解釋，否則價值感會低。",
+    "abandonment_triggers": [
+      "每次都只係引去睇產品。",
+      "結果冇變化可跟。",
+      "分析唔透明或太誇張。",
+      "月費模式令佢覺得唔值，因為唔係日日用。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "未有直接講 free trial，但明確表示要先證明功能真係做到預期效果先會接受收費。",
+    "monthly_comfort_range": "抗拒月費；較接受一次性報告費或唔太高年費；如果已包入 priority banking 最順眼。",
+    "payment_justification": [
+      "真係幫到佢睇到平時未必即刻見到嘅重疊風險。",
+      "分析同銷售分得開。",
+      "結果可保存同持續追蹤變化。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次有新發現，而唔係重複已知資訊。",
+      "可追蹤上次到今次有咩變化。",
+      "保持中立分析定位。"
+    ],
+    "drop_off_reasons": [
+      "變成產品推薦入口。",
+      "缺乏新 insight。",
+      "需要月費但使用頻率低。",
+      "分析不透明或誇大。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "好多客戶覺得現有銀行投資建議太 product-led，唔夠 portfolio-led。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者直接指出現有銀行內容多數逐樣產品講，好少當完整 portfolio 去睇，並對銷售導向高度敏感。"
+    },
+    {
+      "assumption": "客戶對 whole-portfolio risk understanding 有明顯缺口。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者現時靠土法跨 app、月結單同手寫整合，最難看清基金底層重疊同跨銀行總風險。"
+    },
+    {
+      "assumption": "銀行提供嘅 portfolio analytics 可以提升信任。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "有價值感明確，但信任唔係自動產生；必須先滿足分析透明、中立、唔追銷售等條件。"
+    },
+    {
+      "assumption": "客戶願意分享足夠資料，包括部分外部資產，令 whole-portfolio analysis 有用。",
+      "status": "unknown",
+      "evidence_refs": [
+        "exchange_4.persona"
+      ],
+      "rationale": "受訪者只對『你加進去嘅部分外部資產』表示概念上接受，未直接測試實際願意分享邊類外部資產同邊界。"
+    },
+    {
+      "assumption": "功能可以帶動行動質素或互動，而唔係只令人更驚或更被動。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者想用嚟更快看清風險，同願意下月再用；但未直接證明會否調倉、找 RM 或採取具體行動。"
+    },
+    {
+      "assumption": "有可成立嘅收費條件。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者講到可接受一次性報告費、低年費或 priority banking bundle，但月費唔可行。"
+    },
+    {
+      "assumption": "概念可以被視為中立理解工具，而唔係升級版銷售頁。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "可以，但條件嚴格；一有產品推薦或 RM push，立即被視為銷售。"
+    }
+  ],
+  "key_insights": [
+    "最強痛點唔係『睇唔到價格』，而係睇唔清基金底層重疊同跨銀行合併後嘅總風險。",
+    "Portfolio Health Check 對呢位受訪者有明顯 value proposition，但前提係節省手動整合時間，同指出佢平時未即刻見到嘅風險。",
+    "信任核心唔在於『機構級 analytics』四個字，而在於分析是否透明、會否標示資料缺口，同分析後會否立即轉去賣產品。",
+    "留存條件好清晰：要有新 insight、有歷史結果可保存、有變化可跟。",
+    "收費訊號偏向低頻、高價值模式：一次性報告費、低年費或高端客戶 bundled；月費明顯有阻力。"
+  ],
+  "next_experiment": "下一輪用真人訪談專門測資料分享邊界同 action path：先問最近一次跨銀行檢視事件，再中性展示一頁 sample output，分開測試 1) 願唔願意連接外部資產及哪些資產，2) 睇完後會自己調整、約 RM、定完全唔行動，3) 在有/冇產品推薦 CTA 兩個版本下，信任感點變。",
+  "evidence_gaps": [
+    "未直接測試外部資產連接同資料私隱邊界。",
+    "未測 comprehension：壓力測試、情景分析、貨幣風險等術語是否真係易明。",
+    "未有 contrast case：對現有銀行 portfolio support 已滿意嘅客戶會點睇。",
+    "未驗證實際行動效果，只知再用意願，未知會否調倉或提高資產留存。",
+    "只有一位 synthetic persona，唔足以代表香港零售或半零售銀行客群。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念預驗證，屬方向性訊號，唔可以當成人類用戶研究結論或市場證據。"
+}

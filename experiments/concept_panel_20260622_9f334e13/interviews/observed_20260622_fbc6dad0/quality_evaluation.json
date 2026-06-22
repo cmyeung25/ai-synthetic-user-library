@@ -1,0 +1,152 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a recent concrete event and the current workaround before introducing the concept, which fits `concept_validation` sequencing.",
+    "Most asked questions had a single practical purpose and avoided causal pressure or mechanical root-cause probing.",
+    "The facilitator separated trust boundary, repeat-use, payment, and sales-funnel risk into distinct exchanges rather than collapsing them into one omnibus prompt.",
+    "The stop decision was reasonable: all required coverage fields were participant-facing and the last answer materially tested the sales-boundary assumption."
+  ],
+  "findings": [
+    {
+      "category": "Concept introduction neutrality",
+      "severity": "medium",
+      "observation": "The concept intro is overly long and partially solution-loaded. It bundles aggregation, risk, concentration, scenario analysis, optional external assets, report generation, RM handoff, and a no-auto-trading reassurance in one turn, which makes it hard to know which element drives the reaction.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "FACILITATOR TRACE[3]"
+      ],
+      "recommendation": "Split concept exposure into a shorter neutral core first, then add one capability at a time. Ask for reaction to the core portfolio-view concept before introducing RM/report and external-data options."
+    },
+    {
+      "category": "Question focus",
+      "severity": "medium",
+      "observation": "Two questions are compound from the participant’s perspective. `邊部分最有用，邊部分最可疑？` asks for both attraction and suspicion at once, and `基本功能，定係...另外畀錢？` mixes table-stakes classification with willingness-to-pay conditions.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "exchange_7.facilitator"
+      ],
+      "recommendation": "Use one natural focus per spoken question. For example, first ask what stands out as useful, then separately ask what raises concern; first ask whether it feels table-stakes, then separately ask what would justify payment."
+    },
+    {
+      "category": "Evidence discipline",
+      "severity": "high",
+      "observation": "The synthesis treats hypothetical concept reactions as problem evidence and behavioral proof. `problem_evidence.supporting_quotes` includes `exchange_4.persona`, which is post-concept, and `retention_risk.workflow_effect = replaces_workflow` overstates what was actually said. The participant described a current manual workaround, not observed replacement behavior.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.problem_evidence",
+        "SYNTHESIS.retention_risk"
+      ],
+      "recommendation": "Keep pre-concept problem evidence separate from post-concept concept evaluation. Mark claims such as replacement, retention, action, and trust lift as hypothetical until observed in behavior or tested with usage evidence."
+    },
+    {
+      "category": "Assumption grading overreach",
+      "severity": "high",
+      "observation": "Several assumption statuses are stronger than the evidence allows from one synthetic interview and mostly hypothetical answers. `supported` for understanding analytics and premium payment conditions is too strong for broad founder assumptions; `partially_supported` is safer unless backed by observed behavior or repeated cases.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Downgrade broad assumption verdicts when evidence comes from a single synthetic persona or stated intent. Reserve `supported` for tightly scoped persona-level claims, and explicitly note when the evidence is hypothetical rather than behavioral."
+    },
+    {
+      "category": "Concept-validation rigor",
+      "severity": "medium",
+      "observation": "The interview covered curiosity, trust, payment, and repeat-use, but did not explicitly separate trial behavior from month-two retention behavior. Repeat-use was inferred from first-use value conditions rather than probed as a later habit or return pattern.",
+      "evidence_refs": [
+        "exchange_6.facilitator",
+        "exchange_6.persona",
+        "COVERAGE STATUS"
+      ],
+      "recommendation": "Add a direct follow-up about what would make the participant come back in week 2 or month 2, and what would make the tool fade after initial curiosity."
+    },
+    {
+      "category": "Pricing and design bounds",
+      "severity": "medium",
+      "observation": "The synthesis mostly preserves uncertainty on pricing, but it still derives fairly specific product-shaping conclusions from one synthetic persona, such as what is chargeable versus table stakes. Those are useful hypotheses, not validated segmentation truths.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "SYNTHESIS.pricing_signal",
+        "SYNTHESIS.key_insights"
+      ],
+      "recommendation": "Label pricing and design implications as persona-bounded hypotheses. Avoid treating one persona’s table-stakes judgment as a market rule for Hong Kong retail or semi-retail banking customers."
+    },
+    {
+      "category": "Reference quality",
+      "severity": "medium",
+      "observation": "Some synthesis claims lack tight transcript anchoring. `pain_level: high`, `switching_difficulty: medium`, and `time_to_value: 首次打開即時` are plausible interpretations but not direct participant statements with explicit refs.",
+      "evidence_refs": [
+        "SYNTHESIS.current_workaround",
+        "SYNTHESIS.first_value_requirement"
+      ],
+      "recommendation": "Either attach explicit exchange refs and note these are analyst inferences, or remove the scalar labels when the participant did not state them directly."
+    },
+    {
+      "category": "Domain-fit interpretation",
+      "severity": "medium",
+      "observation": "The interview was rightly centered on changed investing behavior, but the synthesis risks collapsing multiple motivations into a single `portfolio-led vs product-led` frame. The participant also cared about transparency, data freshness, and cross-account normalization, not only anti-sales positioning.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Preserve the behavioral job separately from the disruption source: cross-account concentration understanding is the core job; sales-funnel concern is one adoption boundary, not the whole need."
+    }
+  ],
+  "required_improvements": [
+    "Shorten and decompose the concept introduction so each participant-facing question has one clear focus.",
+    "Separate pre-concept problem evidence from post-concept hypothetical reactions in the synthesis.",
+    "Downgrade broad assumption verdicts that rely on a single synthetic persona and stated intent rather than observed behavior.",
+    "Add an explicit month-two retention probe instead of inferring ongoing use from first-use value.",
+    "Stop assigning analyst scalar labels such as `pain_level`, `switching_difficulty`, or `replaces_workflow` without direct participant evidence or clearly marked inference."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one more concrete recent portfolio-review event to confirm whether cross-account concentration checking is recurring or occasional.",
+      "After the core concept reaction, ask separately what would make them try it once, what would make them return in month two, and what would make them ignore it after first use.",
+      "Probe what a transparent output must literally show: holdings roll-up, factor breakdown, scenario math, update timestamps, or audit trail.",
+      "Test a stripped self-serve version before adding RM/report workflow to isolate whether value survives without sales-adjacent cues."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct participant-facing probe for trial behavior: what exact trigger would make them open or connect accounts the first time.",
+      "Add a direct month-two retention probe: in what recurring situation would they come back, and how often.",
+      "Ask what concrete action they would take after a strong concentration alert, and whether they have ever taken a similar action before.",
+      "Probe one acceptable and one unacceptable example of RM involvement so the trust boundary is behaviorally specific rather than principle-only."
+    ],
+    "prompt_adjustments": [
+      "In `concept_validation`, enforce a shorter neutral concept script with no more than 2-3 capability elements before the first reaction probe.",
+      "Add a guardrail that synthesis must tag each claim as `observed_behavior`, `stated_preference`, or `analyst_inference`.",
+      "Prevent `supported` assumption statuses when evidence is from a single synthetic interview unless the claim is explicitly persona-scoped.",
+      "Require retention to be split into `initial curiosity`, `first trial`, `repeat use`, and `month-two retention` rather than collapsing them."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for required coverage, but one or two extra turns would improve rigor if reserved specifically for trial-vs-retention separation and for isolating RM involvement from the core concept. No major widening is needed; a slightly larger soft limit is enough."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic concept-validation interview. Any support, pricing implication, trust boundary, or product-direction conclusion should be treated as persona-bounded prompt-quality evidence, not market evidence or causal proof."
+}
