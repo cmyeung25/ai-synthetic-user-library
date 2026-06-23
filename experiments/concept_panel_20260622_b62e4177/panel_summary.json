@@ -1,0 +1,633 @@
+{
+  "run_id": "concept_panel_20260622_b62e4177",
+  "topic": "HK Bank Portfolio Health Check V2",
+  "language": "Natural Cantonese Traditional Chinese",
+  "core_assumption_count": 8,
+  "persona_count": 7,
+  "problem_strength_counts": {
+    "medium": 6,
+    "unknown": 1
+  },
+  "average_quality_score": 3.33,
+  "assumption_matrix": [
+    {
+      "assumption_index": 1,
+      "assumption": "好多零售客戶而家係用碎片化、人工方式管理投資組合，而唔係真正 whole-portfolio view。",
+      "status_counts": {
+        "supported": 6
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "supported",
+          "rationale": "呢位參與者明確同時用銀行 app 同券商 app，再靠人手拼湊 whole-portfolio view。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "受訪者實際上以逐項查看、截圖拼湊和月結單核對來管理，並明確指出平時難以看出跨產品的重疊風險。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "supported",
+          "rationale": "這位受訪者清楚描述跨銀行與 MPF 需要手動拼湊，沒有一個地方一次過看清。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "受訪者明確以app、月結單、截圖、手機記錄拼湊整體視圖，且命名不一致造成額外判斷成本。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "supported",
+          "rationale": "此受訪者明確跨多個 app、券商、Notes 手動拼湊 exposure。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "supported",
+          "rationale": "受訪者明確描述用 app、截圖、月結單、記事、sheet 人手拼湊，只得到大概圖。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 2,
+      "assumption": "客戶今日能指出 Aladdin 類 analytics 可解決嘅實際盲點，特別係 overlap、concentration、drift。",
+      "status_counts": {
+        "supported": 6
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "supported",
+          "rationale": "參與者主動提到重複持倉、科技／美股集中、美元相關曝險同市場比重偏高。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "她主動指出重疊、集中度和收入來源集中是現有盲點，也重視變化提醒和現金流影響。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "supported",
+          "rationale": "受訪者主動提出市場/資產集中、表面分散但實際重疊，並希望看到對教育和退休目標的影響。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "受訪者主動提到基金方向接近、貨幣分布比預期集中，以及最想先看重疊。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "supported",
+          "rationale": "受訪者具體指出重疊 exposure、美元集中度、幣種風險與情景變化。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "supported",
+          "rationale": "受訪者主動指出重複持倉、集中度、貨幣風險、壓力測試係有價值位。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 3,
+      "assumption": "零售客戶可以理解簡化版 institutional analytics，只要解釋夠具體、非技術化。",
+      "status_counts": {
+        "partially_supported": 2,
+        "supported": 4
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "partially_supported",
+          "rationale": "參與者接受簡單 summary，同接受用人話解釋；但對壓力測試、情景分析仍傾向要有人解釋。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "她能理解重疊、集中度、到期分布和現金流影響，但要求用簡單語言呈現。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "supported",
+          "rationale": "受訪者對集中度、分布、幣種、重疊等概念反應自然，並明確要求『講得清楚』而不是只給分數。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "受訪者不要抽象圖表，要具體指出哪些持倉重疊及原因，顯示對『功能』有理解需求，但不需要機構式術語。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "supported",
+          "rationale": "受訪者表示集中度、幣種分布、重疊 exposure、簡單情景影響都看得明。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "partially_supported",
+          "rationale": "佢接受簡單壓力測試同清楚解釋，但反感『嚇人標籤』同過度肯定語氣。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 4,
+      "assumption": "最有價值嘅零售 use case 係簡化 insight 同 explanation，而唔係機構級 detail 本身。",
+      "status_counts": {
+        "supported": 6
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "supported",
+          "rationale": "參與者反覆要求簡單 summary、具體指出問題同下一步判斷，而唔係更多複雜分析。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "她明確拒絕只有分數的輸出，偏好指出哪部分集中、與上月有何變化，以及需要時有人解釋。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "supported",
+          "rationale": "受訪者偏好清楚解釋和真人取捨分析，不願意為更多圖表付費。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "受訪者反覆強調直接指出問題、簡單解釋、能自行核對，不重視畫面包裝。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "supported",
+          "rationale": "受訪者重視可影響決策的拆解與解釋，不重視靚圖或深層模型細節。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "supported",
+          "rationale": "佢重視先睇清盤面、重複、集中，同要求解釋清楚，而唔係要複雜技術輸出。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 5,
+      "assumption": "有啲能力適合直接放喺 self-serve retail channel，有啲應留喺 RM 或 assisted workflow。",
+      "status_counts": {
+        "supported": 6
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "supported",
+          "rationale": "參與者明確區分咗分布／重複曝險／地區貨幣比重可 self-serve，而壓力測試／情景分析／risk-fit conflict 需要人話解釋。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "她把集中度、重疊、到期分布和現金流變化歸為可自助查看，把利率情景、信用風險惡化和收入目標落差歸為需要人解釋。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "supported",
+          "rationale": "受訪者明確把集中度/分布/重疊歸為自助查看，把情景分析和大調整影響歸為需要人解釋。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "受訪者明確把重疊、集中度、貨幣分布歸為自助；把調整建議、風險取向衝突和取捨說明歸為RM。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "supported",
+          "rationale": "受訪者清楚區分哪些內容可自助看，哪些應留給 RM 或詳細報告。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "supported",
+          "rationale": "受訪者想自助睇重複持倉、集中度、地區/貨幣分布、簡單壓測；反對直接擺交易指令式建議。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 6,
+      "assumption": "免費會增加試用，但 trust、資料共享同 sales-intent concerns 仍然會影響 adoption。",
+      "status_counts": {
+        "supported": 6
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "supported",
+          "rationale": "雖然參與者表示會試，但同時非常在意功能會否一開就推產品或叫約 RM。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "即使核心免費，她仍對外部資料連接、資料用途和推銷風險保持明確界線。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "supported",
+          "rationale": "受訪者願意在免費前提下使用，但對資料範圍和 RM 推銷界線非常敏感。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "即使免費，受訪者仍要求可核對的解釋、清楚權限、避免過度資料讀取。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "supported",
+          "rationale": "受訪者對權限邊界很明確，亦反感帶去產品建議。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "supported",
+          "rationale": "即使免費，佢仍然對登入資料、長期同步、sales follow-up、約 RM 導流有明顯戒心。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 7,
+      "assumption": "最好嘅嵌入位係現有客戶 workflow，而唔係獨立複雜 analytics destination。",
+      "status_counts": {
+        "partially_supported": 4,
+        "supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "partially_supported",
+          "rationale": "參與者傾向喺銀行 app 內即時睇簡單 summary，並在買新嘢或市況大變時回看；但未直接比較獨立 destination 與嵌入式體驗。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "她的使用觸發集中在定期快到期、產品波動和現金流受影響等既有管理節點。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "partially_supported",
+          "rationale": "受訪者描述了現有檢視時點和再次打開的觸發，但沒有直接比較『嵌入現有流程』與『獨立入口』兩種方式。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "受訪者想在RM通話後、收到新建議後、做完調整後即時查看，顯示更像 existing journey 的 decision checkpoint。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "partially_supported",
+          "rationale": "受訪者提到市場波動與固定 money admin 時刻，但未比較不同嵌入形態。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "partially_supported",
+          "rationale": "佢提到市況郁、買完產品後、對比上次變化時會再開；但未直接比較不同入口設計。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 8,
+      "assumption": "客戶可以講清楚邊條邊界係 retail 應顯示，邊啲唔應直接 exposed。",
+      "status_counts": {
+        "supported": 6
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_1201",
+          "persona_name": "Chloe Lam Tsz-yan",
+          "status": "supported",
+          "rationale": "參與者清楚講咗 sales boundary、解釋 boundary 同 self-serve vs assisted boundary。"
+        },
+        {
+          "persona_id": "su_1203",
+          "persona_name": "Lau Mei-ling",
+          "status": "supported",
+          "rationale": "她對資料邊界、可自助看的分析，以及需要人工解讀的分析都有清楚界線。"
+        },
+        {
+          "persona_id": "su_1204",
+          "persona_name": "Lau Mei-yan",
+          "status": "supported",
+          "rationale": "受訪者清楚畫出資料權限邊界，也分清哪些分析可自助、哪些需真人解讀。"
+        },
+        {
+          "persona_id": "su_1205",
+          "persona_name": "Clara Wong",
+          "status": "supported",
+          "rationale": "受訪者對自助/RM分工及外部資料權限界線都給出清楚邊界。"
+        },
+        {
+          "persona_id": "su_1206",
+          "persona_name": "Chloe Ng",
+          "status": "supported",
+          "rationale": "受訪者能具體界定資料邊界與資訊深度邊界。"
+        },
+        {
+          "persona_id": "su_1207",
+          "persona_name": "Maggie Leung",
+          "status": "supported",
+          "rationale": "佢明確區分可直接展示的盤面/風險 insight，同不應直接給零售客的交易導向輸出。"
+        }
+      ]
+    }
+  ],
+  "additional_persona_specific_findings": [],
+  "personas": [
+    {
+      "persona_id": "su_1201",
+      "persona_name": "Chloe Lam Tsz-yan",
+      "interview_id": "observed_20260622_bbed9cfd",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "免費 core 會明顯增加試用意願；參與者已表示第一下會開嚟睇。",
+        "monthly_comfort_range": "唔接受每月為分析交租；較接受一次性收費或包喺 banking plan。",
+        "payment_justification": [
+          "進階版要幫到下一步判斷，而唔係只提供更多圖表。",
+          "如果可解釋點樣減低重複風險、點樣調整方向、會影響到咩，較有付費可能。",
+          "如果可整合銀行以外持倉，感知價值更高。"
+        ],
+        "evidence_strength": "stated"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "上一次結果真係有用。",
+          "能指出具體重複持倉或比重偏高。",
+          "買完新持倉後想再檢查。",
+          "市況郁得明顯時想再睇組合有冇偏咗。"
+        ],
+        "drop_off_reasons": [
+          "如果只俾抽象風險高低而冇 actionable insight。",
+          "如果功能變成 sales funnel。",
+          "如果冇新變化或冇新發現。"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 4,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 3,
+        "causal_rigor": 4,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 3,
+        "overall": 4
+      }
+    },
+    {
+      "persona_id": "su_1202",
+      "persona_name": "Iris Leung",
+      "interview_id": "observed_20260622_8e5a2b53",
+      "problem_strength": "unknown",
+      "pricing_signal": {},
+      "retention_risk": {},
+      "quality": {}
+    },
+    {
+      "persona_id": "su_1203",
+      "persona_name": "Lau Mei-ling",
+      "interview_id": "observed_20260622_feec68e4",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "free core 已被視為合理前提；受訪者願意先用免費版，付費只在高決策壓力時才會考慮。",
+        "monthly_comfort_range": "不支持月費；較偏好一次過收費。",
+        "payment_justification": [
+          "接近真實決策時刻，例如債券到期或定期續不續。",
+          "收到收入過度集中的提醒，但自己看完仍未有把握。",
+          "付費內容需包含較深入分析、書面摘要和有人清楚解釋。",
+          "不能變成順勢推產品。"
+        ],
+        "evidence_strength": "stated"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "有定期快到期。",
+          "某類收息產品波動加大。",
+          "提醒指出每月現金流可能受影響。",
+          "能清楚顯示跟上個月相比有什麼變化。"
+        ],
+        "drop_off_reasons": [
+          "只有分數沒有解釋。",
+          "沒有變化比較。",
+          "太技術化或要自己猜意思。",
+          "過度索取資料或帶有推銷感。"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 3,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 2,
+        "causal_rigor": 3,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 2,
+        "overall": 3
+      }
+    },
+    {
+      "persona_id": "su_1204",
+      "persona_name": "Lau Mei-yan",
+      "interview_id": "observed_20260622_3796b61e",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "核心功能免費會降低試用門檻，受訪者對免費版本有明確試用情境。",
+        "monthly_comfort_range": "未知",
+        "payment_justification": [
+          "只有在準備做較大調整，例如重新分配教育儲蓄、基金和 MPF 時，才會考慮付費。",
+          "願意付費的內容是講得清楚的情景分析，加一次不太 sell 產品的真人解讀。",
+          "單純更多圖表或更多提示不足以支持付費。"
+        ],
+        "evidence_strength": "stated"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "市場有波動時會再打開。",
+          "做完組合調整後，會用來確認整體風險是否回到可接受範圍。",
+          "若提示具體指出某個集中位比上月高，而不是普通推送，會再看。"
+        ],
+        "drop_off_reasons": [
+          "提醒太泛或像普通推送。",
+          "沒有幫到做調整後的風險確認。",
+          "內容太技術化或只是多圖表。"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 4,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 3,
+        "causal_rigor": 3,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 3,
+        "overall": 4
+      }
+    },
+    {
+      "persona_id": "su_1205",
+      "persona_name": "Clara Wong",
+      "interview_id": "observed_20260622_ab221223",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "核心功能免費明顯降低試用門檻，但是否持續使用仍取決於第一次是否真的發現盲點。",
+        "monthly_comfort_range": "未知；未提供明確金額。",
+        "payment_justification": [
+          "額外收費要去到不止提醒，而是真正幫到一次重要決定。",
+          "可接受的進階層例子是完整、可留底的年度檢視報告。",
+          "付費內容需清楚比較現有組合與建議調整前後差異。",
+          "若能納入外部資產，前提仍是方法與權限清晰。"
+        ],
+        "evidence_strength": "stated"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "第一次成功找出原本看不清的重疊。",
+          "做完調整後可以對比前後變化。",
+          "RM提出新建議後，可即時檢查是否令集中度再升高。"
+        ],
+        "drop_off_reasons": [
+          "如果只是靜態提醒，沒有新發現或比較價值。",
+          "如果無法支援RM建議前後的快速檢查。",
+          "如果分析太抽象、太技術化或像銷售話術。"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 4,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 2,
+        "causal_rigor": 3,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 2,
+        "overall": 3
+      }
+    },
+    {
+      "persona_id": "su_1206",
+      "persona_name": "Chloe Ng",
+      "interview_id": "observed_20260622_2574faa9",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "核心功能免費有助打開首次使用，但不代表自然留存。",
+        "monthly_comfort_range": "unknown",
+        "payment_justification": [
+          "只有當進階服務能提供免費版看不到、且會影響決定的資訊時，才可能付費。",
+          "可接受的進階價值包括更清楚的重疊來源、幣種風險、情景變化，以及更完整的外部持倉納入。",
+          "若只是多幾個圖表或帶去產品建議，不會付費。"
+        ],
+        "evidence_strength": "stated"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "市場波動明顯時，可快速確認總 exposure 有沒有走樣。",
+          "月尾或星期日夜晚做 money admin 時，可檢查重疊與幣種偏差。",
+          "若能提供比現有 app 更具體的 whole-portfolio insight。"
+        ],
+        "drop_off_reasons": [
+          "首次體驗太表面",
+          "無法整合外部持倉",
+          "呈現太 technical",
+          "感覺像銷售前置",
+          "setup 或授權成本過高"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 4,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 2,
+        "causal_rigor": 3,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 2,
+        "overall": 3
+      }
+    },
+    {
+      "persona_id": "su_1207",
+      "persona_name": "Maggie Leung",
+      "interview_id": "observed_20260622_9792c9bb",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "free core 已被假設提供；受訪者對免費版有開放度，但是否持續用取決於有冇新洞察。",
+        "monthly_comfort_range": "偏向唔接受月費；較接受一次過報告或一年少少費用。",
+        "payment_justification": [
+          "免費版睇唔到的跨銀行/基金/MPF 重複持倉",
+          "貨幣風險分析",
+          "講得清楚的壓力測試而唔係得幾個嚇人標籤",
+          "更完整但仍然非推銷式的報告"
+        ],
+        "evidence_strength": "stated"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "上一次結果真係指出原本睇唔到的重複或集中",
+          "市況波動較大時",
+          "剛買完基金或股票之後",
+          "有得對返上次變化"
+        ],
+        "drop_off_reasons": [
+          "無新洞察",
+          "結果太籠統或只係警示標籤",
+          "產品體驗變成約 RM 導流",
+          "付費後換來更多推銷電話"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 3,
+        "conversation_naturalness": 3,
+        "evidence_discipline": 2,
+        "causal_rigor": 3,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 2,
+        "overall": 3
+      }
+    }
+  ],
+  "synthetic_only_disclaimer": "This panel contains synthetic AI pre-validation only. It cannot establish market demand, pricing, prevalence, or replace interviews with real people."
+}

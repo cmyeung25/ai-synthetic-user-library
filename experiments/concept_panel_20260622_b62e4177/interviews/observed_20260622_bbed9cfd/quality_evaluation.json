@@ -1,0 +1,123 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "warn",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and a real current workaround before introducing the concept (`exchange_1` to `exchange_3`).",
+    "Most asked questions had one conversational focus and sounded natural in Cantonese rather than analytic or framework-driven (`exchange_1` to `exchange_8`).",
+    "The facilitator kept curiosity, trust boundary, repeat use, payment, and self-serve vs assisted boundaries meaningfully separated instead of collapsing them into one question sequence (`exchange_4` to `exchange_8`).",
+    "The synthesis repeatedly marks pricing and retention evidence as stated or hypothetical rather than behavioral proof, which is appropriate for this mode (`pricing_signal.evidence_strength`, `synthetic_only_disclaimer`)."
+  ],
+  "findings": [
+    {
+      "category": "concept introduction neutrality",
+      "severity": "medium",
+      "observation": "The concept was introduced with a built-in benefit claim instead of a more neutral description. `exchange_4.facilitator` frames the feature as one that will \"幫你一眼睇到\" the participant's exact blind spot, which pre-loads usefulness before reaction is observed.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.facilitator",
+        "exchange_4.persona"
+      ],
+      "recommendation": "Introduce the concept more neutrally, for example by describing what the screen shows without asserting that it solves the concentration problem. Then probe reaction, trust, and usefulness from the participant's own interpretation."
+    },
+    {
+      "category": "disconfirmation coverage",
+      "severity": "medium",
+      "observation": "The interview gathered positive interest and conditions for trust, but it did not directly test a meaningful null or counter-position such as whether the participant's current manual method is already good enough, whether a simpler non-analytics summary would suffice, or whether they would ignore the feature unless prompted. This weakens resistance to confirmation bias in concept validation.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Add at least one participant-facing disconfirmation probe after initial interest, such as asking when this would not be worth opening, when the current workaround is sufficient, or what would make them ignore it even if free."
+    },
+    {
+      "category": "stop rule and coverage discipline",
+      "severity": "medium",
+      "observation": "The facilitator stopped despite the provided coverage state still marking `founder_assumption_check` as missing and `coverage_complete` as false. The stop rationale in the trace says required coverage is complete, which does not match the runtime coverage object.",
+      "evidence_refs": [
+        "COVERAGE_STATUS",
+        "FACILITATOR_TRACE[8]"
+      ],
+      "recommendation": "Do not close while a required coverage item remains uncovered unless the turn limit is reached or the participant is exhausted. Add one targeted founder-assumption probe, then reassess closure."
+    },
+    {
+      "category": "synthesis overreach",
+      "severity": "medium",
+      "observation": "Several synthesis claims go beyond the transcript. `current_workaround.pain_level` is labeled `high`, but the participant only said the process is \"幾煩\" and that they were \"有少少卡住\". `retention_risk.workflow_effect` says `replaces_workflow`, but the interview did not establish replacement versus augmentation. These are stronger interpretations than the evidence supports.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.current_workaround.pain_level",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Downgrade unsupported intensity labels and avoid asserting workflow replacement unless the participant explicitly compares old and new behavior. Use softer wording such as `moderate friction` or `could reduce manual cross-checking`."
+    },
+    {
+      "category": "single-persona product shaping",
+      "severity": "medium",
+      "observation": "The report moves into design and experiment implications with moderate confidence from one synthetic concept interview. The `key_insights` and `next_experiment` are directionally useful, but they should be framed more tightly as persona-specific hypotheses rather than broader retail-banking guidance.",
+      "evidence_refs": [
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.next_experiment",
+        "SYNTHESIS.synthetic_only_disclaimer"
+      ],
+      "recommendation": "Prefix design implications with explicit scope limits such as 'for this persona' and avoid treating the self-serve/assisted split as a segment-wide rule until contrasted with other customer types."
+    }
+  ],
+  "required_improvements": [
+    "Make concept introduction more neutral by removing built-in claims that the feature will solve the participant's stated problem.",
+    "Add at least one explicit disconfirmation probe after initial interest to test when the concept would not be useful or would be ignored.",
+    "Align stop decisions with the actual coverage object; do not close while required coverage remains missing unless constrained by turn limits.",
+    "Tighten synthesis language so intensity, replacement, and design implications do not exceed what the transcript directly supports.",
+    "Keep product and pricing implications explicitly bounded to a single synthetic persona unless corroborated by more interviews."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask what would make the participant not open the feature even if it were free and present in the banking app.",
+      "Probe whether the current manual cross-app method is 'good enough' in any situations, and what threshold would justify switching behavior.",
+      "Ask one founder-assumption question that isolates embedding preference, such as whether they would prefer this as a lightweight check inside their existing app flow or as a separate destination for occasional deep review.",
+      "Test whether a very simple summary alone is sufficient before adding advanced analytics layers."
+    ],
+    "coverage_gap_actions": [
+      "Directly cover `founder_assumption_check` with a participant-facing question rather than inferring it from adjacent preference comments.",
+      "Ask whether the participant would trust external-holdings aggregation enough to connect non-bank accounts, and under what consent/explanation conditions.",
+      "Separate 'I would look at it' from 'I would rely on it to change what I do' with a direct behavior-change probe.",
+      "If payment remains in scope, ask for a concrete trigger or recent comparable payment behavior instead of relying only on stated willingness."
+    ],
+    "prompt_adjustments": [
+      "Revise the concept-validation prompt to require one neutral concept introduction template that describes the feature without promising the outcome.",
+      "Add a prompt rule that after any positive concept reaction, the facilitator must ask one disconfirmation or sufficiency probe before moving to pricing or retention.",
+      "Add a closure guard: if `coverage_complete` is false, the facilitator should not generate a stop rationale claiming completion.",
+      "Constrain synthesis fields to transcript-grounded wording and forbid categorical labels like `replaces_workflow` unless the participant explicitly contrasts old and new behavior."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy appears sufficient. This interview ended early relative to the uncovered requirement; the fix is better closure gating, not a wider turn budget."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview and its synthesis discipline. Findings about research quality are valid for this artifact, but any product implications should remain tightly bounded until confirmed with additional interviews."
+}

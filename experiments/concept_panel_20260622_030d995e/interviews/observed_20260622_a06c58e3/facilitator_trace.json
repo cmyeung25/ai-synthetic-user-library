@@ -1,0 +1,362 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "Concept mode requires current behaviour before introducing the concept. With no transcript yet, the strongest opening is a neutral request for one recent portfolio-review event rather than opinions or feature reactions.",
+    "message_to_persona": "你最近一次主動睇自己成個投資組合係幾時？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次實際檢視投資組合嘅事件係乜",
+      "當時用咗咩工具或方法",
+      "而家流程入面有冇碎片化或手動 workaround",
+      "之後邊類 Portfolio Health Check 能力先有實際價值",
+      "數據、信任同銷售感覺界線喺邊"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workflow_reconstruction",
+    "probing_strategy": "current_workaround",
+    "decision_rationale": "Recent behaviour is established with a concrete event. The biggest gap before introducing the concept is the participant's actual workaround across the bank and broker apps, so the next question should reconstruct the method she used that night.",
+    "message_to_persona": "嗰晚你主要靠咩方法對返銀行同券商嗰啲數？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次主動檢視整體投資組合發生喺上個月尾夜晚，當時同時打開銀行同券商 app 去睇基金、股票同現金配置。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "同一個檢視時段入面，參與者亦會順手檢查細項月費有冇持續扣緊。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢當晚具體用咩工具或步驟整合銀行同券商資料",
+      "而家跨平台睇持倉時最手動或最零散嘅位係邊",
+      "現有方法有冇已經足夠，定係有明顯盲點",
+      "之後介紹概念後，邊類分析最有用或太技術化",
+      "對外部資產整合、alerts 同 RM 介入嘅信任界線喺邊",
+      "免費功能會唔會令佢試，同咩情況下第二個月會再用"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "Current behaviour and workaround are now grounded in a specific recent event, so it is appropriate to introduce the concept neutrally. The next question should test first value reaction with one concrete capability, not bundle trust and retention yet.",
+    "message_to_persona": "如果你個銀行app有個免費嘅 Portfolio Health Check，幫你一次過睇晒銀行同券商持倉分佈同風險，你第一下覺得邊部分最有用？",
+    "evidence_updates": [
+      {
+        "claim": "參與者目前以分開查看銀行 app 與券商 app 的方式管理投資組合。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會用手機計數機粗略核對持倉比例。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "遇到看不明白的地方時，參與者會先截圖，留待之後再看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "邊類整體分析對佢最有即時價值，邊類太技術化或多餘",
+      "佢會唔會信銀行整合外部持倉同風險提示",
+      "點樣呈現先唔似借機推銷",
+      "免費情況下乜嘢會令佢真係試一次",
+      "第二個月會因為咩觸發再用",
+      "邊啲能力應該自助顯示，邊啲只適合 RM 協助解釋"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_probe",
+    "probing_strategy": "trust_boundary",
+    "decision_rationale": "The participant has identified value in a whole-portfolio view and plain-language risk explanation. The next highest-signal gap is the trust boundary around linking and aggregating bank and broker holdings, which is central to adoption and founder assumptions.",
+    "message_to_persona": "如果要連埋券商持倉先做到呢個總覽，你會唔會介意銀行攞到嗰部分資料？",
+    "evidence_updates": [
+      {
+        "claim": "參與者目前用兩個 app 分開查看資料，再自行拼合整體配置。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者認為整體持倉分佈總覽有明顯價值。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者重視風險解釋是否夠白話，不想看到太多行內術語。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "銀行整合外部券商資料的接受界線是甚麼",
+      "甚麼呈現或權限安排會令功能不像推銷",
+      "免費情況下甚麼會促使她首次試用",
+      "第二個月在甚麼情況下會再打開使用",
+      "哪些分析應留在自助介面，哪些應交由RM解釋"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "retention_repeat_use",
+    "decision_rationale": "Trust boundary is now specific and concrete. The next highest-value gap is whether this free feature would become part of her real workflow after first trial, which also tests the assumption that embedding in existing review moments matters more than novelty.",
+    "message_to_persona": "如果你真係開過一次，咩情況會令你下個月再打開佢？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對銀行存取券商持倉資料有明確戒心。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者只會考慮在自己主動授權、只讀、資料範圍有限且用途清楚不作推銷的情況下試用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若一開始要求過闊權限，參與者大多不會啟用功能。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "什麼實際觸發會令她第二個月再使用這個免費功能",
+      "若沒有明確提醒或價值輸出，她是否會自然忽略它",
+      "除免費核心外，是否存在任何可接受的進階付費條件",
+      "怎樣的呈現或嵌入方式最不像推銷並最貼近現有月末檢視流程"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "embedding_probe",
+    "probing_strategy": "founder_assumption_check",
+    "decision_rationale": "Retention is now grounded in concrete repeat-use conditions. The larger remaining uncertainty is how this should fit into her existing monthly review flow, which directly tests the assumption that the feature should live inside an existing customer moment rather than as a separate destination.",
+    "message_to_persona": "如果要變成你固定檢查嘅一部分，你會想喺銀行app邊個位見到佢？",
+    "evidence_updates": [
+      {
+        "claim": "參與者只有在首次使用後看到明確可行的發現時，才會在下個月再次打開這個功能。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "能促成重用的例子包括發現持倉比預期更集中，或有資金一直閒置。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "重用這個功能的前提之一是流程省事，不需要重新連接資料。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若功能在使用時伴隨推銷彈窗，參與者較難把它納入固定檢查流程。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "功能應嵌入銀行app哪個現有流程或頁面才最自然",
+      "除了免費核心外，是否存在任何可接受的進階付費條件",
+      "哪些分析適合自助顯示，哪些更適合由RM輔助解釋"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_probe",
+    "probing_strategy": "payment_conditions",
+    "decision_rationale": "The participant has now described a specific embedding preference inside her existing banking flow, which is sufficient to cover the founder-assumption check about workflow embedding. The main remaining gap is whether any premium layer beyond the free core would ever make sense, so a light pricing probe is appropriate.",
+    "message_to_persona": "如果基本版免費，咩情況下你先會考慮為進階功能畀錢？",
+    "evidence_updates": [
+      {
+        "claim": "參與者希望這個功能出現在銀行 app 首頁或投資總覽頁，而不是藏在多層頁面之後。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者想一打開就知道這個月有沒有變化。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若呈現過於用力或佔據整版，參與者會把它視為廣告。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "除免費核心外，是否存在任何可接受的進階付費條件",
+      "哪些分析適合自助顯示，哪些更適合由RM輔助解釋"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "assumption_check",
+    "probing_strategy": "founder_assumption_check",
+    "decision_rationale": "Most required areas are covered with concrete behavioural and concept reactions. The key remaining gap is whether this analytics capability should stay simple in self-serve retail or move into assisted use, so the next question isolates that boundary without bundling pricing or trust again.",
+    "message_to_persona": "有邊啲分析你會想銀行收埋少少，唔好直接喺app畀你自己睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者目前以分開查看銀行與券商 app、再用手機計數機粗略整合比例的方式檢視投資組合。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者最重視的概念價值是一次過看清股票、基金、現金分佈，以及用白話解釋風險。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對外部持倉資料整合有明確授權與用途邊界，要求主動授權、只讀、有限資料範圍，且不可用於推銷。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者只有在功能省事、無需重連、且能帶來即時有用發現時，才會把它納入固定檢查。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望功能嵌入首頁或投資總覽頁，能快速顯示本月變化，但不應過度搶眼以致像廣告。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對進階付費功能的接受條件是免費版先證明節省時間，且進階提醒或分析要實用、定價清楚、不要拆成複雜 plan。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "哪些分析適合直接放在自助零售 app，哪些應保留為較隱藏或由 RM 協助解釋的內容"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019ef037-5ed3-71e1-bb3e-ddd3f0718f80",
+    "decision_status": "asked"
+  }
+]

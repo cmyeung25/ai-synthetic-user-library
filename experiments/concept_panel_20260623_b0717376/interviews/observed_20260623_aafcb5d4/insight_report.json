@@ -1,0 +1,194 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "我冇一個正式dashboard。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "之後喺手機notes寫返幾個數，當自己拼一個總數出嚟。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "其實係MPF嗰部分最冇把握",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "我會先想佢幫我睇清楚，原來我成個組合有幾多其實係重複咗同一類風險",
+        "evidence_ref": "exchange_4.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月尾因客戶款遲入同學校收費通知，受訪者主動在搭車時檢視整體投資組合。",
+      "受訪者需分開查看銀行 app、投資 app 同 MPF，再用手機 notes 手動拼總數。",
+      "受訪者對 MPF 只能看到大類比例，因更新節奏不同，只敢當作大概，不敢當準。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "分開查看銀行 app 的現金與定期。",
+      "分開查看投資 app 的基金與股票市值。",
+      "另外登入 MPF 只看大概比例。",
+      "在手機 notes 手動記數並拼成總數。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "不要要求提供外部網銀 login 或交易密碼。",
+      "不要長期讀取外部戶口每一筆交易。",
+      "不要查看整體現金流太深。",
+      "分析與產品推介需要分開呈現。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "有限度拉取資產類別。",
+      "有限度拉取持倉摘要。",
+      "可在銀行 app 內先看健康檢查分析結果。"
+    ],
+    "rejected_data_access": [
+      "要求提交網銀 login。",
+      "要求提交交易密碼。",
+      "長期讀取外部戶口每一筆交易。",
+      "讀取整體現金流細節。",
+      "一打開功能就接著推薦基金或保險。"
+    ],
+    "required_trust_explanation": [
+      "先清楚顯示目前分布與風險在說什麼。",
+      "將健康檢查分析與產品建議分開。",
+      "如有推介，需另外清楚說明推介內容與原因。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "快速看清整體組合是否重複承受同一類風險。",
+      "特別看清 MPF、基金、股票之間是否表面分散但實際吃相近市場波動。",
+      "不需要再自己每次重新拼數也能得出整體 view。"
+    ],
+    "time_to_value": "第一次打開就要即時看清整體分布與重複風險。",
+    "abandonment_triggers": [
+      "只有一次性『得意』效果而沒有後續新資訊。",
+      "只是多些靚圖或多幾句分析。",
+      "數據不夠準或更新節奏不一致。",
+      "感覺像借分析名義賣產品。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費已是前提；受訪者對免費版有明確試用意願。",
+    "monthly_comfort_range": "unknown",
+    "payment_justification": [
+      "付費需要帶來更實用的提醒，而不只是更多圖表。",
+      "付費內容應清楚指出哪部分偏離原本比例。",
+      "付費內容最好提供如何調回接近原本配置的具體指引。",
+      "付費價值亦應減少手動拼數。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "定期指出哪些持倉又重疊了。",
+      "清楚比較風險比上次高了還是低了。",
+      "提示是否偏離原本想守住的比例。",
+      "每次打開都有新的、可行動的變化資訊。"
+    ],
+    "drop_off_reasons": [
+      "第一次新鮮，之後沒有持續幫助。",
+      "只有靜態總覽而沒有變化追蹤。",
+      "只有視覺包裝或泛泛分析，沒有具體提醒。",
+      "需要重複自己手動拼數。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客戶目前以零散、手動或產品級視角管理投資，而非真正 whole-portfolio view。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "此受訪者明確以多個 app 加 notes 手動拼數，且沒有正式 dashboard。"
+    },
+    {
+      "assumption": "客戶今天能指出 Aladdin 類分析可補到的實際 blind spot。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "受訪者能具體指出 MPF 透明度不足與跨 MPF、基金、股票的重複風險盲點。"
+    },
+    {
+      "assumption": "零售客戶可理解簡化版機構級投資分析，前提是說法夠具體、不技術化。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者能理解『重複風險』『風險高低變化』『偏離原本比例』，但未測試更複雜分析如情景分析或壓力測試。"
+    },
+    {
+      "assumption": "最有價值的零售用例是簡化洞察與提醒，而不是機構級細節本身。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者偏好清楚可行動的變化提醒，不願為更多圖表或額外分析文字付費。"
+    },
+    {
+      "assumption": "部分能力適合直接放在 self-serve 零售渠道。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者接受在銀行 app 內先看中立分析，但要求與產品建議分開。"
+    },
+    {
+      "assumption": "免費會提升試用，但信任、資料分享和銷售感仍影響採用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "即使核心免費，受訪者仍對資料深度、外部連結方式與銷售感有明確邊界。"
+    },
+    {
+      "assumption": "最佳嵌入方式是在既有客戶 workflow 內，而不是獨立複雜 analytics 目的地。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者的觸發點是現金流壓力和臨時檢查，偏好即時、輕量、持續更新；但未直接比較獨立入口與既有流程入口。"
+    },
+    {
+      "assumption": "客戶能清楚描述哪些 Aladdin 功能不應暴露或不應怎樣暴露。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者明確拒絕深層帳戶存取、整體現金流讀取，以及分析和推介混在一起。"
+    }
+  ],
+  "key_insights": [
+    "這位受訪者的核心痛點不是『沒有數據』，而是無法快速把分散資產拼成可信的整體 view。",
+    "MPF 是最大不確定來源，因為只見到大類比例、更新節奏又不同，令 whole-portfolio 判斷只可當大概。",
+    "最打動受訪者的不是廣義風險分析，而是看穿跨 MPF、基金、股票之間重複承受的同類風險。",
+    "免費核心已能滿足不少價值；若做付費層，必須是可行動提醒與調整指引，而不是更華麗的分析展示。",
+    "信任邊界很清楚：可接受有限度持倉摘要，不接受深層憑證、逐筆交易與現金流全面暴露。"
+  ],
+  "next_experiment": "用真人受訪者測兩個原型方向：一個是『重複風險＋比例偏離』的輕量 monthly check-in 卡片；另一個是同內容加上產品推介入口分離設計，對比理解度、信任感、銷售感與回訪意願。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，不能代表香港零售銀行客群。",
+    "未測試情景分析、壓力測試、貨幣風險、look-through holdings 等其他 Aladdin 能力是否同樣有價值。",
+    "未驗證 RM 介入場景與 self-serve 場景的分工界線。",
+    "未收集真實價格區間，只知道付費條件。",
+    "未取得真正的對比案例，無法判斷不同資產規模或投資成熟度的人是否有相同需求。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 的概念前驗證訊號，不能當作真人市場證據；所有因果與產品判斷都需要再用真人訪談驗證。"
+}

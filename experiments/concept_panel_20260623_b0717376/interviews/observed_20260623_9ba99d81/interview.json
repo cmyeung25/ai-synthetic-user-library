@@ -1,0 +1,706 @@
+{
+  "interview_id": "observed_20260623_9ba99d81",
+  "persona_id": "su_2005",
+  "persona_name": "Iris Cheung",
+  "research_goal": "Understand how existing V5 Hong Kong banking personas currently manage portfolios, what practical blind spots or frictions still exist, which Aladdin-type analytics help in a free bank service, and how the service should be embedded without feeling like disguised selling.",
+  "product_context": "The bank has already decided to launch a free Portfolio Health Check for all retail customers using Aladdin-type portfolio analytics. Focus on current behaviour, useful feature fit, trust boundary, service embedding, and follow-through rather than willingness to pay for the core service.",
+  "output_language": "Natural Cantonese Traditional Chinese",
+  "facilitator_provider": "codex",
+  "facilitator_model": "gpt-5.4",
+  "persona_provider": "codex",
+  "persona_model": "gpt-5.4",
+  "facilitator_prompt_version": "facilitator-interview/v2",
+  "synthesis_prompt_version": "concept-synthesis/v1",
+  "concept_protocol_version": "src/ai_validation_swarm/prompts/concept-interview/hk-bank-portfolio-health-check-v2.md",
+  "concept_label": "Portfolio Health Check",
+  "interview_mode": "concept_validation",
+  "hypothesis": "",
+  "facilitator_provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+  "persona_provider_session_id": "019ef1fc-0d53-7472-9b6f-504547e20a76",
+  "persona_conversation_session_id": "chat_20260623_b860951d",
+  "quality_provider": "codex",
+  "quality_model": "gpt-5.4",
+  "quality_prompt_version": "facilitator-quality-evaluator/v2",
+  "quality_provider_session_id": "",
+  "hypothesis_evidence_judge_prompt_version": "hypothesis-evidence-judge/v1",
+  "hypothesis_evidence_judge_provider_session_id": "",
+  "persona_driver_trace_prompt_version": "persona-driver-trace/v1",
+  "persona_driver_trace_provider_session_id": "",
+  "max_turns": 10,
+  "soft_turn_limit": 8,
+  "hard_turn_limit": 10,
+  "created_at": "2026-06-23T00:57:49+00:00",
+  "updated_at": "2026-06-23T01:04:56+00:00",
+  "status": "failed",
+  "stop_reason": "required_coverage_complete",
+  "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+  "facilitator_decisions": [
+    {
+      "interview_phase": "opening_recent_event",
+      "probing_strategy": "recent_event",
+      "decision_rationale": "首輪先用中性、具體的近期事件題，建立真實投資組合管理情境，避免過早引入概念或假設痛點；概念驗證模式下需先覆蓋現況行為。",
+      "message_to_persona": "你最近一次主動睇自己成個投資組合係幾時，當時發生咩事？",
+      "evidence_updates": [],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "最近一次實際 portfolio review 由咩觸發？",
+        "當時實際睇咗咩資料同用咗咩工具？",
+        "而家主要點樣管理同拼湊整體投資組合視角？",
+        "現有方法有冇碎片化、手動或唔清楚嘅位？",
+        "之後介紹 Portfolio Health Check 後，邊類分析最有用或最冇用？",
+        "乜嘢資料權限、外部資產整合或呈現方式會影響信任感？",
+        "免費功能會令佢試一次，但咩因素會令佢第二個月再用或唔再用？",
+        "邊啲能力應該自助顯示，邊啲應該留畀 RM 或受助服務？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "current_method",
+      "probing_strategy": "sequence_probe",
+      "decision_rationale": "參與者已提供一個近期具體檢視事件，下一步先追問當晚實際如何把不同持倉放在一起看，以建立現有做法與 workaround，再決定之後如何引入概念。",
+      "message_to_persona": "嗰晚你實際係點樣將基金、股票同 MPF 放埋一齊睇？",
+      "evidence_updates": [
+        {
+          "claim": "最近一次主動檢視整個投資組合是在上個月尾。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "那次檢視由銀行投資戶口通知及市場波動新聞觸發。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者在家人睡後一次過查看基金、股票和MPF。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "當次檢視目的是確認跌幅，以及是否有些資金分散到自己沒有持續跟進。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [
+        {
+          "hypothesis": "參與者可能缺乏現成的整體投資組合視圖，所以要在波動時才一次過跨產品自行檢視。",
+          "supporting_evidence_refs": [
+            "exchange_1.persona"
+          ],
+          "alternative_explanations": [
+            "只是例行在市場波動時做一次正常檢查",
+            "其實已有整體視圖，但當晚只是想快速確認跌幅"
+          ],
+          "validation_gap": "未知道他當晚用甚麼工具、是否需要手動拼湊資料，以及平時是否也是這樣做。",
+          "confidence": "low"
+        }
+      ],
+      "open_questions": [
+        "當晚用了哪些工具或畫面去拼湊整體持倉？",
+        "現時最主要的portfolio管理workaround是什麼？",
+        "哪些資訊仍然分散、手動或不清楚？",
+        "介紹Portfolio Health Check後，哪類輸出最有用或最沒用？",
+        "哪些資料來源或權限安排會影響信任？",
+        "免費功能下，什麼會令他第二個月再用或不用？",
+        "哪些能力應放在自助介面，哪些較適合交由RM協助？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "concept_intro",
+      "probing_strategy": "concept_reaction",
+      "decision_rationale": "已經有近期實際檢視事件同現有 workaround，符合先講現況再引入概念的要求；先測第一反應同最想解決的重點，避免一次過混入信任、收費或留存。",
+      "message_to_persona": "如果你個銀行 app 有個免費嘅 Portfolio Health Check，會幫你整合基金、股票同 MPF 去睇整體分布同重複持倉，你第一下最想佢幫你睇到咩？",
+      "evidence_updates": [
+        {
+          "claim": "參與者目前沒有用單一平台整合整個投資組合。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者會分別在銀行app、證券戶口及MPF供應商app查看不同持倉。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者會用手機備忘錄及之前截圖手動對照，粗略記下各類資產佔比。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者當晚不是做正式專業分析，而是想快速知道有沒有重複放太多在同一類資產。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "對免費Portfolio Health Check的第一反應是甚麼？",
+        "最有價值的是整體總覽、重複持倉、集中度、情景分析還是簡單提示？",
+        "哪些資料整合或權限安排會令他覺得過界？",
+        "看到明顯風險提示後他會自己調整、找RM、還是先觀望？",
+        "免費功能下，甚麼會令他第二個月再打開？",
+        "除了免費核心外，是否有任何情況會接受進階層？",
+        "哪些分析適合直接放在零售客戶app，哪些應留給RM使用？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "trust_boundary",
+      "probing_strategy": "trust_probe",
+      "decision_rationale": "已經知道佢對整合與重複持倉有明確興趣，下一步要測試接受哪種資料整合與權限邊界，避免把興趣誤當成信任或採用。",
+      "message_to_persona": "如果要做到呢種一眼睇晒，你會接受銀行連埋你其他戶口資料去分析到咩程度？",
+      "evidence_updates": [
+        {
+          "claim": "參與者最想先看到表面分散但實際重複押在相近市場或大公司的情況。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者希望系統能直接指出哪裡過重、哪裡過散。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者重視不用自己逐個戶口手動拼湊整體投資組合。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "哪些資料來源或權限安排會令他卻步？",
+        "如果看到明顯重複或過重提示，他會自己調整還是找RM？",
+        "免費核心功能下，甚麼會令他第二個月再用？",
+        "除免費核心外，甚麼情況下才會考慮進階層？",
+        "哪些分析適合直接放在app，哪些應留給RM或受助服務？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "retention_follow_through",
+      "probing_strategy": "retention_probe",
+      "decision_rationale": "信任邊界已經清楚，下一步先測試免費核心功能下的實際重用條件，比起直接問升級收費更貼近概念場景，也可順便檢查是否只是一次性新鮮感。",
+      "message_to_persona": "如果呢個功能真係免費有得用，咩情況會令你第二個月都再打開佢？",
+      "evidence_updates": [
+        {
+          "claim": "參與者可考慮讓銀行讀取持倉、產品類別、比例及大概市值作分析。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "接受資料整合的前提是用途只限分析，而且參與者看得到系統讀取了哪些資料。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者不接受交易權限、過細的個人資料，或把無關戶口一併掃描。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "免費核心功能下，甚麼會令他形成重複使用而不只是試一次？",
+        "除了免費核心外，甚麼情況下才會考慮進階層或額外服務？",
+        "哪些分析應直接放在app，哪些應留給RM或受助服務？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "payment_boundary",
+      "probing_strategy": "payment_probe",
+      "decision_rationale": "留存條件已初步清楚，距離回合上限仍有空間；先輕量測試免費核心之外是否存在任何可接受的進階層，符合概念模式要求且不過度聚焦收費。之後仍可用一題補服務嵌入或RM邊界。",
+      "message_to_persona": "如果基本版已經免費，你會喺咩情況下先覺得某啲進階功能值得另外畀錢？",
+      "evidence_updates": [
+        {
+          "claim": "參與者只有在功能持續幫他節省時間時，才會在第二個月再次打開。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "重複使用的條件包括不用再逐個app核對、能清楚指出本月哪類持倉過重或重複。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者希望系統輸出可自行再核對，而不是用誇張方式製造驚嚇。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "免費核心之外，哪些進階功能在甚麼條件下才可能值得付費？",
+        "哪些分析應直接放在app，哪些較適合交由RM或受助服務處理？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "service_embedding",
+      "probing_strategy": "founder_assumption_check",
+      "decision_rationale": "只剩 founder assumption 檢查，最關鍵是驗證這類分析應放在自助 app 還是部分留給 RM，直接測服務嵌入與複雜度邊界。",
+      "message_to_persona": "有啲分析你會想自己喺 app 睇，有啲你反而想留返畀 RM 同你講清楚？",
+      "evidence_updates": [
+        {
+          "claim": "參與者只會在進階功能能持續減少自己手動工作時考慮付費。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "可能有價值的進階功能包括自動追蹤變化、在重複持倉達到某程度時提醒，以及更清楚的整理。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "即使是進階功能，參與者仍不希望因此提供更多敏感資料。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "只有包裝更好或畫面更漂亮不足以支持額外付費。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "哪些分析適合直接放在app自助看，哪些較適合由RM解釋或在受助服務中出現？"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "close",
+      "probing_strategy": "sufficiency_stop",
+      "decision_rationale": "已覆蓋近期行為、現有 workaround、概念反應、信任邊界、免費後重用條件、進階付費邊界，以及自助對RM的服務嵌入分工；再追問大多只會重複。",
+      "message_to_persona": "",
+      "evidence_updates": [
+        {
+          "claim": "參與者希望把分布、重複持倉和近期變化放在app內自助查看。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者傾向把調整建議、取捨判斷，以及產品之間為何重疊過高的解釋留給RM或人工講解。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "即使需要RM介入，參與者也明確抗拒對話一開始就變成銷售。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [],
+      "should_end": true,
+      "end_reason": "required_coverage_complete",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef1fb-c663-75e2-b0f0-8d894ab8fe39",
+      "decision_status": "not_asked_at_close"
+    }
+  ],
+  "exchanges": [
+    {
+      "exchange_id": 1,
+      "facilitator_question": "你最近一次主動睇自己成個投資組合係幾時，當時發生咩事？",
+      "persona_response": "如果講成個都打開嚟睇，應該係上個月尾。嗰晚我收到銀行個投資戶口通知，又見新聞講個市幾波動，我等屋企人瞓咗之後先一次過睇基金、股票同MPF，主要係想確認跌成點，同埋有冇啲錢擺得太散自己都冇跟住。",
+      "facilitator_phase": "opening_recent_event",
+      "probing_strategy": "recent_event",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T00:58:19+00:00"
+    },
+    {
+      "exchange_id": 2,
+      "facilitator_question": "嗰晚你實際係點樣將基金、股票同 MPF 放埋一齊睇？",
+      "persona_response": "其實幾土法，我冇用一個平台全包。銀行app睇基金，證券戶口睇股票，MPF就另外登入供應商個app，再開返手機備忘錄同之前截圖對一對，大概寫低而家各樣佔幾多。主要唔係做得好專業，只係想快啲知道自己有冇重複擺太多同一類嘢。",
+      "facilitator_phase": "current_method",
+      "probing_strategy": "sequence_probe",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "created_at": "2026-06-23T00:58:49+00:00"
+    },
+    {
+      "exchange_id": 3,
+      "facilitator_question": "如果你個銀行 app 有個免費嘅 Portfolio Health Check，會幫你整合基金、股票同 MPF 去睇整體分布同重複持倉，你第一下最想佢幫你睇到咩？",
+      "persona_response": "我第一下最想睇到，其實係有冇表面上買咗幾樣，實際都係重複押喺差唔多同一類市場或者大公司。再直接少少就係，佢最好一眼話畀我知邊度太重、邊度太散，唔使我自己逐個戶口拼返埋。",
+      "facilitator_phase": "concept_intro",
+      "probing_strategy": "concept_reaction",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T00:59:26+00:00"
+    },
+    {
+      "exchange_id": 4,
+      "facilitator_question": "如果要做到呢種一眼睇晒，你會接受銀行連埋你其他戶口資料去分析到咩程度？",
+      "persona_response": "去到讀取持倉、產品類別、比例同大概市值，我可以考慮，前提係真係只用嚟做分析，同埋我睇得到佢攞咗啲乜。交易權限、太詳細嘅個人資料，或者連埋我其他無關戶口一齊掃，我就唔接受。",
+      "facilitator_phase": "trust_boundary",
+      "probing_strategy": "trust_probe",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T00:59:53+00:00"
+    },
+    {
+      "exchange_id": 5,
+      "facilitator_question": "如果呢個功能真係免費有得用，咩情況會令你第二個月都再打開佢？",
+      "persona_response": "要係佢唔止第一次新鮮，第二個月都真係幫我慳到時間。譬如我唔使再自己逐個app對，佢又會清楚話返俾我知今個月邊類持倉重咗、重複咗，仲可以畀我自己再核對，不是亂咁嚇我，我先會再開。",
+      "facilitator_phase": "retention_follow_through",
+      "probing_strategy": "retention_probe",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-23T01:00:17+00:00"
+    },
+    {
+      "exchange_id": 6,
+      "facilitator_question": "如果基本版已經免費，你會喺咩情況下先覺得某啲進階功能值得另外畀錢？",
+      "persona_response": "要去到佢真係幫我減少一啲持續要自己做嘅嘢，我先會諗畀錢。譬如自動追蹤變化、提醒我重複持倉去到某個程度，或者整理得再清楚但又唔逼我交更多敏感資料，咁我會考慮；如果只係圖靚啲或者講法包裝得勁啲，我唔會另外畀。",
+      "facilitator_phase": "payment_boundary",
+      "probing_strategy": "payment_probe",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-23T01:00:43+00:00"
+    },
+    {
+      "exchange_id": 7,
+      "facilitator_question": "有啲分析你會想自己喺 app 睇，有啲你反而想留返畀 RM 同你講清楚？",
+      "persona_response": "會。分布、重複持倉、近排變化呢啲，我想自己喺 app 先睇清楚，最好簡單直接，唔使等人講。去到真係牽涉調整建議、點樣取捨，或者點解某啲產品會撞得咁勁，我反而想有人講清楚，但前提係唔好一開口就變咗sell嘢。",
+      "facilitator_phase": "service_embedding",
+      "probing_strategy": "founder_assumption_check",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T01:01:08+00:00"
+    }
+  ],
+  "pending_facilitator_decision": {},
+  "observer_interventions": [],
+  "last_error": "Codex CLI transport returned an invalid base64 payload wrapper.",
+  "failed_operation": "generate_persona_driver_trace",
+  "failed_payload": {},
+  "insight_report": {
+    "problem_evidence": {
+      "strength": "medium",
+      "supporting_quotes": [
+        {
+          "quote": "銀行app睇基金，證券戶口睇股票，MPF就另外登入供應商個app，再開返手機備忘錄同之前截圖對一對",
+          "evidence_ref": "exchange_2.persona"
+        },
+        {
+          "quote": "佢最好一眼話畀我知邊度太重、邊度太散，唔使我自己逐個戶口拼返埋",
+          "evidence_ref": "exchange_3.persona"
+        },
+        {
+          "quote": "今個月邊類持倉重咗、重複咗，仲可以畀我自己再核對，不是亂咁嚇我，我先會再開",
+          "evidence_ref": "exchange_5.persona"
+        }
+      ],
+      "recent_behavior_evidence": [
+        "上個月尾因銀行通知加上市場波動，參與者主動跨基金、股票、MPF做一次整體檢視。",
+        "現時做法是分平台查看，再用備忘錄和舊截圖手動拼湊大概配置。",
+        "檢視重點不是專業分析，而是快速確認跌幅、重複持倉和是否過重過散。"
+      ]
+    },
+    "current_workaround": {
+      "existing_workaround": [
+        "銀行app看基金。",
+        "證券戶口看股票。",
+        "MPF供應商app另外登入查看。",
+        "用手機備忘錄和之前截圖手動對照，粗略寫低各類持倉比例。"
+      ],
+      "pain_level": "medium",
+      "switching_difficulty": "medium",
+      "what_must_not_change": [
+        "輸出要簡單直接。",
+        "要可自行再核對，不可像在嚇人。",
+        "不可要求交易權限。",
+        "不可擴到無關戶口或過多敏感資料。"
+      ]
+    },
+    "trust_boundary": {
+      "accepted_data_access": [
+        "讀取持倉",
+        "產品類別",
+        "比例",
+        "大概市值"
+      ],
+      "rejected_data_access": [
+        "交易權限",
+        "太詳細的個人資料",
+        "連無關戶口一起掃描",
+        "為進階功能再交更多敏感資料"
+      ],
+      "required_trust_explanation": [
+        "明確只用作分析。",
+        "用戶看得到系統攞咗啲乜。",
+        "分析要可核對，不可黑箱或誇張化。",
+        "RM介入時不能一開口就變成sell嘢。"
+      ]
+    },
+    "first_value_requirement": {
+      "first_use_success": [
+        "一眼看到有沒有表面分散但實際重複押在相近市場或大公司。",
+        "直接指出邊度太重、邊度太散。",
+        "免去逐個戶口手動拼湊。"
+      ],
+      "time_to_value": "首次打開就要即時見到整體分布、重複持倉同過重位置。",
+      "abandonment_triggers": [
+        "只得新鮮感，之後幫不到節省時間。",
+        "只係圖靚啲或包裝得勁啲。",
+        "提示方式似亂咁嚇人。",
+        "要額外交更多敏感資料。"
+      ]
+    },
+    "pricing_signal": {
+      "free_trial_need": "核心功能免費會提高嘗試意願，但不是足夠條件。",
+      "monthly_comfort_range": "未知",
+      "payment_justification": [
+        "只有在進階功能持續減少手動工作時才會考慮付費。",
+        "可接受的付費點包括自動追蹤變化、重複持倉到某程度時提醒、整理更清楚。",
+        "純包裝、圖靚或說法更厲害不足以支持付費。"
+      ],
+      "evidence_strength": "stated"
+    },
+    "retention_risk": {
+      "continuation_reasons": [
+        "每月持續節省對帳時間。",
+        "清楚指出本月哪類持倉變重或重複。",
+        "提供可自行核對的分析結果。"
+      ],
+      "drop_off_reasons": [
+        "只係一次性新鮮感。",
+        "輸出太誇張或像銷售前奏。",
+        "不能真正減少手動整理。"
+      ],
+      "workflow_effect": "replaces_workflow"
+    },
+    "assumption_validation": [
+      {
+        "assumption": "很多零售客戶目前用碎片化、手動或產品級視角管理投資，而不是真正整體視角。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_2.persona"
+        ],
+        "rationale": "此參與者明確跨三個平台查看，再用備忘錄和截圖手動拼湊。"
+      },
+      {
+        "assumption": "客戶能指出 Aladdin 類分析可解決的實際盲點。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_5.persona"
+        ],
+        "rationale": "參與者清楚指出重複押注、過重過散和月度變化提示最有用。"
+      },
+      {
+        "assumption": "零售客戶能理解簡化版 institutional analytics，只要表達夠具體非技術。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_5.persona"
+        ],
+        "rationale": "參與者對重複持倉、分布和變化提示有明確反應，但未測到更複雜情景分析或壓力測試。"
+      },
+      {
+        "assumption": "最有價值的是簡化洞察與優先次序，不是 institutional detail 本身。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_6.persona"
+        ],
+        "rationale": "他要的是一眼看懂和減少手動工作，不願為純包裝或更花巧呈現付費。"
+      },
+      {
+        "assumption": "部分能力應直接放在零售自助渠道，部分應留在 RM 或受助流程。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_7.persona"
+        ],
+        "rationale": "分布、重複、近排變化適合 app；調整建議和取捨解釋較適合 RM。"
+      },
+      {
+        "assumption": "免費會增加試用，但信任、資料分享和銷售感仍影響採用。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_4.persona",
+          "exchange_5.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "即使免費，他仍要求資料邊界、可見性、可核對性，並抗拒 sales feel。"
+      },
+      {
+        "assumption": "最佳嵌入點是在既有 workflow 內，而不是獨立複雜 analytics 目的地。",
+        "status": "partially_supported",
+        "evidence_refs": [
+          "exchange_5.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "參與者偏好直接在 app 內先看清楚，但未明確比較獨立入口與現有旅程節點。"
+      },
+      {
+        "assumption": "客戶能說出哪些功能應或不應暴露給零售客戶。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_4.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "他對資料權限邊界及自助/RM分工表達清楚。"
+      }
+    ],
+    "key_insights": [
+      "真正痛點不是『冇分析』，而是跨戶口拼湊整體視角太土法、太花時間。",
+      "最先有價值的不是深度機構級術語，而是直接指出重複押注、過重過散和近期變化。",
+      "信任門檻很清楚：只限分析、資料可見、可自行核對、不要交易權限、不要掃無關戶口。",
+      "留存取決於持續節省時間，不取決於新鮮感或視覺包裝。",
+      "零售端適合放簡單 summary 和 alert；涉及調整建議與取捨解釋時，較適合 RM 輔助，但要避免變成 sales trigger。"
+    ],
+    "next_experiment": "用另一位不同投資習慣的香港銀行 persona，測試較低參與度用戶是否同樣重視重複持倉/過重過散，並加入一個具體介面刺激物，比較『app內自助 summary』與『RM會前報告』哪種嵌入更自然。",
+    "evidence_gaps": [
+      "未測試外部資產整合以外的資料來源，例如其他銀行或保單資產。",
+      "未測試情景分析、壓力測試、貨幣風險等較複雜能力是否可理解或有價值。",
+      "未有第二個對比事件去看他在平靜市況下會否主動使用。",
+      "founder_assumption_check 在coverage狀態標示為未完成，但 transcript 其實已問到 app 與 RM 分工，屬部分覆蓋。",
+      "只有一位 synthetic persona，不能代表香港零售銀行客群。"
+    ],
+    "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 的概念前驗證，不可當作真人市場證據；所有因果與需求判斷都需要再用真人訪談驗證。"
+  },
+  "quality_evaluation": {},
+  "hypothesis_evidence_judgment": {},
+  "persona_driver_trace": {},
+  "coverage_status": {
+    "requirements": [
+      "recent_behaviour",
+      "current_workaround",
+      "concept_reaction",
+      "trust_boundary",
+      "payment_conditions",
+      "retention_repeat_use",
+      "founder_assumption_check"
+    ],
+    "covered": {
+      "recent_behaviour": true,
+      "current_workaround": true,
+      "concept_reaction": true,
+      "trust_boundary": true,
+      "payment_conditions": true,
+      "retention_repeat_use": true,
+      "founder_assumption_check": false
+    },
+    "missing": [
+      "founder_assumption_check"
+    ],
+    "coverage_complete": false,
+    "soft_limit_reached": false,
+    "hard_limit_reached": false,
+    "exchange_count": 7
+  },
+  "exchange_count": 7,
+  "facilitator_decision_count": 8
+}

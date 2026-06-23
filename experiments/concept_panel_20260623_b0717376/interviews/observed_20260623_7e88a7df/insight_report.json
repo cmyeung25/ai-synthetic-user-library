@@ -1,0 +1,185 @@
+{
+  "problem_evidence": {
+    "strength": "strong",
+    "supporting_quotes": [
+      {
+        "quote": "我會先睇總額，再逐個戶口拉返最近啲交易",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "有啲唔肯定嘅，我會順手cap低，之後先再慢慢追",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "有時幾個app分開睇，個時間差一兩日，我都會停一停先當自己未對清",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "我第一下會想佢直接指出邊啲位同我平時認知唔一致",
+        "evidence_ref": "exchange_4.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月尾曾在晚間主動跨銀行 app 和多個戶口對整體投資組合。",
+      "現時靠手動逐戶口核對交易、供款、轉帳和收費，遇到不確定項目會截圖後續再追。",
+      "主要盲點集中在細額收費、自動轉帳、供款變更是否真正生效，以及不同 app 的時間差。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "先看總額，再逐個戶口拉最近交易逐項比對。",
+      "靠自己記憶核對供款、轉帳和收費。",
+      "對唔準或未確定的項目先截圖，之後再慢慢追查。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "不要只給漂亮圖表而沒有明確異常。",
+      "不要要求一開始就連接所有外部戶口或輸入其他機構登入資料。",
+      "資料保存時間、用途和停用後刪除方式必須講清楚。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "先在銀行 app 內提供已能證明價值的基本檢查。",
+      "若功能已證明有用，可考慮更自動化地追蹤多個外部戶口。"
+    ],
+    "rejected_data_access": [
+      "一開始就要求連接所有其他銀行或投資戶口。",
+      "要求輸入外部戶口登入資料。",
+      "未清楚交代資料保存期限、用途與刪除機制。"
+    ],
+    "required_trust_explanation": [
+      "先證明功能有用，再要求更多授權。",
+      "清楚說明資料會存多久。",
+      "清楚說明資料用來做什麼。",
+      "清楚說明停用後能否刪除資料。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "直接指出與用戶平時認知不一致的地方。",
+      "快速找出比例偏移、細額收費增加、自動轉帳金額變動。",
+      "打開即見變動，不用重新設定一輪。"
+    ],
+    "time_to_value": "第一次使用就要明顯幫他更快找到問題。",
+    "abandonment_triggers": [
+      "只有圖表，沒有可行的異常提示。",
+      "未證明有用前就要求高權限資料連接。",
+      "需要反覆重新設定或重新連接外部戶口。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心免費已是前提，但仍要先證明實用性才願意進一步授權或考慮升級。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "明顯節省時間。",
+      "減少容易出錯的地方。",
+      "可自動追蹤多個外部戶口而不用經常重新連接。",
+      "提醒更準。",
+      "有清楚歷史對比，一眼看到變化。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "上一次確實幫他更快找到問題。",
+      "無需重新設定，打開就見到自上次以來的變動。",
+      "持續提供細額收費、比例偏移、自動轉帳異常等高相關提醒。"
+    ],
+    "drop_off_reasons": [
+      "只增加幾個圖表。",
+      "每次都要重設或重連。",
+      "功能看起來像索取資料或推銷前置，而非中性檢查。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客戶現在以碎片化、手動或產品層級視角管理投資組合，而不是整體視角。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "此受訪者以跨 app、逐戶口手動核對方式管理整體狀況，明顯不是單一整體視圖。"
+    },
+    {
+      "assumption": "客戶今天能指出實際盲點，而 Aladdin 類分析可幫到，特別是異常、偏移、變化偵測。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "受訪者能具體指出細額收費、自動轉帳、供款變更與時間差帶來的不確定，並對異常提示表現出明確需求。"
+    },
+    {
+      "assumption": "零售客戶能理解簡化版機構級分析，只要表達夠具體、不技術化。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "他清楚理解比例偏移與異常交易提示，但未測到更複雜分析如壓力測試或情景分析。"
+    },
+    {
+      "assumption": "最有價值的不是機構級細節本身，而是簡化洞察、解釋和優先次序。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "他明確拒絕只有圖表的升級，偏好直接指出問題與歷史變化。"
+    },
+    {
+      "assumption": "有些能力應直接放入自助零售渠道，另一些應留在 RM 或受助服務。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者明確區分日常異常和比例提醒應自助可見，而產品取捨、風險承受、大額調整可由 RM 解釋。"
+    },
+    {
+      "assumption": "即使功能免費，信任、資料共享和銷售意圖仍會影響採用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona"
+      ],
+      "rationale": "他對外部資料連接、登入資料、保存期限和用途說明有明確要求。"
+    },
+    {
+      "assumption": "最好嵌入現有客戶流程，而不是另開一個複雜分析目的地。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "他希望在銀行 app 內打開即見變動，不想先依賴 RM 才看到基本情況。"
+    },
+    {
+      "assumption": "客戶能描述哪些功能應該或不應該暴露在零售銀行介面。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "他清楚指出自助與 RM 邊界，也清楚指出不可接受的資料要求。"
+    }
+  ],
+  "key_insights": [
+    "這位受訪者的核心痛點不是『看不懂投資分析』，而是跨 app 對數太手動，且微小但累積性的變動難追。",
+    "對他而言，Portfolio Health Check 的核心價值是『指出和我認知不一致的地方』，不是總覽圖表。",
+    "免費會降低嘗試門檻，但不會自動解決信任問題；未證明價值前要求連接外部戶口會直接造成流失。",
+    "月二留存取決於持續節省時間與低操作負擔，尤其是免重設、免重連、直接看到自上次以來的變化。",
+    "進階付費只有在自動化與準確性真的替代手動工作時才有可能成立；單純增加分析展示沒有升級價值。"
+  ],
+  "next_experiment": "用下一位香港銀行 persona 測試一個更具體的產品嵌入原型：銀行 app 內首頁或投資頁直接顯示『自上次檢查以來的3個異常變動』，並分開測試兩種外部資產連接方式，觀察是否仍出現相同的信任阻力。",
+  "evidence_gaps": [
+    "未測到對更複雜 Aladdin 能力如情景分析、壓力測試、貨幣風險的理解與價值感。",
+    "只有一位 synthetic persona，未能代表不同資產規模、年齡或 RM 依賴程度。",
+    "付費敏感度只有條件式口頭表態，沒有實際價格錨點。",
+    "未深入測試通知頻率、提醒格式與銷售感之間的界線。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬 synthetic persona 預驗證，不可視為真人市場證據；所有因果與產品判斷都需要真人訪談再驗證。"
+}

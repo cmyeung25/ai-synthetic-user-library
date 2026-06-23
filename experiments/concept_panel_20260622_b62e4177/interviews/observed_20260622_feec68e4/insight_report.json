@@ -1,0 +1,187 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "主要都係靠app逐頁截圖",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "未必咁易發現原來幾樣都係押埋同一類風險",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "如果佢可以直接講到我而家嘅收息來源有幾集中",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次 portfolio review 由定期快到期觸發，她在銀行 app 逐樣查看債券、收息基金和高息股。",
+      "她把幾頁產品資料截圖，晚上給先生看，再一起討論續做定期還是分散。",
+      "她有時會翻看銀行月結單再對一對，但不會做複雜整理。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 逐頁看產品資料。",
+      "以截圖方式把不同產品資訊拼湊起來給家人一起看。",
+      "偶爾翻查月結單作補充核對。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "要直接對應到具體產品。",
+      "介面和解釋要簡單，不要變得很複雜。",
+      "不要一看完分析就變成推銷流程。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "同一間銀行內已持有產品資料。",
+      "到期日。",
+      "派息記錄。",
+      "買入金額。"
+    ],
+    "rejected_data_access": [
+      "一開始就要求連接其他銀行戶口。",
+      "一開始就要求連接外部券商持倉。",
+      "與分析無關的額外資料。"
+    ],
+    "required_trust_explanation": [
+      "要先講清楚邊個睇到資料。",
+      "要講清楚資料會唔會攞嚟做推銷。",
+      "資料使用範圍要與分析目的直接相關。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "直接看到重疊和集中度。",
+      "看懂收息來源有多集中。",
+      "看到如果某一類出問題，每月現金流大概受多少影響。",
+      "不是只給一個分數，而是指出哪部分集中。"
+    ],
+    "time_to_value": "首次打開就要即時看到整體集中和收入風險，不接受先做很多設定。",
+    "abandonment_triggers": [
+      "只給抽象分數，沒有指出問題在哪裡。",
+      "解釋太技術化。",
+      "一開始就要求過多外部資料連接。",
+      "感覺像銷售入口而不是中立分析。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "free core 已被視為合理前提；受訪者願意先用免費版，付費只在高決策壓力時才會考慮。",
+    "monthly_comfort_range": "不支持月費；較偏好一次過收費。",
+    "payment_justification": [
+      "接近真實決策時刻，例如債券到期或定期續不續。",
+      "收到收入過度集中的提醒，但自己看完仍未有把握。",
+      "付費內容需包含較深入分析、書面摘要和有人清楚解釋。",
+      "不能變成順勢推產品。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "有定期快到期。",
+      "某類收息產品波動加大。",
+      "提醒指出每月現金流可能受影響。",
+      "能清楚顯示跟上個月相比有什麼變化。"
+    ],
+    "drop_off_reasons": [
+      "只有分數沒有解釋。",
+      "沒有變化比較。",
+      "太技術化或要自己猜意思。",
+      "過度索取資料或帶有推銷感。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客戶目前是以零散、手動、產品級視角管理投資，而非 whole-portfolio view。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "受訪者實際上以逐項查看、截圖拼湊和月結單核對來管理，並明確指出平時難以看出跨產品的重疊風險。"
+    },
+    {
+      "assumption": "客戶能指出 Aladdin 類 analytics 可補上的實際盲點，特別是 overlap、concentration、scenario 或 drift。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "她主動指出重疊、集中度和收入來源集中是現有盲點，也重視變化提醒和現金流影響。"
+    },
+    {
+      "assumption": "零售客戶能理解簡化版 institutional analytics，只要解釋夠白話。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "她能理解重疊、集中度、到期分布和現金流影響，但要求用簡單語言呈現。"
+    },
+    {
+      "assumption": "真正有價值的不是 institutional 細節本身，而是簡化後的 insight、explanation 和 prioritization。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "她明確拒絕只有分數的輸出，偏好指出哪部分集中、與上月有何變化，以及需要時有人解釋。"
+    },
+    {
+      "assumption": "有些能力適合直接放進 self-serve retail channel，有些更適合 RM 或 assisted service。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona"
+      ],
+      "rationale": "她把集中度、重疊、到期分布和現金流變化歸為可自助查看，把利率情景、信用風險惡化和收入目標落差歸為需要人解釋。"
+    },
+    {
+      "assumption": "免費會提高試用意願，但 trust、data sharing 和 sales intent 仍會影響 adoption。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "即使核心免費，她仍對外部資料連接、資料用途和推銷風險保持明確界線。"
+    },
+    {
+      "assumption": "最佳嵌入方式是在既有客戶時刻和 workflow 中，而不是獨立複雜分析目的地。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "她的使用觸發集中在定期快到期、產品波動和現金流受影響等既有管理節點。"
+    },
+    {
+      "assumption": "客戶能清楚描述哪些 Aladdin 功能應該或不應該暴露給零售客戶。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "她對資料邊界、可自助看的分析，以及需要人工解讀的分析都有清楚界線。"
+    }
+  ],
+  "key_insights": [
+    "這位受訪者現時做 portfolio 管理主要靠產品頁面和截圖拼湊，最大缺口不是沒有資料，而是沒有整體視角。",
+    "第一價值很集中：她最在意 overlap、concentration，以及這些風險怎樣影響每月收息現金流。",
+    "Retail 版本要用白話和變化導向呈現；單一分數或偏 institutional 的輸出對她吸引力低。",
+    "免費核心有明確空間，但 adoption 受信任邊界強烈約束，尤其是外部資產連接和是否被拿去推銷。",
+    "付費層不是日常訂閱工具，更像在高風險決策時刻購買一次性深入解讀服務。"
+  ],
+  "next_experiment": "用兩個低保真原型做對比測試：1. app 內自助版只顯示集中度、重疊、到期分布和現金流影響；2. 同一基礎上加上利率/信用情景與人工解讀入口，觀察受訪者是否把第二類內容視為需要 assisted service 而非 self-serve。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，不能代表香港零售客群分佈。",
+    "coverage_status 標示 founder_assumption_check 未完成，但逐字稿其實已取得相當多 self-serve vs assisted-service 邊界證據。",
+    "未測試外部資產整合在分步授權、後置授權或只讀模式下的接受度差異。",
+    "未測試 alert 具體呈現格式，例如 dashboard、report、push alert 或 RM meeting prep。",
+    "未取得真實行為上的付費證據，pricing 仍屬假設性表態。"
+  ],
+  "synthetic_only_disclaimer": "以上結論只來自單一 synthetic interview，用於前期方向判斷和研究設計，不可當作真實用戶或市場證據；所有因果與需求判斷仍需真人訪談驗證。"
+}

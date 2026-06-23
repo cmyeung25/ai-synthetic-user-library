@@ -1,0 +1,185 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "其實好土法，開住銀行app同MPF個app，另外拎返之前截低嘅基金結餘對一對。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "未必即刻知道自己係蝕緊幾多，定係只是市場短期波動。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "如果平時開嚟都只係睇到一堆數，冇乜新意思，我應該唔會養成習慣。",
+        "evidence_ref": "exchange_6.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "幾個月前交完學校雜費後，因為現金流有啲緊，夜晚自己對戶口、MPF 同基金。",
+      "當晚先睇戶口現金，再睇 MPF 同基金大概跌成點，目的主要係分辨邊筆錢唔應該當可動用。",
+      "最後冇作出投資調整，只係保守啲估自己可用資金。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 睇現金戶口。",
+      "用 MPF app 分開睇 MPF。",
+      "用之前截低嘅基金結餘做手動比對。",
+      "用『唔好太樂觀咁計啲錢』做心理 safety margin。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "唔想一開始做好多設定。",
+      "唔想未見到價值前就連好多外部戶口或投資資料。",
+      "入口要自然，唔似 promo 或推銷。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "先用銀行入面已有嘅戶口、基金、MPF 資料。",
+      "之後可由佢自己決定要唔要加其他戶口或外部投資資料。"
+    ],
+    "rejected_data_access": [
+      "一開始就要求連埋其他戶口。",
+      "未證明有幫助前就攞更多屋企同財務資料。"
+    ],
+    "required_trust_explanation": [
+      "要先證明功能真係幫到手，唔係花巧。",
+      "要俾到清楚實用提醒，而唔係多幾個圖表。",
+      "呈現方式要似『幫你整理而家資產情況』，唔似叫人買嘢。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "快啲知道自己手頭鬆唔鬆。",
+      "分到邊啲錢可以當流動，邊啲唔應該預咗嚟用。",
+      "指出原本自己會睇漏嘅位。",
+      "簡單睇到基金同 MPF 波動係咪去到要留意。"
+    ],
+    "time_to_value": "第一次打開就要見到價值，最好唔使做太多設定。",
+    "abandonment_triggers": [
+      "一開就要做很多設定。",
+      "只見到一堆數，冇清楚意思。",
+      "只係多幾個圖表，冇幫到判斷或現金安排。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "高；免費核心功能要先證明實用，先會考慮任何收費層。",
+    "monthly_comfort_range": "未講明金額；偏向低價、可月付、可隨時停。",
+    "payment_justification": [
+      "真係減少逐個 app 對數。",
+      "清楚講到幫佢避開咗咩錯。",
+      "對現金安排真係有用。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "有大額支出時。",
+      "收入唔穩時。",
+      "市場郁得比較明顯時。",
+      "功能持續提供清楚提醒，而唔係純展示數字。"
+    ],
+    "drop_off_reasons": [
+      "平時打開冇新意思。",
+      "冇情境觸發。",
+      "資訊太多但唔 actionable。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "好多零售客而家係用碎片化、手動、產品級視角管理資產，而唔係真正 whole-portfolio view。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "呢位受訪者明確講自己『冇好正式嗰種』整體組合管理，實際做法係分開 app 加截圖手動對數。"
+    },
+    {
+      "assumption": "客戶今日能指出實際 blind spot，而 Aladdin 類分析有機會幫到。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "她清楚指出睇唔清實際蝕幾多、是否短期波動、以及應否做啲咩；但她最想解決的是可動用資金與簡單提醒，未見對更進階分析有強烈主動需求。"
+    },
+    {
+      "assumption": "零售客可以理解簡化版 institutional analytics，只要解釋夠具體。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "她接受『一眼睇』『清楚提醒』『避開咩錯』呢類具體輸出，但未有證據顯示她想理解較技術性的分析層。"
+    },
+    {
+      "assumption": "最有價值嘅唔係 institutional detail 本身，而係簡化後嘅 insight、解釋同優先次序。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "她反覆強調要幫到判斷同現金安排，並直接否定『只是多幾個圖表』。"
+    },
+    {
+      "assumption": "有啲能力應該直接放入 self-serve retail，有啲應該保留或逐步開放。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "她接受先用銀行內已有資料、自主決定是否擴充，亦偏好總覽頁旁邊的自然入口，而非重設定或強推式設計。"
+    },
+    {
+      "assumption": "免費會增加 trial，但 trust、data-sharing 同 sales-intent 仍然左右 adoption。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "即使免費，她仍介意外部資料連接、要先見價值，並在意入口唔似推銷。"
+    },
+    {
+      "assumption": "最佳嵌入位係現有客戶時刻，而唔係獨立複雜分析 destination。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "她傾向在睇完結餘、基金或 MPF 後，於戶口總覽或投資頁面旁邊見到平實入口。"
+    },
+    {
+      "assumption": "客戶可以講得出零售銀行內應該暴露或唔應該暴露咩能力邊界。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "她對資料授權邊界同入口語氣講得清楚，但未細分邊類分析該 self-serve、邊類該交畀 RM。"
+    }
+  ],
+  "key_insights": [
+    "對呢位 persona，『Portfolio Health Check』首先唔係投資優化工具，而係資金可動用性同風險提醒工具。",
+    "現時最大 friction 係手動整合多個來源，同埋睇到數字但唔知代表咩、應唔應該做啲咩。",
+    "初次採用門檻唔在於功能少，而在於設定同授權太重；先用銀行內資料係明顯較可接受嘅起點。",
+    "留存唔會靠日常 habit，本質更似事件觸發工具：大額支出、收入不穩、或者市場大波動時先會再開。",
+    "收費空間唔係靠更多圖表，而係靠實際減少對數工作、幫手避錯、同改善現金安排。"
+  ],
+  "next_experiment": "用同一概念測第二位香港 persona 時，刻意比較兩種入口同首屏：1.『幫你整理而家資產情況／可動用資金』式低負擔 summary；2.『投資健康分析』式較投資導向 summary，觀察邊個更自然、較少 sales 感、同更能帶出首次價值。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，唔足以代表香港零售或 affluent 客群。",
+    "未測到她對具體功能排序，例如 overlap、集中度、情景分析、壓力測試、plain-language explanation 邊樣最有用。",
+    "未測到她對 RM 參與或 assisted-service workflow 嘅接受度。",
+    "未有真實行為數據驗證她講嘅回訪條件會否轉化成實際使用。",
+    "未有明確價格帶，只知傾向低價、月付、可隨時停。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念前驗證，屬方向性訊號，唔可以當成人類用戶研究結論或市場證據。"
+}

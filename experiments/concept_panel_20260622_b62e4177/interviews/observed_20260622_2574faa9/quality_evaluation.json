@@ -1,0 +1,125 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview establishes a recent real episode and current workaround before introducing the concept, with clear behavioral evidence in `exchange_1` to `exchange_4`.",
+    "Most spoken questions are short, natural Cantonese, and focused on one conversational job at a time.",
+    "The facilitator distinguishes trust boundary, reuse trigger, payment condition, and self-serve versus RM boundary instead of collapsing them into one pricing or feature-preference block.",
+    "Stopping was reasonable: required coverage was complete by `exchange_9`, and further probing risked repetition more than new evidence."
+  ],
+  "findings": [
+    {
+      "category": "synthesis_overreach",
+      "severity": "medium",
+      "observation": "The synthesis upgrades one synthetic participant's stated and hypothetical answers into broad retail-customer conclusions and product-shaping claims. Several assumptions are marked `supported` even though the evidence is one persona and much of it comes after concept introduction.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "exchange_9.persona",
+        "SYNTHESIS.assumption_validation",
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Downgrade these to persona-scoped signals such as `observed in this synthetic interview` or `hypothetical stated preference`, and reserve market-level or segment-level claims for multi-participant human evidence."
+    },
+    {
+      "category": "leading_or_solution_loaded_questioning",
+      "severity": "medium",
+      "observation": "The concept introduction preloads both the solution form and a key value dimension: `免費嘅 Portfolio Health Check` that `幫你整合持倉同睇重疊 exposure`. That narrows the response toward the researcher's preferred framing before an open reaction to the concept.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "FACILITATOR_TRACE[4]"
+      ],
+      "recommendation": "Introduce the concept more neutrally first, then probe desired outputs separately. For example, describe a bank feature that summarizes total portfolio risk across accounts without naming overlap as the main value up front."
+    },
+    {
+      "category": "evidence_discipline",
+      "severity": "medium",
+      "observation": "Hypothetical answers are sometimes carried forward as if they were workflow or design proof. `retention_risk.workflow_effect` says `replaces_workflow`, but no observed replacement occurred; `payment_justification` and `self-serve/RM` boundaries are also stated preferences, not behavior.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "exchange_9.persona",
+        "SYNTHESIS.retention_risk",
+        "SYNTHESIS.pricing_signal",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Label these consistently as `stated`, `hypothetical`, or `intent`. Avoid verbs like `replaces` or `will` unless the transcript shows an observed action or a tested simulated choice."
+    },
+    {
+      "category": "question_design",
+      "severity": "low",
+      "observation": "The final question is mildly compound because it asks both what the participant can understand alone and what is too technical and should be left to RM or reports.",
+      "evidence_refs": [
+        "exchange_9.facilitator"
+      ],
+      "recommendation": "Split into two turns on rerun: first ask what they would use on their own, then ask what should stay assisted or documented."
+    },
+    {
+      "category": "domain_fit_and_output_scope",
+      "severity": "medium",
+      "observation": "The research goal asks how Aladdin-like functions should embed into retail banking services, but the interview only lightly probes embedding context. The synthesis still proposes product-direction outputs such as prototype comparisons and retail-channel boundaries from adjacent evidence.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_9.persona",
+        "SYNTHESIS.next_experiment",
+        "SYNTHESIS.key_insights"
+      ],
+      "recommendation": "Probe placement directly in participant-facing terms: alert, homepage card, monthly review flow, RM pre-meeting summary, or separate destination. Keep design implications bounded to this single persona until contrasted with alternative embed patterns."
+    }
+  ],
+  "required_improvements": [
+    "Reduce synthesis scope: report persona-level signals instead of `supported` retail-customer assumptions from one synthetic concept interview.",
+    "Rewrite concept introduction to avoid seeding `overlap exposure` as the expected primary value before open concept reaction.",
+    "Tag every concept-stage answer as behavioral, stated, or hypothetical and prevent hypothetical statements from being summarized as observed workflow proof.",
+    "Add direct participant-facing probes about embedding context if the output is expected to inform retail-service integration."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask the participant to react to a neutral concept description before naming specific analytics outputs.",
+      "Probe where this would live in their actual banking journey: homepage, alert, monthly review, RM touchpoint, or standalone tool.",
+      "Test what they would do with a concrete output: after seeing overlap or currency concentration, what exact next action would they take or defer?",
+      "Ask what makes external-account setup feel worth completing versus too much effort."
+    ],
+    "coverage_gap_actions": [
+      "Add a participant-facing placement probe to cover service-embedding evidence directly rather than inferring it from reuse timing.",
+      "Ask one follow-up that separates `interesting to look at` from `would actually rely on for a decision`.",
+      "If pricing remains in scope, ask for a concrete tradeoff or substitute behavior instead of only `what would be worth paying for`.",
+      "Probe a failure case: if external accounts are not connected, is the bank-only version still useful enough to open again?"
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, instruct the facilitator to introduce the concept before naming exemplar features unless the participant already surfaced them unprompted.",
+      "Add a synthesis rule that any single-persona synthetic finding must be explicitly scoped as persona-specific and non-generalizable.",
+      "Add a guardrail that hypothetical statements cannot be converted into `supported` market assumptions without a `stated/hypothetical` label.",
+      "Encourage one explicit embedding question when the research goal includes `how the feature should be embedded`."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for this interview. Keep the soft limit similar, but reserve 1 additional turn for a direct embedding-pattern probe when service-placement decisions are part of the goal."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a synthetic interview only. Any product, segment, pricing, retention, or embedding conclusion should be treated as provisional until checked against real participant evidence."
+}

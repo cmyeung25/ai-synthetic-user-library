@@ -1,0 +1,132 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept, with usable behavioral detail in `exchange_1` and `exchange_2`.",
+    "Questions were mostly short, colloquial, and single-focus; no obvious compound chains or mechanical why-ladders appeared.",
+    "The facilitator kept curiosity, trust, retention, pricing, and data-sharing distinct enough at the transcript level.",
+    "The stop decision was reasonable: all required concept-validation coverage areas were participant-facing by `exchange_8`, and continuing likely would have yielded diminishing returns."
+  ],
+  "findings": [
+    {
+      "category": "Synthesis overreach",
+      "severity": "high",
+      "observation": "Several synthesis claims convert one synthetic participant's stated preferences into stronger product conclusions than the evidence supports. The clearest examples are `retention_risk.workflow_effect = \"replaces_workflow\"` and the assumption that the 'best' embed is an existing journey checkpoint. The participant only said they would check after RM advice or after adjustments (`exchange_5.persona`, `exchange_6.persona`); that supports an event-triggered use case, not replacement of the existing workflow or a best overall embed pattern.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.assumption_validation[6]"
+      ],
+      "recommendation": "Downgrade these claims to bounded statements such as 'could fit into RM-triggered moments for this persona' and avoid terms like 'replaces' or 'best' unless contrasted against alternative workflows with direct participant evidence."
+    },
+    {
+      "category": "Evidence discipline",
+      "severity": "medium",
+      "observation": "The synthesis uses supportive quote snippets, but multiple downstream claims are not tightly authorized by the cited transcript. For example, `problem_evidence.strength = \"medium\"` is reasonable, yet several assumption validations are marked `supported` when the interview only produced hypothetical concept responses rather than observed behavioral proof, especially around understanding institution-grade analytics and describing which capabilities should be exposed to retail users.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_8.persona",
+        "SYNTHESIS.assumption_validation[2]",
+        "SYNTHESIS.assumption_validation[7]"
+      ],
+      "recommendation": "Differentiate observed current-state evidence from hypothetical concept reactions. Mark those assumption checks as 'directionally supported by stated preference' or equivalent rather than plain `supported`."
+    },
+    {
+      "category": "Neutrality of concept intro",
+      "severity": "medium",
+      "observation": "The concept introduction bundled named benefits and likely value dimensions into the prompt: '免費', '較簡單方式', '重疊、集中度同貨幣風險' in `exchange_3.facilitator`. That is not aggressive selling, but it does preload both the solution frame and the likely helpful outputs before hearing what the participant would naturally seek from a tool.",
+      "evidence_refs": [
+        "exchange_3.facilitator"
+      ],
+      "recommendation": "Keep the concept intro shorter and less feature-specified, then let the participant pull priorities. Example: introduce a neutral portfolio-overview tool first, then ask what they would most want it to surface."
+    },
+    {
+      "category": "Domain-fit inference",
+      "severity": "medium",
+      "observation": "The review goal asks what Aladdin-like functions help and how they should embed into retail banking. The transcript does capture a stated split between app self-serve and RM-assisted interpretation, but the synthesis pushes toward product-shaping implications from one adjacent, hypothetical interview. Claims about which retail use cases are 'most valuable' are broader than the evidence base.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.key_insights[1]",
+        "SYNTHESIS.key_insights[4]"
+      ],
+      "recommendation": "Keep product implications explicitly scoped to this persona and label them as candidate design directions pending contrast interviews with customers who manage portfolios differently."
+    },
+    {
+      "category": "Pricing interpretation",
+      "severity": "low",
+      "observation": "The interview kept payment separate from free curiosity and month-two retention, which is good. But the synthesis still edges toward business implication from thin evidence: there is no willingness-to-pay range, no tradeoff against alternatives, and no concrete payment trigger beyond a stated condition for '一次重要決定'.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "SYNTHESIS.pricing_signal"
+      ],
+      "recommendation": "Preserve pricing as exploratory only. In the next run, isolate one recent high-stakes decision and ask what would have made paid support worth it versus RM-only support."
+    },
+    {
+      "category": "Coverage depth gap",
+      "severity": "low",
+      "observation": "Coverage was technically complete, but current workaround depth remained narrow. The interview established how the participant compares app and statements, yet did not probe frequency, time cost, failure consequences, or whether they have ever made a wrong decision because overlap/concentration was missed.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "COVERAGE_STATUS"
+      ],
+      "recommendation": "Use one additional behavioral probe after the workaround description to quantify friction and consequence before concept introduction."
+    }
+  ],
+  "required_improvements": [
+    "Tighten synthesis to distinguish observed behavior from hypothetical concept reactions, and downgrade unsupported `supported` labels.",
+    "Remove or bound product-level claims such as workflow replacement, best embed pattern, and strongest value point unless directly evidenced by contrastive participant data.",
+    "Make the concept introduction less solution-loaded by avoiding pre-specified helpful dimensions before eliciting the participant's own desired outputs.",
+    "Add one behavioral consequence probe before concept introduction to establish whether current blind spots have led to missed actions, delayed decisions, or reliance on RM."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one concrete case where the participant almost misread diversification or concentration, what they did next, and what consequence followed.",
+      "Probe how often they do this review, how long it takes, and what exactly is hard when naming is inconsistent.",
+      "After neutral concept intro, ask the participant to name the first output they would want before suggesting overlap, concentration, or FX risk.",
+      "For paid support, anchor on a recent important decision and ask what extra help would have changed the decision enough to justify paying."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct participant-facing probe on consequences of the current workaround: delay, confusion, wrong assumption, or extra RM dependence.",
+      "Test a contrast case by asking whether there are situations where the current app plus statements already feel sufficient.",
+      "If external-asset aggregation matters, ask what minimum data is insufficient as well as what maximum access is unacceptable.",
+      "Separate stated trust requirements from actual proof by asking how they currently verify an RM or app claim today."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, require one more pre-concept behavior/consequence probe before any feature framing when the goal includes discovering blind spots.",
+      "Constrain synthesis labels so hypothetical concept reactions cannot be recorded as plain `supported` without an explicit qualifier.",
+      "Add a guardrail banning superlatives such as 'best', 'most valuable', or workflow replacement from single synthetic interviews unless directly contrast-tested.",
+      "Encourage observer or runtime checks to flag concept prompts that preload multiple candidate value dimensions."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy was sufficient for basic coverage, but one extra turn before concept introduction would improve problem-evidence quality. Keep the overall budget similar and reallocate a turn from late-stage implication probing to earlier behavioral consequence probing."
+  },
+  "human_review_needed": true,
+  "synthetic_only_disclaimer": "This audit evaluates only the supplied synthetic interview artifacts. Any product, pricing, retention, or embedding implication should remain provisional until verified with real participant interviews."
+}

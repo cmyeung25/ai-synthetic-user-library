@@ -1,0 +1,135 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and current workaround before introducing the concept, which fits `concept_validation` requirements (`exchange_1` to `exchange_3`).",
+    "Most asked questions had a single conversational focus and stayed short, with no obvious Five Whys pattern or early causal pressure (`exchange_2`, `exchange_3`, `exchange_6`, `exchange_7`).",
+    "The facilitator kept curiosity, retention, trust boundary, and payment as separate topics rather than collapsing them into one long questionnaire (`exchange_5` to `exchange_8`).",
+    "The participant voice stayed natural and specific to one persona; answers were not numbered, framework-like, or self-referential about the simulation.",
+    "The synthesis preserves some uncertainty, especially around pricing and generalizability, and includes a clear synthetic-only disclaimer."
+  ],
+  "findings": [
+    {
+      "category": "Leading / concept intro",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded because it pre-bundles the feature scope and benefit: `免費嘅 Portfolio Health Check，幫你一眼睇返戶口、基金同 MPF`. That frames the tool as helpful and complete before the participant reacts, rather than neutrally testing what they would expect or need.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "facilitator_trace[3]"
+      ],
+      "recommendation": "Introduce the concept with less promised value and less fixed scope, for example by naming it and asking what they would assume it does, or by describing it as a possible summary view without claiming it helps `一眼睇返` everything."
+    },
+    {
+      "category": "Question design",
+      "severity": "medium",
+      "observation": "`exchange_8` is effectively a double question: it asks both placement (`擺喺邊個位`) and timing (`咩時候出現`) in one turn, plus an anti-sales framing requirement (`唔似叫你買嘢`). The answer covers both, but the question has more than one natural focus.",
+      "evidence_refs": [
+        "exchange_8.facilitator"
+      ],
+      "recommendation": "Split embedding into separate probes: first where it should appear, then when it should appear, then if needed ask how to keep it from feeling sales-like."
+    },
+    {
+      "category": "Evidence discipline",
+      "severity": "medium",
+      "observation": "Several synthesis claims extend beyond what one synthetic participant actually evidenced. `retention_risk.workflow_effect = replaces_workflow` is stronger than the transcript supports; the participant said the tool must reduce cross-app checking and surface missed items, but did not clearly say it would replace the current workflow. Similarly, `switching_difficulty = low` is not directly established.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "synthesis.current_workaround.switching_difficulty",
+        "synthesis.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Downgrade these to cautious phrasing such as `may reduce parts of the workaround` and avoid assigning difficulty levels unless the participant compared the old and new workflows explicitly."
+    },
+    {
+      "category": "Founder assumption assessment",
+      "severity": "medium",
+      "observation": "The report marks multiple product-shaping assumptions as `supported` from one synthetic persona, including market-facing assumptions about retail customers broadly and embedding strategy. The transcript supports this persona's preference, but not wider segment-level support.",
+      "evidence_refs": [
+        "synthesis.assumption_validation[0]",
+        "synthesis.assumption_validation[4]",
+        "synthesis.assumption_validation[5]",
+        "synthesis.assumption_validation[6]",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Keep assumption status bounded to `supported for this persona` or `directionally supported`, and avoid broad customer-language such as `好多零售客` unless multiple personas or external evidence exist."
+    },
+    {
+      "category": "Domain-fit alignment",
+      "severity": "medium",
+      "observation": "The research goal asks where real portfolio-management frictions sit, but the strongest observed friction here is adjacent cash-availability sensemaking rather than portfolio management in a richer investment-behavior sense. The synthesis notes this, but still leans into portfolio-health/product implications without probing whether this participant would ever use deeper portfolio tools beyond liquidity clarity.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "synthesis.key_insights[0]"
+      ],
+      "recommendation": "In the next rerun, explicitly test whether the participant sees this as a money-visibility tool, an investment-decision tool, or both, before drawing portfolio-management conclusions."
+    },
+    {
+      "category": "Coverage quality",
+      "severity": "low",
+      "observation": "Coverage is marked complete, but `founder_assumption_check` was handled only through placement/tone in `exchange_8`. It did not directly test one important assumption named in the synthesis gap list: whether RM-assisted or hybrid service involvement would feel more appropriate than pure self-serve for more advanced analysis.",
+      "evidence_refs": [
+        "coverage_status",
+        "exchange_8.facilitator",
+        "synthesis.evidence_gaps"
+      ],
+      "recommendation": "Treat founder-assumption coverage as partial unless at least one key business-model or service-boundary assumption is directly probed participant-facing."
+    }
+  ],
+  "required_improvements": [
+    "Make concept introduction more neutral by removing promised value language from the first concept question.",
+    "Tighten evidence discipline in synthesis: do not label unsupported mechanics such as `replaces_workflow` or `switching_difficulty` as established facts.",
+    "Bound product and segment conclusions to a single synthetic persona; avoid `supported` labels that read as market evidence.",
+    "Use one focus per asked question, especially for embedding/placement probes.",
+    "Add at least one direct probe to distinguish liquidity-management needs from broader portfolio-management needs before shaping feature direction."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask whether the participant would view the tool mainly as cash-planning support, investment monitoring, or both, and why.",
+      "After concept intro, ask what they would expect to see first before suggesting specific asset types or outcomes.",
+      "Probe one concrete advanced feature candidate at a time, such as plain-language explanations, loss vs volatility interpretation, or concentration alerts, to see what actually matters.",
+      "Test whether a human-assisted follow-up or RM handoff would feel useful or intrusive once the summary flags an issue."
+    ],
+    "coverage_gap_actions": [
+      "Directly probe whether deeper portfolio analysis is wanted at all beyond knowing what money is safely usable.",
+      "Ask what current action the participant takes, if any, when MPF/fund values move, so the team can separate monitoring from decision support.",
+      "Probe service-boundary preferences participant-facing: self-serve only, optional advisor help, or bank contact after a flagged issue.",
+      "If pricing remains relevant, ask for one acceptable range or comparison anchor rather than only `low price` and `monthly` statements."
+    ],
+    "prompt_adjustments": [
+      "Revise the concept-validation prompt to ban benefit-loaded phrasing such as `幫你一眼睇返...` in the first concept mention.",
+      "Add a synthesis rule that any segment-level assumption must be tagged `single-persona directional only` unless supported by multiple interviews.",
+      "Require synthesis fields like workflow change, switching difficulty, and evidence strength to map to direct transcript statements rather than analyst inference.",
+      "Have the observer or runtime checker flag multi-focus questions before they are asked, especially placement-plus-timing combinations."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy was sufficient for a compact first-pass concept screen, but a rerun should allow 1-2 extra turns to isolate tool framing, domain fit, and service-boundary questions without compressing them into compound prompts."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit assesses a single synthetic interview only. Any product, pricing, needs, POV, HMW, or segment conclusions should be treated as directional and not as human-user evidence or market validation."
+}

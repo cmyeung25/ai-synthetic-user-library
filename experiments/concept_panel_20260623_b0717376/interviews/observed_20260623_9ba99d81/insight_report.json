@@ -1,0 +1,186 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "銀行app睇基金，證券戶口睇股票，MPF就另外登入供應商個app，再開返手機備忘錄同之前截圖對一對",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "佢最好一眼話畀我知邊度太重、邊度太散，唔使我自己逐個戶口拼返埋",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "今個月邊類持倉重咗、重複咗，仲可以畀我自己再核對，不是亂咁嚇我，我先會再開",
+        "evidence_ref": "exchange_5.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月尾因銀行通知加上市場波動，參與者主動跨基金、股票、MPF做一次整體檢視。",
+      "現時做法是分平台查看，再用備忘錄和舊截圖手動拼湊大概配置。",
+      "檢視重點不是專業分析，而是快速確認跌幅、重複持倉和是否過重過散。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "銀行app看基金。",
+      "證券戶口看股票。",
+      "MPF供應商app另外登入查看。",
+      "用手機備忘錄和之前截圖手動對照，粗略寫低各類持倉比例。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "輸出要簡單直接。",
+      "要可自行再核對，不可像在嚇人。",
+      "不可要求交易權限。",
+      "不可擴到無關戶口或過多敏感資料。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "讀取持倉",
+      "產品類別",
+      "比例",
+      "大概市值"
+    ],
+    "rejected_data_access": [
+      "交易權限",
+      "太詳細的個人資料",
+      "連無關戶口一起掃描",
+      "為進階功能再交更多敏感資料"
+    ],
+    "required_trust_explanation": [
+      "明確只用作分析。",
+      "用戶看得到系統攞咗啲乜。",
+      "分析要可核對，不可黑箱或誇張化。",
+      "RM介入時不能一開口就變成sell嘢。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一眼看到有沒有表面分散但實際重複押在相近市場或大公司。",
+      "直接指出邊度太重、邊度太散。",
+      "免去逐個戶口手動拼湊。"
+    ],
+    "time_to_value": "首次打開就要即時見到整體分布、重複持倉同過重位置。",
+    "abandonment_triggers": [
+      "只得新鮮感，之後幫不到節省時間。",
+      "只係圖靚啲或包裝得勁啲。",
+      "提示方式似亂咁嚇人。",
+      "要額外交更多敏感資料。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費會提高嘗試意願，但不是足夠條件。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "只有在進階功能持續減少手動工作時才會考慮付費。",
+      "可接受的付費點包括自動追蹤變化、重複持倉到某程度時提醒、整理更清楚。",
+      "純包裝、圖靚或說法更厲害不足以支持付費。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每月持續節省對帳時間。",
+      "清楚指出本月哪類持倉變重或重複。",
+      "提供可自行核對的分析結果。"
+    ],
+    "drop_off_reasons": [
+      "只係一次性新鮮感。",
+      "輸出太誇張或像銷售前奏。",
+      "不能真正減少手動整理。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客戶目前用碎片化、手動或產品級視角管理投資，而不是真正整體視角。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona"
+      ],
+      "rationale": "此參與者明確跨三個平台查看，再用備忘錄和截圖手動拼湊。"
+    },
+    {
+      "assumption": "客戶能指出 Aladdin 類分析可解決的實際盲點。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "參與者清楚指出重複押注、過重過散和月度變化提示最有用。"
+    },
+    {
+      "assumption": "零售客戶能理解簡化版 institutional analytics，只要表達夠具體非技術。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "參與者對重複持倉、分布和變化提示有明確反應，但未測到更複雜情景分析或壓力測試。"
+    },
+    {
+      "assumption": "最有價值的是簡化洞察與優先次序，不是 institutional detail 本身。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "他要的是一眼看懂和減少手動工作，不願為純包裝或更花巧呈現付費。"
+    },
+    {
+      "assumption": "部分能力應直接放在零售自助渠道，部分應留在 RM 或受助流程。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_7.persona"
+      ],
+      "rationale": "分布、重複、近排變化適合 app；調整建議和取捨解釋較適合 RM。"
+    },
+    {
+      "assumption": "免費會增加試用，但信任、資料分享和銷售感仍影響採用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "即使免費，他仍要求資料邊界、可見性、可核對性，並抗拒 sales feel。"
+    },
+    {
+      "assumption": "最佳嵌入點是在既有 workflow 內，而不是獨立複雜 analytics 目的地。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "參與者偏好直接在 app 內先看清楚，但未明確比較獨立入口與現有旅程節點。"
+    },
+    {
+      "assumption": "客戶能說出哪些功能應或不應暴露給零售客戶。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "他對資料權限邊界及自助/RM分工表達清楚。"
+    }
+  ],
+  "key_insights": [
+    "真正痛點不是『冇分析』，而是跨戶口拼湊整體視角太土法、太花時間。",
+    "最先有價值的不是深度機構級術語，而是直接指出重複押注、過重過散和近期變化。",
+    "信任門檻很清楚：只限分析、資料可見、可自行核對、不要交易權限、不要掃無關戶口。",
+    "留存取決於持續節省時間，不取決於新鮮感或視覺包裝。",
+    "零售端適合放簡單 summary 和 alert；涉及調整建議與取捨解釋時，較適合 RM 輔助，但要避免變成 sales trigger。"
+  ],
+  "next_experiment": "用另一位不同投資習慣的香港銀行 persona，測試較低參與度用戶是否同樣重視重複持倉/過重過散，並加入一個具體介面刺激物，比較『app內自助 summary』與『RM會前報告』哪種嵌入更自然。",
+  "evidence_gaps": [
+    "未測試外部資產整合以外的資料來源，例如其他銀行或保單資產。",
+    "未測試情景分析、壓力測試、貨幣風險等較複雜能力是否可理解或有價值。",
+    "未有第二個對比事件去看他在平靜市況下會否主動使用。",
+    "founder_assumption_check 在coverage狀態標示為未完成，但 transcript 其實已問到 app 與 RM 分工，屬部分覆蓋。",
+    "只有一位 synthetic persona，不能代表香港零售銀行客群。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 的概念前驗證，不可當作真人市場證據；所有因果與需求判斷都需要再用真人訪談驗證。"
+}

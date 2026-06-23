@@ -1,0 +1,189 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "去到跨銀行同MPF一齊睇嗰部分，仲係有少少散，唔算一眼睇得清。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "基本上係靠自己逐個餘額同持倉對。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "有時我會截圖，或者記低大概比重，先拼到一個總體感覺。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "我第一下會想睇而家成個組合係咪其實太集中喺同一個市場或者同一類資產，表面上分開擺，但實際風險係重疊。",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次檢視發生在星期日夜晚，受訪者主動先看主銀行 app，再逐個打開另一間銀行和 MPF app 比對。",
+      "受訪者不是逐隻產品看，而是想確認整體分佈是否過偏，特別留意香港和美國市場加埋是否過重。",
+      "整合跨銀行與 MPF 時，目前主要靠手動對餘額、持倉、截圖和記大概比重。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "先看主銀行 app 的基金和股票。",
+      "再打開另一間銀行 app 和 MPF app 逐個比對。",
+      "靠截圖或記下大概比重，拼出總體感覺。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "不能要求提供每筆交易或日常現金流。",
+      "不能讓 RM 因為這些資料主動追著推產品。",
+      "自助畫面要講得清楚，不能只給分數。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "持倉類別",
+      "金額",
+      "大概成本",
+      "幣種",
+      "產品基本分類",
+      "按情況整合部分外部資產作整體風險與重疊分析"
+    ],
+    "rejected_data_access": [
+      "每筆交易資料",
+      "日常現金流資料",
+      "把資料用於 RM 主動推產品"
+    ],
+    "required_trust_explanation": [
+      "明確說明只用哪些資料做整體風險與重疊分析。",
+      "保持分析用途與銷售用途分開。",
+      "用清楚、非純分數式的解釋呈現結果。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一打開就能看清整體組合是否過度集中在同一市場或同一類資產。",
+      "能指出表面分散但實際風險重疊的地方。",
+      "最好可連到教育儲蓄或退休時間表的實際影響。"
+    ],
+    "time_to_value": "首次使用就要見到整體集中度/重疊的清楚答案。",
+    "abandonment_triggers": [
+      "只有多幾個圖表或多些提示，沒有更清楚的判讀。",
+      "畫面只給分數，沒有解釋。",
+      "感覺功能被用來觸發銷售跟進。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費會降低試用門檻，受訪者對免費版本有明確試用情境。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "只有在準備做較大調整，例如重新分配教育儲蓄、基金和 MPF 時，才會考慮付費。",
+      "願意付費的內容是講得清楚的情景分析，加一次不太 sell 產品的真人解讀。",
+      "單純更多圖表或更多提示不足以支持付費。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "市場有波動時會再打開。",
+      "做完組合調整後，會用來確認整體風險是否回到可接受範圍。",
+      "若提示具體指出某個集中位比上月高，而不是普通推送，會再看。"
+    ],
+    "drop_off_reasons": [
+      "提醒太泛或像普通推送。",
+      "沒有幫到做調整後的風險確認。",
+      "內容太技術化或只是多圖表。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客戶目前是靠碎片化、人工或產品級視圖管理投資組合，而不是真正的 whole-portfolio view。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "這位受訪者清楚描述跨銀行與 MPF 需要手動拼湊，沒有一個地方一次過看清。"
+    },
+    {
+      "assumption": "客戶今天能指出 Aladdin 類 analytics 可處理的真實盲點，特別是重疊、集中度、scenario 或 drift。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "受訪者主動提出市場/資產集中、表面分散但實際重疊，並希望看到對教育和退休目標的影響。"
+    },
+    {
+      "assumption": "零售客戶可以理解簡化版 institutional analytics，只要解釋夠具體、非技術化。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者對集中度、分布、幣種、重疊等概念反應自然，並明確要求『講得清楚』而不是只給分數。"
+    },
+    {
+      "assumption": "最有價值的不是 institutional detail 本身，而是簡化後的 insight、explanation 和 prioritization。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者偏好清楚解釋和真人取捨分析，不願意為更多圖表付費。"
+    },
+    {
+      "assumption": "有些能力適合直接放在自助渠道，有些應保留在 RM 或 assisted workflow。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者明確把集中度/分布/重疊歸為自助查看，把情景分析和大調整影響歸為需要人解釋。"
+    },
+    {
+      "assumption": "免費會提高試用意願，但信任、資料共享和銷售意圖仍然影響採用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "受訪者願意在免費前提下使用，但對資料範圍和 RM 推銷界線非常敏感。"
+    },
+    {
+      "assumption": "最佳嵌入方式是放進現有理財節奏，而不是做成獨立複雜 analytics 目的地。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "受訪者描述了現有檢視時點和再次打開的觸發，但沒有直接比較『嵌入現有流程』與『獨立入口』兩種方式。"
+    },
+    {
+      "assumption": "客戶可以清楚描述甚麼功能應或不應暴露給零售客戶。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者清楚畫出資料權限邊界，也分清哪些分析可自助、哪些需真人解讀。"
+    }
+  ],
+  "key_insights": [
+    "受訪者的核心問題不是沒有看投資，而是整體視角分散；他已經會主動管理，但跨銀行與 MPF 仍靠人手拼湊。",
+    "最有吸引力的免費價值是 whole-portfolio 的集中度與重疊判讀，尤其能連到教育儲蓄和退休時間表的實際含義。",
+    "信任邊界很清楚：可以給持倉級彙總資料，不可以給交易與現金流，更不可以轉成 RM 主動推銷線索。",
+    "留存依賴事件觸發，而不是日常打卡：市場波動、做完調整、或收到具體而非泛化的集中度提醒時才會再打開。",
+    "付費空間不在更多圖表，而在重大調整時的高質素 scenario analysis 加中立真人解讀。"
+  ],
+  "next_experiment": "用 3 個低保真概念稿做下一輪真人訪談：1) 自助版整體集中度/重疊總覽，2) 具體風險提醒卡連到教育/退休目標影響，3) 重大調整前的 scenario + RM 解讀流程，重點比較理解度、信任感和是否會採取下一步。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，不能代表香港零售或半零售客戶分佈。",
+    "未覆蓋對 stress test、risk-fit drift、dashboard/report 形式的反應差異。",
+    "未測試不同外部資產連接方式對信任的影響，例如 manual entry、read-only linking 或 periodic import。",
+    "未驗證沒有家庭理財目標壓力、較年輕或較高交易頻率客群是否有不同需求。",
+    "未取得真實使用流程中的行為證據，只是概念層回應。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 的概念驗證前置訊號，用來生成待驗證假設與訪談方向，不能當作真實市場需求或因果證據。"
+}

@@ -1,0 +1,126 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 3,
+    "conversation_naturalness": 3,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "warn",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept, with behavioral detail in `exchange_1.persona` and a current workaround in `exchange_2.persona`.",
+    "The facilitator avoided root-cause pressure and did not run a mechanical Five Whys pattern; questions stayed mostly on behavior, reaction, trust, retention, and payment.",
+    "Concept coverage was efficient: curiosity/value (`exchange_3`), trust boundary (`exchange_4`), month-two reuse (`exchange_5`), payment (`exchange_6`), and self-serve vs assisted boundary (`exchange_7`).",
+    "The synthesis includes a clear synthetic-only disclaimer and often labels pricing/retention evidence as stated or hypothetical."
+  ],
+  "findings": [
+    {
+      "category": "synthesis_overreach",
+      "severity": "high",
+      "observation": "Several synthesis claims exceed the transcript. `current_workaround.pain_level: \"high\"` is stronger than the participant said; the evidence shows incompleteness and inconvenience, not a direct high-severity pain rating. `retention_risk.workflow_effect: \"replaces_workflow\"` is unsupported because no exchange established replacement versus supplementation. `problem_evidence` uses `exchange_3.persona` as problem proof even though that exchange is a concept-introduction hypothetical, not observed current behavior.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "recommendation": "Restrict problem and workflow claims to observed behavior from `exchange_1.persona` and `exchange_2.persona`. Label concept-era statements as hypothetical preferences, and remove unsupported intensity or replacement claims unless directly stated."
+    },
+    {
+      "category": "question_design",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded. `exchange_3.facilitator` embeds the value proposition `免費`, `Portfolio Health Check`, and `一次過睇晒整體持倉同重複`, which pre-frames the main benefit instead of first eliciting the participant's own desired outcome from the current problem.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "FACILITATOR_TRACE[2]"
+      ],
+      "recommendation": "Introduce the concept more neutrally, for example by describing it as a feature that aggregates holdings and shows analytics, then ask what would be useful or unhelpful before naming the strongest expected benefit."
+    },
+    {
+      "category": "question_design",
+      "severity": "medium",
+      "observation": "`exchange_7.facilitator` is compound. It asks both what should be shown directly in-app and what should not be shown to retail clients. That creates two evaluative tasks in one turn, reducing the chance of deeper probing on either side.",
+      "evidence_refs": [
+        "exchange_7.facilitator",
+        "FACILITATOR_TRACE[6]"
+      ],
+      "recommendation": "Split this into two turns: first ask what they would want self-serve, then separately ask what feels inappropriate or should require explanation/assistance."
+    },
+    {
+      "category": "conversation_quality",
+      "severity": "low",
+      "observation": "`exchange_2.facilitator` is slightly unnatural and mildly repetitive: `當時你平時` blends the recalled episode with a general-habit framing. It still works, but it weakens conversational focus.",
+      "evidence_refs": [
+        "exchange_2.facilitator"
+      ],
+      "recommendation": "Keep one time frame per question. For example, either ask about that specific recent session or ask generally how they usually combine sources."
+    },
+    {
+      "category": "evidence_discipline",
+      "severity": "medium",
+      "observation": "The synthesis moves from one synthetic persona to broad product-shaping outputs. `next_experiment` is reasonable, but several `assumption_validation` entries use `supported` language that sounds stronger than warranted from a single synthetic interview, especially for claims about `零售客` generally.",
+      "evidence_refs": [
+        "SYNTHESIS.assumption_validation",
+        "SYNTHESIS.next_experiment",
+        "SYNTHESIS.evidence_gaps"
+      ],
+      "recommendation": "Downgrade broad population claims to `directional` or `single-persona signal`, and keep product implications explicitly bounded to this one synthetic case."
+    },
+    {
+      "category": "domain_fit",
+      "severity": "medium",
+      "observation": "Domain fit is partly inferred from the disruption source rather than only changed actions. The interview shows the participant manually reconciles fragmented holdings and wants overlap/concentration visibility, but it does not yet show how this would change actual portfolio management actions beyond reviewing or checking after purchases.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_5.persona"
+      ],
+      "recommendation": "Probe a concrete follow-through case: when an insight would lead to rebalance, hold, seek advice, or ignore it. Use changed action as the test for domain fit, not just interest in analytics."
+    }
+  ],
+  "required_improvements": [
+    "Tighten synthesis discipline: separate observed behavior evidence from hypothetical concept reactions, and remove unsupported intensity/replacement claims.",
+    "Rewrite concept introduction to reduce solution-loading and avoid naming the expected core value too specifically before the participant responds.",
+    "Split compound questions, especially the self-serve versus not-for-retail boundary, into separate turns with follow-up depth.",
+    "Keep conclusions bounded to one synthetic persona; do not mark retail-wide assumptions as fully supported from this interview alone.",
+    "Add participant-facing probes about what action the insight would change, so domain fit is grounded in behavior change rather than stated interest."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one specific recent case where the participant noticed overlap or concentration only after manual reconciliation, and what they did next.",
+      "After concept intro, ask what action they would take if the tool showed a concentration issue, and whether they would self-serve, ignore, or contact someone.",
+      "Probe one trust-boundary variant at a time: manual upload, PDF statement import, and read-only aggregation, instead of treating external-linking as one bundle.",
+      "Ask what would make the feature feel educational versus sales-triggering in a concrete app flow."
+    ],
+    "coverage_gap_actions": [
+      "Even though coverage is marked complete, add a direct participant-facing probe on actual changed action after receiving an insight; current evidence mostly covers stated value and revisit conditions.",
+      "Isolate the current workaround's adequacy: ask what decisions they cannot make today because the stitched view is incomplete.",
+      "For concept validation, explicitly separate first-use curiosity, repeat-use trigger, and paid upgrade trigger in the transcript and synthesis labels.",
+      "Test whether the participant would trust a simple pressure-test output only if assumptions are inspectable, rather than inferring that from general dislike of `嚇人標籤`."
+    ],
+    "prompt_adjustments": [
+      "In concept validation mode, instruct the facilitator to introduce concepts with minimal benefit framing and avoid naming the presumed headline outcome unless the participant has already articulated it.",
+      "Add a prompt rule that each spoken question should contain one evaluative task only; split `want` and `should not show` questions.",
+      "Add a synthesis rule that problem evidence must come only from pre-concept observed behavior exchanges unless explicitly labeled as hypothetical.",
+      "Require broad assumption statuses to be phrased as `single-persona signal` when evidence comes from one synthetic interview."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for baseline coverage, but one or two extra turns would improve rigor if reserved for action-change and trust-implementation probes. No major expansion is needed; a slightly wider soft limit is enough."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit assesses a single synthetic interview and its artifacts. Findings about interview quality are useful, but any product, market, or causal conclusion should remain bounded to synthetic evidence unless corroborated with real participant data."
+}

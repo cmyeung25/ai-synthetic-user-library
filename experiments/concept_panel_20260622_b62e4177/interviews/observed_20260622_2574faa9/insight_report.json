@@ -1,0 +1,197 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "最麻煩唔係逐個產品，而係要自己心入面再拼一次幣種同市場 exposure，因為每個app個分類方式都唔同。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "嗰晚最唔清楚其實係重疊 exposure，特別係美股嗰邊。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "如果個全貌都未睇清，我唔想靠感覺去調。",
+        "evidence_ref": "exchange_4.persona"
+      },
+      {
+        "quote": "如果第一次開已經只係好表面，我未必會特登返去睇第二次。",
+        "evidence_ref": "exchange_7.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "幾個星期前因美股波動，受訪者主動做過一次整體投資組合檢視。",
+      "實際流程包括來回查看銀行 app、外部券商、截圖和 Notes。",
+      "因看不清重疊 exposure 與美元集中度，當晚選擇先不調整持倉。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "先開主要銀行 app 睇現金同基金。",
+      "再去券商睇 ETF 同美股持倉。",
+      "靠截圖同 Notes 手動對數。",
+      "用心算方式重新拼湊幣種同市場 exposure。"
+    ],
+    "pain_level": "high",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "分析要用直接語言，不好變成行話。",
+      "外部持倉整合必須 read-only。",
+      "用戶要可選擇連接哪些戶口，並可隨時 revoke。",
+      "不要把功能變成產品銷售入口。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "持倉種類",
+      "數量",
+      "市值",
+      "幣種",
+      "基本交易紀錄（用作成本與 exposure 計算）",
+      "read-only 外部戶口連接",
+      "用戶自行選擇連接戶口",
+      "可隨時撤銷授權"
+    ],
+    "rejected_data_access": [
+      "完整銀行流水",
+      "與投資分析無直接關係的消費資料",
+      "超出投資分析所需的廣泛資料讀取",
+      "任何非 read-only 權限"
+    ],
+    "required_trust_explanation": [
+      "清楚說明為何需要每類資料。",
+      "明確保證只讀取投資分析所需範圍。",
+      "讓用戶感到是中立分析，不是順便帶去產品建議。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "第一眼要清楚拆解重疊 exposure。",
+      "最好能看出是否其實集中在同一批大型美股或同一主題。",
+      "若可連同外部持倉一併計算，感知價值更高。",
+      "輸出不能只停留在表面總覽。"
+    ],
+    "time_to_value": "首次打開時就要即時看到可影響決策的 whole-portfolio insight。",
+    "abandonment_triggers": [
+      "內容太表面",
+      "只有靚圖沒有新洞察",
+      "只看銀行內部資產導致結果不完整",
+      "語言太 technical",
+      "像銷售流程而非中立分析"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費有助打開首次使用，但不代表自然留存。",
+    "monthly_comfort_range": "unknown",
+    "payment_justification": [
+      "只有當進階服務能提供免費版看不到、且會影響決定的資訊時，才可能付費。",
+      "可接受的進階價值包括更清楚的重疊來源、幣種風險、情景變化，以及更完整的外部持倉納入。",
+      "若只是多幾個圖表或帶去產品建議，不會付費。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "市場波動明顯時，可快速確認總 exposure 有沒有走樣。",
+      "月尾或星期日夜晚做 money admin 時，可檢查重疊與幣種偏差。",
+      "若能提供比現有 app 更具體的 whole-portfolio insight。"
+    ],
+    "drop_off_reasons": [
+      "首次體驗太表面",
+      "無法整合外部持倉",
+      "呈現太 technical",
+      "感覺像銷售前置",
+      "setup 或授權成本過高"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客戶目前用碎片化、手動或產品級視角管理投資組合，而不是 true whole-portfolio 視角。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "此受訪者明確跨多個 app、券商、Notes 手動拼湊 exposure。"
+    },
+    {
+      "assumption": "客戶今天能指出 Aladdin 類 analytics 可解決的實際盲點，尤其 overlap、concentration、scenario 或 drift。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者具體指出重疊 exposure、美元集中度、幣種風險與情景變化。"
+    },
+    {
+      "assumption": "零售客戶可理解簡化後的 institutional analytics，只要解釋夠具體、非 technical。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_9.persona"
+      ],
+      "rationale": "受訪者表示集中度、幣種分布、重疊 exposure、簡單情景影響都看得明。"
+    },
+    {
+      "assumption": "最有價值的零售 use case 是簡化 insight、解釋與 prioritization，而不是 institutional detail 本身。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona",
+        "exchange_9.persona"
+      ],
+      "rationale": "受訪者重視可影響決策的拆解與解釋，不重視靚圖或深層模型細節。"
+    },
+    {
+      "assumption": "部分能力應直接在 self-serve retail channel 出現，另一部分應保留給 RM 或 assisted service。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_9.persona"
+      ],
+      "rationale": "受訪者清楚區分哪些內容可自助看，哪些應留給 RM 或詳細報告。"
+    },
+    {
+      "assumption": "即使核心免費，信任、資料分享與銷售意圖仍會影響採用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者對權限邊界很明確，亦反感帶去產品建議。"
+    },
+    {
+      "assumption": "最佳嵌入方式應貼近既有客戶時刻，而不是一個獨立複雜 analytics destination。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者提到市場波動與固定 money admin 時刻，但未比較不同嵌入形態。"
+    },
+    {
+      "assumption": "客戶可以清楚描述哪些 Aladdin 功能該或不該暴露在 retail banking。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_9.persona"
+      ],
+      "rationale": "受訪者能具體界定資料邊界與資訊深度邊界。"
+    }
+  ],
+  "key_insights": [
+    "這位受訪者的核心問題不是『看不到持倉』，而是跨平台下看不清 whole-portfolio 的重疊 exposure、集中度與幣種風險。",
+    "Portfolio Health Check 的首要價值應是把 look-through overlap 用人話拆開，而不是先做漂亮 dashboard。",
+    "若不能納入外部持倉，分析容易被視為不完整；但外部整合必須以最少必要資料和明確控制權為前提。",
+    "留存觸發點偏事件化和節奏化：市場波動時，以及既有的月尾或週末 money admin 時刻。",
+    "零售端可承接的是簡化 insight 層；模型假設、壓力測試計算邏輯與深層指標更適合交由 RM 或詳細報告承接。"
+  ],
+  "next_experiment": "用真人受訪者測兩個原型對比：1. 只含銀行內部資產的重疊/集中度總覽；2. 可 read-only 連外部持倉並清楚拆解 overlap、幣種與簡單 scenario。比較首次理解、信任、授權意願與一週後再開意圖。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，無法判斷在更廣泛香港零售/半零售客群中的普遍性。",
+    "未測試不同外部戶口連接流程對授權完成率的影響。",
+    "未比較 alert、首頁卡片、定期報告、RM 會前工具等不同嵌入方式。",
+    "未觀察真實行為資料，現時留存與付費訊號主要是陳述性假設。",
+    "未覆蓋低參與度投資者或更高資產客群，可能存在明顯差異。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬 synthetic persona 預驗證，不能當作真人市場證據；所有洞察、價值判斷與因果解釋都需要用真人訪談與真實產品測試再驗證。"
+}

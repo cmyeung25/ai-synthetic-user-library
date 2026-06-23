@@ -1,0 +1,219 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "critical_incident",
+    "decision_rationale": "概念模式先建立最近實際 portfolio 管理行為，未有 transcript 時先用中性近期事件題開場，避免過早引入功能或支付／信任假設。",
+    "message_to_persona": "可唔可以講下你最近一次認真睇自己成個投資組合嗰陣發生咩事？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次實際 portfolio review 係咩情境觸發",
+      "佢而家用咩方法或工具去管理整體投資組合",
+      "現有方法有冇碎片化、手動整合或盲點",
+      "之後引入概念時邊啲能力最有感",
+      "信任、資料邊界、免費使用後重覆使用條件係咩"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019eef6b-0512-7172-9c4e-1a2e2b4fddd3",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "journey_reconstruction",
+    "decision_rationale": "已經有一個近期具體 portfolio review 事件，下一步先拆解當晚實際用咩工具同點樣拼湊資訊，以補足 current_workaround，再為之後概念引入建立基線。",
+    "message_to_persona": "你嗰晚係點樣用個 spreadsheet 去對呢啲重疊持股？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次認真檢視整體投資組合是在上個星期日夜晚，觸發因素是前幾日美股波動急。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者原本主要只留意幾個倉位，之後因為不放心整體曝險而坐低重看全個組合。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當時同時用 laptop 上的 spreadsheet 和手機上的 broker app 交叉查看持倉。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者在檢查中發現幾隻 ETF 與基金存在重疊持股，表面分散不等於實際分散。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當晚 spreadsheet 具體點樣整合不同持倉資料",
+      "佢依家最主要依賴邊個工具或手動方法做 whole-portfolio 檢查",
+      "重疊持股以外，仲有冇其他睇唔清嘅風險位",
+      "之後引入 Portfolio Health Check 時，邊類分析最有即時價值",
+      "對外部資產整合、alerts 同 RM 介入嘅信任邊界係咩",
+      "免費情況下，咩原因會令佢第二個月繼續用或放低唔用"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019eef6b-0512-7172-9c4e-1a2e2b4fddd3",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "first_reaction",
+    "decision_rationale": "最近行為同現有手動 workaround 已經有具體事件，可按 protocol 中性引入概念，先測第一反應同感知價值，避免一次過混入信任或付費。",
+    "message_to_persona": "如果銀行 app 有個免費嘅 Portfolio Health Check 幫你自動睇成個組合同重疊持股，你第一下覺得邊部分最有用？",
+    "evidence_updates": [
+      {
+        "claim": "參與者通常不會逐份 fund 文件查看，而是先拉出基金頭幾大持倉，再與自己直接持有的股票放在同一欄比對。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會手動標記實際上屬於同一 underlying name 的持倉，以辨認表面分散但實際重複加碼的情況。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者用 spreadsheet 的主要價值是看出重複曝險的比例，而不只是看戶口中持倉數量。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "除重疊持股外，參與者目前還看不清哪些 whole-portfolio 風險",
+      "對自動化 whole-portfolio 分析的第一反應與最有感能力是什麼",
+      "哪些輸出會覺得太技術化或不必要",
+      "對資料整合和銀行使用外部資產資料的接受邊界在哪裡",
+      "免費情況下，什麼會驅動首次嘗試與第二個月持續使用",
+      "是否偏好 self-serve alert、dashboard、report 還是 RM 輔助"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019eef6b-0512-7172-9c4e-1a2e2b4fddd3",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_probe",
+    "probing_strategy": "consequence_probe",
+    "decision_rationale": "參與者已表達對自動重疊與集中度分析有興趣，但前提是『做得準』，下一步應先釐清信任邊界，了解咩情況下會信、唔信或需要核對。",
+    "message_to_persona": "咩情況會令你信呢個結果，或者反而想自己再對一次？",
+    "evidence_updates": [
+      {
+        "claim": "如果銀行 app 能即時指出重複押注的 underlying 和集中度位置，參與者會覺得有用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者目前需要自行拼合幾個戶口的資料，才能看出重複曝險。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對 Portfolio Health Check 的試用意願取決於自動分析是否準確。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者對銀行自動整合與分析資料的信任條件是什麼",
+      "哪些資料來源或外部資產連結會超出可接受範圍",
+      "免費情況下什麼會推動首次試用與之後持續使用",
+      "第二個月仍會回來看的觸發點是 alert、定期 review 還是市場波動",
+      "除重疊與集中度外，哪些 Aladdin 類能力對零售客戶太技術化或不必要",
+      "哪些能力應留在 RM 輔助而不應直接曝光給零售客戶"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019eef6b-0512-7172-9c4e-1a2e2b4fddd3",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "commitment_evidence",
+    "decision_rationale": "免費前提已明確，先問實際回訪觸發點，比泛問會唔會用更有證據力；之後再補一題測試 premium 邊界或哪些功能太技術化。",
+    "message_to_persona": "如果呢個功能真係免費，你通常要去到咩情況先會第二次再開返嚟睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者較信任分析結果的條件包括清楚時間戳、持倉來源，以及可展開查看重疊計算方式。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果系統只提供總分或籠統風險提示，沒有清楚指出哪些 ETF 或基金重疊，參與者多數會自行重新核對。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者需要可追溯和可解釋的分析，而不只是抽象風險評分。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "免費情況下第二個月或之後持續使用的實際觸發點是什麼",
+      "除免費核心外，是否存在任何值得付費的進階層",
+      "哪些 Aladdin 類輸出對零售客戶太技術化、應該隱藏或留給 RM",
+      "除重疊與集中度外，是否還有其他 whole-portfolio 盲點值得解決"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019eef6b-0512-7172-9c4e-1a2e2b4fddd3",
+    "decision_status": "proposed"
+  }
+]

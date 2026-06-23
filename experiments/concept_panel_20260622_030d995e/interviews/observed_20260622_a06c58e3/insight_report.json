@@ -1,0 +1,185 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "兩邊app逐個睇。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "再用手機計數機大概對下比例",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "我而家最煩係要自己逐個app拼返埋",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "如果一開波就要好闊嘅權限，我多數唔會開。",
+        "evidence_ref": "exchange_4.persona"
+      },
+      {
+        "quote": "又唔會突然彈一堆推銷，我先會當佢係固定檢查。",
+        "evidence_ref": "exchange_5.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次實際檢視發生喺上個月尾夜晚，會同時開銀行 app 同券商 app。",
+      "現時做法係手動跨 app 睇持倉、市值、交易，再用手機計數機粗略對比例。",
+      "有唔明白嘅位會先截圖，之後再返睇。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "分開開銀行 app 同券商 app 睇資料",
+      "銀行 app 睇現金同自動轉賬",
+      "券商 app 睇持倉市值同最近交易",
+      "用手機計數機自己對比例",
+      "截圖留待之後再理解"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "一定要白話，唔好太多行內術語",
+      "唔可以一上嚟就要好闊權限",
+      "唔想成版似廣告或者突然彈推銷",
+      "最好唔使每次重新連接外部資料"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "由用戶主動授權",
+      "只讀權限",
+      "只攞做總覽所需資料",
+      "可以隨時停止",
+      "清楚講明唔會拎去做其他推銷"
+    ],
+    "rejected_data_access": [
+      "一開始就要好闊權限",
+      "用途唔清楚嘅資料存取",
+      "將分析變成推銷觸發",
+      "太似監視式分析，例如根據開 app 時間推測情緒",
+      "替用戶貼風險或性格標籤",
+      "直接畀『你應該買乜』式建議"
+    ],
+    "required_trust_explanation": [
+      "要解釋點攞資料、攞幾多、用嚟做乜",
+      "要令功能感覺係中立總覽，而唔係包裝過嘅銷售入口"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一打開就睇到整體股票、基金、現金分佈",
+      "即刻發現到有用資訊，例如持倉太集中或有錢閒置",
+      "風險解釋夠白話",
+      "首頁或投資總覽可以直接見到本月有冇變化"
+    ],
+    "time_to_value": "第一次打開就要見到可行動嘅發現",
+    "abandonment_triggers": [
+      "只係『得個睇字』冇實際幫助",
+      "要重新連接資料",
+      "權限要求太闊",
+      "畫面太用力似廣告",
+      "突然彈推銷"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "好明確，需要免費核心先證明真係幫到佢慳時間，之後先會考慮進階付費。",
+    "monthly_comfort_range": "未知；只知道定價要講清楚，唔好拆成幾層 plan。",
+    "payment_justification": [
+      "免費版已證明有實用價值",
+      "進階版提供更實用提醒，例如持倉過度集中提示",
+      "可以對返一段時間變化",
+      "收費結構簡單透明"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次都可以快速見到有用變化",
+      "能指出集中風險或閒置資金",
+      "流程省事",
+      "已連接資料不用重做",
+      "放喺首頁或投資總覽，配合現有月尾檢查習慣"
+    ],
+    "drop_off_reasons": [
+      "無新發現",
+      "只提供觀看而無實際幫助",
+      "每次要重連",
+      "太多推銷感",
+      "版面過份搶眼像廣告",
+      "分析內容令用戶覺得被監視或被貼標籤"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "客戶而家主要靠碎片化、手動方式管理投資組合，而唔係真正整體視圖。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "受訪者明確描述跨銀行 app 同券商 app 手動拼合，再用計數機對比例。"
+    },
+    {
+      "assumption": "簡化版整體分佈與風險說明，對零售客戶有明顯價值。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona"
+      ],
+      "rationale": "受訪者第一時間指出最有用係一次過睇清持倉分佈，同埋風險要講得白。"
+    },
+    {
+      "assumption": "免費會提升試用意願，但信任同銷售感仍然左右採用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "受訪者願意考慮試用，但前提係只讀、有限資料、可停用、唔作推銷，否則唔會開。"
+    },
+    {
+      "assumption": "最好嵌入現有客戶流程，而唔係做成獨立複雜目的地。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者想放首頁或投資總覽，一打開就見到變化，並會將之納入固定月尾檢查。"
+    },
+    {
+      "assumption": "部分能力應留喺簡單自助零售介面，部分唔應直接暴露畀用戶。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "受訪者明確拒絕貼標籤、過度判斷式建議同監視感分析。"
+    },
+    {
+      "assumption": "重點盲點一定係重疊、集中度呢類 Aladdin 強項。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "集中度對呢位受訪者有吸引力，但當前最直接痛點其實係跨 app 拼資料同節省時間，未見重疊視圖被主動提出。"
+    }
+  ],
+  "key_insights": [
+    "呢位受訪者唔係冇檢視投資，而係已經有固定月尾檢查習慣；真正 friction 係資料散、整合手動、理解成本高。",
+    "對 Portfolio Health Check 嘅價值判斷好務實：唔係因為『分析好勁』，而係要即刻幫佢見到集中、閒置或變化。",
+    "白話解釋係核心，不是加分項；太多行內字會直接削弱價值。",
+    "信任界線非常清晰：主動授權、只讀、最少資料、可隨時停、不可轉做推銷。",
+    "嵌入方式比功能清單更影響採用；首頁或投資總覽嘅輕量呈現，比獨立 analytics 專區更貼近佢現有行為。','進階付費有可能，但前提係免費核心先證明節省時間同提供持續實用提醒。','不應把人格判斷、風險貼標籤、監視式洞察直接暴露在零售 app。'],"
+  ],
+  "next_experiment": "用第二位香港 persona 重做同樣 concept interview，特別測試兩件事：1. 若本身冇固定月尾檢查習慣，首頁輕量提醒仲有冇價值；2. 對『外部持倉只讀連接』同『白話風險提示』嘅接受界線係咪一致。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，未足以代表香港零售或 affluent 客戶。",
+    "未測到對 look-through overlap、情景分析、貨幣風險、RM 協作等具體能力嘅相對優先次序。",
+    "未有真實價格帶，只知道收費結構要簡單透明。",
+    "未直接測試如果完全唔連外部券商，只做銀行內持倉總覽時，價值會跌幾多。",
+    "未驗證當 alert 真係出現時，佢會自助調整、搵 RM，定係只係睇完算。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念驗證前測，適合用嚟收窄假設同下一輪訪談重點，唔可以當成人類市場證據。"
+}

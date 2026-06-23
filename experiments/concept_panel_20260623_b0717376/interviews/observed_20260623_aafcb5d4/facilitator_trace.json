@@ -1,0 +1,340 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "概念驗證模式下，先用中性、貼近實際行為的開場問題建立一個最近的投資組合檢視事件，未引入概念，亦未假設痛點或 blind spot。",
+    "message_to_persona": "可唔可以同我講下，你最近一次主動睇自己整體投資組合係幾時，當時發生咩事令你去睇？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次具體 portfolio review 事件係咩",
+      "當時觸發因素係咩",
+      "佢點樣理解『整體投資組合』而唔只係單一產品"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_method",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "最近事件已建立，下一步先還原當時實際點樣對資料，補 current_workaround，避免太快跳去概念或抽象痛點。問題聚焦喺同一個事件入面實際睇咩同用咩工具。",
+    "message_to_persona": "你嗰次喺車上對一對嗰陣，實際係用咩畫面或者方法去拼返成個組合？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次主動檢視整體投資組合係上個月尾。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "該次檢視由現金流壓力觸發，包括客戶款延遲入帳及學校收費通知。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當時在搭車時打開銀行 app 與投資 app 交叉查看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者檢視投資組合時關注風險分布是否過於進取，並考慮是否需要轉保守。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢當時點樣將銀行、投資戶口同MPF資訊拼埋一齊",
+      "佢依賴咩工具或心法去判斷分布是否太進取",
+      "現有方法邊度最零散、最手動或最唔清楚"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_gap",
+    "probing_strategy": "consequence_probe",
+    "decision_rationale": "已經知道佢用手動方法拼總數，概念未應引入前，先問這個 workaround 在同一事件中卡住的位置，補足實際盲點或摩擦，而不是抽象偏好。",
+    "message_to_persona": "你嗰次咁樣自己拼完之後，邊一樣其實你都仲係最冇把握？",
+    "evidence_updates": [
+      {
+        "claim": "參與者沒有正式 dashboard 檢視整體投資組合。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會分別查看銀行 app 的現金和定期、投資 app 的基金和股票市值，以及 MPF 的大概比例。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會在手機 notes 記下幾個數字，再手動拼出總數。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "手動拼總數後，佢最唔確定的是風險分布、流動性、定義上的『太進取』，還是其他因素",
+      "現有方法造成的是資訊缺口、理解困難，還是時間成本",
+      "之後先可中性引入 Portfolio Health Check 測試哪些能力有用或多餘"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro_first_reaction",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "近期行為同現有 workaround 已有足夠基礎，下一步可中性引入概念，先測第一反應同最有感的一項價值，不急於同時問信任或使用情境。",
+    "message_to_persona": "如果你間銀行 app 有一個免費嘅 Portfolio Health Check，幫你連埋銀行內投資同部分外部資產睇整體分布同風險，第一樣你最想佢幫你睇清楚嘅會係咩？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對 MPF 部分最沒有把握。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者通常只能看到 MPF 的大類比例，不會拆到逐隻基金。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "由於更新節奏不同，參與者在車上交叉比對後只會視為大概，不敢當作很準確。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "引入概念後，佢最重視的是 MPF 透明度、整體風險分布、流動性，還是其他視角",
+      "佢對整合部分外部資產的接受程度如何",
+      "之後需要分開測試 trust boundary、month-two repeat use 同免費核心以外的 premium 邊界"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "boundary_probe",
+    "decision_rationale": "概念已引出最有用能力，下一步應分開測試信任與資料邊界，避免同一題混入使用頻率或行動意圖。問題聚焦於外部資產整合所需的可接受資料範圍。",
+    "message_to_persona": "如果要幫你睇到呢啲重複風險，去到邊種資料連結方式你會開始覺得唔舒服？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對免費 Portfolio Health Check 的第一價值反應，是看清整體組合中重複承受的同類風險。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者特別關注 MPF、基金和股票之間表面分開持有、實際上暴露於相近市場波動。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者現時存在 whole-portfolio 視角不足的情況，因為他只能靠分開查看不同帳戶後手動拼湊。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢可接受哪些外部資產資料來源或權限，哪些會觸發銷售或私隱疑慮",
+      "見到重複風險提示後，佢會自己調整、搵RM解釋，定係先觀望",
+      "免費功能在第二個月會否再用，取決於 alerts、報告、定期 review 還是一次性查看",
+      "免費核心以外是否存在任何合理 premium 邊界"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_repeat_use",
+    "probing_strategy": "retention_probe",
+    "decision_rationale": "信任邊界已清楚，下一步先測免費功能是否只屬一次性查看，還是有明確的回訪觸發，這比過早問 premium 更能檢驗 founder 對持續使用的假設。",
+    "message_to_persona": "如果呢個功能真係免費有得用，咩情況先會令你第二個月都再打開佢睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者不接受為健康檢查提供網銀登入或交易密碼。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不接受長期讀取外部戶口每一筆交易，特別是不想讓整體現金流被看見。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者可接受有限度抓取資產類別與持倉摘要來完成健康檢查。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "免費功能的持續使用觸發會是定期檢查、風險提示、資金變動，還是只在有事時才會打開",
+      "如果沒有明確提醒或新資訊，參與者會否把它視為一次性工具",
+      "免費核心以外是否存在任何可接受的進階服務邊界",
+      "功能如何呈現才不會像變相銷售"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_boundary",
+    "probing_strategy": "payment_probe",
+    "decision_rationale": "免費核心同回訪條件已經有資料，依家可輕量測試免費以外有冇任何合理進階層，避免過度花篇幅喺付費，但仍補足 required coverage。",
+    "message_to_persona": "如果基本版已經免費，你會唔會對邊一類額外功能覺得值得另外畀錢，定其實去到呢度就夠？",
+    "evidence_updates": [
+      {
+        "claim": "參與者只有在第二次打開時仍然能提供新而有用的變化資訊，才會持續使用該功能。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者期望功能可定期指出持倉重疊、整體風險較上次的變化，以及是否偏離原先想守住的比例。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者重視的是持續可行動的 whole-portfolio 提醒，而不是一次性的靜態總覽。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_4.persona",
+          "exchange_6.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "免費核心以外是否存在任何可接受的 premium 邊界",
+      "功能怎樣呈現或嵌入銀行服務才不會令人覺得是變相銷售",
+      "參與者理解的『值得付費』是更深分析、人工解說，還是根本不需要付費層"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "founder_assumption_check",
+    "probing_strategy": "boundary_probe",
+    "decision_rationale": "其餘 required coverage 已完成，最後補一條關於服務嵌入與銷售感邊界的問題，直接檢查 founder 假設：功能要點樣出現先唔會被當成變相 sell 產品。",
+    "message_to_persona": "如果銀行 app 推呢個功能，你覺得佢點樣出現先會似中立幫你睇，而唔係借啲意 sell 你產品？",
+    "evidence_updates": [
+      {
+        "claim": "參與者認為免費版若已能看分布和重複風險，與付費版的差距未必很大。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若要付費，參與者期望得到更實用的提醒，包括指出哪部分偏離原本比例，以及如何調回接近原有配置。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不會為較多圖表或額外分析文字付費。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "功能應如何嵌入銀行 app 才會被視為中立工具而非銷售觸發"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019ef1e7-ac5e-7552-9b7e-698c4689ab9a",
+    "decision_status": "asked"
+  }
+]

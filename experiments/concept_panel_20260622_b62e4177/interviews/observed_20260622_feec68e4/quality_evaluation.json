@@ -1,0 +1,137 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 3,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "warn",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept, using `exchange_1` and `exchange_2` to ground later questions.",
+    "The facilitator kept curiosity, trust boundary, repeat-use, and payment distinct across separate turns rather than collapsing them into one long questionnaire.",
+    "Questions were mostly short and conversational in Cantonese, and the persona responses remained natural rather than numbered or self-explanatory.",
+    "The runtime stopped at a reasonable point for a 7-exchange synthetic concept interview; additional questions would likely have shifted from participant evidence into more speculative preference talk."
+  ],
+  "findings": [
+    {
+      "category": "synthesis_fidelity",
+      "severity": "high",
+      "observation": "The synthesis marks multiple founder assumptions as `supported` even though most concept-stage evidence is hypothetical preference talk, not behavioral proof. Claims such as understanding simplified analytics, ideal embedding, and ability to distinguish self-serve vs assisted service rely mainly on `exchange_3`, `exchange_5`, `exchange_6`, and `exchange_7`, all framed as hypothetical future use.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "exchange_3.persona",
+        "exchange_5.facilitator",
+        "exchange_5.persona",
+        "exchange_6.facilitator",
+        "exchange_6.persona",
+        "exchange_7.facilitator",
+        "exchange_7.persona",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Downgrade these assumption results to stated interest or directional signal unless backed by observed behavior. Separate `observed current behavior` from `hypothetical reaction` throughout the report."
+    },
+    {
+      "category": "evidence_discipline",
+      "severity": "medium",
+      "observation": "Several synthesis outputs go beyond the cited evidence. `retention_risk.workflow_effect` says `replaces_workflow`, but the transcript only shows that the participant might reopen the feature under certain triggers; it does not establish replacement of the current screenshot-and-discussion workflow.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_5.persona",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Restrict workflow conclusions to what the participant actually said, such as `could supplement current review moments`, unless a direct substitution probe is asked."
+    },
+    {
+      "category": "leading_question_risk",
+      "severity": "medium",
+      "observation": "The concept introduction bundled the concept name with pre-framed value dimensions: `集中睇返成個組合嘅風險分佈、重疊同集中度`. That is acceptable for concept validation, but it still narrows response space toward the researcher's supplied benefits rather than first eliciting what the participant would want from such a feature.",
+      "evidence_refs": [
+        "exchange_3.facilitator"
+      ],
+      "recommendation": "After concept intro, ask one broader reaction question first, for example what they think the feature would help with or not help with, before naming specific outputs to evaluate."
+    },
+    {
+      "category": "domain_fit",
+      "severity": "medium",
+      "observation": "The research goal includes how Aladdin-like functions should embed into retail banking service, but the participant-facing coverage of embedding remained partial. `exchange_6` identifies self-serve versus explained analyses, yet it does not probe channel, trigger, or handoff mechanics such as alert, RM call, branch follow-up, or in-app escalation.",
+      "evidence_refs": [
+        "exchange_6.facilitator",
+        "exchange_6.persona",
+        "RESEARCH GOAL",
+        "COVERAGE STATUS.missing"
+      ],
+      "recommendation": "Add one direct embedding probe about where and when the feature should appear and how a user would move from app insight to human help."
+    },
+    {
+      "category": "planning_quality",
+      "severity": "low",
+      "observation": "Coverage bookkeeping is inconsistent. `COVERAGE STATUS` says `founder_assumption_check` is missing, while the trace after `exchange_6` says it is basically covered and the closing decision treats required coverage as complete.",
+      "evidence_refs": [
+        "COVERAGE STATUS",
+        "FACILITATOR TRACE[5]",
+        "FACILITATOR TRACE[7]"
+      ],
+      "recommendation": "Align runtime coverage flags with the actual protocol dimensions so the closer does not claim completion against a still-missing requirement."
+    },
+    {
+      "category": "evidence_reference_quality",
+      "severity": "medium",
+      "observation": "The concept report preserves too little negative or weak problem evidence. The participant does describe a workaround and a gap, but there is no strong evidence of acute pain or repeated failure; yet `problem_evidence.strength` is set to `medium` and several downstream implications treat the problem as already substantial.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "SYNTHESIS.problem_evidence"
+      ],
+      "recommendation": "Represent the problem more narrowly: current process is manual and fragmented, but pain severity and frequency remain under-tested in this transcript."
+    }
+  ],
+  "required_improvements": [
+    "Separate observed behavior evidence from hypothetical concept reactions in the synthesis and assumption table.",
+    "Add one participant-facing embedding question that tests channel and handoff, not just which analyses need explanation.",
+    "Tighten evidence claims around retention, workflow replacement, and problem strength so conclusions do not outrun transcript support.",
+    "Fix coverage-state logic so missing protocol items are not simultaneously marked complete at close."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask how the participant would want this to appear in practice: passive dashboard, maturity alert, push notification, or banker conversation prep.",
+      "Probe one concrete current blind spot consequence from the recent review, such as whether the fragmented view ever changed or delayed a decision.",
+      "Test whether the participant would act differently if the feature only used in-bank holdings first, then later offered optional external aggregation.",
+      "After concept reaction, ask what would make the feature feel useless or ignorable to surface disconfirming signals."
+    ],
+    "coverage_gap_actions": [
+      "Directly probe the founder assumption about service embedding with a participant-facing question on preferred channel and escalation path.",
+      "Probe whether current manual review is merely acceptable friction or has caused missed opportunities, confusion, or duplicated holdings in a specific event.",
+      "Ask what they would do after seeing a concentration warning to distinguish curiosity from actionability.",
+      "If pricing is important, ask for a recalled case of paying for adjacent advice or analysis rather than relying only on hypothetical willingness."
+    ],
+    "prompt_adjustments": [
+      "Require the synthesis to label every major claim as `observed`, `stated`, or `hypothetical` and prevent `supported` status from resting only on hypothetical future-use answers.",
+      "In concept mode, instruct the facilitator to ask one open reaction question before naming specific candidate outputs like overlap or concentration.",
+      "Add a guardrail that `workflow replacement`, `retention`, and `payment` claims need either a direct comparative probe or must stay explicitly tentative.",
+      "Have the observer or runtime validator flag coverage inconsistencies when the close rationale says complete but a required item remains missing."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy is close to sufficient for a synthetic concept interview, but one additional turn should be reserved for a direct embedding/handoff probe when that is part of the research goal."
+  },
+  "human_review_needed": true,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview and its write-up. It can judge methodological quality and evidence discipline, but it does not convert the synthetic transcript into real user evidence or market truth."
+}

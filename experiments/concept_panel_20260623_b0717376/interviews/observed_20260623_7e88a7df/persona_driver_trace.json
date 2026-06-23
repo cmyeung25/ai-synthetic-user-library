@@ -1,0 +1,248 @@
+{
+  "synthetic_only_disclaimer": "This trace is based on a synthetic persona artifact plus the supplied interview transcript. It is an inference aid for pre-validation, not human market evidence.",
+  "surface_read": {
+    "what_the_persona_explicitly_said": [
+      "She last reviewed her overall portfolio at the end of last month, after her daughter was asleep, by opening the bank app and several accounts to check for unnoticed small fees and whether allocation had drifted (`exchange_1.persona`).",
+      "Her process is deliberately manual: check total balance first, then recent transactions per account against remembered contributions, transfers, and fees; screenshot uncertain items to follow up later (`exchange_2.persona`).",
+      "Her uncertainty clusters around low-salience but accumulating items such as small charges, autopay transfers, and whether a changed contribution amount actually took effect; timing mismatches across apps also make her pause (`exchange_3.persona`).",
+      "For a free Portfolio Health Check, she wants direct mismatch detection, not just attractive charts: drift in allocation, increases in small fees, or changed autopay amounts (`exchange_4.persona`).",
+      "She resists linking other banks or entering login details before the tool proves value, and she wants clear answers on data retention, use, and deletion after stopping (`exchange_5.persona`).",
+      "She would reopen the feature next month if it genuinely helped her find issues faster and preserved setup state, especially around small charges, allocation drift, and unusual autopay changes (`exchange_6.persona`).",
+      "She would only consider paying if the upgrade clearly saves time or reduces mistakes, for example by reliably tracking multiple external accounts, improving alert accuracy, or showing clean historical comparisons; extra charts alone would not justify payment (`exchange_7.persona`).",
+      "She wants routine monitoring in-app and self-serve, but would accept human help for larger tradeoff or risk discussions, without having to depend on a relationship manager for basic visibility (`exchange_8.persona`)."
+    ],
+    "what_they_seemed_to_optimize_for": "Reliable oversight with low extra admin: faster detection of quiet errors, preserved review control, minimal rework, and clear privacy boundaries before deeper account linking.",
+    "what_stayed_implicit": [
+      "Why small recurring discrepancies feel especially important emotionally, beyond pure financial impact.",
+      "How much trust she currently places in her bank versus third-party tools for cross-account visibility.",
+      "Whether her existing workaround is tolerable because it is familiar, or because alternatives have previously disappointed her.",
+      "What level of false positives or imperfect syncing she would still accept if the tool materially reduced manual checking."
+    ]
+  },
+  "likely_drivers": [
+    {
+      "driver": "She is scanning for quiet leaks and silent mismatches because money management is framed as ongoing stabilization work, not occasional optimization.",
+      "driver_type": "core_value",
+      "why_it_matters_here": "Her answers repeatedly center on small fees, autopay changes, and drift rather than performance storytelling. That suggests she experiences portfolio review as checking whether the system stayed aligned, not as chasing insight for its own sake.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "profile_source_refs": [
+        "values.core_values",
+        "values.fears",
+        "problem_context.active_pain_points",
+        "childhood_environment.money_environment",
+        "childhood_environment.adult_decision_links"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She defaults to manual cross-checking because review control matters more than elegance, especially when data is fragmented or time-shifted.",
+      "driver_type": "decision_style",
+      "why_it_matters_here": "She explicitly describes the 'most stupid but safest' method and pauses when app timing does not line up. That fits a reversible, verification-first style where confidence comes from personally reconciling sources.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.decision_style",
+        "product_reaction_rules.first_checks",
+        "product_reaction_rules.positive_signals",
+        "contradiction_map",
+        "technology_attitude.automation_openness"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Her trust threshold is gated by proof-before-permissions, especially for external account linking and any persistent data use.",
+      "driver_type": "trust_pattern",
+      "why_it_matters_here": "She does not reject aggregation in principle; she rejects premature access. The barrier is not interest but sequence: show usefulness first, then ask for broader permissions with clear retention and deletion terms.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "values.fears",
+        "behavior_profile.decision_blockers",
+        "product_reaction_rules.negative_signals",
+        "product_reaction_rules.questions_they_would_ask",
+        "personality_belief.trust_orientation"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mostly_observed"
+    },
+    {
+      "driver": "Her routine is interruption-heavy, so usefulness is defined by resumability and saved state, not by feature breadth.",
+      "driver_type": "daily_constraint",
+      "why_it_matters_here": "She reviews finances late at night after caregiving and explicitly values reopening the feature without resetting anything. That points to a practical constraint: tools must survive fragmented attention and short sessions.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_6.persona"
+      ],
+      "profile_source_refs": [
+        "life_story.current_daily_routine",
+        "behavior_profile.buying_behavior",
+        "problem_context.jobs_to_be_done",
+        "childhood_environment.ordinary_childhood_scenes",
+        "product_reaction_rules.difference_between_curiosity_and_purchase"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She separates monitoring from advice: self-serve for baseline visibility, human support only when tradeoffs become consequential.",
+      "driver_type": "identity_or_role",
+      "why_it_matters_here": "She wants app-level access for normal monitoring and only escalates to a person for product/risk interpretation or larger changes. That reflects a competent, hands-on stance rather than dependence on expert mediation.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "basic_identity.occupation",
+        "personality_belief.trust_orientation",
+        "problem_context.jobs_to_be_done",
+        "values.core_values"
+      ],
+      "confidence": "medium",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Her upgrade logic is time-and-error reduction, not richer analytics as a status signal.",
+      "driver_type": "other",
+      "why_it_matters_here": "She does not frame paid value as more sophistication. She frames it as fewer reconnections, better alert precision, and clearer historical comparison. That implies she prices features through operational friction removed.",
+      "evidence_refs": [
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "pricing_logic.price_sensitivity_level",
+        "pricing_logic.personal_payment_comfort",
+        "problem_context.willingness_to_pay",
+        "contradiction_map"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mostly_observed"
+    }
+  ],
+  "unspoken_constraints": [
+    {
+      "constraint": "Any workflow that requires a long uninterrupted setup or repeated reconnection will likely die even if she likes the concept.",
+      "why_likely": "She works in short bursts, reviews late at night, and explicitly wants the next session to open with saved context instead of setup repetition.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "life_story.current_daily_routine",
+        "behavior_profile.decision_blockers",
+        "problem_context.active_pain_points"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "She may tolerate incomplete coverage at first if the tool is immediately useful on bank-native data without demanding broader linkage.",
+      "why_likely": "Her strongest resistance is front-loaded permissions, not the analytic concept itself.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "profile_source_refs": [
+        "product_reaction_rules.first_checks",
+        "product_reaction_rules.negative_signals",
+        "values.fears"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "constraint": "She needs low false-confidence behavior from the system; ambiguous or delayed data should be surfaced honestly rather than smoothed over.",
+      "why_likely": "She already pauses when apps are out of sync by a day or two and treats that as unresolved rather than close enough.",
+      "evidence_refs": [
+        "exchange_3.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.trust_orientation",
+        "values.core_values",
+        "product_reaction_rules.positive_signals"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "value_tensions": [
+    {
+      "tension": "Convenience versus control",
+      "side_a": "She wants faster consolidated monitoring and less back-and-forth.",
+      "side_b": "She resists surrendering review control or granting broad permissions before trust is earned.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "problem_context.jobs_to_be_done",
+        "values.fears",
+        "contradiction_map"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Problem awareness versus migration resistance",
+      "side_a": "She clearly feels the pain of fragmented accounts and manual checking.",
+      "side_b": "She still prefers the known manual workaround unless the new flow beats it quickly and with less setup burden.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_6.persona"
+      ],
+      "profile_source_refs": [
+        "problem_context.active_pain_points",
+        "contradiction_map",
+        "behavior_profile.decision_blockers"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Free service openness versus monetization skepticism",
+      "side_a": "She is open to a free in-app check if it proves useful.",
+      "side_b": "She raises the bar sharply for any paid layer and dismisses cosmetic analytics as insufficient.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "pricing_logic.preferred_pricing_model",
+        "pricing_logic.pricing_objection",
+        "problem_context.willingness_to_pay"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "missed_follow_up_questions": [
+    {
+      "question": "When you say a mismatch matters, which one would make you act immediately versus just note it for later?",
+      "why_this_would_clarify": "It would distinguish alert-worthy issues from background noise and reveal her threshold for follow-through.",
+      "priority": "high"
+    },
+    {
+      "question": "If the app flags something but says the data may be one to two days behind, would that still help you or just create more checking?",
+      "why_this_would_clarify": "Her tolerance for imperfect data freshness appears central to trust and routine adoption.",
+      "priority": "high"
+    },
+    {
+      "question": "What is the minimum proof of usefulness you would need before linking one external account?",
+      "why_this_would_clarify": "This would turn her broad privacy boundary into a concrete sequencing requirement.",
+      "priority": "high"
+    },
+    {
+      "question": "Have you tried any portfolio summary or expense-monitoring tools before, and what made you stop or keep using them?",
+      "why_this_would_clarify": "Past disappointments or successes would sharpen which objections come from stable disposition versus prior product scars.",
+      "priority": "medium"
+    }
+  ]
+}

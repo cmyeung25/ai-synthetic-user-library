@@ -1,0 +1,144 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "fail",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and current workaround before introducing the concept, which fits `concept_validation` mode.",
+    "Questions were mostly short, single-focus, and conversational in Cantonese rather than formal or analytical.",
+    "Trust, repeat-use, placement, and payment were kept as distinct topics instead of being bundled into one long questionnaire.",
+    "The persona answers stayed natural and experience-shaped rather than numbered, framework-like, or self-referential.",
+    "The facilitator stopped at a reasonable point once all required coverage fields were touched and the exchange count was still modest."
+  ],
+  "findings": [
+    {
+      "category": "evidence_discipline",
+      "severity": "high",
+      "observation": "The synthesis turns hypothetical concept reactions into stronger product evidence than the transcript supports. Claims such as `workflow_effect: replaces_workflow` and several `supported` assumption verdicts are inferred from stated preferences about a hypothetical feature, not observed adoption or changed behavior.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Label concept answers as hypothetical intent, not behavioral proof. Reserve adoption, replacement, or workflow-change claims for observed use or explicit post-trial behavior."
+    },
+    {
+      "category": "synthesis_fidelity",
+      "severity": "high",
+      "observation": "Several synthesis outputs exceed what one synthetic concept interview can justify, including broad design guidance and product-shaping conclusions such as what should or should not be exposed in a retail app, and which embedding pattern is best.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_8.persona",
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Bound conclusions to this single persona. Rephrase as `for this persona` and keep design implications tentative until contrasted with another persona or observed trial behavior."
+    },
+    {
+      "category": "neutrality",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded: it names the feature, says it is `free`, and prepackages benefits as a whole-portfolio and risk view before eliciting the participant's own framing of value.",
+      "evidence_refs": [
+        "exchange_3.facilitator"
+      ],
+      "recommendation": "Introduce the concept more neutrally, for example by describing it as a possible summary view and asking what, if anything, would matter, before adding benefit language like risk or convenience."
+    },
+    {
+      "category": "leading_question_risk",
+      "severity": "medium",
+      "observation": "The final question presupposes that some analyses should be hidden by the bank, which can steer the participant toward privacy or paternalism concerns instead of first asking what should or should not be shown.",
+      "evidence_refs": [
+        "exchange_8.facilitator"
+      ],
+      "recommendation": "Use an open contrast question such as what they would want shown directly versus kept optional or absent, then probe why."
+    },
+    {
+      "category": "concept_validation",
+      "severity": "medium",
+      "observation": "Curiosity, trial, payment, and month-two retention were mostly separated, but the report still treats repeat-use conditions as if they demonstrate likely retention rather than stated conditions for hypothetical reuse.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.retention_risk",
+        "SYNTHESIS.pricing_signal"
+      ],
+      "recommendation": "Preserve separate labels: `trial condition`, `repeat-use condition`, `payment condition`, and `stated retention intent`."
+    },
+    {
+      "category": "domain_fit",
+      "severity": "medium",
+      "observation": "The research goal asks where a Portfolio Health Check should be embedded without feeling like disguised selling, but the interview did not directly test contrastive placements or selling-feel thresholds beyond one preferred location and one generic anti-push concern.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "recommendation": "Add a direct participant-facing contrast probe between homepage card, investment overview, separate tab, and RM-led follow-up, including what would make each feel helpful versus sales-like."
+    },
+    {
+      "category": "evidence_reference_quality",
+      "severity": "medium",
+      "observation": "Some synthesis references are weakly tied to the specific claims they support. For example, the assumption about `part of her real workflow` is supported by hypothetical future statements, and the `supported` statuses do not distinguish observed current behavior from concept speculation.",
+      "evidence_refs": [
+        "SYNTHESIS.assumption_validation",
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "recommendation": "Split evidence tables into `observed current behavior` and `hypothetical concept response`, and require exact claim-evidence matching at that level."
+    }
+  ],
+  "required_improvements": [
+    "Downgrade hypothetical concept reactions to stated intent and remove behavioral certainty claims such as `replaces_workflow`.",
+    "Constrain synthesis outputs to one synthetic persona and avoid broad product, need, POV, or HMW-style conclusions from this single interview.",
+    "Revise concept intro and closing probes to reduce presupposition and selling language.",
+    "Strengthen transcript-to-claim discipline by separating observed behavior evidence from hypothetical concept evidence.",
+    "Add participant-facing contrast questions in the next rerun to directly test embedding and disguised-selling boundaries."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask what made the last monthly review feel tedious or uncertain before introducing any feature idea.",
+      "Probe contrastively where this should appear: homepage, investment overview, separate tool, or advisor-led flow, and what would make each feel like help versus a sales hook.",
+      "Ask what would happen after a concentration or idle-cash alert: ignore it, self-adjust, research elsewhere, or contact an RM.",
+      "Test the no-external-link baseline directly: would a bank-only version still be useful, and for what jobs?",
+      "If rerunning with a second persona, compare someone with no fixed monthly review habit against this persona's routine."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct probe on current workaround adequacy: what the participant still cannot tell after using both apps and a calculator.",
+      "Ask for one concrete example of an insight they would act on versus one they would dismiss as noise.",
+      "Probe acceptable versus unacceptable permission copy in participant language, not only abstract trust principles.",
+      "Test whether repeat use depends more on automatic freshness, alert quality, placement, or absence of sales prompts.",
+      "Capture whether pricing interest is for saving time, better decisions, reassurance, or reminders, since the current evidence mixes these motives."
+    ],
+    "prompt_adjustments": [
+      "In concept mode, require the report to tag every claim as `observed current behavior`, `stated preference`, or `hypothetical intent`.",
+      "Block synthesis fields that imply adoption, replacement, retention, or product-market fit unless there is observed post-introduction behavior.",
+      "Nudge the facilitator to introduce the concept without `free` or bundled benefit wording on the first concept question.",
+      "Add an observer rule to challenge presuppositional phrasing like `what should be hidden` and replace it with open contrast prompts.",
+      "Prevent broad design outputs from a single synthetic interview by forcing `for this persona only` wording in synthesis templates."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy was sufficient for baseline concept coverage. Keep the hard limit similar, but allow 2-3 extra turns in reruns specifically for contrastive embedding and anti-sales probes rather than adding broader questionnaire coverage."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit reviews a single synthetic concept-validation interview. Findings about rigor and evidence quality are valid for the artifact, but market or product conclusions should remain tightly bounded to this persona and should not be treated as real-world user evidence."
+}

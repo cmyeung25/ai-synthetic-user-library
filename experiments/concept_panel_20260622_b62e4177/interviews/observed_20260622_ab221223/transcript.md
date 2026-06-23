@@ -1,0 +1,91 @@
+# Facilitated Interview: Clara Wong
+
+> Synthetic-user interview for AI pre-validation only; not human market evidence.
+
+Interview mode: concept_validation
+Concept: Portfolio Health Check
+
+Research goal: 在已確定銀行會把 Aladdin 類 portfolio analytics solution 免費帶給零售銀行客戶的前提下，了解香港零售或半零售銀行客戶目前實際如何做投資組合管理、他們的真實盲點在哪裡、哪些 Aladdin 類功能最有幫助，以及這些功能應如何嵌入 retail banking 服務。
+
+Turn policy: soft 12, hard 16
+Coverage complete: True
+
+## Exchange 1
+
+**Facilitator (opening_recent_event / recent_event)**
+
+你最近一次主動睇自己成個投資組合係幾時，當時發生咩事？
+
+**Clara Wong**
+
+應該係上個月尾，一次同RM通完電話之後。佢提到我有幾個基金同收入類產品可能有啲重疊，我夜晚食完飯就開返銀行app同幾份月結單對一對，仲喺手機記低咗邊幾項我想再問清楚。
+
+## Exchange 2
+
+**Facilitator (current_method / workaround_probe)**
+
+你嗰晚係點樣對返 app 同月結單啲資料？
+
+**Clara Wong**
+
+我通常先睇app入面持倉名稱同大概金額，再拎月結單逐項對，主要睇有冇同一類基金其實方向好接近，或者貨幣分布比我以為中得多。見到叫法唔一致嗰啲，我會停一停，截圖或者記低，因為嗰啲最容易講到好似分散，其實未必係。
+
+## Exchange 3
+
+**Facilitator (concept_introduction / concept_reaction)**
+
+如果銀行 app 有個免費嘅 Portfolio Health Check，會幫你用較簡單方式睇返成個組合嘅重疊、集中度同貨幣風險，你第一下最想佢幫你睇邊樣？
+
+**Clara Wong**
+
+我第一下會想睇重疊，因為呢樣最容易表面上分散，實際上可能係同一個方向。最好佢講得直接啲，唔係淨係畀幾個圖，而係話我而家邊幾項其實係同一類風險。
+
+## Exchange 4
+
+**Facilitator (trust_boundary / trust_probe)**
+
+如果個 app 話你有幾項其實係同一類風險，點樣講你先會信？
+
+**Clara Wong**
+
+佢要指出係邊幾項，唔係只係話你有重疊。最好再用簡單說明講清楚點解算同一類風險，例如其實都係集中喺同一個地區、行業，或者背後主要持有好接近，咁我先可以自己對返月結單。
+
+## Exchange 5
+
+**Facilitator (retention / repeat_use_probe)**
+
+如果呢個功能真係免費有，你第二個月會因為咩情況再打開嚟睇？
+
+**Clara Wong**
+
+如果佢第一次真係指出到一兩個我本身冇睇清嘅重疊，或者喺做完調整之後可以畀我對比返，咁我第二個月會再開。又或者RM同我講完一個新建議之後，我會想即刻睇下加落去會唔會令集中度再高咗。
+
+## Exchange 6
+
+**Facilitator (service_boundary / founder_assumption_check)**
+
+有啲分析你會想自己喺 app 即刻睇，有啲你反而想留返畀 RM 解釋，你通常會點分？
+
+**Clara Wong**
+
+如果係重疊、集中度、貨幣分布呢啲，我想自己喺app先睇，因為我要先知道個盤大概發生咩事。去到話應唔應該調整、減邊樣加邊樣，或者點樣同我而家個風險取向有衝突，嗰啲我會想RM解釋，因為一去到動作就要講清楚代價同原因。
+
+## Exchange 7
+
+**Facilitator (pricing_boundary / payment_probe)**
+
+如果基本版免費，去到咩情況你先會覺得有啲進階支援值得另外收費？
+
+**Clara Wong**
+
+要去到唔止係提醒，而係真係幫到我做一次重要決定，我先會接受另外收費。譬如有一份完整啲、可以留底嘅年度檢視報告，清楚講埋現有組合同建議調整前後有咩分別，甚至可以連外部資產一齊睇，但前提係方法講得明、資料權限講得清楚，唔係包裝成多幾個靚畫面。
+
+## Exchange 8
+
+**Facilitator (founder_assumption_check / boundary_probe)**
+
+如果要連你銀行以外嘅資產一齊睇，你會接受 app 攞到邊一類資料先算合理？
+
+**Clara Wong**
+
+如果係為咗做整體風險圖，我可以接受佢先攞最基本嘅持倉資料，例如產品類別、大概金額、貨幣、入面主要曝險係咩。交易明細、其他戶口來往，或者同分析無直接關係嘅資料，我就唔會覺得合理，至少第一步唔需要。

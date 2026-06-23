@@ -1,0 +1,338 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "先用中性開場鎖定最近一次真實嘅投資組合檢視行為，建立具體事件，再按回答追問現有做法同盲點；未引入概念，避免過早帶方向。",
+    "message_to_persona": "你最近一次主動睇自己成個投資組合係幾時？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次檢視投資組合嘅具體事件係咩",
+      "當時用咗咩工具或方法",
+      "而家最主要靠咩方式管理整體投資組合",
+      "有冇覺得邊啲位仍然零散、唔清楚或者太手動"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_reconstruction",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "參與者已提供最近一次具體檢視事件，下一步應重建佢當晚實際點樣跨 app／戶口去對資料，以補 current_workaround，仍未適合引入概念。",
+    "message_to_persona": "你嗰晚係點樣逐個戶口對返啲資料？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次主動檢視整體投資組合係上個月尾。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "嗰晚喺照顧完女兒入睡後，參與者開銀行app同幾個戶口逐一核對，重點留意細項收費同配置比例有冇偏離。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者當晚具體用咩工具、畫面或方法去對資料",
+      "跨戶口核對時邊啲資訊最難整合",
+      "目前有冇固定檢視框架，定係靠臨時逐個戶口睇",
+      "完成檢視後有冇作出任何調整或延後處理",
+      "之後引入 Portfolio Health Check 時，邊類分析最貼近佢而家痛點"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround_gap",
+    "probing_strategy": "consequence_probe",
+    "decision_rationale": "雖然已知參與者用手動對數同截圖追查，但未知道實際最卡嘅資訊缺口係乜；先追問佢標記為「唔肯定」的內容，可補足 blind spot，再決定點樣引入概念。",
+    "message_to_persona": "你通常最易喺邊類資料上出現呢啲「唔肯定」？",
+    "evidence_updates": [
+      {
+        "claim": "參與者目前以手動、較保守的方式管理投資組合。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會先看總額，再逐個戶口核對近期交易，並與自己記得的供款、轉帳和收費比對。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "遇到不確定的項目時，參與者會先截圖，之後再慢慢追查。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最常出現不確定的是收費、資產比例、交易去向還是其他資訊",
+      "參與者現時最主要的整合盲點是什麼",
+      "這些不確定最後通常如何處理，會否導致延後決定或忽略",
+      "哪些類型的整體投資組合資訊若能自動整理會真正有用",
+      "之後引入 Portfolio Health Check 時，哪些分析會太複雜或多餘"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "最近事件同現有手動做法已經夠具體，亦見到跨 app 時差、細額收費同自動轉帳係主要盲點；而家可中性引入概念，先測第一反應同最有感價值。",
+    "message_to_persona": "如果銀行app有個免費嘅 Portfolio Health Check，會幫你整合返呢啲戶口、睇比例有冇偏同留意細項變動，你第一下最想佢幫你睇到咩？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最常對細額收費、自動轉帳及改過供款後金額是否已跟隨變動感到不確定。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當不同 app 的資料時間差一兩日，參與者會暫停判斷，先當作未核對清楚。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者對免費 Portfolio Health Check 的第一反應是什麼",
+      "最有感的功能是整合戶口、比例偏差、收費追蹤還是其他",
+      "哪些分析會令參與者覺得太複雜或無必要",
+      "銀行整合外部資產或交易資料的接受邊界在哪裡",
+      "什麼情況會令參與者下個月再打開這個功能"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "trust_probe",
+    "decision_rationale": "參與者已清楚表達想要的是異常提示而非漂亮圖表，下一步應測試資料與使用邊界，確認乜嘢情況會令功能由有用變成令人抗拒或覺得似銷售。",
+    "message_to_persona": "如果呢個功能要幫你整合其他戶口或者外部資產，你去到邊個位就會開始覺得唔想連或者唔太信？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對 Portfolio Health Check 的首要期待是指出與自己原有認知不一致的地方，而不是只提供視覺化圖表。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者認為最有價值的提醒包括比例突然偏離、細額收費較上月增加，以及自動轉帳金額變動。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "外部戶口或資產整合的信任邊界在哪裡",
+      "什麼呈現方式會令功能看起來像中性提醒而不是銷售觸發",
+      "參與者是否只需要異常提示而不需要太多分析細節",
+      "免費提供的前提下，什麼會令參與者下個月再打開這個功能",
+      "除免費核心外，是否存在任何合理的進階付費層"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_follow_through",
+    "probing_strategy": "retention_probe",
+    "decision_rationale": "信任邊界已清楚，下一步應測試免費功能喺月二會唔會被重用，以及乜嘢觸發先值得佢再打開；付費層可再後置輕問。",
+    "message_to_persona": "如果佢真係免費放喺銀行app入面，咩情況會令你下個月再開多次？",
+    "evidence_updates": [
+      {
+        "claim": "參與者不願在功能未證明有用前就連接所有其他銀行或投資戶口。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若需要輸入其他機構登入資料，參與者會停下來，不再繼續。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若資料保存期限、用途或停用後能否刪除說明不清，參與者多數不會繼續使用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩觸發會令參與者在第二個月再次使用這個功能",
+      "參與者需要的是定期提醒、異常提示還是主動檢查入口",
+      "除免費核心外，是否有任何進階服務情境會令參與者考慮付費",
+      "功能應如何嵌入現有銀行 app 流程才不像獨立複雜分析工具",
+      "參與者是否只接受簡單可行的提示，而不想看太多分析細節"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "payment_condition",
+    "probing_strategy": "pricing_probe",
+    "decision_rationale": "未到回合上限，仲欠一個輕量付費條件測試。核心免費已成立，而家只需確認有冇任何進階價值會令佢考慮升級；創辦人相關假設已有部分行為證據，之後可視乎回答再補一條簡單邊界問題或收結。",
+    "message_to_persona": "如果免費版已經有呢啲提醒，去到咩情況你先會考慮再俾錢升級？",
+    "evidence_updates": [
+      {
+        "claim": "參與者會否重用此功能，取決於上一次是否真的幫他更快找出問題。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望再次打開時毋須重新設定，並可直接看到自上次以來的變動。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "最能促成重用的內容包括細額收費、比例偏移及自動轉帳異常。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對參與者而言，簡單指出異常和變動比純圖表展示更有價值。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_4.persona",
+          "exchange_6.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "除免費核心外，任何合理的升級付費情境是什麼",
+      "哪些分析細節應留在 RM 或進階服務，而不應放進一般零售介面",
+      "參與者對簡化提示相對完整分析的邊界在哪裡"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "founder_assumption_check",
+    "probing_strategy": "embedding_probe",
+    "decision_rationale": "所需覆蓋只差創辦人假設檢查；現有證據已顯示參與者重視省時、異常提示同低設定負擔，下一步應直接測試呢類分析應放喺自助 app 定係只適合較受協助情境。",
+    "message_to_persona": "有啲分析你會想自己喺app即刻睇到，定係你反而覺得應該留返俾客戶經理幫你睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者現時以跨 app、逐戶口手動核對的方式管理投資組合，屬碎片化且偏手動。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "claim": "參與者目前最在意的是細額收費、自動轉帳變動及比例偏移等異常，而非圖表展示本身。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona",
+          "exchange_6.persona",
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "功能是否值得持續使用，取決於能否明顯節省時間、減少易錯位，並且減少重複設定或重新連接外部戶口。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona",
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對資料連接與保存有明確信任邊界，未證明價值前不願擴大授權。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "哪些分析應直接放在零售銀行 app 的自助介面",
+      "哪些內容若太複雜應留給 RM 或受助服務處理",
+      "參與者對簡化提示與進階分析的分界線在哪裡"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019ef1e1-b84d-7730-b220-f74377d7b561",
+    "decision_status": "asked"
+  }
+]

@@ -1,0 +1,191 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "夜晚用手機睇幾個畫面，其實資訊好碎",
+        "evidence_ref": "exchange_4.persona"
+      },
+      {
+        "quote": "最難係分唔清嗰個跌係短期波動，定係我當初個判斷已經唔啱",
+        "evidence_ref": "exchange_4.persona"
+      },
+      {
+        "quote": "如果本身已經喺銀行 app 入面，起碼唔使我再搬資料去另一個地方",
+        "evidence_ref": "exchange_5.persona"
+      },
+      {
+        "quote": "真係幫我慳到自己逐個戶口對",
+        "evidence_ref": "exchange_7.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次檢視係晚飯後，用手機逐個睇銀行 app 同基金戶口，再對 notes。",
+      "先睇總數有冇明顯跌多咗，再望有冇一兩樣要處理。",
+      "見到其中一隻基金跌幅比預期大，就再開多次睇，但冇即刻賣，只係提醒自己兩日後再望。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "跨幾個 app 逐個睇持倉。",
+      "自己用 notes 記低買咗啲咩、幾時入、點解買、去到邊個價位要再睇。",
+      "夜晚先做快速檢查，避免當下衝動落決定。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "要留喺原本銀行 app 入面用。",
+      "要快，幾分鐘內睇到重點。",
+      "唔想重新設定一大輪。",
+      "分析要講人話，唔好變成銷售流程。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "自動整合現有持倉，如果已經喺銀行 app 入面。",
+      "清楚展示集中風險、波動同判斷原因。",
+      "基本 portfolio summary 直接喺 app 自助睇。"
+    ],
+    "rejected_data_access": [
+      "分析後即刻彈『更適合你』產品。",
+      "結論永遠導向調倉買基金。",
+      "app 單方面判定 suitability 或直接叫人轉產品而冇解釋。"
+    ],
+    "required_trust_explanation": [
+      "先講清楚而家個組合有咩風險。",
+      "要解釋點解會得出嗰個判斷。",
+      "分析同銷售推薦要明顯分開。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "自動整合持倉，唔使自己搬資料。",
+      "用簡單語言講清楚風險。",
+      "即時睇到集中風險、資產偏重、波動等重點。"
+    ],
+    "time_to_value": "幾分鐘內",
+    "abandonment_triggers": [
+      "資訊表面簡單但其實唔清楚。",
+      "一開就似 sales。",
+      "要重新做好多設定。",
+      "只係多幾個花巧圖表，冇幫助決策。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費係合理基線；受訪者對免費版有開放態度。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "值得付費嘅唔係更多圖表，而係持續跟進價值。",
+      "例如清楚提醒邊啲變化值得再睇。",
+      "歷史比較要容易明。",
+      "有人幫手解讀風險提示可以係付費位。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "第二次打開都仲係快。",
+      "慳到逐個戶口對。",
+      "會講到今次同上次有咩變化。",
+      "每次都唔使重新設定。"
+    ],
+    "drop_off_reasons": [
+      "太慢。",
+      "要重新 setup。",
+      "只有靜態圖表，冇變化重點。",
+      "令人覺得係借分析做銷售。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "好多零售客而家係用碎片化、手動、產品層級視角管理 portfolio，而唔係完整 whole-portfolio view。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "受訪者明確描述跨 app 加 notes，亦主動提到資訊好碎。"
+    },
+    {
+      "assumption": "客戶而家講得出 practical blind spots，Aladdin 類分析可以補到。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "佢講到最難係分辨短期波動定 thesis 變咗，亦想見到集中風險、波動同判斷原因。"
+    },
+    {
+      "assumption": "零售客理解到簡化版 institutional analytics，只要講法具體、非技術。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "佢唔追求術語，反而清楚要求『講人話』同基本 summary。"
+    },
+    {
+      "assumption": "最有價值嘅係簡化 insight、解釋同 prioritization，而唔係 institutional detail 本身。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_8.persona",
+        "exchange_9.persona"
+      ],
+      "rationale": "受訪者 repeatedly 重視原因解釋、變化提醒、歷史比較，明言唔會為花巧圖表畀錢。"
+    },
+    {
+      "assumption": "有啲能力適合直接放 retail self-serve，有啲應該留畀 RM / assisted workflow。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "佢清楚分開基本分散/波動 summary 同需要人解釋嘅調倉、產品轉換、suitability 類輸出。"
+    },
+    {
+      "assumption": "免費會提高 trial openness，但 trust、data-sharing、sales-intent concerns 仍然影響 adoption。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "佢第一下有興趣，但立即提出自動整合、講人話、唔好變 sales。"
+    },
+    {
+      "assumption": "最好嵌入現有 workflow，而唔係另開一個複雜 analytics destination。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "佢明確話要喺銀行 app 入面、唔使搬資料、唔使重新設定、幾分鐘睇到重點。"
+    },
+    {
+      "assumption": "客戶講得出應該 expose 同唔應該 expose 嘅邊界。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "佢明確界定咩適合 self-serve、咩需要人先解釋。"
+    }
+  ],
+  "key_insights": [
+    "呢位受訪者而家用『多個 app + 自己 notes』去拼一個 portfolio view，主要 friction 係碎片化同判斷脈絡會流失。",
+    "真正痛點唔係想要更多數據，而係想快啲知道『而家有咩變化』『個跌係短期波動定 thesis 出問題』。",
+    "Portfolio Health Check 對佢有吸引力，前提係內嵌現有銀行 app、自動整合持倉、幾分鐘內出到重點。",
+    "信任邊界非常清楚：分析可以，sell 產品唔得；一見到推薦產品彈窗，功能即刻由『分析』變『sales』。",
+    "自助版最適合做基本分散度、資產偏重、波動變化等 summary；牽涉調倉、轉產品、suitability 判斷時，佢想要人解釋。"
+  ],
+  "next_experiment": "用下一位 persona 測試一個更具體但仍中性的原型描述：只展示『今次 vs 上次變化』『集中風險』『波動原因解釋』，再對比一個帶產品推薦 CTA 的版本，驗證 sales-intent 對信任同重用意願嘅影響。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，唔足以代表 V5 客群。",
+    "未測到外部資產連結權限邊界，只測到對現有銀行內持倉整合的期待。",
+    "未深入測 alert、dashboard、review report、RM tool 各種呈現形式嘅偏好差異。",
+    "payment range 冇實數，只知付費條件方向。",
+    "未有 contrast case，例如一位認為現有方法已經完全夠用嘅 persona。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念前驗證訊號，唔可以當成人類用戶研究結論或市場證據；所有因果同產品判斷都需要再用真實香港銀行客戶訪談驗證。"
+}
