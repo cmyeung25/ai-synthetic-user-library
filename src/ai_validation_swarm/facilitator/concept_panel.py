@@ -34,11 +34,7 @@ FOLLOWUP_PRODUCT_CONTEXT = (
 def _persona_ids(data_dir: Path, selected: list[str] | None = None) -> list[str]:
     available = sorted(
         path.name for path in data_dir.iterdir()
-        if path.is_dir() and (
-            (path / "v4" / "profile.json").exists()
-            or (path / "v3_3" / "profile.json").exists()
-            or (path / "v3_2" / "profile.json").exists()
-        )
+        if path.is_dir() and (path / "v5" / "profile.json").exists()
     )
     if not selected:
         return available
@@ -81,8 +77,43 @@ def _summary_payload(
 ) -> dict[str, Any]:
     assumption_rows: dict[int, dict[str, Any]] = {}
     additional_findings: list[dict[str, Any]] = []
+    driver_type_counts: Counter[str] = Counter()
+    recurring_drivers: dict[str, dict[str, Any]] = {}
+    recurring_constraints: dict[str, dict[str, Any]] = {}
+    recurring_tensions: dict[str, dict[str, Any]] = {}
+
+    def _normalize_key(value: str) -> str:
+        return " ".join(str(value).strip().casefold().split())
+
+    def _add_grouped_item(
+        bucket: dict[str, dict[str, Any]],
+        *,
+        key: str,
+        label: str,
+        item_type: str = "",
+        persona_id: str,
+        persona_name: str,
+        confidence: str,
+        why: str = "",
+    ) -> None:
+        row = bucket.setdefault(key, {
+            "label": label,
+            "item_type": item_type,
+            "persona_ids": set(),
+            "persona_names": [],
+            "confidence_counts": Counter(),
+            "example_why": why,
+        })
+        if persona_id not in row["persona_ids"]:
+            row["persona_ids"].add(persona_id)
+            row["persona_names"].append(persona_name)
+        row["confidence_counts"][confidence or "unknown"] += 1
+        if not row.get("example_why") and why:
+            row["example_why"] = why
+
     for interview in interviews:
         report = interview.get("report", {})
+        driver_trace = interview.get("persona_driver_trace", {})
         for index, item in enumerate(report.get("assumption_validation", []), start=1):
             if index > core_assumption_count:
                 additional_findings.append({
@@ -107,6 +138,49 @@ def _summary_payload(
                 "rationale": item.get("rationale", ""),
             })
 
+        for driver in driver_trace.get("likely_drivers", []):
+            driver_type = str(driver.get("driver_type", "other"))
+            driver_label = str(driver.get("driver", "")).strip()
+            if not driver_label:
+                continue
+            driver_type_counts[driver_type] += 1
+            _add_grouped_item(
+                recurring_drivers,
+                key=f"{driver_type}|{_normalize_key(driver_label)}",
+                label=driver_label,
+                item_type=driver_type,
+                persona_id=interview["persona_id"],
+                persona_name=interview["persona_name"],
+                confidence=str(driver.get("confidence", "unknown")),
+                why=str(driver.get("why_it_matters_here", "")),
+            )
+        for constraint in driver_trace.get("unspoken_constraints", []):
+            constraint_label = str(constraint.get("constraint", "")).strip()
+            if not constraint_label:
+                continue
+            _add_grouped_item(
+                recurring_constraints,
+                key=_normalize_key(constraint_label),
+                label=constraint_label,
+                persona_id=interview["persona_id"],
+                persona_name=interview["persona_name"],
+                confidence=str(constraint.get("confidence", "unknown")),
+                why=str(constraint.get("why_likely", "")),
+            )
+        for tension in driver_trace.get("value_tensions", []):
+            tension_label = str(tension.get("tension", "")).strip()
+            if not tension_label:
+                continue
+            _add_grouped_item(
+                recurring_tensions,
+                key=_normalize_key(tension_label),
+                label=tension_label,
+                persona_id=interview["persona_id"],
+                persona_name=interview["persona_name"],
+                confidence=str(tension.get("confidence", "unknown")),
+                why=f"{tension.get('side_a', '')} vs {tension.get('side_b', '')}".strip(),
+            )
+
     problem_counts = Counter(
         item.get("report", {}).get("problem_evidence", {}).get("strength", "unknown")
         for item in interviews
@@ -123,6 +197,38 @@ def _summary_payload(
         "persona_count": len(interviews),
         "problem_strength_counts": dict(problem_counts),
         "average_quality_score": round(sum(quality_scores) / len(quality_scores), 2) if quality_scores else None,
+        "driver_type_counts": dict(driver_type_counts),
+        "common_likely_drivers": [{
+            "driver": row["label"],
+            "driver_type": row["item_type"],
+            "persona_count": len(row["persona_ids"]),
+            "personas": row["persona_names"],
+            "confidence_counts": dict(row["confidence_counts"]),
+            "example_why_it_matters_here": row["example_why"],
+        } for row in sorted(
+            recurring_drivers.values(),
+            key=lambda item: (-len(item["persona_ids"]), item["label"].casefold()),
+        )],
+        "common_unspoken_constraints": [{
+            "constraint": row["label"],
+            "persona_count": len(row["persona_ids"]),
+            "personas": row["persona_names"],
+            "confidence_counts": dict(row["confidence_counts"]),
+            "example_why_likely": row["example_why"],
+        } for row in sorted(
+            recurring_constraints.values(),
+            key=lambda item: (-len(item["persona_ids"]), item["label"].casefold()),
+        )],
+        "common_value_tensions": [{
+            "tension": row["label"],
+            "persona_count": len(row["persona_ids"]),
+            "personas": row["persona_names"],
+            "confidence_counts": dict(row["confidence_counts"]),
+            "example_frame": row["example_why"],
+        } for row in sorted(
+            recurring_tensions.values(),
+            key=lambda item: (-len(item["persona_ids"]), item["label"].casefold()),
+        )],
         "assumption_matrix": [{
             "assumption_index": index,
             "assumption": row["assumption"],
@@ -138,6 +244,10 @@ def _summary_payload(
             "pricing_signal": item.get("report", {}).get("pricing_signal", {}),
             "retention_risk": item.get("report", {}).get("retention_risk", {}),
             "quality": item.get("quality", {}).get("scores", {}),
+            "top_likely_drivers": item.get("persona_driver_trace", {}).get("likely_drivers", [])[:3],
+            "top_unspoken_constraints": item.get("persona_driver_trace", {}).get("unspoken_constraints", [])[:2],
+            "value_tensions": item.get("persona_driver_trace", {}).get("value_tensions", [])[:2],
+            "missed_follow_up_questions": item.get("persona_driver_trace", {}).get("missed_follow_up_questions", [])[:2],
         } for item in interviews],
         "synthetic_only_disclaimer": (
             "This panel contains synthetic AI pre-validation only. It cannot establish market demand, "
@@ -168,11 +278,53 @@ def _render_summary(summary: dict[str, Any], interviews: list[dict[str, Any]]) -
             f"- Workflow effect: {retention.get('workflow_effect', 'unclear')}",
             f"- Quality: {quality.get('overall', 'unknown')}/5", "",
         ])
+        for driver in item.get("persona_driver_trace", {}).get("likely_drivers", [])[:2]:
+            lines.append(
+                f"- Driver: {driver.get('driver', '')} "
+                f"({driver.get('driver_type', '')}, {driver.get('confidence', 'unknown')})"
+            )
+        for tension in item.get("persona_driver_trace", {}).get("value_tensions", [])[:1]:
+            lines.append(
+                f"- Tension: {tension.get('tension', '')} "
+                f"({tension.get('side_a', '')} vs {tension.get('side_b', '')})"
+            )
+        for follow_up in item.get("persona_driver_trace", {}).get("missed_follow_up_questions", [])[:1]:
+            lines.append(f"- Missed follow-up: {follow_up.get('question', '')}")
+        if item.get("persona_driver_trace", {}).get("likely_drivers"):
+            lines.append("")
         for insight in report.get("key_insights", []):
             for clean_insight in str(insight).replace("??,'", "\n").splitlines():
                 clean_insight = clean_insight.strip(" ,'\"")
                 if clean_insight:
                     lines.append(f"- {clean_insight}")
+        lines.append("")
+    if summary.get("common_likely_drivers"):
+        lines.extend(["## Common Likely Drivers", ""])
+        for item in summary["common_likely_drivers"]:
+            lines.append(
+                f"- {item['driver']} [{item['driver_type']}] "
+                f"across {item['persona_count']} personas: {', '.join(item['personas'])}"
+            )
+            if item.get("example_why_it_matters_here"):
+                lines.append(f"  Why it mattered: {item['example_why_it_matters_here']}")
+        lines.append("")
+    if summary.get("common_unspoken_constraints"):
+        lines.extend(["## Common Unspoken Constraints", ""])
+        for item in summary["common_unspoken_constraints"]:
+            lines.append(
+                f"- {item['constraint']} across {item['persona_count']} personas: {', '.join(item['personas'])}"
+            )
+            if item.get("example_why_likely"):
+                lines.append(f"  Why likely: {item['example_why_likely']}")
+        lines.append("")
+    if summary.get("common_value_tensions"):
+        lines.extend(["## Common Value Tensions", ""])
+        for item in summary["common_value_tensions"]:
+            lines.append(
+                f"- {item['tension']} across {item['persona_count']} personas: {', '.join(item['personas'])}"
+            )
+            if item.get("example_frame"):
+                lines.append(f"  Frame: {item['example_frame']}")
         lines.append("")
     lines.extend(["## Assumption Matrix", ""])
     for row in summary.get("assumption_matrix", []):
@@ -261,6 +413,10 @@ def run_concept_panel(
             "folder": str(folder),
             "report": report,
             "quality": quality,
+            "persona_driver_trace": (
+                read_json(folder / "persona_driver_trace.json")
+                if (folder / "persona_driver_trace.json").exists() else {}
+            ),
         })
         if progress_writer is not None:
             progress_writer(
@@ -356,6 +512,10 @@ def summarize_existing_concept_panel(
             "folder": str(folder),
             "report": read_json(folder / "insight_report.json"),
             "quality": read_json(folder / "quality_evaluation.json"),
+            "persona_driver_trace": (
+                read_json(folder / "persona_driver_trace.json")
+                if (folder / "persona_driver_trace.json").exists() else {}
+            ),
         })
     missing = selected - {item["persona_id"] for item in interviews}
     if missing:

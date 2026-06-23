@@ -177,6 +177,61 @@ class ObserverPersonaFixture:
         self.calls.append(kwargs)
         return ChatResult(self.responses.pop(0), "unclear", "high", "persona-thread")
 
+    def generate_persona_driver_trace(self, **kwargs):
+        return type("TraceResult", (), {
+            "payload": {
+                "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+                "surface_read": {
+                    "what_the_persona_explicitly_said": [
+                        "They thought the other person had confirmed the new time.",
+                        "They rechecked every booking because they did not trust the shared plan.",
+                    ],
+                    "what_they_seemed_to_optimize_for": "Avoiding another coordination miss.",
+                    "what_stayed_implicit": [
+                        "Whether this caution comes from a broader household role or one bad recent incident.",
+                    ],
+                },
+                "likely_drivers": [
+                    {
+                        "driver": "Responsibility ambiguity triggers manual checking",
+                        "driver_type": "trust_pattern",
+                        "why_it_matters_here": "The persona defaults to verification when shared ownership feels unclear.",
+                        "evidence_refs": ["exchange_1.persona", "exchange_2.persona"],
+                        "profile_source_refs": ["human_difference_axes.control_preference", "behavior_profile"],
+                        "confidence": "medium",
+                        "observed_vs_inferred": "mixed",
+                    }
+                ],
+                "unspoken_constraints": [
+                    {
+                        "constraint": "The persona may feel accountable for making sure the plan does not fail publicly.",
+                        "why_likely": "Their answer moves quickly from ambiguity to self-checking.",
+                        "evidence_refs": ["exchange_2.persona"],
+                        "profile_source_refs": ["life_story", "human_difference_axes.life_load"],
+                        "confidence": "low",
+                    }
+                ],
+                "value_tensions": [
+                    {
+                        "tension": "Shared planning versus single ownership",
+                        "side_a": "Wants collaboration",
+                        "side_b": "Falls back to one owner to feel safe",
+                        "evidence_refs": ["exchange_1.persona", "exchange_3.persona"],
+                        "profile_source_refs": ["values.core_values", "human_difference_axes.control_preference"],
+                        "confidence": "medium",
+                    }
+                ],
+                "missed_follow_up_questions": [
+                    {
+                        "question": "When you say you did not trust the shared plan, what exactly were you afraid would happen next?",
+                        "why_this_would_clarify": "It would separate social embarrassment, practical loss, and control anxiety.",
+                        "priority": "high",
+                    }
+                ],
+            },
+            "provider_session_id": "persona-trace-thread",
+        })()
+
 
 class ObserverQualityFixture:
     provider_name = "recorded-llm"
@@ -399,9 +454,13 @@ class ObserverRuntimeTest(unittest.TestCase):
             self.assertIn("not_asked_at_close", decision_statuses)
             for name in (
                 "observer_events.json", "insight_report.json", "insights.md",
+                "persona_driver_trace.json", "persona_driver_trace.md",
                 "quality_evaluation.json", "quality_evaluation.md",
             ):
                 self.assertTrue((folder / name).exists(), name)
+            trace = read_json(folder / "persona_driver_trace.json")
+            self.assertEqual(trace["likely_drivers"][0]["driver_type"], "trust_pattern")
+            self.assertEqual(session.persona_driver_trace_provider_session_id, "persona-trace-thread")
 
             facilitator_input = "\n".join(str(call) for call in facilitator.calls)
             self.assertNotIn("PERSONA RESEARCH KERNEL", facilitator_input)
@@ -430,6 +489,7 @@ class ObserverRuntimeTest(unittest.TestCase):
             session = runtime.resynthesize(session.interview_id)
             self.assertEqual(session.status, "completed")
             self.assertTrue((folder / "insight_report.previous.json").exists())
+            self.assertTrue((folder / "persona_driver_trace.previous.json").exists())
             self.assertEqual(session.last_error, "")
             self.assertEqual(session.failed_operation, "")
 

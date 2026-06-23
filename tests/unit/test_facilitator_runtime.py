@@ -198,6 +198,60 @@ class RecordedLLMPersona:
             provider_session_id="persona-thread-1",
         )
 
+    def generate_persona_driver_trace(self, **kwargs):
+        return type("TraceResult", (), {
+            "payload": {
+                "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+                "surface_read": {
+                    "what_the_persona_explicitly_said": [
+                        "They reopened bookings and kept notes in chat.",
+                    ],
+                    "what_they_seemed_to_optimize_for": "Restoring confidence after a disruption.",
+                    "what_stayed_implicit": [
+                        "How much prior coordination friction shaped this reaction.",
+                    ],
+                },
+                "likely_drivers": [
+                    {
+                        "driver": "Need to regain certainty before moving on",
+                        "driver_type": "decision_style",
+                        "why_it_matters_here": "The persona answered through verification behaviour rather than abstract preference.",
+                        "evidence_refs": ["exchange_1.persona", "exchange_2.persona"],
+                        "profile_source_refs": ["behavior_profile", "values.core_values"],
+                        "confidence": "medium",
+                        "observed_vs_inferred": "mixed",
+                    }
+                ],
+                "unspoken_constraints": [
+                    {
+                        "constraint": "Shared planning feels fragile when responsibility is ambiguous.",
+                        "why_likely": "The second answer points to uncertainty about whether the partner had seen the latest plan.",
+                        "evidence_refs": ["exchange_2.persona"],
+                        "profile_source_refs": ["contradiction_map"],
+                        "confidence": "medium",
+                    }
+                ],
+                "value_tensions": [
+                    {
+                        "tension": "Automation versus manual reassurance",
+                        "side_a": "Wants less checking work",
+                        "side_b": "Still manually verifies after change",
+                        "evidence_refs": ["exchange_1.persona", "exchange_2.persona"],
+                        "profile_source_refs": ["values.core_values"],
+                        "confidence": "medium",
+                    }
+                ],
+                "missed_follow_up_questions": [
+                    {
+                        "question": "What made you trust chat notes more than the shared plan in that moment?",
+                        "why_this_would_clarify": "It would expose whether the deeper issue was coordination trust or tool reliability.",
+                        "priority": "high",
+                    }
+                ],
+            },
+            "provider_session_id": "persona-trace-thread-1",
+        })()
+
 
 class FacilitatorRuntimeTest(unittest.TestCase):
     def test_facilitator_skill_and_versioned_prompts_are_complete(self):
@@ -216,6 +270,8 @@ class FacilitatorRuntimeTest(unittest.TestCase):
         self.assertIn("focused on one remembered action, decision, or consequence", interview_rules)
         self.assertIn("evidence inconsistent with it", interview_rules)
         self.assertIn("test the supplied mechanism before strengthening a competing cause", interview_rules)
+        self.assertIn("Preserve participant heterogeneity", interview_rules)
+        self.assertIn("Do not make overlap, concentration, stress testing, or any other named capability become mandatory pain points", interview_rules)
         self.assertIn("leave `root_cause_hypotheses`, `needs`, `pov_statements`, and `how_might_we_questions` empty", synthesis_rules)
         self.assertIn("provisionally_supported", synthesis_rules)
         self.assertIn("Absence of supporting evidence is not contradicting evidence", synthesis_rules)
@@ -265,7 +321,13 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertEqual(observed[0][1], "Tell me about the last trip you had to reorganize after plans changed.")
             self.assertTrue((output / "facilitator_trace.json").exists())
             self.assertTrue((output / "insight_report.json").exists())
+            self.assertTrue((output / "persona_driver_trace.json").exists())
+            self.assertTrue((output / "persona_driver_trace.md").exists())
             self.assertIn("Root-Cause Hypotheses", (output / "insights.md").read_text(encoding="utf-8"))
+            driver_trace = read_json(output / "persona_driver_trace.json")
+            self.assertEqual(driver_trace["likely_drivers"][0]["driver_type"], "decision_style")
+            self.assertEqual(session["persona_driver_trace_provider_session_id"], "persona-trace-thread-1")
+            self.assertEqual(session["persona_driver_trace_prompt_version"], "persona-driver-trace/v1")
 
             all_facilitator_inputs = "\n".join(str(call[1]) for call in facilitator.calls)
             self.assertNotIn("PERSONA RESEARCH KERNEL", all_facilitator_inputs)

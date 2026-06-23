@@ -3,6 +3,21 @@ from __future__ import annotations
 import copy
 from typing import Any
 
+"""
+Legacy project-specific V5 panel presets.
+
+These presets were created for earlier banking POC work and are not the default
+or recommended representation of current V5 platform behaviour.
+
+Current V5 direction:
+- generate reusable personas from human_difference_axes and generic life context
+- assemble interview panels from an existing V5 pool or dynamic sampling
+- avoid fixed concept-shaped archetype sets as the default panel mechanism
+
+This module remains only for legacy-compatible regeneration of prior project
+artifacts.
+"""
+
 
 HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK = "hk_retail_bank_portfolio_health_check"
 
@@ -26,6 +41,21 @@ _BANKING_CONTEXT_FIELDS = [
     "fee_sensitivity",
     "past_bad_investment_experience",
     "suitability_sensitivity",
+]
+
+_HUMAN_DIFFERENCE_AXES_FIELDS = [
+    "control_preference",
+    "trust_style",
+    "complexity_tolerance",
+    "decision_tempo",
+    "financial_attention_cadence",
+    "relationship_to_money",
+    "risk_orientation",
+    "need_for_explanation",
+    "life_load",
+    "fragmentation_reality",
+    "guidance_preference",
+    "reflection_style",
 ]
 
 _CONCEPT_REACTION_FIELDS = [
@@ -66,7 +96,7 @@ def _persona_id(number: int) -> str:
 def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201) -> dict[str, Any]:
     common_guide: dict[str, Any] = {
         "mode": "guided",
-        "required_profile_sections": ["banking_context"],
+        "required_profile_sections": ["human_difference_axes"],
         "panel_preset": HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK,
         "research_context": {
             "market": "Hong Kong retail and affluent retail banking",
@@ -129,6 +159,10 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
             "response_rule": (
                 "Distinguish what this person understands, what still confuses them, and whether the feature would increase trust, action, or avoidance."
             ),
+            "persona_generation_rule": (
+                "Build the person from ordinary life, values, routines, and human difference axes first. "
+                "Do not pre-encode a single banking pain or assume the concept is relevant in the same way for every participant."
+            ),
         },
     }
 
@@ -152,11 +186,18 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
                     "relationship_manager_usage": "Rarely speaks to RM unless very unsure.",
                     "digital_banking_usage": "High app usage, low patience for dense financial jargon.",
                     "risk_understanding_level": "Knows diversification in theory but not portfolio analytics in depth.",
-                    "interview_focus": [
-                        "Whether stress testing feels educational or scary",
-                        "Whether explanations need visuals and plain language",
-                        "Whether the feature increases confidence enough to ask for help",
-                    ],
+                    "control_preference": "Low to moderate; wants guidance and guardrails before acting alone.",
+                    "trust_style": "Starts with borrowed trust from familiar brands or peers, then looks for simple proof.",
+                    "complexity_tolerance": "Low; disengages when the explanation becomes too abstract or jargon-heavy.",
+                    "decision_tempo": "Fast at idea discovery, slower at final commitment when real money is involved.",
+                    "financial_attention_cadence": "Event-driven; checks more after market moves or social prompts than on a fixed schedule.",
+                    "relationship_to_money": "Money feels tied to progress, independence, and not falling behind peers.",
+                    "risk_orientation": "Curious about upside but emotionally sensitive to visible losses and embarrassment.",
+                    "need_for_explanation": "High; learns through stories, simple comparisons, and concrete examples.",
+                    "life_load": "Moderate; early-career work and social life compete for attention.",
+                    "fragmentation_reality": "Low to moderate; small holdings split across one bank and perhaps one external app.",
+                    "guidance_preference": "Self-serve first with optional human backup when uncertainty spikes.",
+                    "reflection_style": "Answers through recent episodes and feelings rather than stable investing principles.",
                 },
             },
         },
@@ -178,11 +219,18 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
                     "relationship_manager_usage": "Low trust in RM product pushes.",
                     "digital_banking_usage": "High, but compares with broker-grade interfaces.",
                     "risk_understanding_level": "Understands portfolio concepts and wants depth, not generic warnings.",
-                    "interview_focus": [
-                        "Whether bank analytics are deep and timely enough",
-                        "Whether external holdings sync is worth the privacy trade-off",
-                        "Whether institutional analytics can win back wallet share",
-                    ],
+                    "control_preference": "High; wants direct control over holdings, timing, and interpretation.",
+                    "trust_style": "Evidence-first; respects competence more than relationship warmth.",
+                    "complexity_tolerance": "High; comfortable with layered data if it improves decisions.",
+                    "decision_tempo": "Fast once convinced the signal is useful enough.",
+                    "financial_attention_cadence": "Frequent and routine; reviews positions as part of normal media and market consumption.",
+                    "relationship_to_money": "Money is both a scorecard and a tool for autonomy.",
+                    "risk_orientation": "Accepts volatility if they believe they understand the trade-off.",
+                    "need_for_explanation": "Medium; prefers concise but information-dense explanations.",
+                    "life_load": "Moderate; investing is a meaningful hobby as well as a financial activity.",
+                    "fragmentation_reality": "High; assets are spread across bank, broker, and external research tools.",
+                    "guidance_preference": "Independent by default; will use expert input only if it is additive and non-patronizing.",
+                    "reflection_style": "Frames answers in comparisons, trade-offs, and process quality.",
                 },
             },
         },
@@ -204,11 +252,18 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
                     "relationship_manager_usage": "Moderate to high when discussing income products.",
                     "digital_banking_usage": "Moderate; accepts app use if clearly explained.",
                     "risk_understanding_level": "May over-associate income products with low risk.",
-                    "interview_focus": [
-                        "Whether rate and credit stress tests are enlightening or feel like fear-based selling",
-                        "Whether cash-flow safety framing works better than analytics framing",
-                        "Whether RM explanation is necessary for trust",
-                    ],
+                    "control_preference": "Moderate; wants to approve changes personally but values steady guidance.",
+                    "trust_style": "Relationship-based with caution; familiarity matters, but fear of surprises is strong.",
+                    "complexity_tolerance": "Low to moderate; accepts complexity only when clearly tied to safety or income continuity.",
+                    "decision_tempo": "Slow and deliberate, especially when principal feels exposed.",
+                    "financial_attention_cadence": "Calendar-driven; pays attention around maturities, cash-flow needs, and major headlines.",
+                    "relationship_to_money": "Money is security, dignity, and peace of mind more than personal expression.",
+                    "risk_orientation": "Loss-averse and drawdown-sensitive, especially late in the cycle.",
+                    "need_for_explanation": "High; wants plain-language reassurance and concrete downside framing.",
+                    "life_load": "Moderate; family, retirement planning, and health concerns can crowd out analytical attention.",
+                    "fragmentation_reality": "Low to moderate; most holdings sit with known institutions, though product layers may still be opaque.",
+                    "guidance_preference": "Human explanation first, app support second.",
+                    "reflection_style": "Judges ideas through past bad periods, cash-flow consequences, and whether sleep would be affected.",
                 },
             },
         },
@@ -230,11 +285,18 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
                     "relationship_manager_usage": "Selective; wants advice connected to goals, not just products.",
                     "digital_banking_usage": "High for household admin and monitoring.",
                     "risk_understanding_level": "Understands risk better when tied to life goals and downside consequences.",
-                    "interview_focus": [
-                        "Whether goal-success framing beats abstract risk framing",
-                        "Whether they will aggregate MPF, insurance, and family assets",
-                        "Whether shared household visibility matters",
-                    ],
+                    "control_preference": "Moderate; wants clarity before deciding, but does not need to micromanage every position.",
+                    "trust_style": "Pragmatic; trusts systems that connect clearly to household outcomes.",
+                    "complexity_tolerance": "Moderate; will handle detail if it helps protect family plans.",
+                    "decision_tempo": "Measured; decisions compete with other family and work priorities.",
+                    "financial_attention_cadence": "Routine but not constant; usually reviewed around bills, school planning, or annual check-ins.",
+                    "relationship_to_money": "Money is a planning tool for stability and future options for the family.",
+                    "risk_orientation": "Balanced but responsibility-heavy; downside matters because other people depend on the plan.",
+                    "need_for_explanation": "High; wants translation from numbers to household consequences.",
+                    "life_load": "High; work, caregiving, and coordination reduce spare cognitive bandwidth.",
+                    "fragmentation_reality": "Moderate to high; family assets span banking, insurance, MPF, and sometimes spouse-held accounts.",
+                    "guidance_preference": "Hybrid; wants self-serve visibility with occasional advisor interpretation.",
+                    "reflection_style": "Explains choices through family trade-offs, timelines, and regret avoidance.",
                 },
             },
         },
@@ -256,11 +318,18 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
                     "relationship_manager_usage": "High, but trust must feel earned each review cycle.",
                     "digital_banking_usage": "Moderate to high as a monitoring and review tool.",
                     "risk_understanding_level": "Comfortable with advisory conversations, less interested in raw dashboards alone.",
-                    "interview_focus": [
-                        "Whether BlackRock-powered analytics increase advisory credibility",
-                        "Whether third-party analytics reduce product-push suspicion",
-                        "Whether premium reporting feels worth paying for",
-                    ],
+                    "control_preference": "Moderate to high; delegates some analysis but not final judgment.",
+                    "trust_style": "Credential-aware; trusts prestige and process if both feel coherent.",
+                    "complexity_tolerance": "High; expects professional nuance and dislikes over-simplification.",
+                    "decision_tempo": "Moderate; willing to wait for a proper explanation when ticket sizes are meaningful.",
+                    "financial_attention_cadence": "Structured; reviews around scheduled RM meetings, market events, and portfolio reviews.",
+                    "relationship_to_money": "Money is stewardship, status maintenance, and optionality for later life or family.",
+                    "risk_orientation": "Selective; accepts complexity but expects it to be justified and monitored.",
+                    "need_for_explanation": "Medium to high; wants a polished explanation with defendable logic.",
+                    "life_load": "Moderate; professional and family commitments limit time, but expectations of service are high.",
+                    "fragmentation_reality": "Moderate; assets may sit across multiple product wrappers and banking relationships.",
+                    "guidance_preference": "Advisor-led discussion supported by strong analytics, not pure self-serve.",
+                    "reflection_style": "Assesses whether advice feels consistent, professional, and aligned with prior experience.",
                 },
             },
         },
@@ -282,11 +351,18 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
                     "relationship_manager_usage": "Moderate when useful, but independent verification matters.",
                     "digital_banking_usage": "High, expects bilingual clarity and consolidated views.",
                     "risk_understanding_level": "Understands some complexity but still lacks one whole-portfolio view.",
-                    "interview_focus": [
-                        "Whether FX and cross-market scenario analytics solve a real blind spot",
-                        "Whether cross-border data sharing feels risky",
-                        "Whether dual-language explanation matters for usability and trust",
-                    ],
+                    "control_preference": "High; needs to see and compare moving parts across markets directly.",
+                    "trust_style": "Verification-oriented; trusts consolidation only if data lineage is clear.",
+                    "complexity_tolerance": "High; willing to navigate multi-layer explanations if they match portfolio reality.",
+                    "decision_tempo": "Variable; can move quickly on market shifts but takes time on cross-border setup choices.",
+                    "financial_attention_cadence": "Frequent and trigger-based around FX, rates, and geopolitical developments.",
+                    "relationship_to_money": "Money is flexibility across geographies, currencies, and family obligations.",
+                    "risk_orientation": "Comfortable with complexity but wary of hidden transmission channels.",
+                    "need_for_explanation": "Medium to high; wants plain language for summary and technical detail on demand.",
+                    "life_load": "High; cross-border admin and family or business commitments add coordination strain.",
+                    "fragmentation_reality": "Very high; holdings and records are spread across markets, currencies, and institutions.",
+                    "guidance_preference": "Tool-led first, with specialist help only when edge cases matter.",
+                    "reflection_style": "Talks in scenarios, jurisdictions, and practical constraints rather than product labels alone.",
                 },
             },
         },
@@ -308,11 +384,18 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
                     "relationship_manager_usage": "Low unless forced by circumstance or trust is rebuilt slowly.",
                     "digital_banking_usage": "Moderate; will read carefully if the claim touches risk.",
                     "risk_understanding_level": "Sensitive to downside and suitability, but distrust changes how they interpret evidence.",
-                    "interview_focus": [
-                        "What transparency would make the model feel credible",
-                        "Whether BlackRock branding helps or deepens conflict concerns",
-                        "Whether the feature should stop at risk alerting rather than recommendations",
-                    ],
+                    "control_preference": "High; wants to retain veto power and interpret motives personally.",
+                    "trust_style": "Defensive; trust starts low and must be rebuilt through transparency and consistency.",
+                    "complexity_tolerance": "Moderate; will engage with detail if it helps spot hidden incentives.",
+                    "decision_tempo": "Slow when counterparties are involved; assumes persuasion pressure may be present.",
+                    "financial_attention_cadence": "Irregular but intense when something feels off or a recommendation appears.",
+                    "relationship_to_money": "Money is hard-won and tied to self-protection after prior regret.",
+                    "risk_orientation": "Cautious in both market risk and institutional risk.",
+                    "need_for_explanation": "High; wants to know not just the answer but whose interests shape the answer.",
+                    "life_load": "Moderate; distrust itself consumes attention and extends decision time.",
+                    "fragmentation_reality": "Moderate; may keep assets spread out partly to avoid over-dependence on one institution.",
+                    "guidance_preference": "Prefers neutral tools over relationship-driven advice.",
+                    "reflection_style": "Returns to prior disappointments and consistency checks when evaluating new claims.",
                 },
             },
         },
@@ -339,8 +422,11 @@ def build_hk_retail_bank_portfolio_health_check_panel(*, starting_id: int = 1201
     }
 
 
-def build_v4_panel_preset(preset_name: str, *, starting_id: int = 1201) -> dict[str, Any]:
+def build_v5_panel_preset(preset_name: str, *, starting_id: int = 1201) -> dict[str, Any]:
     if preset_name == HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK:
         return build_hk_retail_bank_portfolio_health_check_panel(starting_id=starting_id)
-    raise ValueError(f"Unsupported V4 panel preset: {preset_name}")
+    raise ValueError(
+        f"Unsupported legacy V5 panel preset: {preset_name}. "
+        "Current V5 no longer treats fixed project-specific archetype panels as the default path."
+    )
 

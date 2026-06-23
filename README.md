@@ -27,7 +27,8 @@ This is not a market-proof engine. It is an AI pre-validation system designed to
 - sensitive-topic risks
 - next-step real-world validation questions
 
-See [PERSONA_MODELING_GUIDE.md](/C:/Users/user/OneDrive/文件/AI Synthetic User Library/PERSONA_MODELING_GUIDE.md) for the rule on what belongs in reusable persona core versus concept-specific sidecar outputs.
+See [PERSONA_MODELING_GUIDE.md](/C:/Users/user/OneDrive/文件/AI Synthetic User Library/PERSONA_MODELING_GUIDE.md) for what belongs in reusable persona core versus concept-specific sidecar outputs.
+See [PERSONA_GENERATION_PRINCIPLES_FOR_REALISTIC_INTERVIEWS.md](/C:/Users/user/OneDrive/文件/AI Synthetic User Library/PERSONA_GENERATION_PRINCIPLES_FOR_REALISTIC_INTERVIEWS.md) for the platform-level rule that personas should remain people first, with pain discovered at interview time rather than pre-encoded around the concept.
 
 ## Commands
 
@@ -42,10 +43,10 @@ The CLI exposes these commands:
 - `probe-codex-auth`
 - `enrich-personas`
 - `generate-v3-2-persona`
-- `generate-v4-persona`
-- `generate-v4-panel`
+- `generate-v5-persona`
+- `generate-v5-panel` (legacy project-specific preset path)
 - `validate-personas-v3-2`
-- `validate-personas-v4`
+- `validate-personas-v5`
 - `validate-brief`
 - `run-validation`
 - `audit-report`
@@ -87,21 +88,29 @@ The V3.2 production command requires `codex` or `openai`; deterministic adapters
 
 Use `--backend codex-sdk` to reuse Codex Auth through a locally installed `@openai/codex-sdk` when the Codex CLI websocket transport is unavailable. Set `AI_VALIDATION_CODEX_SDK_MODULE` when the SDK is not installed under the workspace or the known sibling project path.
 
-### V4 direct persona synthesis
+### V5 direct persona synthesis
 
-`generate-v4-persona` keeps one reusable core persona profile and can optionally require domain-specific profile sections such as `banking_context`. Concept-specific reactions are written as sidecar `concept_outputs.json` artifacts instead of polluting the reusable profile.
+`generate-v5-persona` keeps one reusable core persona profile and can optionally require domain-specific profile sections such as `banking_context`. It now treats `human_difference_axes` as first-class persona core so domain reactions can be inferred later instead of being pre-encoded into the person. Concept-specific reactions are written as sidecar `concept_outputs.json` artifacts instead of polluting the reusable profile.
+
+Current V5 panel direction is:
+
+- generate reusable V5 personas
+- run interviews against selected V5 personas from the pool
+- avoid treating fixed concept-shaped archetype sets as the default panel mechanism
+
+`generate-v5-panel` remains only as a legacy project-specific preset generator for older banking POC artifacts.
 
 ```powershell
 $env:PYTHONPATH='src'
 & 'C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
-  -m ai_validation_swarm.cli.main generate-v4-panel `
+  -m ai_validation_swarm.cli.main generate-v5-panel `
   --panel-preset hk_retail_bank_portfolio_health_check `
   --starting-id 1201 `
   --backend codex-sdk `
   --output-dir data/personas
 ```
 
-This preset generates seven Hong Kong banking-investment personas for the `Portfolio Health Check` concept. Each persona stores reusable `banking_context` inside `profile.json`, while concept-specific reactions are stored in `concept_outputs.json`.
+This legacy preset generates seven Hong Kong banking-investment personas for the `Portfolio Health Check` concept. Each persona stores reusable `human_difference_axes` inside `profile.json`, while concept-specific reactions are stored in `concept_outputs.json`.
 
 Example:
 
@@ -192,7 +201,7 @@ ai-validation-swarm run-facilitated-interview `
   --backend codex
 ```
 
-The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. Outputs are stored under `interviews/{interview_id}/`. Synthetic interviews do not replace human research.
+The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, and `persona_driver_trace.md` so the team can inspect both the observed answers and the likely values, memories, or constraints sitting behind them. Synthetic interviews do not replace human research.
 
 ### Observer-controlled interview
 
@@ -208,7 +217,7 @@ ai-validation-swarm observe-facilitated-interview `
 
 At each pause, press Enter to approve the proposed question. Use `/steer TEXT` to ask the facilitator LLM to revise its direction, `/deepen TOPIC` to request more evidence, or `/ask QUESTION` to submit a question for neutral review and rewriting by the facilitator. `/ask-exact QUESTION` bypasses that review and is explicitly attributed as a direct observer question. `/pause`, `/retry`, `/status`, `/stop`, and `/quit` control the session. Resume later with `--resume INTERVIEW_ID`. Use `/reevaluate` to rerun only the quality audit, or `/resynthesize` to archive and rebuild both synthesis and quality from the saved transcript after prompt or evidence-gate upgrades.
 
-Observer sessions add `observer_events.json`, `quality_evaluation.json`, and `quality_evaluation.md`. The independent quality LLM audits leading questions, repetition, mechanical Five Whys, premature causal claims, evidence references, and synthesis overreach.
+Observer sessions add `observer_events.json`, `quality_evaluation.json`, `quality_evaluation.md`, and `persona_driver_trace.md`. The independent quality LLM audits leading questions, repetition, mechanical Five Whys, premature causal claims, evidence references, and synthesis overreach.
 
 ## SaaS readiness artifacts
 

@@ -8,10 +8,17 @@ from typing import Any
 from ai_validation_swarm.conversation.models import ConversationSession, ConversationTurn
 from ai_validation_swarm.conversation.providers import ConversationProvider
 from ai_validation_swarm.domain.models import PersonaSkill, utc_now_iso
-from ai_validation_swarm.storage.files import ensure_dir, load_persona, read_json, resolve_persona_version_folder, write_json
+from ai_validation_swarm.storage.files import (
+    ensure_dir,
+    load_persona,
+    read_json,
+    resolve_current_persona_version_folder,
+    write_json,
+)
 
 
 PROMPT_VERSION = "persona-conversation/v1"
+DRIVER_TRACE_PROMPT_VERSION = "persona-driver-trace/v1"
 MAX_HISTORY_TURNS = 12
 MAX_SYSTEM_CONTEXT_CHARS = 12_000
 MAX_STRUCTURED_CONTEXT_CHARS = 10_000
@@ -20,9 +27,11 @@ MAX_STRUCTURED_CONTEXT_CHARS = 10_000
 def resolve_persona_folder(data_dir: Path, persona_id: str) -> Path:
     base = data_dir / persona_id
     try:
-        return resolve_persona_version_folder(base)
-    except ValueError:
-        raise ValueError(f"Persona '{persona_id}' was not found under {data_dir}.") from None
+        return resolve_current_persona_version_folder(base)
+    except ValueError as exc:
+        raise ValueError(
+            f"Persona '{persona_id}' could not be resolved from {data_dir}. {exc}"
+        ) from None
 
 
 def _read_optional(path: Path) -> str:
@@ -56,6 +65,33 @@ def _relevant_profile_context(persona: PersonaSkill, message: str) -> dict[str, 
         sections["daily_micro_behaviours"] = profile.daily_micro_behaviours
         sections["workflow_adoption_model"] = profile.workflow_adoption_model
         sections["hidden_habits"] = profile.hidden_habits
+    return sections
+
+
+def _driver_trace_profile_context(persona: PersonaSkill) -> dict[str, Any]:
+    profile = persona.profile
+    sections: dict[str, Any] = {
+        "basic_identity": profile.basic_identity,
+        "personality_belief": getattr(profile, "personality_belief", {}),
+        "values": profile.values,
+        "life_story": getattr(profile, "life_story", {}),
+        "behavior_profile": profile.behavior_profile,
+        "problem_context": getattr(profile, "problem_context", {}),
+        "product_reaction_rules": profile.product_reaction_rules,
+        "contradiction_map": profile.contradiction_map,
+        "deep_research_notes": profile.deep_research_notes,
+    }
+    for optional_key in (
+        "childhood_environment",
+        "canonical_biography",
+        "workflow_adoption_model",
+        "daily_micro_behaviours",
+        "human_difference_axes",
+        "banking_context",
+    ):
+        value = getattr(profile, optional_key, None)
+        if value:
+            sections[optional_key] = value
     return sections
 
 
@@ -142,6 +178,44 @@ class ConversationRuntime:
         session.updated_at = utc_now_iso()
         self.save(session)
 
+    def generate_persona_driver_trace(
+        self,
+        session: ConversationSession,
+        persona: PersonaSkill,
+        persona_folder: Path,
+        *,
+        interview_transcript: str,
+        research_goal: str,
+        product_context: str = "",
+        output_language: str = "Traditional Chinese",
+    ) -> tuple[dict[str, Any], str]:
+        prompt_path = Path(__file__).parents[1] / "prompts" / "persona-driver-trace" / "v1.md"
+        reflection_rules = prompt_path.read_text(encoding="utf-8").strip()
+        system_prompt = self._system_prompt(persona, persona_folder, runtime_instruction=reflection_rules)
+        structured_context = json.dumps(
+            _driver_trace_profile_context(persona),
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )[:MAX_STRUCTURED_CONTEXT_CHARS]
+        user_prompt = (
+            f"OUTPUT LANGUAGE:\n{output_language}\n\n"
+            f"RESEARCH GOAL:\n{research_goal}\n\n"
+            f"PRODUCT CONTEXT:\n{product_context or '(none)'}\n\n"
+            "INTERVIEW TRANSCRIPT:\n"
+            f"{interview_transcript}\n\n"
+            "STRUCTURED PERSONA CONTEXT:\n"
+            f"{structured_context}\n\n"
+            "Generate a structured persona driver trace. Use transcript refs like "
+            "`exchange_2.persona` and profile refs like `values.core_values` or "
+            "`human_difference_axes.trust_style` whenever possible."
+        )
+        result = self.provider.generate_persona_driver_trace(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            persona=persona,
+        )
+        return result.payload, result.provider_session_id
+
     def save(self, session: ConversationSession) -> Path:
         folder = self.session_dir / session.session_id
         ensure_dir(folder)
@@ -164,6 +238,65 @@ class ConversationRuntime:
             lines.extend([f"## {speaker}", "", turn.content, ""])
             if turn.role == "persona":
                 lines.extend([f"Intent: `{turn.intent_level}` | Confidence: `{turn.confidence}`", ""])
+        return "\n".join(lines).rstrip() + "\n"
+
+    @staticmethod
+    def render_persona_driver_trace_markdown(
+        payload: dict[str, Any],
+        *,
+        persona_name: str,
+        research_goal: str,
+    ) -> str:
+        lines = [
+            f"# Persona Driver Trace: {persona_name}",
+            "",
+            f"> {payload.get('synthetic_only_disclaimer', '')}",
+            "",
+            f"Research goal: {research_goal}",
+            "",
+            "## Surface Read",
+            "",
+        ]
+        surface = payload.get("surface_read", {})
+        for item in surface.get("what_the_persona_explicitly_said", []):
+            lines.append(f"- Said: {item}")
+        optimize_for = surface.get("what_they_seemed_to_optimize_for", "")
+        if optimize_for:
+            lines.append(f"- Seemed to optimize for: {optimize_for}")
+        for item in surface.get("what_stayed_implicit", []):
+            lines.append(f"- Implicit: {item}")
+
+        lines.extend(["", "## Likely Drivers", ""])
+        for item in payload.get("likely_drivers", []):
+            lines.append(
+                f"- [{item.get('confidence', 'unknown')}] {item.get('driver', '')} "
+                f"({item.get('driver_type', '')}, {item.get('observed_vs_inferred', '')})"
+            )
+            lines.append(f"  Why: {item.get('why_it_matters_here', '')}")
+            refs = ", ".join(item.get("evidence_refs", []))
+            if refs:
+                lines.append(f"  Transcript refs: {refs}")
+            sources = ", ".join(item.get("profile_source_refs", []))
+            if sources:
+                lines.append(f"  Profile refs: {sources}")
+
+        lines.extend(["", "## Unspoken Constraints", ""])
+        for item in payload.get("unspoken_constraints", []):
+            lines.append(f"- [{item.get('confidence', 'unknown')}] {item.get('constraint', '')}")
+            lines.append(f"  Why likely: {item.get('why_likely', '')}")
+
+        lines.extend(["", "## Value Tensions", ""])
+        for item in payload.get("value_tensions", []):
+            lines.append(
+                f"- [{item.get('confidence', 'unknown')}] {item.get('tension', '')}: "
+                f"{item.get('side_a', '')} vs {item.get('side_b', '')}"
+            )
+
+        lines.extend(["", "## Missed Follow-Up Questions", ""])
+        for item in payload.get("missed_follow_up_questions", []):
+            lines.append(f"- [{item.get('priority', 'unknown')}] {item.get('question', '')}")
+            lines.append(f"  Why: {item.get('why_this_would_clarify', '')}")
+
         return "\n".join(lines).rstrip() + "\n"
 
     def _system_prompt(self, persona: PersonaSkill, folder: Path, *, runtime_instruction: str = "") -> str:

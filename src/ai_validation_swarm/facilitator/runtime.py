@@ -6,7 +6,11 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ai_validation_swarm.conversation.providers import ConversationProvider
-from ai_validation_swarm.conversation.runtime import ConversationRuntime, resolve_persona_folder
+from ai_validation_swarm.conversation.runtime import (
+    DRIVER_TRACE_PROMPT_VERSION,
+    ConversationRuntime,
+    resolve_persona_folder,
+)
 from ai_validation_swarm.domain.models import utc_now_iso
 from ai_validation_swarm.facilitator.concept_protocols import load_concept_protocol
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
@@ -131,6 +135,7 @@ class FacilitatedInterviewRuntime:
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
             persona_conversation_session_id=persona_session.session_id,
+            persona_driver_trace_prompt_version=DRIVER_TRACE_PROMPT_VERSION,
             max_turns=hard_limit,
             soft_turn_limit=soft_limit,
             hard_turn_limit=hard_limit,
@@ -227,12 +232,29 @@ class FacilitatedInterviewRuntime:
         self._enforce_synthesis_evidence_scope(session, synthesis)
         session.facilitator_provider_session_id = facilitator_session_id
         session.insight_report = synthesis
+        self._progress("generating_persona_driver_trace")
+        driver_trace, trace_session_id = persona_runtime.generate_persona_driver_trace(
+            persona_session,
+            persona,
+            persona_folder,
+            interview_transcript=self._plain_transcript(session),
+            research_goal=session.research_goal,
+            product_context=session.product_context,
+            output_language=session.output_language,
+        )
+        session.persona_driver_trace = driver_trace
+        session.persona_driver_trace_provider_session_id = trace_session_id
         session.status = "completed"
         session.updated_at = utc_now_iso()
         persona_runtime.close(persona_session)
         self._save(session, interview_folder)
         write_json(interview_folder / "insight_report.json", synthesis)
+        write_json(interview_folder / "persona_driver_trace.json", driver_trace)
         (interview_folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
+        (interview_folder / "persona_driver_trace.md").write_text(
+            self._render_persona_driver_trace(session),
+            encoding="utf-8",
+        )
         self._progress(f"completed interview_id={interview_id}")
         return interview_folder
 
@@ -539,6 +561,12 @@ class FacilitatedInterviewRuntime:
     def _save(self, session: InterviewSession, folder: Path) -> None:
         write_json(folder / "interview.json", session.to_dict())
         write_json(folder / "facilitator_trace.json", session.facilitator_decisions)
+        if session.persona_driver_trace:
+            write_json(folder / "persona_driver_trace.json", session.persona_driver_trace)
+            (folder / "persona_driver_trace.md").write_text(
+                self._render_persona_driver_trace(session),
+                encoding="utf-8",
+            )
         (folder / "transcript.md").write_text(self._render_transcript(session), encoding="utf-8")
 
     @staticmethod
@@ -549,6 +577,14 @@ class FacilitatedInterviewRuntime:
         if mode == "validate_hypothesis" and not hypothesis.strip():
             raise ValueError("validate_hypothesis mode requires a non-empty hypothesis.")
         return mode
+
+    @staticmethod
+    def _render_persona_driver_trace(session: InterviewSession) -> str:
+        return ConversationRuntime.render_persona_driver_trace_markdown(
+            session.persona_driver_trace,
+            persona_name=session.persona_name,
+            research_goal=session.research_goal,
+        )
 
     @staticmethod
     def _effective_question_basis(question: str, declared_basis: str) -> str:

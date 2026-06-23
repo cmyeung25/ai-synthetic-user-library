@@ -67,6 +67,8 @@ class InterviewSession:
     quality_provider_session_id: str = ""
     hypothesis_evidence_judge_prompt_version: str = ""
     hypothesis_evidence_judge_provider_session_id: str = ""
+    persona_driver_trace_prompt_version: str = ""
+    persona_driver_trace_provider_session_id: str = ""
     max_turns: int = 10
     soft_turn_limit: int = 10
     hard_turn_limit: int = 10
@@ -85,6 +87,7 @@ class InterviewSession:
     insight_report: dict[str, Any] = field(default_factory=dict)
     quality_evaluation: dict[str, Any] = field(default_factory=dict)
     hypothesis_evidence_judgment: dict[str, Any] = field(default_factory=dict)
+    persona_driver_trace: dict[str, Any] = field(default_factory=dict)
     coverage_status: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:

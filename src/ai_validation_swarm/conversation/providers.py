@@ -23,12 +23,146 @@ RESPONSE_SCHEMA: dict[str, Any] = {
     },
 }
 
+PERSONA_DRIVER_TRACE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "synthetic_only_disclaimer",
+        "surface_read",
+        "likely_drivers",
+        "unspoken_constraints",
+        "value_tensions",
+        "missed_follow_up_questions",
+    ],
+    "properties": {
+        "synthetic_only_disclaimer": {"type": "string"},
+        "surface_read": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "what_the_persona_explicitly_said",
+                "what_they_seemed_to_optimize_for",
+                "what_stayed_implicit",
+            ],
+            "properties": {
+                "what_the_persona_explicitly_said": {"type": "array", "items": {"type": "string"}},
+                "what_they_seemed_to_optimize_for": {"type": "string"},
+                "what_stayed_implicit": {"type": "array", "items": {"type": "string"}},
+            },
+        },
+        "likely_drivers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "driver",
+                    "driver_type",
+                    "why_it_matters_here",
+                    "evidence_refs",
+                    "profile_source_refs",
+                    "confidence",
+                    "observed_vs_inferred",
+                ],
+                "properties": {
+                    "driver": {"type": "string"},
+                    "driver_type": {
+                        "type": "string",
+                        "enum": [
+                            "core_value",
+                            "past_experience",
+                            "daily_constraint",
+                            "identity_or_role",
+                            "decision_style",
+                            "trust_pattern",
+                            "knowledge_gap",
+                            "emotional_protection",
+                            "other",
+                        ],
+                    },
+                    "why_it_matters_here": {"type": "string"},
+                    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+                    "profile_source_refs": {"type": "array", "items": {"type": "string"}},
+                    "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+                    "observed_vs_inferred": {
+                        "type": "string",
+                        "enum": ["mostly_observed", "mixed", "mostly_inferred"],
+                    },
+                },
+            },
+        },
+        "unspoken_constraints": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "constraint",
+                    "why_likely",
+                    "evidence_refs",
+                    "profile_source_refs",
+                    "confidence",
+                ],
+                "properties": {
+                    "constraint": {"type": "string"},
+                    "why_likely": {"type": "string"},
+                    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+                    "profile_source_refs": {"type": "array", "items": {"type": "string"}},
+                    "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+                },
+            },
+        },
+        "value_tensions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "tension",
+                    "side_a",
+                    "side_b",
+                    "evidence_refs",
+                    "profile_source_refs",
+                    "confidence",
+                ],
+                "properties": {
+                    "tension": {"type": "string"},
+                    "side_a": {"type": "string"},
+                    "side_b": {"type": "string"},
+                    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+                    "profile_source_refs": {"type": "array", "items": {"type": "string"}},
+                    "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+                },
+            },
+        },
+        "missed_follow_up_questions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["question", "why_this_would_clarify", "priority"],
+                "properties": {
+                    "question": {"type": "string"},
+                    "why_this_would_clarify": {"type": "string"},
+                    "priority": {"type": "string", "enum": ["low", "medium", "high"]},
+                },
+            },
+        },
+    },
+}
+
 
 @dataclass(slots=True)
 class ChatResult:
     reply: str
     intent_level: str
     confidence: str
+    provider_session_id: str = ""
+
+
+@dataclass(slots=True)
+class PersonaDriverTraceResult:
+    payload: dict[str, Any]
     provider_session_id: str = ""
 
 
@@ -40,6 +174,10 @@ class ConversationProvider(Protocol):
         self, *, system_prompt: str, user_prompt: str, persona: PersonaSkill,
         provider_session_id: str = "",
     ) -> ChatResult: ...
+
+    def generate_persona_driver_trace(
+        self, *, system_prompt: str, user_prompt: str, persona: PersonaSkill,
+    ) -> PersonaDriverTraceResult: ...
 
 
 class OpenAIConversationProvider:
@@ -82,6 +220,19 @@ class OpenAIConversationProvider:
             provider_session_id=transport_session_id or provider_session_id,
         )
 
+    def generate_persona_driver_trace(
+        self, *, system_prompt: str, user_prompt: str, persona: PersonaSkill,
+    ) -> PersonaDriverTraceResult:
+        del persona
+        payload = self.client.create_json_response(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            output_schema=PERSONA_DRIVER_TRACE_SCHEMA,
+        )
+        metadata = getattr(self.client, "last_transport_metadata", {})
+        transport_session_id = str(metadata.get("codex_session_id", ""))
+        return PersonaDriverTraceResult(payload=payload, provider_session_id=transport_session_id)
+
 
 class MockConversationProvider:
     provider_name = "mock"
@@ -114,3 +265,62 @@ class MockConversationProvider:
         questions = reactions.get("questions_they_would_ask", [])
         question = str(questions[0]) if questions else "What would this change in one ordinary week?"
         return ChatResult(reply=f"I understand the direction, but I would test one small case first. {question}", intent_level="curious", confidence="medium")
+
+    def generate_persona_driver_trace(
+        self, *, system_prompt: str, user_prompt: str, persona: PersonaSkill,
+    ) -> PersonaDriverTraceResult:
+        del system_prompt, user_prompt
+        profile = persona.profile
+        values = profile.values if isinstance(profile.values, dict) else {}
+        core_values = values.get("core_values", []) if isinstance(values.get("core_values", []), list) else []
+        first_value = str(core_values[0]) if core_values else "keep life manageable"
+        payload = {
+            "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+            "surface_read": {
+                "what_the_persona_explicitly_said": [
+                    "The persona answered narrowly and left room for follow-up.",
+                ],
+                "what_they_seemed_to_optimize_for": "A practical answer that protects their existing routine.",
+                "what_stayed_implicit": [
+                    "Deeper reasons were likely present but not fully surfaced in the short exchange.",
+                ],
+            },
+            "likely_drivers": [
+                {
+                    "driver": first_value,
+                    "driver_type": "core_value",
+                    "why_it_matters_here": "The persona tends to judge new ideas through whether they reduce day-to-day friction.",
+                    "evidence_refs": ["exchange_1.persona"],
+                    "profile_source_refs": ["values.core_values"],
+                    "confidence": "medium",
+                    "observed_vs_inferred": "mixed",
+                }
+            ],
+            "unspoken_constraints": [
+                {
+                    "constraint": "The persona may not want to spend extra time learning a new workflow before seeing proof.",
+                    "why_likely": "Short answers and cautious intent usually imply limited activation bandwidth.",
+                    "evidence_refs": ["exchange_1.persona"],
+                    "profile_source_refs": ["behavior_profile", "workflow_adoption_model"],
+                    "confidence": "low",
+                }
+            ],
+            "value_tensions": [
+                {
+                    "tension": "Curiosity versus activation effort",
+                    "side_a": "Can see possible value",
+                    "side_b": "Does not want another thing to maintain",
+                    "evidence_refs": ["exchange_1.persona"],
+                    "profile_source_refs": ["values.core_values", "behavior_profile"],
+                    "confidence": "medium",
+                }
+            ],
+            "missed_follow_up_questions": [
+                {
+                    "question": "What was the part of that situation that bothered you after the task itself was done?",
+                    "why_this_would_clarify": "It would surface whether the deeper issue was trust, effort, embarrassment, or uncertainty.",
+                    "priority": "high",
+                }
+            ],
+        }
+        return PersonaDriverTraceResult(payload=payload)

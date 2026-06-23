@@ -49,14 +49,14 @@ from ai_validation_swarm.personas.v3_3 import (
     generate_v3_3_personas,
     validate_v3_3_persona_folder,
 )
-from ai_validation_swarm.personas.v4 import (
-    OpenAIV4SynthesisAdapter,
-    generate_v4_persona,
-    validate_v4_persona_folder,
+from ai_validation_swarm.personas.v5 import (
+    OpenAIV5SynthesisAdapter,
+    generate_v5_persona,
+    validate_v5_persona_folder,
 )
-from ai_validation_swarm.personas.v4_panels import (
+from ai_validation_swarm.personas.v5_panels import (
     HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK,
-    build_v4_panel_preset,
+    build_v5_panel_preset,
 )
 from ai_validation_swarm.personas.validator import validate_personas
 from ai_validation_swarm.providers.factory import build_provider
@@ -371,34 +371,42 @@ def _build_parser() -> argparse.ArgumentParser:
     validate_v3_3_cmd = subparsers.add_parser("validate-personas-v3-3")
     validate_v3_3_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
 
-    generate_v4_cmd = subparsers.add_parser("generate-v4-persona")
-    generate_v4_cmd.add_argument("--persona-id", required=True)
-    generate_v4_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
-    generate_v4_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
-    generate_v4_cmd.add_argument("--guide-file", type=Path)
-    generate_v4_cmd.add_argument("--fixed", action="append", default=[], metavar="KEY=VALUE")
-    generate_v4_cmd.add_argument("--prefer", action="append", default=[], metavar="KEY=VALUE")
-    generate_v4_cmd.add_argument("--interest", action="append", default=[])
-    generate_v4_cmd.add_argument("--random-seed", type=int)
-    generate_v4_cmd.add_argument("--max-transport-attempts", type=int, default=2)
-    generate_v4_cmd.add_argument("--resume-response", action="store_true")
-    generate_v4_cmd.add_argument("--debug-progress", action="store_true")
+    generate_v5_cmd = subparsers.add_parser("generate-v5-persona")
+    generate_v5_cmd.add_argument("--persona-id", required=True)
+    generate_v5_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
+    generate_v5_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
+    generate_v5_cmd.add_argument("--guide-file", type=Path)
+    generate_v5_cmd.add_argument("--fixed", action="append", default=[], metavar="KEY=VALUE")
+    generate_v5_cmd.add_argument("--prefer", action="append", default=[], metavar="KEY=VALUE")
+    generate_v5_cmd.add_argument("--interest", action="append", default=[])
+    generate_v5_cmd.add_argument("--random-seed", type=int)
+    generate_v5_cmd.add_argument("--max-transport-attempts", type=int, default=2)
+    generate_v5_cmd.add_argument("--resume-response", action="store_true")
+    generate_v5_cmd.add_argument("--debug-progress", action="store_true")
 
-    generate_v4_panel_cmd = subparsers.add_parser("generate-v4-panel")
-    generate_v4_panel_cmd.add_argument(
+    generate_v5_panel_cmd = subparsers.add_parser(
+        "generate-v5-panel",
+        help="Legacy project-specific V5 preset generator; not the current default V5 panel path.",
+        description=(
+            "Generate a legacy project-specific V5 panel preset. "
+            "Current V5 platform direction favors reusable V5 personas plus dynamic panel selection "
+            "rather than fixed concept-shaped archetype panels."
+        ),
+    )
+    generate_v5_panel_cmd.add_argument(
         "--panel-preset",
         choices=[HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK],
         default=HK_RETAIL_BANK_PORTFOLIO_HEALTH_CHECK,
     )
-    generate_v4_panel_cmd.add_argument("--starting-id", type=int, default=1201)
-    generate_v4_panel_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
-    generate_v4_panel_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
-    generate_v4_panel_cmd.add_argument("--random-seed", type=int)
-    generate_v4_panel_cmd.add_argument("--max-transport-attempts", type=int, default=2)
-    generate_v4_panel_cmd.add_argument("--debug-progress", action="store_true")
+    generate_v5_panel_cmd.add_argument("--starting-id", type=int, default=1201)
+    generate_v5_panel_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
+    generate_v5_panel_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
+    generate_v5_panel_cmd.add_argument("--random-seed", type=int)
+    generate_v5_panel_cmd.add_argument("--max-transport-attempts", type=int, default=2)
+    generate_v5_panel_cmd.add_argument("--debug-progress", action="store_true")
 
-    validate_v4_cmd = subparsers.add_parser("validate-personas-v4")
-    validate_v4_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
+    validate_v5_cmd = subparsers.add_parser("validate-personas-v5")
+    validate_v5_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
 
     generate_target_cmd = subparsers.add_parser("generate-persona-to-target")
     generate_target_cmd.add_argument("--target-version", choices=["v3", "v3_1", "v3_1_1", "v3_1_2"], required=True)
@@ -1038,7 +1046,7 @@ def _cmd_validate_personas_v3_3(args: argparse.Namespace) -> int:
     return 1
 
 
-def _parse_v4_guide_values(items: list[str]) -> dict[str, object]:
+def _parse_v5_guide_values(items: list[str]) -> dict[str, object]:
     parsed: dict[str, object] = {}
     for item in items:
         if "=" not in item:
@@ -1056,7 +1064,7 @@ def _parse_v4_guide_values(items: list[str]) -> dict[str, object]:
     return parsed
 
 
-def _build_v4_adapter_components(
+def _build_v5_adapter_components(
     *,
     backend: str,
     output_dir: Path,
@@ -1072,7 +1080,7 @@ def _build_v4_adapter_components(
         force_transport=forced_transport,
         timeout_default=360,
     )
-    transport_log = output_dir / persona_id / "v4" / "llm_transport.log"
+    transport_log = output_dir / persona_id / "v5" / "llm_transport.log"
     ensure_dir(transport_log.parent)
 
     def transport_writer(message: str) -> None:
@@ -1082,12 +1090,12 @@ def _build_v4_adapter_components(
             progress_writer(message)
 
     client = OpenAIResponsesClient(config, debug_writer=transport_writer)
-    return config, OpenAIV4SynthesisAdapter(client, config)
+    return config, OpenAIV5SynthesisAdapter(client, config)
 
 
-def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
+def _cmd_generate_v5_persona(args: argparse.Namespace) -> int:
     progress_writer = (lambda message: print(_console_safe(message), flush=True)) if args.debug_progress else None
-    config, adapter = _build_v4_adapter_components(
+    config, adapter = _build_v5_adapter_components(
         backend=args.backend,
         output_dir=args.output_dir,
         persona_id=args.persona_id,
@@ -1097,15 +1105,15 @@ def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
     guide: dict[str, object] = {"mode": "open", "fixed": {}, "preferred": {}}
     if args.guide_file:
         if not args.guide_file.exists():
-            raise ValueError(f"V4 guide file not found: {args.guide_file}")
+            raise ValueError(f"V5 guide file not found: {args.guide_file}")
         loaded = json.loads(args.guide_file.read_text(encoding="utf-8"))
         if not isinstance(loaded, dict):
-            raise ValueError("V4 guide file must contain one JSON object.")
+            raise ValueError("V5 guide file must contain one JSON object.")
         guide = loaded
     fixed = dict(guide.get("fixed", {})) if isinstance(guide.get("fixed", {}), dict) else {}
     preferred = dict(guide.get("preferred", {})) if isinstance(guide.get("preferred", {}), dict) else {}
-    fixed.update(_parse_v4_guide_values(args.fixed))
-    preferred.update(_parse_v4_guide_values(args.prefer))
+    fixed.update(_parse_v5_guide_values(args.fixed))
+    preferred.update(_parse_v5_guide_values(args.prefer))
     if args.interest:
         preferred["interests"] = list(args.interest)
     guide["fixed"] = fixed
@@ -1114,10 +1122,10 @@ def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
 
     if progress_writer is not None:
         progress_writer(
-            f"[v4] backend={args.backend} transport={config.transport} model={config.model} "
+            f"[v5] backend={args.backend} transport={config.transport} model={config.model} "
             f"reasoning={config.model_reasoning_effort} timeout={config.timeout_seconds}s guide_mode={guide['mode']}"
         )
-    target = generate_v4_persona(
+    target = generate_v5_persona(
         persona_id=args.persona_id,
         output_dir=args.output_dir,
         adapter=adapter,
@@ -1127,19 +1135,23 @@ def _cmd_generate_v4_persona(args: argparse.Namespace) -> int:
         resume_response=args.resume_response,
         progress_writer=progress_writer,
     )
-    print(f"Generated V4 persona {args.persona_id} at {target} using {args.backend}.")
+    print(f"Generated V5 persona {args.persona_id} at {target} using {args.backend}.")
     return 0
 
 
-def _cmd_generate_v4_panel(args: argparse.Namespace) -> int:
+def _cmd_generate_v5_panel(args: argparse.Namespace) -> int:
     progress_writer = (lambda message: print(_console_safe(message), flush=True)) if args.debug_progress else None
-    panel = build_v4_panel_preset(args.panel_preset, starting_id=args.starting_id)
+    print(
+        "Legacy preset warning: generate-v5-panel exists only for backward-compatible project regeneration. "
+        "It is not the current default V5 panel path."
+    )
+    panel = build_v5_panel_preset(args.panel_preset, starting_id=args.starting_id)
     generated: list[dict[str, str]] = []
 
     for offset, persona_spec in enumerate(panel["personas"]):
         persona_id = str(persona_spec["persona_id"])
         persona_seed = args.random_seed + offset if args.random_seed is not None else None
-        config, adapter = _build_v4_adapter_components(
+        config, adapter = _build_v5_adapter_components(
             backend=args.backend,
             output_dir=args.output_dir,
             persona_id=persona_id,
@@ -1148,10 +1160,10 @@ def _cmd_generate_v4_panel(args: argparse.Namespace) -> int:
         guide = dict(persona_spec["guide"])
         if progress_writer is not None:
             progress_writer(
-                f"[v4-panel] preset={args.panel_preset} persona_id={persona_id} "
+                f"[v5-panel] preset={args.panel_preset} persona_id={persona_id} "
                 f"label={persona_spec['label']} transport={config.transport}"
             )
-        target = generate_v4_persona(
+        target = generate_v5_persona(
             persona_id=persona_id,
             output_dir=args.output_dir,
             adapter=adapter,
@@ -1181,26 +1193,26 @@ def _cmd_generate_v4_panel(args: argparse.Namespace) -> int:
             "generated": generated,
         },
     )
-    print(f"Generated V4 panel {args.panel_preset} with {len(generated)} personas.")
+    print(f"Generated V5 panel {args.panel_preset} with {len(generated)} personas.")
     print(f"Manifest: {manifest_path}")
     return 0
 
 
-def _cmd_validate_personas_v4(args: argparse.Namespace) -> int:
+def _cmd_validate_personas_v5(args: argparse.Namespace) -> int:
     reports = []
     if args.data_dir.exists():
         for persona_root in sorted(path for path in args.data_dir.iterdir() if path.is_dir()):
-            folder = persona_root / "v4"
+            folder = persona_root / "v5"
             if folder.exists():
-                reports.append((persona_root.name, validate_v4_persona_folder(folder)))
+                reports.append((persona_root.name, validate_v5_persona_folder(folder)))
     if not reports:
-        print("No V4 personas found.")
+        print("No V5 personas found.")
         return 1
     invalid = [(persona_id, report) for persona_id, report in reports if not report["valid"]]
     if not invalid:
-        print(f"V4 validation passed for {len(reports)} personas.")
+        print(f"V5 validation passed for {len(reports)} personas.")
         return 0
-    print(f"V4 validation found issues in {len(invalid)} of {len(reports)} personas.")
+    print(f"V5 validation found issues in {len(invalid)} of {len(reports)} personas.")
     for persona_id, report in invalid:
         for message in report["missing_fields"]:
             print(f"- {persona_id} | missing_field | {message}")
@@ -1695,6 +1707,7 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
     print(f"\nInterview completed: {output}")
     print(f"Transcript: {output / 'transcript.md'}")
     print(f"Insights: {output / 'insights.md'}")
+    print(f"Persona driver trace: {output / 'persona_driver_trace.md'}")
     return 0
 
 
@@ -1852,6 +1865,7 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
     print(f"\nSession folder: {folder}")
     if session.status == "completed":
         print(f"Insights: {folder / 'insights.md'}")
+        print(f"Persona driver trace: {folder / 'persona_driver_trace.md'}")
     print(f"Quality: {folder / 'quality_evaluation.md'}")
     return 0 if session.status != "failed" else 1
 
@@ -1968,8 +1982,8 @@ def main(argv: list[str] | None = None) -> int:
         "generate-v3-1-2-persona": _cmd_generate_v3_1_2_persona,
         "generate-v3-2-persona": _cmd_generate_v3_2_persona,
         "generate-v3-3-persona": _cmd_generate_v3_3_persona,
-        "generate-v4-persona": _cmd_generate_v4_persona,
-        "generate-v4-panel": _cmd_generate_v4_panel,
+        "generate-v5-persona": _cmd_generate_v5_persona,
+        "generate-v5-panel": _cmd_generate_v5_panel,
         "generate-persona-to-target": _cmd_generate_persona_to_target,
         "run-distinctiveness-check-v3-1-1": _cmd_run_distinctiveness_check_v3_1_1,
         "run-distinctiveness-check-v3-1-2": _cmd_run_distinctiveness_check_v3_1_2,
@@ -1977,7 +1991,7 @@ def main(argv: list[str] | None = None) -> int:
         "validate-personas-v3-1-2": _cmd_validate_personas_v3_1_2,
         "validate-personas-v3-2": _cmd_validate_personas_v3_2,
         "validate-personas-v3-3": _cmd_validate_personas_v3_3,
-        "validate-personas-v4": _cmd_validate_personas_v4,
+        "validate-personas-v5": _cmd_validate_personas_v5,
         "summarize-personas": _cmd_summarize_personas,
         "inspect-openai-auth": _cmd_inspect_openai_auth,
         "probe-codex-auth": _cmd_probe_codex_auth,

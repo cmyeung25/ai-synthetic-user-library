@@ -2,6 +2,8 @@
 
 Use this guide before adding any new persona field, section, or generation requirement.
 
+For platform-level interview realism rules, also read [PERSONA_GENERATION_PRINCIPLES_FOR_REALISTIC_INTERVIEWS.md](./PERSONA_GENERATION_PRINCIPLES_FOR_REALISTIC_INTERVIEWS.md).
+
 ## First question
 
 Ask:
@@ -80,11 +82,27 @@ For domain-heavy studies:
 - put stable domain context into core
 - put concept reaction contracts into sidecar outputs
 - keep interview answers concept-bound unless they clearly generalize into stable persona structure
+- keep study-time pain discovery in the interview unless it is genuinely a long-lived trait
 
 Example:
 
 - `banking_context` belongs in core
 - `portfolio_health_check` reaction belongs in `concept_outputs.json`
+
+## Study-Time Inference
+
+Keep these out of reusable core unless they are proven stable across many studies:
+
+- biggest current blind spot
+- most useful feature in this concept
+- likely trigger for this study's target behaviour when it is written to match the concept too neatly
+- main pain statement that already sounds like the founder's positioning
+
+These are often better treated as interview-time discovery.
+
+Persona core should explain why a pain could plausibly arise.
+
+The interview should discover whether it actually does.
 
 ## Anti-patterns
 
@@ -94,6 +112,8 @@ Avoid these:
 - treating one interview answer as a stable persona truth
 - expanding core just because a field is useful in one POC
 - mixing identity, context, and evaluation output in the same section
+- using persona core to pre-encode the study conclusion
+- shaping every panel participant around the same product pain before the interview begins
 
 ## Default rule
 

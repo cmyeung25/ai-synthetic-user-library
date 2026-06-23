@@ -6,7 +6,11 @@ from pathlib import Path
 from typing import Any
 
 from ai_validation_swarm.conversation.providers import ConversationProvider
-from ai_validation_swarm.conversation.runtime import ConversationRuntime, resolve_persona_folder
+from ai_validation_swarm.conversation.runtime import (
+    DRIVER_TRACE_PROMPT_VERSION,
+    ConversationRuntime,
+    resolve_persona_folder,
+)
 from ai_validation_swarm.domain.models import utc_now_iso
 from ai_validation_swarm.facilitator.concept_protocols import load_concept_protocol
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
@@ -107,6 +111,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             quality_provider=self.quality_provider.provider_name,
             quality_model=self.quality_provider.model_name,
             quality_prompt_version=QUALITY_PROMPT_VERSION,
+            persona_driver_trace_prompt_version=DRIVER_TRACE_PROMPT_VERSION,
             max_turns=hard_limit,
             soft_turn_limit=soft_limit,
             hard_turn_limit=hard_limit,
@@ -286,7 +291,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
                 failed_operation=operation,
                 failed_payload=payload,
             )
-        if operation in {"judge_hypothesis_evidence", "synthesize", "evaluate_quality"}:
+        if operation in {"judge_hypothesis_evidence", "synthesize", "generate_persona_driver_trace", "evaluate_quality"}:
             self._progress(f"retry_failed_stage operation={operation} interview_id={interview_id}")
             return self.finalize(interview_id, stop_reason=session.stop_reason or "observer_stop")
         raise ValueError(f"Unsupported failed operation '{operation}'.")
@@ -335,6 +340,15 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             session.insight_report = synthesis
             write_json(folder / "insight_report.json", synthesis)
             (folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
+
+        if not session.persona_driver_trace:
+            session.status = "analyzing_persona_driver_trace"
+            self._save_controlled(session, folder)
+            self._progress(f"generating_persona_driver_trace interview_id={interview_id}")
+            try:
+                self._generate_persona_driver_trace(folder, session)
+            except Exception as exc:
+                return self._fail(session, folder, "generate_persona_driver_trace", exc)
 
         session.status = "evaluating_quality"
         self._save_controlled(session, folder)
@@ -399,8 +413,12 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             write_json(folder / "insight_report.previous.json", session.insight_report)
         if session.quality_evaluation:
             write_json(folder / "quality_evaluation.previous.json", session.quality_evaluation)
+        if session.persona_driver_trace:
+            write_json(folder / "persona_driver_trace.previous.json", session.persona_driver_trace)
         session.insight_report = {}
         session.quality_evaluation = {}
+        session.persona_driver_trace = {}
+        session.persona_driver_trace_provider_session_id = ""
         if session.hypothesis_evidence_judgment:
             write_json(folder / "hypothesis_evidence_judgment.previous.json", session.hypothesis_evidence_judgment)
         session.hypothesis_evidence_judgment = {}
@@ -441,6 +459,14 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         write_json(folder / "insight_report.json", synthesis)
         (folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
 
+        session.status = "analyzing_persona_driver_trace"
+        self._save_controlled(session, folder)
+        self._progress(f"generating_persona_driver_trace interview_id={interview_id}")
+        try:
+            self._generate_persona_driver_trace(folder, session)
+        except Exception as exc:
+            return self._fail(session, folder, "generate_persona_driver_trace", exc)
+
         session.status = "evaluating_quality"
         self._save_controlled(session, folder)
         self._progress(f"evaluating_quality interview_id={interview_id}")
@@ -460,6 +486,29 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
         self._progress(f"completed_resynthesis interview_id={interview_id}")
         return session
+
+    def _generate_persona_driver_trace(self, folder: Path, session: InterviewSession) -> None:
+        persona_folder = resolve_persona_folder(self.data_dir, session.persona_id)
+        persona = load_persona(persona_folder)
+        persona_runtime = ConversationRuntime(
+            data_dir=self.data_dir,
+            session_dir=folder / "persona_runtime",
+            provider=self.persona_provider,
+        )
+        persona_session, _, _ = persona_runtime.resume(session.persona_conversation_session_id)
+        payload, provider_session_id = persona_runtime.generate_persona_driver_trace(
+            persona_session,
+            persona,
+            persona_folder,
+            interview_transcript=self._plain_transcript(session),
+            research_goal=session.research_goal,
+            product_context=session.product_context,
+            output_language=session.output_language,
+        )
+        session.persona_driver_trace = payload
+        session.persona_driver_trace_provider_session_id = provider_session_id
+        session.updated_at = utc_now_iso()
+        self._save_controlled(session, folder)
 
     def _ask_persona(
         self,

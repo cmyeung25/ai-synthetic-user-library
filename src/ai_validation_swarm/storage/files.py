@@ -57,11 +57,23 @@ def load_persona(folder: Path) -> PersonaSkill:
 def resolve_persona_version_folder(folder: Path) -> Path:
     if (folder / "profile.json").exists():
         return folder
-    for version in ("v4", "v3_3", "v3_2", "v3_1_2", "v3_1_1", "v3_1", "v3", "v2"):
+    for version in ("v5", "v4", "v3_3", "v3_2", "v3_1_2", "v3_1_1", "v3_1", "v3", "v2"):
         candidate = folder / version
         if (candidate / "profile.json").exists():
             return candidate
     raise ValueError(f"No supported persona artifact found under {folder}.")
+
+
+def resolve_current_persona_version_folder(folder: Path) -> Path:
+    if (folder / "profile.json").exists():
+        return folder
+    candidate = folder / "v5"
+    if (candidate / "profile.json").exists():
+        return candidate
+    raise ValueError(
+        f"No current persona artifact found under {folder}. "
+        "Current runtime paths only support v5 personas. Legacy versions remain read-compatible only."
+    )
 
 
 def load_personas(base_dir: Path) -> list[PersonaSkill]:

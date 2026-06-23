@@ -100,6 +100,33 @@ class PersonaValidatorTest(unittest.TestCase):
         }
         self.assertEqual(validate_personas([persona]), [])
 
+    def test_validate_personas_requires_complete_human_difference_axes_when_present(self) -> None:
+        persona = generate_personas(count=1, random_seed=53)[0]
+        persona.profile.human_difference_axes = {
+            "control_preference": "Moderate.",
+            "trust_style": "Evidence first.",
+        }
+        issues = validate_personas([persona])
+        self.assertTrue(any(issue.check_name == "required_field" and "human_difference_axes" in issue.message for issue in issues))
+
+    def test_validate_personas_accepts_complete_human_difference_axes(self) -> None:
+        persona = generate_personas(count=1, random_seed=59)[0]
+        persona.profile.human_difference_axes = {
+            "control_preference": "Moderate; wants some choice but appreciates structure.",
+            "trust_style": "Evidence first with cautious benefit of the doubt.",
+            "complexity_tolerance": "Moderate.",
+            "decision_tempo": "Measured.",
+            "financial_attention_cadence": "Periodic with event-driven spikes.",
+            "relationship_to_money": "Practical security and progress.",
+            "risk_orientation": "Open to measured risk.",
+            "need_for_explanation": "High enough to want translation, not just outputs.",
+            "life_load": "Moderate.",
+            "fragmentation_reality": "Some assets and information live across multiple places.",
+            "guidance_preference": "Hybrid self-serve and expert support.",
+            "reflection_style": "Thinks in trade-offs and recent examples.",
+        }
+        self.assertEqual(validate_personas([persona]), [])
+
     def test_validate_personas_cli_returns_zero_for_clean_library(self) -> None:
         import tempfile
 

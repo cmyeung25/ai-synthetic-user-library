@@ -20,9 +20,9 @@ from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig, Op
 from ai_validation_swarm.storage.files import ensure_dir, load_persona, read_json, write_json
 
 
-GENERATOR_VERSION = "persona-generator/v4"
-PROMPT_VERSION = "persona-synthesis/v4.md"
-AUDIT_PROMPT_VERSION = "quality-auditor/v4.md"
+GENERATOR_VERSION = "persona-generator/v5"
+PROMPT_VERSION = "persona-synthesis/v5.md"
+AUDIT_PROMPT_VERSION = "quality-auditor/v5.md"
 SYNTHETIC_DISCLAIMER = (
     "This is a synthetic user for AI pre-validation only. It is not a real person and does not replace human market research."
 )
@@ -39,10 +39,11 @@ BASE_PROFILE_SECTIONS = tuple(
         "generation_status",
         "extensions",
         "consistency_exceptions",
+        "human_difference_axes",
         "banking_context",
     }
 )
-OPTIONAL_GUIDED_PROFILE_SECTIONS = ("banking_context",)
+OPTIONAL_GUIDED_PROFILE_SECTIONS = ("human_difference_axes", "banking_context")
 
 LLM_PROFILE_FIELDS = BASE_PROFILE_SECTIONS
 
@@ -62,6 +63,20 @@ PROFILE_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
 }
 
 OPTIONAL_GUIDED_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
+    "human_difference_axes": (
+        "control_preference",
+        "trust_style",
+        "complexity_tolerance",
+        "decision_tempo",
+        "financial_attention_cadence",
+        "relationship_to_money",
+        "risk_orientation",
+        "need_for_explanation",
+        "life_load",
+        "fragmentation_reality",
+        "guidance_preference",
+        "reflection_style",
+    ),
     "banking_context": (
         "bank_relationship",
         "investment_experience",
@@ -135,6 +150,24 @@ FLEXIBLE_PROFILE_SECTIONS = {
     "daily_micro_behaviours",
     "identity_symbols",
     "sensitive_scenario_salience",
+}
+
+SUMMARY_WRAPPABLE_PROFILE_SECTIONS = {
+    "domain_fit",
+    "workflow_adoption_model",
+    "identity_and_inclusion_reaction",
+    "media_and_content_diet",
+    "social_circle_and_communities",
+    "taste_and_aesthetic_preferences",
+    "spending_and_leisure_patterns",
+    "personal_environment",
+    "emotional_regulation_style",
+    "hidden_habits",
+    "cultural_texture",
+    "deep_research_notes",
+    "panel_role_profile",
+    "identity_language",
+    "small_business_context",
 }
 
 
@@ -240,11 +273,11 @@ class GenerationEventLog:
             handle.write(json.dumps(record, ensure_ascii=False) + "\n")
         if self.writer is not None:
             summary = " ".join(f"{key}={value}" for key, value in payload.items() if key not in {"detail", "payload"})
-            self.writer(f"[v4] {event}{(' ' + summary) if summary else ''}")
+            self.writer(f"[v5] {event}{(' ' + summary) if summary else ''}")
 
 
 @dataclass(slots=True)
-class V4SynthesisRequest:
+class V5SynthesisRequest:
     synthetic_user_id: str
     random_seed: int
     guide: dict[str, Any]
@@ -325,7 +358,7 @@ class V4SynthesisRequest:
 
     def payload(self) -> dict[str, Any]:
         return {
-            "task": "Create one complete V4 synthetic user in a single coherent synthesis pass.",
+            "task": "Create one complete V5 synthetic user in a single coherent synthesis pass.",
             "synthetic_user_id": self.synthetic_user_id,
             "random_seed": self.random_seed,
             "guide": self.guide,
@@ -340,7 +373,7 @@ class V4SynthesisRequest:
 
 
 @dataclass(slots=True)
-class V4SynthesisResult:
+class V5SynthesisResult:
     profile: dict[str, Any]
     decision_policy: dict[str, Any]
     response_style: dict[str, Any]
@@ -353,11 +386,11 @@ class V4SynthesisResult:
     metadata: dict[str, Any]
 
 
-class V4SynthesisAdapter(Protocol):
-    def synthesize(self, request: V4SynthesisRequest) -> V4SynthesisResult: ...
+class V5SynthesisAdapter(Protocol):
+    def synthesize(self, request: V5SynthesisRequest) -> V5SynthesisResult: ...
 
 
-def build_v4_output_schema() -> dict[str, Any]:
+def build_v5_output_schema() -> dict[str, Any]:
     return {
         "type": "object",
         "additionalProperties": False,
@@ -376,19 +409,19 @@ def build_v4_output_schema() -> dict[str, Any]:
     }
 
 
-class OpenAIV4SynthesisAdapter:
+class OpenAIV5SynthesisAdapter:
     def __init__(self, client: OpenAIResponsesClient, config: OpenAIProviderConfig) -> None:
         self.client = client
         self.config = config
 
-    def synthesize(self, request: V4SynthesisRequest) -> V4SynthesisResult:
+    def synthesize(self, request: V5SynthesisRequest) -> V5SynthesisResult:
         payload = self.client.create_json_response(
             system_prompt=request.prompt_text,
             user_prompt=json.dumps(request.payload(), ensure_ascii=False, indent=2),
-            output_schema=build_v4_output_schema(),
+            output_schema=build_v5_output_schema(),
             use_transport_output_schema=self.config.transport != "codex_sdk_node",
         )
-        return V4SynthesisResult(
+        return V5SynthesisResult(
             profile=dict(payload.get("profile", {})),
             decision_policy=dict(payload.get("decision_policy", {})),
             response_style=dict(payload.get("response_style", {})),
@@ -407,8 +440,8 @@ class OpenAIV4SynthesisAdapter:
         )
 
 
-def _result_from_payload(payload: dict[str, Any]) -> V4SynthesisResult:
-    return V4SynthesisResult(
+def _result_from_payload(payload: dict[str, Any]) -> V5SynthesisResult:
+    return V5SynthesisResult(
         profile=dict(payload.get("profile", {})),
         decision_policy=dict(payload.get("decision_policy", {})),
         response_style=dict(payload.get("response_style", {})),
@@ -422,7 +455,7 @@ def _result_from_payload(payload: dict[str, Any]) -> V4SynthesisResult:
     )
 
 
-def normalize_v4_result_structure(result: V4SynthesisResult) -> list[str]:
+def normalize_v5_result_structure(result: V5SynthesisResult) -> list[str]:
     """Apply lossless container coercions only; never synthesize persona content."""
     changes: list[str] = []
     list_paths = (
@@ -443,10 +476,11 @@ def normalize_v4_result_structure(result: V4SynthesisResult) -> list[str]:
         if isinstance(container, dict) and isinstance(container.get(key), str) and container[key].strip():
             container[key] = [container[key].strip()]
             changes.append(f"wrapped_single_string_as_list:{path}")
-    domain_fit = result.profile.get("domain_fit")
-    if isinstance(domain_fit, str) and domain_fit.strip():
-        result.profile["domain_fit"] = {"summary": domain_fit.strip()}
-        changes.append("wrapped_string_as_object:domain_fit")
+    for section_name in SUMMARY_WRAPPABLE_PROFILE_SECTIONS:
+        section_value = result.profile.get(section_name)
+        if isinstance(section_value, str) and section_value.strip():
+            result.profile[section_name] = {"summary": section_value.strip()}
+            changes.append(f"wrapped_string_as_object:{section_name}")
     scenarios = result.profile.get("sensitive_scenario_reactions")
     if isinstance(scenarios, dict):
         for key, value in list(scenarios.items()):
@@ -456,7 +490,7 @@ def normalize_v4_result_structure(result: V4SynthesisResult) -> list[str]:
     return changes
 
 
-def validate_v4_result(result: V4SynthesisResult, persona_id: str, guide: dict[str, Any] | None = None) -> list[str]:
+def validate_v5_result(result: V5SynthesisResult, persona_id: str, guide: dict[str, Any] | None = None) -> list[str]:
     findings: list[str] = []
     guide = guide or {}
     profile_sections = _contract_profile_sections(guide)
@@ -584,7 +618,7 @@ def _build_seed(persona_id: str, profile: dict[str, Any]) -> PersonaSeed:
     panel = profile.get("panel_role_profile", {})
     age = int(identity["age"])
     return PersonaSeed(
-        seed_id=f"v4-{persona_id}",
+        seed_id=f"v5-{persona_id}",
         panel_role=str(panel.get("panel_role") or "general_research_participant"),
         age_band=_age_band(age),
         location_type=str(identity.get("living_area") or "urban_or_regional"),
@@ -614,14 +648,15 @@ def _build_seed(persona_id: str, profile: dict[str, Any]) -> PersonaSeed:
     )
 
 
-def result_to_persona(result: V4SynthesisResult, persona_id: str) -> PersonaSkill:
+def result_to_persona(result: V5SynthesisResult, persona_id: str) -> PersonaSkill:
     profile_payload = copy.deepcopy(result.profile)
     identity = profile_payload.setdefault("basic_identity", {})
     identity["synthetic_user_id"] = persona_id
+    profile_payload.setdefault("human_difference_axes", {})
     profile_payload.setdefault("banking_context", {})
     profile_payload["audit_evidence_layer"] = {
-        "persona_generation_method": "single_pass_llm_v4_synthesis",
-        "persona_version": "v4",
+        "persona_generation_method": "single_pass_llm_v5_synthesis",
+        "persona_version": "v5",
         "generator_version": GENERATOR_VERSION,
         "evidence_grade": "synthetic_prevalidation_only",
         "synthetic_only_disclaimer": SYNTHETIC_DISCLAIMER,
@@ -639,15 +674,15 @@ def result_to_persona(result: V4SynthesisResult, persona_id: str) -> PersonaSkil
     allowed = {field.name for field in fields(SyntheticUser)}
     unknown = sorted(set(profile_payload) - allowed)
     if unknown:
-        raise ValueError(f"V4 profile returned unknown sections: {', '.join(unknown)}")
+        raise ValueError(f"V5 profile returned unknown sections: {', '.join(unknown)}")
     missing = sorted(allowed - set(profile_payload))
     if missing:
-        raise ValueError(f"V4 profile missing sections: {', '.join(missing)}")
+        raise ValueError(f"V5 profile missing sections: {', '.join(missing)}")
     profile = SyntheticUser(**profile_payload)
     seed = _build_seed(persona_id, profile_payload)
     audit_evidence = copy.deepcopy(profile.audit_evidence_layer)
     persona = PersonaSkill(
-        skill_version="v4",
+        skill_version="v5",
         seed=seed,
         profile=profile,
         decision_policy=copy.deepcopy(result.decision_policy),
@@ -685,7 +720,7 @@ def _usage_and_cost(metadata: dict[str, Any], input_text: str, output_text: str)
     }
 
 
-def _quality_report(persona: PersonaSkill, result: V4SynthesisResult) -> dict[str, Any]:
+def _quality_report(persona: PersonaSkill, result: V5SynthesisResult) -> dict[str, Any]:
     profile = persona.profile
     local_count = len(profile.local_grounding_layer.get("city_or_region_specific_context", []))
     scene_count = sum(1 for chapter in profile.canonical_biography.get("decade_timeline", []) if chapter.get("specific_scene"))
@@ -733,13 +768,14 @@ def _bullet_lines(values: Any) -> list[str]:
     return [f"- {text}"] if text else []
 
 
-def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
+def _render_v5_artifacts(persona: PersonaSkill) -> dict[str, str]:
     profile = persona.profile
     identity = profile.basic_identity
     name = str(identity.get("name", persona.profile.synthetic_user_id))
     biography = profile.canonical_biography
     childhood = profile.childhood_environment
     voice = profile.persona_voiceprint
+    human_difference_axes = profile.human_difference_axes
     banking_context = profile.banking_context
     disclaimer = f"> {SYNTHETIC_DISCLAIMER}"
 
@@ -750,6 +786,8 @@ def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
         f"**Research role:** {_as_text(profile.panel_role_profile.get('research_function') or profile.panel_role_profile.get('panel_role'))}",
         "",
     ])
+    if human_difference_axes:
+        persona_md += "\n".join(["**Human Difference Axes:**", _as_text(human_difference_axes), "", ""])
     if banking_context:
         persona_md += "\n".join(["**Banking Context:**", _as_text(banking_context), "", ""])
 
@@ -797,6 +835,8 @@ def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
         "## Interests That Affect Buying", "", _as_text(profile.interests_and_hobbies.get("interest_depth")), "",
         "## Discovery Path & Daily Friction", "", _as_text(profile.product_discovery_paths), "", _as_text(profile.daily_micro_behaviours), "",
     ]
+    if human_difference_axes:
+        kernel_lines.extend(["## Human Difference Axes", "", _as_text(human_difference_axes), ""])
     if banking_context:
         kernel_lines.extend(["## Banking Context", "", _as_text(banking_context), ""])
     kernel_lines.extend(["## Contradictions", ""])
@@ -817,6 +857,8 @@ def _render_v4_artifacts(persona: PersonaSkill) -> dict[str, str]:
         "## Sensitive Topic Handling", "", _as_text(profile.sensitive_scenario_reactions), "",
         "## Objection Language", "", _as_text(profile.objection_language_style), "",
     ]
+    if human_difference_axes:
+        skill_lines.extend(["## Human Difference Axes", "", _as_text(human_difference_axes), ""])
     if banking_context:
         skill_lines.extend(["## Banking Context", "", _as_text(banking_context), ""])
     skill_lines.extend(["## Hidden Contradictions", ""])
@@ -853,7 +895,7 @@ def _load_comparison_personas(output_dir: Path, persona_id: str) -> list[Persona
     if not output_dir.exists():
         return personas
     for folder in sorted(output_dir.iterdir()):
-        candidate = folder / "v4"
+        candidate = folder / "v5"
         if folder.name == persona_id or not (candidate / "profile.json").exists():
             continue
         try:
@@ -863,11 +905,11 @@ def _load_comparison_personas(output_dir: Path, persona_id: str) -> list[Persona
     return personas
 
 
-def generate_v4_persona(
+def generate_v5_persona(
     *,
     persona_id: str,
     output_dir: Path,
-    adapter: V4SynthesisAdapter,
+    adapter: V5SynthesisAdapter,
     guide: dict[str, Any] | None = None,
     random_seed: int | None = None,
     max_transport_attempts: int = 2,
@@ -876,8 +918,8 @@ def generate_v4_persona(
 ) -> Path:
     if not persona_id.startswith("su_") or not persona_id[3:].isdigit():
         raise ValueError(f"Invalid synthetic user ID: {persona_id}")
-    target_dir = output_dir / persona_id / "v4"
-    work_dir = output_dir / ".v4_generation" / persona_id
+    target_dir = output_dir / persona_id / "v5"
+    work_dir = output_dir / ".v5_generation" / persona_id
     seed = random_seed
     if seed is None and resume_response:
         seed = _resume_seed_from_artifacts(target_dir)
@@ -901,7 +943,7 @@ def generate_v4_persona(
     normalized_guide.setdefault("mode", "guided" if guide else "open")
     normalized_guide.setdefault("fixed", {})
     normalized_guide.setdefault("preferred", {})
-    request = V4SynthesisRequest(persona_id, seed, normalized_guide, prompt_text)
+    request = V5SynthesisRequest(persona_id, seed, normalized_guide, prompt_text)
     request_payload = request.payload()
     write_json(brief_path, normalized_guide)
     write_json(target_dir / "llm_request.json", {
@@ -912,14 +954,14 @@ def generate_v4_persona(
     })
     log.emit("generation.started", persona_id=persona_id, random_seed=seed, guide_mode=normalized_guide["mode"])
 
-    result: V4SynthesisResult | None = None
+    result: V5SynthesisResult | None = None
     last_error: Exception | None = None
     started_at = time.perf_counter()
     response_path = target_dir / "llm_response.json"
     if resume_response and response_path.exists():
         saved_payload = json.loads(response_path.read_text(encoding="utf-8"))
         if not isinstance(saved_payload, dict):
-            raise ValueError(f"Saved V4 response is not an object: {response_path}")
+            raise ValueError(f"Saved V5 response is not an object: {response_path}")
         result = _result_from_payload(saved_payload)
         log.emit("llm.response.resumed", response_path=str(response_path))
     else:
@@ -936,9 +978,9 @@ def generate_v4_persona(
     if result is None:
         write_json(work_dir / "failure.json", {"error": str(last_error), "failed_at": _timestamp()})
         log.emit("generation.failed", stage="transport", detail=str(last_error))
-        raise ValueError(f"V4 transport failed for {persona_id}: {last_error}") from last_error
+        raise ValueError(f"V5 transport failed for {persona_id}: {last_error}") from last_error
 
-    structural_normalizations = normalize_v4_result_structure(result)
+    structural_normalizations = normalize_v5_result_structure(result)
     if structural_normalizations:
         log.emit("response.structure_normalized", detail=structural_normalizations)
     raw_response = {
@@ -955,14 +997,14 @@ def generate_v4_persona(
     }
     write_json(target_dir / "llm_response.json", raw_response)
     write_json(work_dir / "completed_response.json", raw_response)
-    findings = validate_v4_result(result, persona_id, normalized_guide)
+    findings = validate_v5_result(result, persona_id, normalized_guide)
     if findings:
         write_json(target_dir / "contract_report.json", {"status": "rejected", "findings": findings})
         log.emit("generation.rejected", stage="contract", finding_count=len(findings), detail=findings)
-        raise ValueError(f"V4 synthesis contract failed for {persona_id}: {', '.join(findings)}")
+        raise ValueError(f"V5 synthesis contract failed for {persona_id}: {', '.join(findings)}")
 
     persona = result_to_persona(result, persona_id)
-    rendered = _render_v4_artifacts(persona)
+    rendered = _render_v5_artifacts(persona)
     comparisons = _load_comparison_personas(output_dir, persona_id)
     duplicate_report = build_diversity_report_v3_1(persona, comparisons)
     duplicate_report.update({
@@ -1022,7 +1064,7 @@ def generate_v4_persona(
     return target_dir
 
 
-def validate_v4_persona_folder(folder: Path) -> dict[str, Any]:
+def validate_v5_persona_folder(folder: Path) -> dict[str, Any]:
     required = {
         "profile.json", "audit.json", "persona.md", "biography.md", "research_kernel.md", "persona.skill.md",
         "local_grounding.md", "sensitive_scenarios.md", "generation_notes.json", "generation.log.jsonl",
@@ -1035,8 +1077,8 @@ def validate_v4_persona_folder(folder: Path) -> dict[str, Any]:
     if not missing:
         try:
             persona = load_persona(folder)
-            if persona.skill_version != "v4":
-                warnings.append("skill_version is not v4")
+            if persona.skill_version != "v5":
+                warnings.append("skill_version is not v5")
             notes = json.loads((folder / "generation_notes.json").read_text(encoding="utf-8"))
             if notes.get("generator_version") != GENERATOR_VERSION:
                 warnings.append("generation_notes generator_version mismatch")

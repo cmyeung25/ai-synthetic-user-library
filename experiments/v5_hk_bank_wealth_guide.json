@@ -1,0 +1,98 @@
+{
+  "mode": "guided",
+  "required_profile_sections": [
+    "human_difference_axes",
+    "banking_context"
+  ],
+  "research_context": {
+    "market": "Hong Kong retail and affluent retail banking / wealth management",
+    "purpose": "Generate a second-batch V5 persona pool that is genuinely relevant to banking and wealth-management interviews without pre-encoding the current concept conclusion.",
+    "platform_rule": "Build a person first. Banking context may include stable domain facts, but it must not pre-encode the interview finding.",
+    "allowed_domain_context_examples": [
+      "bank relationship type",
+      "investment experience level",
+      "products held",
+      "investable asset range",
+      "whether an RM exists",
+      "review frequency",
+      "number of platforms used",
+      "currency mix",
+      "data-sharing comfort",
+      "digital banking usage"
+    ],
+    "forbidden_core_shortcuts": [
+      "main pain is overlap",
+      "needs stress testing",
+      "biggest blind spot is concentration",
+      "would value scenario analysis most",
+      "likely to trust BlackRock more",
+      "would use RM only for this concept"
+    ]
+  },
+  "fixed": {
+    "location": "Hong Kong",
+    "preferred_languages": [
+      "Cantonese",
+      "English"
+    ],
+    "market_scope": "retail_or_affluent_retail_banking_wealth_management",
+    "persona_domain_relevance": "must_be_plausibly_relevant_to_banking_and_wealth_management_interviews"
+  },
+  "preferred": {
+    "persona_generation_rule": "Generate the person from ordinary life, values, routines, and human difference axes first. Banking context should be factual and reusable. Do not write concept-specific conclusions into persona core.",
+    "sample_eligibility_rule": "The person should plausibly have an active or recent relationship with retail banking, savings, investment, insurance, or wealth-related decisions in Hong Kong, either for self, spouse, household, or family role.",
+    "banking_context_rule": "Use banking_context only for stable domain facts and habits. Do not infer hidden portfolio pain, likely feature preference, or likely concept reaction.",
+    "portfolio_relevance_floor": "The person should plausibly be discussable in wealth-management interviews, but may range from early-stage investor to affluent RM-served client.",
+    "variation_targets": [
+      "bank-only versus multi-platform asset reality",
+      "self-serve versus RM-assisted decision style",
+      "single-currency versus multi-currency life",
+      "low-complexity versus moderate/high-complexity holdings",
+      "infrequent versus frequent financial attention",
+      "family-goal versus income-stability versus autonomy-oriented money mindset",
+      "trusting versus conflict-sensitive institutional trust style"
+    ],
+    "banking_context_expectations": {
+      "bank_relationship": "Should state the main type of banking relationship and how central the bank is in daily financial life.",
+      "investment_experience": "Should describe actual familiarity level, not idealized sophistication.",
+      "investment_products_held": "Should reflect plausible product mix such as deposits, MPF, ETF, fund, bonds, stocks, FX, insurance, or structured products.",
+      "investable_assets_band": "Should be concrete enough to shape plausibility, but not overly precise.",
+      "monthly_income_band": "Should align with life stage and asset reality.",
+      "primary_financial_goal": "Should describe a stable life-finance goal, not the concept answer.",
+      "current_investment_decision_process": "Should describe current workflow, sources, and habits rather than desired future tool behavior.",
+      "relationship_manager_usage": "May be none, occasional, or regular; do not force RM relevance.",
+      "digital_banking_usage": "May vary from heavy app user to basic monitoring only.",
+      "trust_in_bank": "Should be stated as a baseline attitude, not as a reaction to the future concept.",
+      "trust_in_blackrock_or_institutional_brand": "May be blank, low, moderate, or high, but must remain a general predisposition rather than a concept-specific verdict.",
+      "risk_understanding_level": "Should reflect genuine literacy, not what the interviewer hopes to test.",
+      "portfolio_complexity": "Should stay factual: simple, moderate, or complex.",
+      "external_asset_fragmentation": "May be low or high; high does not automatically mean pain.",
+      "data_sharing_comfort": "Should capture baseline comfort and boundaries.",
+      "advisory_preference": "Should reflect general support preference, not this concept specifically.",
+      "fee_sensitivity": "Should reflect general willingness to pay for financial services or tools.",
+      "past_bad_investment_experience": "Can be none or meaningful, but should not dominate every persona.",
+      "suitability_sensitivity": "Should reflect concern for fit, fairness, or sales pressure where relevant."
+    },
+    "human_difference_axes_expectations": {
+      "control_preference": "Allow full range from delegation-friendly to high personal verification.",
+      "trust_style": "Vary across institution-trusting, evidence-first, relationship-trusting, or conflict-sensitive styles.",
+      "complexity_tolerance": "Must vary; do not make every wealth persona analytically deep.",
+      "decision_tempo": "Allow event-driven, scheduled, reactive, or highly methodical patterns.",
+      "financial_attention_cadence": "Allow reluctant, periodic, frequent, or market-attuned patterns.",
+      "relationship_to_money": "Vary across security, family duty, mastery, autonomy, or stress-management roles.",
+      "risk_orientation": "Vary genuinely; do not force all personas into risk-aware language.",
+      "need_for_explanation": "Vary between intuitive summary seekers and evidence-seeking detail readers.",
+      "life_load": "Must shape whether the person realistically uses rich financial tools.",
+      "fragmentation_reality": "May be simple or fragmented, but does not itself imply dissatisfaction.",
+      "guidance_preference": "Allow self-serve, hybrid, advisor-led, or reassurance-seeking patterns.",
+      "reflection_style": "Allow practical hindsight, emotional recall, or principle-based reflection."
+    },
+    "negative_prompting": [
+      "Do not generate seven different versions of the same bank-investment persona.",
+      "Do not make every person portfolio-oriented by default; some may still be product-led or goal-led in how they think.",
+      "Do not force everyone to care about diversification language, factor exposure, stress tests, or scenario analysis.",
+      "Do not assume every affluent person is articulate, every beginner is confused, or every skeptical person is anti-bank.",
+      "Preserve room for people whose current method feels good enough."
+    ]
+  }
+}

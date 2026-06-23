@@ -176,6 +176,20 @@ def _non_empty_string_or_object_or_string_list(value: object) -> bool:
 
 
 OPTIONAL_STRUCTURED_SECTIONS: dict[str, tuple[str, ...]] = {
+    "human_difference_axes": (
+        "control_preference",
+        "trust_style",
+        "complexity_tolerance",
+        "decision_tempo",
+        "financial_attention_cadence",
+        "relationship_to_money",
+        "risk_orientation",
+        "need_for_explanation",
+        "life_load",
+        "fragmentation_reality",
+        "guidance_preference",
+        "reflection_style",
+    ),
     "banking_context": (
         "bank_relationship",
         "investment_experience",
