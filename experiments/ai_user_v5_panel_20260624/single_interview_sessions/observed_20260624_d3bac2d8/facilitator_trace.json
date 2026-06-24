@@ -1,0 +1,590 @@
+[
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "open_recent_event",
+    "decision_rationale": "概念驗證模式先建立當前真實行為；目前無逐字稿，所以先用中性、具體嘅最近事件開場，聚焦一次 roadmap / feature priority 決定，為之後追問流程、依據同 workaround 建立事件基礎。",
+    "message_to_persona": "可唔可以講下你最近一次要排 roadmap 或 feature priority 嘅實際情況？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "嗰次決定入面佢當時想釐清咩不確定性？",
+      "佢實際用咗咩資料、工具或者人去支持個決定？",
+      "最後點樣取捨，仲有邊啲位其實未夠把握？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "Transcript is empty, so the interview should open in concept-validation mode by grounding on one recent, real feature-priority decision before any concept exposure. I revised the proposed wording to focus on a concrete decision moment rather than the broader and slightly bundled 'roadmap or feature priority' framing.",
+    "message_to_persona": "可唔可以講下你最近一次真係要決定邊個 feature 先做嘅情況？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "嗰次決定入面佢實際想回答咩不確定性",
+      "當時用咗邊啲證據、工具同 workaround",
+      "缺咗邊類用戶或市場訊號",
+      "有冇時間壓力、stakeholder 壓力或者要公開 defend 嘅位",
+      "最後實際取捨咗乜，同私下最擔心乜"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround",
+    "probing_strategy": "workaround_function_probe",
+    "decision_rationale": "Participant gave a concrete recent prioritisation event and a high-signal multi-input workaround cue: they used both quantitative data and user call notes to override stakeholder preference. Before introducing the concept, the highest-value next step is to unpack what each source actually did in their workflow and what gap each filled.",
+    "message_to_persona": "你嗰陣睇數據同 user call notes，兩樣嘢分別幫你判斷到啲咩？",
+    "evidence_updates": [
+      {
+        "claim": "Participant recalled a recent onboarding reprioritisation decision between new-user tips and the first key post-registration setup step.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant leaned toward fixing the first key setup step rather than adding new-user tips.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant used product data and user call notes to support that decision against sales and founder preference.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant described the main issue at that step as uncertainty about what to do next rather than inability to click.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What distinct role did quantitative data versus user call notes play in this decision?",
+      "What ambiguity remained after reviewing those inputs?",
+      "How does the participant usually prepare evidence before real user contact or prioritisation debates?",
+      "What would make a synthetic-user output trustworthy or not in a case like this?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "decision_mapping",
+    "probing_strategy": "output_to_decision_probe",
+    "decision_rationale": "最近事件同現有做法已經建立，概念可以中性引入。上一答出現高訊號線索：participant 依賴 call notes 去識別數據睇唔到的猶豫，因此優先問一個具名輸出點樣改變當次排序決定，避免停留喺泛泛有冇興趣。",
+    "message_to_persona": "想像有個 AI 預驗證平台會俾你見到合成用戶反覆問「做完呢步有咩用」，最近嗰次如果你見到呢個結果，你會點改個排序決定？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次 onboarding 改版取捨中，participant 最終傾向先處理註冊後第一個關鍵設定步驟，而唔係先做新手提示。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "數據主要幫 participant 定位問題集中喺註冊後第一個設定步驟的 drop-off。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "user call notes 幫 participant 識別到流失背後係對下一步價值同出錯風險的猶豫，而唔係單純操作困難。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "引入概念後，participant 對 synthetic-user pre-validation 的第一反應係邊部分有用、邊部分可疑。",
+      "乜嘢證據格式或透明度門檻先會令合成輸出唔似 AI 戲法。",
+      "喺咩情況下 participant 仍然唔會用，或者一定要真人研究先得。",
+      "如果真係採用，會放喺現有決策流程邊一步，並取代或縮細邊個現有步驟。",
+      "咩重複使用場景會令佢第二個月繼續返嚟用。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "threshold_probe",
+    "decision_rationale": "最近一答已出現高訊號信任線索：參與者明確話合成結果只可幫手收窄判斷，仍要對照 analytics 同真實 user notes。概念模式仲未補到 trust boundary，而且 depth 要求入面 threshold_probe 未完成，所以先追問佢可接受嘅具體可信門檻，而唔轉去更廣泛覆蓋。",
+    "message_to_persona": "咩證據層次先會令你覺得呢啲合成結果可信到值得你用嚟收窄判斷？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次 onboarding 改版決定中，傾向先處理註冊後第一個關鍵設定步驟，而唔係先做新手提示。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者用 analytics 去定位問題集中喺第一個設定步驟的 drop-off，而唔係一般操作混亂。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者用 user call notes 去理解猶豫來源係『做完呢步有咩用』同『會唔會整錯』，而唔係單純唔識用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果合成用戶結果能展示某種疑問如何反覆出現同集中喺特定情境，參與者會更有把握把『講清楚第一步價值同下一步』排優先。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者唔會單靠合成結果改排序，會用 analytics 同真實 user notes 交叉核對；目前概念價值較似收窄判斷，而唔係代為落判斷。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "參與者對 AI synthetic-user 平台的信任主要取決於輸出是否有可追溯的重複模式與情境分佈，而唔係得一句 summary。",
+        "supporting_evidence_refs": [
+          "exchange_3.persona"
+        ],
+        "alternative_explanations": [
+          "參與者對任何新研究輸入都會先要求交叉驗證",
+          "參與者可能主要係為咗向內部持份者辯護決定，所以偏好可解釋證據"
+        ],
+        "validation_gap": "未知道具體要去到咩證據粒度、頻率或呈現方式，佢先會視為足夠可信。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "呢個概念對參與者的核心價值可能係幫手收窄優先次序，而唔係取代 analytics 或真實 user research。",
+        "supporting_evidence_refs": [
+          "exchange_3.persona"
+        ],
+        "alternative_explanations": [
+          "最近嗰次案例特別適合用呢類輸出，未必代表一般 workflow 會重複使用",
+          "參與者可能只係口頭接受概念，但實際上唔會加進流程"
+        ],
+        "validation_gap": "未有 non-use 對比案例，亦未知道佢會喺邊個固定流程位反覆打開呢類工具。",
+        "confidence": "medium"
+      }
+    ],
+    "open_questions": [
+      "合成結果要去到咩具體證據門檻，參與者先會覺得可信到可以收窄判斷？",
+      "喺邊類情況下，即使見到類似輸出，參與者都會覺得唔值得用或唔會信？",
+      "如果呢個工具真係入 workflow，最可能插入邊一步，而會縮短或取代現有邊個步驟？",
+      "乜嘢重複出現的決策場景會令參與者喺第二個月繼續返嚟用？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "non_use_boundary",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "Last answer gave a clear trust threshold: they would use synthetic output only to narrow judgment when it matches real evidence and shows assumptions. Depth is still missing a contrast/non-use probe, and the highest-value next step is a recalled contrast case to learn when the platform would be skipped rather than layered in.",
+    "message_to_persona": "有冇最近一次你會覺得就算有呢個平台都唔會開，當時係咩情況？",
+    "evidence_updates": [
+      {
+        "claim": "In the onboarding prioritisation event, the participant chose to prioritise clarifying the value and next step of the first key setup step over adding a more complete-looking guided prompt.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Analytics helped the participant locate where drop-off concentrated, while user call notes explained the hesitation behind that drop-off.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant would treat synthetic outputs as a narrowing aid, not as a standalone decision source, and would still cross-check against analytics and real user notes.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Trust depends on two conditions: alignment with the participant's real cases, and visibility into the assumptions and situations behind repeated synthetic objections.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant may only adopt the platform in decisions where current evidence is ambiguous enough that narrowing direction is valuable.",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "low"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "In which recent decision contexts would the participant not use the platform at all?",
+      "What kind of existing evidence makes the platform feel redundant or like extra process?",
+      "At what point in the workflow, if any, would the participant naturally insert the platform rather than treat it as another layer?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "service_embedding",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "最新回答提供咗清晰 non-use 邊界：臨上線、涉法務/support、時間極短時唔會開。下一步用對比個案搵佢會喺邊種工作流節點主動開工具，可同時補 `service_embedding` 同 `repeat_use_condition`，亦順手完成缺失嘅 concept reaction 實際落點。",
+    "message_to_persona": "咁乜嘢類型嘅項目，你會一開始就開呢個平台？",
+    "evidence_updates": [
+      {
+        "claim": "在 release 前兩日、涉及 billing 文案和流程接唔順的臨急修正情況下，參與者不會使用此類平台。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "不使用原因包括需要看真實用戶是否誤解、需法務及 support 判斷、以及時間太短而新工具會增加解釋和核對負擔。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對平台的使用邊界偏向前期收窄判斷，而非臨近上線的高風險決策。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "exchange_5.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "邊類項目會令參與者喺流程一開始主動開平台？",
+      "平台最自然插入喺佢現有 workflow 嘅邊個步驟？",
+      "咩重複出現嘅任務先足以支撐持續回訪，而唔只係偶爾好奇使用？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "recalled_contrast_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "workflow_insertion",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "The last answer provides a strong non-use boundary: urgent release-stage issues make a new tool feel like extra explanation and verification work. Before moving to broader concept reactions, the next question should deepen that cue and identify the concrete condition where the tool would fit into a real workflow instead of adding burden.",
+    "message_to_persona": "咁乜嘢情況下，你會覺得開呢個平台係幫到手，唔係加重核對負擔？",
+    "evidence_updates": [
+      {
+        "claim": "Participant would not use the platform for a late-stage billing copy/flow issue discovered two days before release.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "In urgent release-stage situations, the participant prioritizes real-user misunderstanding, legal review, and support handling over opening a new tool.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "A key adoption barrier is the perceived overhead of explaining and cross-checking output from a new tool under time pressure.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The platform may fit better earlier in the decision process, before release-stage constraints dominate.",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_5.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "In what exact project situation would the participant open the platform without feeling extra verification overhead?",
+      "What is the participant's first neutral reaction to the concept outside the urgent non-use case?",
+      "What existing step would the tool need to shrink or replace to earn repeat use?",
+      "What minimum output standard would make the participant act on the platform's output rather than treat it as polished AI theatre?",
+      "What repeated use case would bring the participant back in month two?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "repeat_use_condition",
+    "decision_rationale": "`repeat_use_condition` remains uncovered. The participant has already given strong trust and non-use boundaries, so the next highest-value gap is the repeated use case that would bring them back rather than treating the tool as one more layer.",
+    "message_to_persona": "如果呢個平台真係有用，你會喺邊一類項目反覆開返佢？",
+    "evidence_updates": [
+      {
+        "claim": "Participant recently made a feature-prioritization decision in an onboarding redesign and chose to fix the first key post-signup setup step before adding onboarding tips.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "They used analytics to locate where drop-off concentrated and user call notes to understand the hesitation behind that drop-off.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Synthetic outputs would be useful for narrowing what to validate, but not for making the final decision alone.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Trust depends on alignment with real cases and visibility into assumptions and recurring contexts, not just summarized conclusions.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant would not use the platform in urgent late-stage release situations involving billing language, legal/support handling, and immediate real-user risk.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The platform appears most useful in earlier prioritization moments when evidence is incomplete but there is still time to compare its outputs against analytics or user notes.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What was the participant's first reaction to the concept in their own terms, especially the most useful or suspicious part?",
+      "What repeated workflow or project type would make them return to the platform instead of treating it as an extra layer?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_reaction",
+    "probing_strategy": "first_reaction_probe",
+    "decision_rationale": "`concept_reaction` 仍未覆蓋；現有證據已經涵蓋現況、信任門檻、非使用邊界、重複使用條件同輸出到決策映射，下一步應先補概念首反應，而且只問一個焦點，避免將有用位同懷疑位包埋一齊。",
+    "message_to_persona": "聽到呢種平台，你第一下最覺得有用嘅係邊部分？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次 feature 排序決定發生喺 onboarding 改版，參與者最後傾向先處理註冊後第一個關鍵設定步驟，而唔係新手提示。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者用 analytics 定位 drop-off 集中位置，再用 user call notes 補足猶豫原因。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者認為合成輸出只可用嚟收窄判斷，不會單獨用作拍板。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者的信任門檻是合成結果要與手上真實 case 大致對得上，並且能展示背後假設與重複出現的情境。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在 release 前兩日涉及 billing 文案與流程銜接的高時效、高風險情況下，參與者不會使用此類平台。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "此平台較適合前期排優先次序、真實證據未完整但又未急到即日拍板的情境。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若平台能穩定指出反覆出現的猶豫點並可對照 analytics 與 notes，參與者會在 onboarding、activation、定位文案和新 concept 篩方向時重複使用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者對整體概念第一下最有感的價值點是甚麼？",
+      "參與者對概念最直接的懷疑點會落在哪一部分？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "closing_assessment",
+    "probing_strategy": "stop_rule",
+    "decision_rationale": "Coverage and required depth are complete. The last answer repeats previously established value and trust thresholds rather than opening a new unresolved cue, so another probe would likely be repetitive.",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "Participant sees value in the concept mainly as a pre-research narrowing tool when evidence is incomplete, especially for onboarding, activation, positioning copy, and early concept-direction decisions.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona",
+          "exchange_7.persona",
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant would not use the platform for urgent late-stage issues where real-user misunderstanding, legal/support handling, and coordination risk dominate.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Trust threshold requires the synthetic output to match real analytics and user notes, and to show the assumptions and contexts behind repeated patterns rather than only a summary.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona",
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant would use the platform to narrow what to validate next, but would not let it independently decide prioritisation.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "Concept-validation coverage and required depth are complete; additional questioning would likely duplicate established trust, value, and non-use conditions.",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "not_asked_at_close"
+  }
+]

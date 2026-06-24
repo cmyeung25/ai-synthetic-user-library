@@ -1,0 +1,241 @@
+{
+  "artifact_version": "facilitator_audit_feedback_v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "generic"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Solid coverage with natural questioning, but the facilitator introduced the concept too early and too specifically, which reduced the chance to deepen the recalled real decision and increased anchoring risk.",
+    "primary_failure_mode": "Coverage advanced ahead of deeper causal probing on the recent real event, especially once a concrete concept output was introduced.",
+    "depth_vs_coverage_assessment": "The interview achieved required coverage and some depth, but left high-value depth on pressure, missing evidence, tradeoffs, and evidence-conflict handling unexplored."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "early_concept_exposure",
+      "severity": "high",
+      "why_it_matters": "Introducing the concept before the recalled real event is fully unpacked weakens the behavioral baseline used to evaluate later concept reactions.",
+      "observed_pattern": "After one follow-up on the recent decision, the facilitator moved into concept testing instead of staying longer on the real event."
+    },
+    {
+      "tag": "solution_anchoring",
+      "severity": "high",
+      "why_it_matters": "Supplying a specific example of the concept output can steer the participant toward validating the facilitator's frame rather than revealing their own criteria.",
+      "observed_pattern": "The first concept question included a concrete inferred output pattern rather than first asking what additional input would have helped in that decision."
+    },
+    {
+      "tag": "missed_causal_depth_on_real_event",
+      "severity": "medium",
+      "why_it_matters": "Without probing pressure, tradeoff, and missing evidence, the facilitator learns less about the actual decision mechanism the concept would need to fit.",
+      "observed_pattern": "The participant described using multiple evidence sources, but the facilitator did not probe what remained uncertain, what was at stake, or what alternative was consciously deprioritized."
+    },
+    {
+      "tag": "hypothetical_behavior_blur",
+      "severity": "medium",
+      "why_it_matters": "When stated future use is treated too similarly to observed workflow behavior, later synthesis can overstate fit and adoption readiness.",
+      "observed_pattern": "Several later answers were hypothetical concept-use statements, but the interview did not explicitly separate intended behavior from enacted behavior."
+    },
+    {
+      "tag": "replacement_step_omission",
+      "severity": "low",
+      "why_it_matters": "A tool's fit is clearer when the interview identifies what current step becomes shorter, easier, or unnecessary, not just where the tool might be inserted.",
+      "observed_pattern": "The interview established likely insertion points but did not isolate which existing activity would be reduced or replaced."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "multi-source evidence workaround",
+      "priority": "high",
+      "participant_signal": "The participant explained that one source located where the problem concentrated while another explained why people hesitated.",
+      "missed_followup_question": "After combining those sources, what was still uncertain enough that the decision still felt risky or debatable?",
+      "generic_learning": "When a participant describes a multi-source workaround, probe the residual uncertainty, not just the function of each source."
+    },
+    {
+      "trigger_type": "stakeholder override cue",
+      "priority": "high",
+      "participant_signal": "The participant said other stakeholders preferred a different option, but they leaned another way based on evidence.",
+      "missed_followup_question": "What tradeoff did you knowingly accept by choosing against the preferred option, and what part of that choice was hardest to defend?",
+      "generic_learning": "When a participant mentions conflicting stakeholder preferences, probe the defended tradeoff and social pressure before moving on."
+    },
+    {
+      "trigger_type": "trust threshold statement",
+      "priority": "high",
+      "participant_signal": "The participant said they would compare synthetic output against existing evidence and would not let it decide alone.",
+      "missed_followup_question": "If the new output partly matched your existing evidence but conflicted on one important point, how would you resolve that conflict?",
+      "generic_learning": "When a participant states a trust rule, test the conflict case to reveal the real ranking of evidence sources."
+    },
+    {
+      "trigger_type": "non-use boundary",
+      "priority": "high",
+      "participant_signal": "The participant gave a recent case where urgency and risk made a new tool feel like extra verification burden.",
+      "missed_followup_question": "What specific threshold made that situation unsuitable: time left, consequence severity, or the number of teams that needed to trust the result?",
+      "generic_learning": "When a participant gives a non-use example, separate time pressure, risk, and coordination cost instead of leaving them bundled."
+    },
+    {
+      "trigger_type": "workflow fit claim",
+      "priority": "medium",
+      "participant_signal": "The participant described situations where the concept could help narrow what to validate next.",
+      "missed_followup_question": "If this were useful in practice, which current step would become shorter, easier, or unnecessary?",
+      "generic_learning": "Always test whether a proposed tool removes work or merely adds another review layer."
+    },
+    {
+      "trigger_type": "repeat-use condition",
+      "priority": "medium",
+      "participant_signal": "The participant named several future scenarios where they might reopen the tool repeatedly.",
+      "missed_followup_question": "What is the minimum output that would be strong enough for you to schedule a real follow-up action instead of just reading and moving on?",
+      "generic_learning": "Convert stated reuse interest into an action threshold by asking what output would trigger a concrete next step."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant appears mainly to want a faster way to prioritize earlier.",
+      "possible_underlying_driver": "The stronger driver may be the need for decisions that remain defensible under scrutiny, with speed only acceptable when evidence remains explainable.",
+      "why_the_surface_frame_is_weak": "The transcript repeatedly ties usefulness to traceability, assumptions, and cross-checking rather than to speed alone.",
+      "generic_learning": "Do not classify a participant's driver as speed just because they value quicker narrowing; probe what kind of risk the speed must not increase."
+    },
+    {
+      "observed_surface_frame": "The participant appears generally open to the concept in early-stage work.",
+      "possible_underlying_driver": "The underlying condition may be low added verification cost rather than broad openness to synthetic evidence.",
+      "why_the_surface_frame_is_weak": "The participant repeatedly framed usefulness in terms of avoiding extra explanation and checking burden.",
+      "generic_learning": "When participants sound positive, test whether the positivity is conditional on workload reduction, social defensibility, or reversibility."
+    },
+    {
+      "observed_surface_frame": "The participant's non-use case appears to be only about urgent timing.",
+      "possible_underlying_driver": "The deeper blocker may be consequence severity and cross-functional accountability, with timing acting as an amplifier.",
+      "why_the_surface_frame_is_weak": "The non-use example bundled urgency with legal/support consequences and the need for real-user confirmation.",
+      "generic_learning": "When a participant rejects a tool in a high-pressure scenario, separate urgency from consequence and accountability before inferring the driver."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "The first concept probe embedded a specific hypothetical finding, which risks converting participant reaction into confirmation of a facilitator-supplied interpretation.",
+      "severity": "high",
+      "generic_learning": "First ask what extra input would have helped in the recalled decision; only then test specific concept outputs."
+    },
+    {
+      "issue": "Observed past behavior and hypothetical future use were not kept sharply distinct throughout later probing, creating downstream risk of overstating workflow fit.",
+      "severity": "medium",
+      "generic_learning": "Label hypothetical sections explicitly in both questioning and synthesis, and avoid treating stated intent as enacted evidence."
+    },
+    {
+      "issue": "The interview stopped without testing an evidence-conflict scenario, leaving the participant's actual decision rule under disagreement unverified.",
+      "severity": "medium",
+      "generic_learning": "When a participant says they would cross-check sources, always probe what happens when the sources disagree."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept-validation interviews, do not introduce the concept until the facilitator has elicited the recalled decision, the evidence used, the missing evidence, and the key tradeoff accepted in that real event.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant mentions multiple evidence sources, ask what uncertainty remained after combining them and what the unresolved risk was.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant mentions stakeholder disagreement or pressure, ask what they could defend publicly versus what they still worried about privately.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Do not let the first concept question contain a specific inferred output pattern, quote, or conclusion; start with a neutral usefulness probe tied to the recalled event.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant gives a non-use case, separate time pressure, consequence severity, and coordination burden with at least one clarifying probe before generalizing the boundary.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Treat workflow insertion, repeat use, and action follow-through as hypothetical unless the participant describes an enacted behavior or simulated task response.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Before adding more coverage questions, prioritize one probe on what current step the tool would shorten, replace, or make easier.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not stop immediately after coverage is complete if a high-signal unresolved cue remains about tradeoff, evidence conflict, or replacement-vs-layering; spend one final turn resolving it.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "fac_rule_recent_event_min_depth",
+      "rule": "Before concept exposure, get at least one concrete probe each on missing evidence, decision tradeoff, and pressure or accountability within the recalled real event.",
+      "source_tags": [
+        "early_concept_exposure",
+        "missed_causal_depth_on_real_event"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "fac_rule_neutral_first_concept_turn",
+      "rule": "Make the first concept turn neutral and participant-led; ask what additional input would have helped before testing any named output from the proposed solution.",
+      "source_tags": [
+        "solution_anchoring"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "fac_rule_conflict_case_probe",
+      "rule": "When a participant says a new input would be cross-checked, ask how they would act if that input conflicts with their current evidence.",
+      "source_tags": [
+        "hypothetical_behavior_blur"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "fac_rule_replace_not_layer",
+      "rule": "For any proposed tool or workflow change, ask what existing step becomes shorter, easier, skipped, or unchanged.",
+      "source_tags": [
+        "replacement_step_omission"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "fac_rule_hypothetical_labeling",
+      "rule": "Keep observed behavior and stated future intent explicitly separated in both interview notes and synthesis claims.",
+      "source_tags": [
+        "hypothetical_behavior_blur"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The facilitator missed a chance to probe the participant's specific concern about using synthetic evidence in relation to analytics, call notes, legal/support review, and release-stage product decisions.",
+      "block_reason": "This bundles project-specific evidence sources, functions, and operating context too tightly to reuse safely in facilitator-core guidance.",
+      "rewrite_as_generic": "When a participant names existing evidence sources or review partners that must validate a new input, probe the ranking and conflict-resolution rule among those sources instead of treating cross-checking as sufficient detail."
+    },
+    {
+      "blocked_item": "The synthesis overreached into product-direction claims about where this platform should focus first and what interface features it should emphasize.",
+      "block_reason": "Those claims are too tied to the current product concept and interview topic to feed back as generic facilitator learning.",
+      "rewrite_as_generic": "In synthesis from a single interview, phrase implications as participant-specific signals or candidate hypotheses to test, not as product strategy conclusions."
+    }
+  ]
+}

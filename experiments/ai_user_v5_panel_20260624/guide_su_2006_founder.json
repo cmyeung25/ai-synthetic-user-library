@@ -1,0 +1,72 @@
+{
+  "mode": "guided",
+  "required_profile_sections": [
+    "human_difference_axes"
+  ],
+  "research_context": {
+    "market": "Hong Kong product teams evaluating AI user or synthetic user research tools",
+    "purpose": "Generate a reusable V5 persona who is genuinely relevant to founder-side product discovery and concept validation without pre-encoding any conclusion about synthetic users.",
+    "platform_rule": "Build a person first. Product-building context may include stable role facts and working habits, but must not pre-encode whether the person supports or rejects AI users.",
+    "allowed_domain_context_examples": [
+      "company stage",
+      "product role",
+      "team size",
+      "research exposure level",
+      "prototype and shipping habits",
+      "customer contact pattern",
+      "decision ownership",
+      "evidence standards",
+      "collaboration with design and engineering",
+      "budget and time constraints"
+    ],
+    "forbidden_core_shortcuts": [
+      "main pain is interview speed",
+      "already believes synthetic users can replace interviews",
+      "does not trust human interviews",
+      "needs AI validation because no users exist",
+      "would obviously buy this concept",
+      "would obviously reject this concept"
+    ]
+  },
+  "fixed": {
+    "location": "Hong Kong",
+    "preferred_languages": [
+      "Cantonese",
+      "English"
+    ],
+    "occupation": "Solo founder building a workflow SaaS product after several years in product design and startup work",
+    "persona_domain_relevance": "must_be_plausibly_relevant_to_ai_user_and_synthetic_research_tool_interviews"
+  },
+  "preferred": {
+    "persona_generation_rule": "Generate the person from ordinary life, values, routines, constraints, and working habits first. Founder context should be factual and reusable, not concept-shaped.",
+    "sample_eligibility_rule": "The person should plausibly make early product decisions, frame hypotheses, review research evidence, and decide whether to spend scarce time or money on validation.",
+    "product_context_rule": "Use product-building context only for stable role facts such as work history, evidence habits, collaboration style, and shipping constraints. Do not write synthetic-user conclusions into persona core.",
+    "role_anchor": "founder_with_product_design_background",
+    "age_range": "31-38",
+    "company_stage": "solo_or_very_small_team_pre_pm_fit_or_early_revenue",
+    "career_path_expectation": "Should include real product design experience before founder work, with enough exposure to weak assumptions, customer ambiguity, and prototype iteration to make product-critique behavior plausible.",
+    "variation_targets": [
+      "private builder versus public founder persona",
+      "evidence-seeking versus intuition-defending tendency",
+      "resource-constrained validation habits",
+      "interview respect without formal research training",
+      "design craft orientation versus shipping pressure"
+    ],
+    "human_difference_axes_expectations": {
+      "control_preference": "Should lean high but not absolute; the person should want interpretive control over evidence and product direction.",
+      "trust_style": "Should not default to trusting AI or distrusting people; trust should depend on transparency, challenge quality, and fit to real founder work.",
+      "complexity_tolerance": "Can be medium to high when it helps real decisions.",
+      "decision_tempo": "Should show the tension between moving fast and fearing wasted build time.",
+      "financial_attention_cadence": "Should reflect small-business or solo-founder budget vigilance.",
+      "relationship_to_money": "Money may represent runway, optionality, and proof of seriousness.",
+      "need_for_explanation": "Should want reasons, not only answers.",
+      "guidance_preference": "May want structured pushback rather than step-by-step hand-holding."
+    },
+    "negative_prompting": [
+      "Do not make the founder a caricature of startup hype.",
+      "Do not force venture-backed language or Silicon Valley mannerisms.",
+      "Do not assume they hate interviews or have no access to real users.",
+      "Do not make every frustration about AI."
+    ]
+  }
+}

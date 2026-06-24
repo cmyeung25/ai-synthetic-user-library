@@ -1,0 +1,159 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "真係流失最多係嗰個位",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "drop-off 明顯高",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "會問自己做完呢步有咩用、會唔會整錯",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "嗰種猶豫感係數字本身睇唔到",
+        "evidence_ref": "exchange_2.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次優先排序，佢喺 stakeholder 想先做新手提示時，仍然基於 analytics 同 user call notes 傾向先改註冊後第一個關鍵設定步驟。",
+      "佢用數據定位問題集中喺邊個步驟，再用 user call notes 補足點解會卡住，顯示現時決策已經係多來源交叉判斷，而唔係單靠意見。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用 analytics 搵出 drop-off 最集中的步驟。",
+      "用 user call notes 理解猶豫內容，例如用戶會問做完有咩用、會唔會整錯。",
+      "當新輸入出現時，會同現有 analytics 同真實 user notes 對一對，先用嚟收窄判斷。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "唔可以取代 analytics 同真實 user notes。",
+      "唔可以增加大量解釋同核對負擔。",
+      "唔可以喺急近上線、涉法務/support 嘅情境迫佢引入新工具。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "接受將『一個真實問題』放入平台，前提係輸出可以對返 analytics 或 user notes。",
+      "接受平台作為前期優先排序時嘅輔助輸入，用嚟收窄要驗證邊條方向。"
+    ],
+    "rejected_data_access": [
+      "唔接受平台單獨拍板或代替真實 evidence。",
+      "唔接受喺 release 前兩日、billing 文案與流程風險、需要法務/support 判斷時作主要依據。"
+    ],
+    "required_trust_explanation": [
+      "要喺真實 case 入面『指出嘅猶豫位同 analytics、user call notes 大致對得上』。",
+      "要『唔止俾結論，仲俾到我見到係基於咩假設、邊類情境先會反覆出現』。",
+      "要見到 pattern 點樣反覆出現，而唔係得一句 summary。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "喺一個真實優先排序問題上，快速指出重複出現嘅猶豫位。",
+      "輸出能夠按情境分布展示，而唔係只得總結句。",
+      "結果可以即場同現有 analytics 或 user notes 對照，幫佢收窄下一步驗證方向。"
+    ],
+    "time_to_value": "要夠快，適合前期排優先次序但唔係即日拍板嘅時段；逐字稿無提供更精確時間門檻。",
+    "abandonment_triggers": [
+      "結果得一句 summary，睇唔到點樣反覆出現。",
+      "需要額外大量解釋同核對，變成新負擔。",
+      "情境太急或太高風險，必須睇真實用戶、法務同 support 反應。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "unknown",
+    "monthly_comfort_range": "unknown",
+    "payment_justification": [
+      "無直接價格證據。最多只可講：如果工具能穩定幫佢喺前期收窄驗證方向，而且對得返手上 evidence，先可能形成付費理由。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "喺 onboarding、activation、定位文案、新 concept 篩方向等前期判斷場景，若能穩定顯示重複猶豫位並對得返 analytics 同 notes。",
+      "能嵌入每次排優先次序前嘅固定檢查位，而唔係變成獨立研究流程。"
+    ],
+    "drop_off_reasons": [
+      "急近上線或 release 前修正問題時，工具只會增加核對負擔。",
+      "涉及 billing、法務、support 等高風險真實後果時，佢會優先睇真實用戶反應。",
+      "如果輸出不可解釋、不可追溯，或者同手上證據對唔上。"
+    ],
+    "workflow_effect": "adds_layer"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "呢位 PM 目前喺 feature priority 上有真實證據缺口，需要用多種來源補足。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "最近真實事件入面，佢明確用 analytics 搵出 drop-off 位，再靠 user call notes 理解猶豫原因，顯示單一 evidence 唔夠。"
+    },
+    {
+      "assumption": "AI synthetic-user platform 對佢最合理角色係幫手收窄判斷，而唔係代替真實研究或 analytics。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "佢多次明講『唔係代我落判斷』『未去到可以單獨拍板』，角色定位清晰而一致。"
+    },
+    {
+      "assumption": "只要平台指出一個有意思嘅 pattern，佢就會直接改變排序決定。",
+      "status": "weakened",
+      "evidence_refs": [
+        "exchange_3.persona"
+      ],
+      "rationale": "佢話即使見到有用結果，都『會拎返 analytics 同真實 user notes 對一對』；所以 pattern 本身不足以直接改決定。"
+    },
+    {
+      "assumption": "平台若提供可追溯假設同情境分布，會較容易被納入 workflow。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "佢明確要求可解釋、可對照、可見重複模式；但呢個仍然係概念反應，未有實際使用行為。"
+    },
+    {
+      "assumption": "平台適合高壓、近上線、涉及 billing / legal / support 風險嘅決策。",
+      "status": "invalidated",
+      "evidence_refs": [
+        "exchange_5.persona"
+      ],
+      "rationale": "佢提供咗直接反例：release 前兩日發現 billing 文案與流程問題時，明確話『我唔會開』。"
+    },
+    {
+      "assumption": "如果工具有用，佢會喺部分前期項目重複使用。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_7.persona"
+      ],
+      "rationale": "佢講出 onboarding、activation、定位文案、新 concept 篩方向等重複使用場景，但仍屬假設性未發生行為。"
+    }
+  ],
+  "key_insights": [
+    "Because 佢最近真實上係先用 analytics 定位 drop-off，再用 notes 補『做完呢步有咩用、會唔會整錯』呢類猶豫，this persona would 只接受平台作前期收窄判斷嘅輔助輸入，unless 輸出可以脫離現有 evidence 單獨證成決策。 This means the product should 設計成 evidence-triangulation 工具，而唔係 autonomous recommender。",
+    "Because 佢明確怕『增加我要解釋同核對嘅負擔』，this persona would 喺 release 前、涉 billing/法務/support 嘅高風險情境跳過平台，unless 工具幾乎零額外核對成本而且能處理真實後果責任。 This means the product should 先聚焦非緊急前期優先排序場景，避免把高壓修補工作流當主用例。",
+    "Because 佢要求結果要『唔止俾結論』，仲要見到『基於咩假設、邊類情境先會反覆出現』，this persona would 對黑盒 summary 保持保留，unless 平台能展示 pattern、情境分布同假設來源。 This means the product should 先驗證 explainability 與 traceability 介面，而唔係先擴大輸出花巧度。",
+    "Because 佢只喺『手上真實證據唔算好完整，但又未急到即日要拍板』時先覺得有幫助，this persona would 只喺證據半完整、仍有少量判斷空間嘅項目開平台，unless 已有足夠真實研究或決策時限太短。 This means the product should 把 first-use 切入點放喺 evidence gap 明確但仍可補驗證嘅 backlog prioritization。"
+  ],
+  "next_experiment": "搵 1 個真實、非緊急、前期優先排序案例（例如 onboarding 或定位文案），只輸入該團隊已知問題與現有 analytics 摘要，產出 3-5 個可追溯嘅合成猶豫 pattern，每個 pattern 都標示假設同情境。然後請呢位 PM 只做一件事：逐項標記『對得上 / 對唔上 / 未知』佢手上真實 notes 與 analytics，並記錄有無因此收窄到下一步要驗證嘅 1 條方向。成功標準唔係採納建議，而係能否低負擔地完成對照並收窄一條真實驗證方向。",
+  "evidence_gaps": [
+    "無 pricing、budget、採購流程資料，任何付費或月費推斷都唔成立。",
+    "無 month-two 實際留存行為；重複使用只係概念層面陳述。",
+    "只有一位 persona、一段訪談；不能外推到其他 PM 或市場普遍性。",
+    "未見實際產品輸出樣本，所以對 explainability 需求只知方向，不知具體可接受格式。",
+    "無反例顯示當 analytics 與 synthetic pattern 衝突時，佢會點處理。"
+  ],
+  "synthetic_only_disclaimer": "以下只係基於單一合成受訪者逐字稿嘅模擬概念驗證整理，屬校準中嘅 simulated evidence，唔係人類市場證據，亦唔應被當作採納、付費或留存預測嘅充分證明。"
+}

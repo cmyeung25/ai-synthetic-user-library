@@ -1,0 +1,71 @@
+{
+  "mode": "guided",
+  "required_profile_sections": [
+    "human_difference_axes"
+  ],
+  "research_context": {
+    "market": "Hong Kong product teams evaluating AI user or synthetic user research tools",
+    "purpose": "Generate a reusable V5 persona who is genuinely relevant to product-management decisions, discovery planning, and concept evaluation without pre-encoding a synthetic-user conclusion.",
+    "platform_rule": "Build a person first. Product-management context may include stable role facts, planning habits, and cross-functional pressure, but must not encode a fixed attitude toward AI users.",
+    "allowed_domain_context_examples": [
+      "product area",
+      "team maturity",
+      "research ops maturity",
+      "cross-functional collaboration",
+      "roadmap pressure",
+      "evidence review habits",
+      "prototype testing exposure",
+      "stakeholder management",
+      "analytics versus interview balance",
+      "time-to-decision constraints"
+    ],
+    "forbidden_core_shortcuts": [
+      "main pain is recruiting users",
+      "already thinks synthetic users are enough",
+      "thinks PMs should stop talking to users",
+      "needs this because roadmap is blocked",
+      "would definitely trust AI over humans",
+      "would definitely reject AI over humans"
+    ]
+  },
+  "fixed": {
+    "location": "Hong Kong",
+    "preferred_languages": [
+      "Cantonese",
+      "English"
+    ],
+    "occupation": "Product manager at a mid-stage software company shipping customer-facing digital products",
+    "persona_domain_relevance": "must_be_plausibly_relevant_to_ai_user_and_synthetic_research_tool_interviews"
+  },
+  "preferred": {
+    "persona_generation_rule": "Generate the person from ordinary life, work rhythm, values, and role pressure first. PM context should be stable and reusable, not a disguised concept reaction.",
+    "sample_eligibility_rule": "The person should plausibly own problem framing, prioritization, discovery decisions, and tradeoffs between speed, evidence quality, and team bandwidth.",
+    "product_context_rule": "Use PM context only for stable habits such as how the person evaluates evidence, works with design and engineering, and handles stakeholder pressure.",
+    "role_anchor": "mid_stage_product_manager",
+    "age_range": "32-40",
+    "product_maturity": "live_product_with_real_users_and_regular_roadmap_pressure",
+    "career_path_expectation": "Should include enough real product work to make discovery, prioritization, experimentation, and cross-functional tradeoffs feel lived rather than theatrical.",
+    "variation_targets": [
+      "strong discovery respect versus delivery pressure",
+      "analytics-comfortable versus interview-led evidence mix",
+      "consensus builder versus sharper decision-maker",
+      "team bandwidth realism",
+      "stakeholder defensibility concerns"
+    ],
+    "human_difference_axes_expectations": {
+      "control_preference": "Should want visibility into how conclusions are reached, especially if evidence will be used in prioritization.",
+      "trust_style": "Should care about repeatability, falsifiability, and whether evidence can survive stakeholder review.",
+      "complexity_tolerance": "Should tolerate some complexity if it sharpens decisions.",
+      "decision_tempo": "Should capture tension between urgency and evidence discipline.",
+      "financial_attention_cadence": "Can reflect manager-level budgeting awareness rather than founder-level runway anxiety.",
+      "relationship_to_money": "May relate money to team efficiency, career credibility, and sensible tool spend.",
+      "need_for_explanation": "Should need a concise but defensible explanation path."
+    },
+    "negative_prompting": [
+      "Do not make the PM a generic framework machine.",
+      "Do not fill the persona with product jargon at the expense of real life.",
+      "Do not assume formal research training.",
+      "Do not make the person sound like a founder in disguise."
+    ]
+  }
+}

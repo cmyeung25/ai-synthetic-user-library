@@ -1,0 +1,67 @@
+# Persona Driver Trace: Janice Wong
+
+> 此輸出只係基於提供嘅合成人物設定同訪談逐字稿所做嘅推斷分析，用於 AI 預驗證，唔係真人市場證據，亦唔取代真人研究。
+
+Research goal: Understand how this product manager currently decides roadmap and feature priority, what evidence she trusts, what hidden tradeoffs or pressures shape those calls, and only after that test whether an AI synthetic-user platform fits the workflow.
+
+## Surface Read
+
+- Said: 佢最近一次 feature priority 決定，係 onboarding 改版入面，最終傾向先處理註冊後第一個關鍵設定步驟，而唔係先做新手提示，因為 analytics 同 user call notes 都指向真正流失位喺嗰度。
+- Said: 佢分得好清楚 analytics 係幫手見到問題集中喺邊，user call notes 係補到點解用戶會猶豫，特別係『做完有咩用』同『會唔會整錯』呢類動機層面。
+- Said: 如果 AI 合成結果唔止係 summary，而係見到 pattern 點樣反覆出現、集中喺邊類情境，佢會更有把握將『講清楚第一步價值』排前，但唔會單靠合成結果落決定。
+- Said: 佢要求至少兩層可信度：一係合成結果要同真實 case 入面嘅 analytics 同 user notes 大致對得上；二係要見到背後假設同適用情境。
+- Said: 喺 release 前兩日先爆出 billing 文案同流程問題嗰類高風險、時間極短情境，佢唔會開呢類平台，因為會增加解釋同核對負擔，而且要睇真實用戶、法務同 support 反應。
+- Said: 佢會喺前期排優先次序、手上證據未算完整、但又未去到即日要拍板嗰啲情況先覺得平台幫到手。
+- Said: 如果平台穩定幫到佢喺 onboarding、activation、定位文案、新 concept 篩方向等項目入面反覆收窄驗證方向，佢會重複使用。
+- Said: 佢第一下覺得最有用嘅唔係『代替判斷』，而係喺早期證據不足時更快收窄要睇邊個猶豫位同邊個方向值得再驗。
+- Seemed to optimize for: 用最少但可辯護嘅證據，喺真實產品節奏下收窄判斷範圍，減少錯判同額外驗證負擔。
+- Implicit: 佢唔只係講證據質量，其實都好在意呢啲輸出可唔可以頂得住 stakeholder 質疑。
+- Implicit: 佢對工具嘅接受門檻，受時間壓力同跨功能協作成本強烈影響。
+- Implicit: 表面上佢對平台有興趣，但實際承諾門檻仍然高，尤其係涉及高風險流程、合規或臨近上線時。
+
+## Likely Drivers
+
+- [high] 偏向用多來源交叉驗證，而唔接受單一訊號直接推動產品決定 (core_value, mixed)
+  Why: 所以佢即使覺得合成用戶結果有用，都只願意用嚟『收窄判斷』，而唔畀佢取代 analytics 或真實 user notes。
+  Transcript refs: exchange_3.persona, exchange_4.persona, exchange_6.persona, exchange_8.persona
+  Profile refs: values.core_values, personality_belief.trust_orientation, human_difference_axes.trust_style, product_reaction_rules.first_checks
+- [high] 怕基於脆弱證據拍板，之後喺跨功能場合頂唔順追問 (emotional_protection, mixed)
+  Why: 佢 repeatedly 強調要見到 pattern、假設、適用情境，同埋要同手頭真實證據對返，反映佢唔係單純想更快，而係想決定喺壓力下都站得住。
+  Transcript refs: exchange_3.persona, exchange_4.persona, exchange_5.persona
+  Profile refs: values.fears, values.aspirations, behavior_profile.decision_blockers, deep_research_notes.behavioral_summary
+- [high] 決策風格係先快速收窄，再保留可逆性，而唔係一開始就全面承諾 (decision_style, mixed)
+  Why: 佢對平台最正面嘅用法，正正係前期 prioritisation 同 concept 篩方向，呢啲都係仲可以 reversible 嘅階段；一到 release 前高風險場景，佢就唔想引入新工具。
+  Transcript refs: exchange_5.persona, exchange_6.persona, exchange_7.persona, exchange_8.persona
+  Profile refs: personality_belief.decision_style, human_difference_axes.risk_orientation, product_reaction_rules.difference_between_curiosity_and_purchase
+- [medium] 生活同工作都碎片化，令佢對『額外核對負擔』特別敏感 (daily_constraint, mixed)
+  Why: 佢唔係抗拒分析，而係抗拒一個新工具令本身已經擠迫嘅判斷流程再多一層解釋成本，所以只接受快、窄、可對照現有證據嘅用法。
+  Transcript refs: exchange_5.persona, exchange_6.persona
+  Profile refs: life_story.current_daily_routine, human_difference_axes.life_load, human_difference_axes.fragmentation reality, values.core_values
+- [high] 對 explainability 有高要求，但耐性有限，只接受短而夠力嘅解釋鏈 (trust_pattern, mixed)
+  Why: 佢唔滿足於一句 summary，但亦冇表示想做重配置或深度方法研究；佢要嘅係可以快速睇到 pattern、情境、假設，足夠帶入 meeting defend。
+  Transcript refs: exchange_3.persona, exchange_4.persona, exchange_8.persona
+  Profile refs: human_difference_axes.need_for_explanation, contradiction_map, product_reaction_rules.positive_signals
+
+## Unspoken Constraints
+
+- [high] 工具必須嵌入現有 PM 證據流程，而唔可以變成另一套要獨立解釋嘅方法論
+  Why likely: 佢一直用『對返 analytics 同 user notes』做可信度基準，顯示新工具只可以做輔助層。
+- [high] 高風險、近上線、涉 billing/法務/support 嘅問題，合成證據天然唔夠格做主體依據
+  Why likely: 佢主動舉咗 billing release 前兩日嘅例子，仲明確講到法務同 support，反映佢有隱含嘅風險分層。
+- [high] 就算覺得有用，真正持續採用都要證明佢有淨節省，而唔係將驗證工搬位
+  Why likely: 佢多次用『收窄判斷』同『唔係多咗一層要盲信嘅輸出』去界定價值，表示佢會計 verification overhead。
+
+## Value Tensions
+
+- [high] 重視證據嚴謹 vs 要喺現實節奏下快啲拍板: 想 decisions 有 analytics、notes、可追溯假設支撐 vs 又要喺證據未完整時先做 priority，唔可以等研究慢慢齊
+- [high] 想要 explainability vs 唔接受高設定同高核對成本: 要求見到 pattern、假設、情境，唔接受一句 summary vs 但一見到會增加解釋或核對負擔，就寧願唔開工具
+- [high] 對 AI 有實用 curiosity vs 對 hype 同過度替代 claims 有防衛: 願意喺 onboarding、activation、concept 篩方向反覆用，如果對得返真實證據 vs 堅持唔畀合成結果代替判斷，亦隱含只接受有清楚邊界嘅角色定位
+
+## Missed Follow-Up Questions
+
+- [high] 你講『對得返 analytics 同 user notes』先會信，咁如果三者有部分一致、部分打架，你通常會點排次序？
+  Why: 可以更清楚知道佢實際嘅證據衝突處理規則，而唔止係原則上要 cross-check。
+- [high] 你話 release 前兩日唔會開，但如果係兩星期前、仲未涉及法務，你覺得咩風險級別開始值得開一次？
+  Why: 可以界定平台適用窗口，分清楚係時間壓力問題、合規問題，定係 workflow 成本問題。
+- [medium] 如果你要向 design lead 或老闆解釋點解參考咗合成結果，你最驚佢哋 challenge 邊一點？
+  Why: 呢條會直接暴露佢最核心嘅社會性信任門檻，同採用阻力係方法可信度、政治風險，定係解釋成本。

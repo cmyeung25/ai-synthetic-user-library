@@ -1,0 +1,121 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "pass",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a real recent prioritization event before concept discussion, which is appropriate for `concept_validation` (`exchange_1` to `exchange_2`).",
+    "Most asked questions had one conversational focus and sounded natural in Cantonese; there is little repetition or analytical jargon in participant-facing turns (`exchange_1` to `exchange_8`).",
+    "The facilitator separated current workaround, trust boundary, non-use boundary, workflow fit, and repeat-use condition rather than collapsing them into one long questionnaire (`exchange_2`, `exchange_4` to `exchange_7`).",
+    "The synthesis usually preserves the stated-vs-behavioral boundary, especially on pricing and repeat use, by marking those areas as hypothetical or unknown."
+  ],
+  "findings": [
+    {
+      "category": "Concept introduction neutrality",
+      "severity": "medium",
+      "observation": "The first concept question is somewhat solution-loaded and anchors the participant to a researcher-supplied output pattern. It introduces a specific synthetic finding, `合成用戶反覆問「做完呢步有咩用」`, before first asking what kind of additional input would have been useful in that real decision. That risks steering the reaction toward confirmation of an already-specified mechanism.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "facilitator_trace[2]"
+      ],
+      "recommendation": "Replace the first concept turn with a neutral insertion question tied to the recalled event, such as what extra evidence would have helped, before testing any specific synthetic output example."
+    },
+    {
+      "category": "Recent-event depth before concept",
+      "severity": "medium",
+      "observation": "The interview moved to concept exposure after only one follow-up on the real event. The observer explicitly steered toward missing evidence on what she was trying to defend publicly, what pressure existed, what evidence was missing, and what tradeoff she actually made, but those participant-facing probes never happened before concept introduction.",
+      "evidence_refs": [
+        "observer_interventions[1]",
+        "exchange_1.persona",
+        "exchange_2.facilitator",
+        "exchange_3.facilitator"
+      ],
+      "recommendation": "On rerun, spend 1-2 more turns on the real decision before introducing the product: missing evidence, stakeholder pressure, private doubts, and the exact tradeoff accepted."
+    },
+    {
+      "category": "Synthesis overreach from one synthetic interview",
+      "severity": "medium",
+      "observation": "Several `key_insights` convert one participant's concept reaction into broad product-direction statements using strong `This means the product should...` language. That exceeds what one synthetic concept-validation interview can justify, even with the synthetic-only disclaimer.",
+      "evidence_refs": [
+        "synthesis.key_insights[0]",
+        "synthesis.key_insights[1]",
+        "synthesis.key_insights[2]",
+        "synthesis.key_insights[3]"
+      ],
+      "recommendation": "Reframe these as persona-bounded implications or candidate design hypotheses, not product-level conclusions. Keep scope explicit: `for this persona`, `suggests testing`, `do not generalize`."
+    },
+    {
+      "category": "Domain-fit inference basis",
+      "severity": "medium",
+      "observation": "The report makes workflow-fit claims mostly from stated future-use scenarios rather than changed actions. `continuation_reasons`, `workflow_effect`, and parts of `service_embedding` are still hypothetical because no concept was actually used in a live prioritization workflow.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "synthesis.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Label workflow insertion and retention sections more explicitly as stated intent, and validate domain fit with a simulated or real task where the participant actually compares tool output against existing evidence."
+    },
+    {
+      "category": "Missing replacement-step clarity",
+      "severity": "low",
+      "observation": "The observer asked to learn what existing step the platform would shrink or replace, but the participant-facing questions did not isolate that. The interview established where the tool might fit, but not what current work would be removed versus added.",
+      "evidence_refs": [
+        "observer_interventions[2]",
+        "exchange_6.facilitator",
+        "exchange_7.facilitator"
+      ],
+      "recommendation": "Add a direct probe: what step would become shorter, skipped, or easier if the platform were useful in practice."
+    }
+  ],
+  "required_improvements": [
+    "Make the first concept introduction neutral and participant-led before testing any specific synthetic pattern.",
+    "Deepen the recalled recent decision with explicit pressure, tradeoff, and missing-evidence probes before concept exposure.",
+    "Constrain synthesis to persona-bounded implications; do not turn one synthetic interview into broad product-shaping guidance.",
+    "Separate observed behavior from hypothetical future use more consistently in workflow-fit and retention claims.",
+    "Add one direct probe on what current step the tool would replace or shorten."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for the exact tradeoff in the recent prioritization call: what she chose, what she delayed, and what she could or could not defend to stakeholders.",
+      "Probe what evidence was still missing after analytics plus call notes, before introducing any AI concept.",
+      "After neutral concept introduction, ask what existing step it would shrink, replace, or make easier.",
+      "Test a conflict case: if synthetic output points one way and analytics or notes point another way, what would she do?"
+    ],
+    "coverage_gap_actions": [
+      "Add a participant-facing probe on the current workflow step that would be displaced versus merely layered on top.",
+      "Get one concrete threshold example: what output format would be actionable enough to schedule a follow-up validation task.",
+      "If concept validation is rerun, distinguish curiosity, trial, and repeated use with explicit wording, while keeping all three labeled as hypothetical unless enacted."
+    ],
+    "prompt_adjustments": [
+      "In `concept_validation`, require at least 3 participant turns on the recalled event before concept exposure unless the user explicitly asks for a shorter screen.",
+      "Ban first concept turns that include a specific inferred pattern or quote; require an open usefulness probe first.",
+      "When observer steering requests missing recent-event evidence, prioritize those gaps before advancing coverage bookkeeping.",
+      "Add a synthesis rule that product implications from one synthetic interview must be phrased as `candidate hypothesis` or `persona-specific signal`, not `the product should`."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient. Do not widen it yet; use the same budget but reallocate one early concept turn back into deeper recent-event probing before concept introduction."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a synthetic interview artifact, not human-subject research quality in the field. Findings judge methodological rigor and evidence discipline within the simulation workflow only."
+}

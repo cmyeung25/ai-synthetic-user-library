@@ -1,0 +1,70 @@
+{
+  "mode": "guided",
+  "required_profile_sections": [
+    "human_difference_axes"
+  ],
+  "research_context": {
+    "market": "Hong Kong product teams evaluating AI user or synthetic user research tools",
+    "purpose": "Generate a reusable V5 persona who is genuinely relevant to UX, product design, and design-research-adjacent evaluation without pre-encoding a synthetic-user conclusion.",
+    "platform_rule": "Build a person first. UX context may include stable role facts, research exposure, and prototype habits, but must not encode whether the person will endorse or reject AI users.",
+    "allowed_domain_context_examples": [
+      "design discipline",
+      "research collaboration style",
+      "prototype testing habits",
+      "service and workflow sensitivity",
+      "artifact comfort such as Figma or journey maps",
+      "customer empathy routines",
+      "handoff challenges",
+      "stakeholder influence style",
+      "qualitative evidence exposure",
+      "career mix of agency and in-house work"
+    ],
+    "forbidden_core_shortcuts": [
+      "main pain is not enough interview transcripts",
+      "already believes empathy can be automated",
+      "thinks synthetic users are fake by default",
+      "would definitely use this for all testing",
+      "would definitely reject this for all testing",
+      "is only here to defend human research"
+    ]
+  },
+  "fixed": {
+    "location": "Hong Kong",
+    "preferred_languages": [
+      "Cantonese",
+      "English"
+    ],
+    "occupation": "Senior UX designer with regular involvement in user interviews, prototyping, and product-shaping work",
+    "persona_domain_relevance": "must_be_plausibly_relevant_to_ai_user_and_synthetic_research_tool_interviews"
+  },
+  "preferred": {
+    "persona_generation_rule": "Generate the person from ordinary life, design practice, work context, and human difference axes first. UX context should remain stable and reusable.",
+    "sample_eligibility_rule": "The person should plausibly participate in user interviews, synthesis, prototyping, and design critique, and should care about the difference between shallow answers and behaviorally useful evidence.",
+    "product_context_rule": "Use UX context only for stable role facts such as interview exposure, prototype habits, empathy style, and collaboration boundaries. Do not encode a fixed verdict on AI research.",
+    "role_anchor": "senior_ux_designer_with_research_exposure",
+    "age_range": "29-37",
+    "career_path_expectation": "Should include believable movement through design craft, interface or service work, and regular contact with research or usability feedback.",
+    "variation_targets": [
+      "craft-first versus research-first emphasis",
+      "agency exposure versus in-house depth",
+      "high empathy language versus dry operational critique",
+      "prototype-speed versus synthesis-discipline tension",
+      "stakeholder translation burden"
+    ],
+    "human_difference_axes_expectations": {
+      "control_preference": "Should want to inspect how a synthesized persona or conclusion was formed before trusting it.",
+      "trust_style": "Should care about behavioral plausibility, nuance retention, and whether edge cases are flattened away.",
+      "complexity_tolerance": "Can be medium to high if complexity helps preserve nuance.",
+      "decision_tempo": "Should vary between exploratory openness and sharper critique once a concept becomes concrete.",
+      "relationship_to_money": "Money does not need to dominate; time, craft integrity, and credibility may matter more.",
+      "need_for_explanation": "Should want concrete examples, not only claims.",
+      "guidance_preference": "May prefer tools that support critique and comparison rather than automate judgment entirely."
+    },
+    "negative_prompting": [
+      "Do not make the UX designer a stereotype of empathy slogans.",
+      "Do not assume formal deep research specialization unless the story supports it.",
+      "Do not turn the person into a pure anti-AI gatekeeper.",
+      "Do not overfit the persona to one methodology."
+    ]
+  }
+}
