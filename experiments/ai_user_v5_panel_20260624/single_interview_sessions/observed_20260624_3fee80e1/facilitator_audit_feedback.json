@@ -1,0 +1,216 @@
+{
+  "artifact_version": "facilitator_audit_feedback_v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "generic_interviewing",
+      "synthetic_user_research",
+      "qualitative_concept_interviews"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Strong turn-by-turn probing within a narrow slice, but the run over-optimized for depth inside one example and then treated template coverage as sufficient despite unresolved research-goal dimensions. The main improvement need is stronger closure discipline tied to the stated research objective, plus cleaner separation of observed behavior from hypothetical concept reaction in synthesis.",
+    "primary_failure_mode": "The facilitator accepted local depth on one concrete use case as a substitute for full goal coverage, causing missed probes on decision context and later synthesis overreach.",
+    "depth_vs_coverage_assessment": "Depth was good within the chosen incident, especially around thresholds, contrast, and trust conditions. Coverage against the broader research goal was incomplete even though concept-mode checklist coverage was complete."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "goal-template-mismatch",
+      "severity": "high",
+      "why_it_matters": "A facilitator can satisfy a generic interview template while still missing the actual decision questions the study needed answered.",
+      "observed_pattern": "The run completed concept-mode fields but did not collect several research-goal dimensions explicitly called out in the brief and observer steering."
+    },
+    {
+      "tag": "premature-narrowing",
+      "severity": "medium",
+      "why_it_matters": "Early narrowing can produce clean depth on one example while hiding whether that example is representative of the participant's broader workflow.",
+      "observed_pattern": "After a broad opening, the interview quickly locked onto one onboarding/setup incident and stayed there through concept testing."
+    },
+    {
+      "tag": "missed-evidence-conflict-probe",
+      "severity": "medium",
+      "why_it_matters": "Adoption decisions are often governed by what people do when evidence sources disagree, not only by ideal trust conditions.",
+      "observed_pattern": "The facilitator probed what evidence would build trust, but did not ask how the participant would respond if the tool output conflicted with analytics, prior observation, or other evidence."
+    },
+    {
+      "tag": "hypothetical-evidence-blending",
+      "severity": "high",
+      "why_it_matters": "When hypothetical reactions are blended with observed behavior, downstream synthesis can overstate what was actually established.",
+      "observed_pattern": "Later synthesis sections mixed real-event evidence with stated future-use conditions without consistently labeling the difference."
+    },
+    {
+      "tag": "closure-too-permissive",
+      "severity": "high",
+      "why_it_matters": "If closure rules only check template completion, important unanswered questions can be frozen into apparently complete evidence.",
+      "observed_pattern": "The interview stopped once concept coverage and required depth fields were complete, despite unresolved goal-specific gaps."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "scope signal",
+      "priority": "high",
+      "participant_signal": "The participant initially named more than one decision area, but the interview pursued only one concrete path.",
+      "missed_followup_question": "Which of those decision types do you personally carry most often, and who else is involved when the call is not yours alone?",
+      "generic_learning": "When a participant names multiple decision domains early, use one short ownership probe before narrowing so later findings are anchored to the right decision context."
+    },
+    {
+      "trigger_type": "observer-steered gap",
+      "priority": "high",
+      "participant_signal": "The stated goal included what evidence is publicly defensible versus privately worrying, but the participant was never asked to separate those.",
+      "missed_followup_question": "In that decision, what could you comfortably defend to others, and what were you privately worried about even if you could not easily prove it yet?",
+      "generic_learning": "If the study cares about explicit versus tacit decision drivers, ask for the contrast directly instead of inferring it from later concept reactions."
+    },
+    {
+      "trigger_type": "evidence-quality cue",
+      "priority": "high",
+      "participant_signal": "The participant described acting on a strong local signal without needing more sample size.",
+      "missed_followup_question": "What evidence was still missing at that point, and what made waiting for more evidence feel too costly?",
+      "generic_learning": "When someone acts before gathering more data, probe both the missing evidence and the cost of delay to understand the true decision threshold."
+    },
+    {
+      "trigger_type": "adoption-risk cue",
+      "priority": "high",
+      "participant_signal": "The participant set trust conditions for using the tool, but no conflict case was tested.",
+      "missed_followup_question": "If the tool's conclusion points one way but your analytics or user conversations point another way, how would you resolve that conflict?",
+      "generic_learning": "A trust-threshold answer is incomplete until you test behavior under evidence conflict."
+    },
+    {
+      "trigger_type": "representativeness cue",
+      "priority": "medium",
+      "participant_signal": "The interview derived broad workflow implications from a single operational example.",
+      "missed_followup_question": "Is this type of decision the main recurring bottleneck for you, or just one recent example of a broader pattern?",
+      "generic_learning": "Before generalizing from one vivid case, verify whether it is central, frequent, or merely convenient to recall."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant seemed focused on one specific operational problem in a setup flow.",
+      "possible_underlying_driver": "The stronger reusable driver may be a general need for decision support that exposes reasoning, assumptions, and alternatives before asking for action.",
+      "why_the_surface_frame_is_weak": "Multiple later answers emphasized explanation structure and reduction of rework more than the specific surface area itself.",
+      "generic_learning": "When a participant talks through a narrow use case, test whether the real driver is the local task or a broader decision-making standard."
+    },
+    {
+      "observed_surface_frame": "The participant's fast action on a small number of observations could be read as low need for evidence volume.",
+      "possible_underlying_driver": "The deeper pattern may be reliance on mechanism-level signal once the participant believes the causal structure is visible.",
+      "why_the_surface_frame_is_weak": "The participant did not reject evidence quality; they described a threshold where additional quantity no longer improved the decision.",
+      "generic_learning": "Do not code early action as impulsiveness or low rigor without probing what kind of evidence the participant treats as sufficient."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Observed-event evidence and hypothetical concept-adoption evidence were not kept in clearly separated buckets in synthesis.",
+      "severity": "high",
+      "generic_learning": "Maintain explicit labels for recalled behavior versus stated future conditions so downstream conclusions do not inherit false certainty."
+    },
+    {
+      "issue": "Synthesis moved from a single tested slice to broader product or workflow implications not established by the transcript.",
+      "severity": "high",
+      "generic_learning": "Bound implications to the exact decision context tested unless the interview explicitly verifies transfer across contexts."
+    },
+    {
+      "issue": "Coverage completion was treated as an evidence claim even though it reflected template completion more than goal completion.",
+      "severity": "medium",
+      "generic_learning": "Coverage status should be tied to the study objective, not only to the default interview scaffold."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "Treat the stated research goal as binding. Do not declare coverage complete unless each named decision dimension in the goal has been directly participant-tested or explicitly ruled out as not applicable.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "When a participant names multiple decision areas in the opening, ask one short ownership/frequency probe before narrowing to a single example.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If the study includes tacit-versus-defensible reasoning, ask a direct contrast question on what the participant could defend publicly versus what they privately worried about.",
+      "reuse_scope": "interview_mode_only",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "After a participant states trust criteria for a new tool or method, ask one conflict probe about what happens when that output disagrees with another evidence source.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "In synthesis, separate observed behavior, recalled interpretation, and hypothetical adoption conditions into distinct sections and do not use one as proof of the others.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not stop solely because the concept-validation checklist is complete if goal-specific gaps remain unresolved.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "Before generalizing from one concrete example, ask whether the case is typical, high-frequency, high-stakes, or merely recent.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "CF-001",
+      "rule": "When a participant describes multiple decision contexts at the start, capture ownership and frequency before selecting one for depth.",
+      "source_tags": [
+        "goal-template-mismatch",
+        "premature-narrowing"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-002",
+      "rule": "After a stated trust threshold, always test one evidence-conflict scenario to learn how the participant adjudicates disagreement.",
+      "source_tags": [
+        "missed-evidence-conflict-probe"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-003",
+      "rule": "Keep observed past behavior and hypothetical future adoption in separate evidence lanes throughout synthesis and evaluation.",
+      "source_tags": [
+        "hypothetical-evidence-blending"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-004",
+      "rule": "Closure requires both template completion and research-goal completion; either one alone is insufficient.",
+      "source_tags": [
+        "closure-too-permissive",
+        "goal-template-mismatch"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The facilitator should have asked specifically about how synthetic output would compare against the participant's other named evidence sources in this founder workflow.",
+      "block_reason": "As written, this is tied to the project's local evidence stack and role framing.",
+      "rewrite_as_generic": "Ask how the participant resolves conflicts when a new method disagrees with their existing evidence sources."
+    },
+    {
+      "blocked_item": "The run should not have generalized from the onboarding/setup-flow example to broader roadmap and feature-priority behavior for this founder.",
+      "block_reason": "This references the project's specific workflow categories.",
+      "rewrite_as_generic": "Do not generalize from one operational example to a broader decision domain unless transfer has been directly tested."
+    }
+  ]
+}

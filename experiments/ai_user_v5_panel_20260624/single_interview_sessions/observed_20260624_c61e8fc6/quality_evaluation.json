@@ -1,0 +1,131 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview establishes a recent concrete event before concept introduction, then anchors later concept questions back to that event (`exchange_2` to `exchange_4`, concept starts at `exchange_5`).",
+    "Most asked questions have one conversational focus and sound natural in Cantonese; there is no obvious participant-facing jargon or analytical classification spoken to the participant (`exchange_1`-`exchange_11`).",
+    "The facilitator probes trust boundary, workflow insertion, and repeat-use conditions distinctly rather than collapsing them into a single adoption claim (`exchange_6`, `exchange_8`, `exchange_9`, `exchange_10`, `exchange_11`).",
+    "The synthesis generally preserves that concept-validation evidence is hypothetical rather than behavioural proof, especially on pricing and retention limits (`pricing_signal`, `evidence_gaps`, `synthetic_only_disclaimer`)."
+  ],
+  "findings": [
+    {
+      "category": "leading / solution-loaded questioning",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded: it preloads benefits such as '提早搵出假設漏洞同反對位', which frames the platform as useful before the participant has reacted. That weakens neutrality even though the participant answer remains substantive.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "FACILITATOR TRACE concept_intro asked"
+      ],
+      "recommendation": "Introduce the concept with a thinner description of the workflow change, then ask what, if anything, seems useful or risky. Remove built-in benefit claims from the participant-facing wording."
+    },
+    {
+      "category": "coverage quality",
+      "severity": "medium",
+      "observation": "Observer intervention 2 asked for what she could defend publicly versus what still felt privately uncertain in the real decision, but that participant-facing probe never happened before concept introduction. The interview gets trust criteria later, but misses a direct current-state probe on public-vs-private uncertainty in the recalled event.",
+      "evidence_refs": [
+        "OBSERVER INTERVENTIONS intervention_id 2",
+        "exchange_2.facilitator",
+        "exchange_3.facilitator",
+        "exchange_4.facilitator"
+      ],
+      "recommendation": "Before concept introduction, add one direct recalled-event question on what she felt confident defending in the room versus what still felt uncertain to her."
+    },
+    {
+      "category": "concept-validation rigor",
+      "severity": "medium",
+      "observation": "Curiosity/trial and repeated workflow use are covered, but payment and month-two retention remain untested. The synthesis correctly marks pricing as unknown, yet some retention framing goes slightly beyond evidence because all continuation and drop-off statements come from hypothetical tool-use answers, not observed analog behaviour with a comparable tool.",
+      "evidence_refs": [
+        "exchange_8.persona",
+        "exchange_9.persona",
+        "exchange_10.persona",
+        "SYNTHESIS retention_risk",
+        "SYNTHESIS pricing_signal"
+      ],
+      "recommendation": "Label retention outputs explicitly as hypothetical stated conditions, or collect analogous behaviour about prior tool adoption, continued use, and abandonment before writing retention risk claims."
+    },
+    {
+      "category": "evidence discipline",
+      "severity": "medium",
+      "observation": "`workflow_effect: adds_layer` is a synthesized causal label without a direct participant quote using that framing. The participant said she would use it as a pre-map and still re-check, which supports limited insertion, but the exact 'adds layer' formulation is analyst interpretation.",
+      "evidence_refs": [
+        "exchange_8.persona",
+        "exchange_10.persona",
+        "SYNTHESIS retention_risk.workflow_effect"
+      ],
+      "recommendation": "Either quote the participant-facing wording more directly, or mark this as analyst interpretation rather than evidence-backed output."
+    },
+    {
+      "category": "synthesis overreach",
+      "severity": "medium",
+      "observation": "The `key_insights` and `next_experiment` sections contain strong product-shaping implications from a single synthetic concept-validation interview. They are directionally plausible, but they move from one persona's stated preferences to product recommendations that should be bounded more explicitly.",
+      "evidence_refs": [
+        "SYNTHESIS key_insights",
+        "SYNTHESIS next_experiment",
+        "SYNTHESIS synthetic_only_disclaimer"
+      ],
+      "recommendation": "Keep product implications narrower: state them as candidate implications for follow-up testing with additional personas or real participants, not as product-level conclusions."
+    },
+    {
+      "category": "domain fit alignment",
+      "severity": "medium",
+      "observation": "The research goal mentions roadmap and feature-priority decisions, but the realized interview centers more on synthesis and prototype-review preparation than on an actual roadmap or priority call. There is one changed action about altering review focus and next-round testing, but limited evidence on how research signals affect broader prioritization tradeoffs.",
+      "evidence_refs": [
+        "RESEARCH GOAL",
+        "exchange_2.persona",
+        "exchange_7.persona"
+      ],
+      "recommendation": "In the next run, ask for one specific case where research evidence changed feature priority, scope, or sequencing, not only how synthesis was prepared."
+    }
+  ],
+  "required_improvements": [
+    "Rewrite the concept intro to remove built-in value claims and ask for usefulness/risk more neutrally.",
+    "Add a pre-concept recalled-event probe on what the participant could publicly defend versus what remained privately uncertain.",
+    "Constrain synthesis outputs so hypothetical adoption statements are not presented as retention evidence without analogous behavioural proof.",
+    "Reduce product-shaping implications from a single synthetic concept-validation interview and label analyst interpretations explicitly."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one concrete feature-priority or roadmap call where prototype/interview evidence changed scope, sequencing, or go/no-go.",
+      "Before introducing the concept, ask what she could defend publicly in that decision and what still worried her privately.",
+      "After concept intro, separate 'would try once', 'would rely on in review prep', and 'would keep using after a month' as distinct probes.",
+      "Probe one comparable past tool or synthesis aid she adopted or abandoned, to ground retention and trust claims in observed behaviour."
+    ],
+    "coverage_gap_actions": [
+      "Directly probe payment willingness or procurement analogs only if concept value and trust threshold are concrete enough.",
+      "Collect participant-facing evidence on month-two repeat use via analogous past tool behaviour, not only hypothetical future statements.",
+      "Probe a real tradeoff outcome: what got deprioritized, delayed, or rewritten because of the research signal in the recalled event."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, require a lean concept intro that states the workflow change without embedding benefits like finding flaws or objections early.",
+      "Add a guardrail that if the research goal includes priority or roadmap decisions, at least one asked question must probe an actual changed action on scope, sequencing, or prioritization.",
+      "In synthesis policy, mark retention, workflow effects, and adoption-path claims as hypothetical unless backed by observed analogous behaviour.",
+      "Ask observer steering to preserve one explicit 'defend publicly vs worry privately' question before concept introduction when that is in the research goal."
+    ],
+    "turn_budget_guidance": "Current turn budget was sufficient for this interview length, but one extra turn before concept intro should be reserved for the missing public-vs-private uncertainty probe if roadmap/priority evidence is a core goal."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates methodological quality of a synthetic interview artifact. Any participant reactions, adoption signals, and product implications remain simulated evidence and should not be treated as human market proof."
+}

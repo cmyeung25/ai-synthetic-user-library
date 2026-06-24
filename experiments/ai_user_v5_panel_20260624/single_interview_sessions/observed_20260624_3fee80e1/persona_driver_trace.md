@@ -1,0 +1,73 @@
+# Persona Driver Trace: Mandy Cheung
+
+> 呢份分析只係基於合成人物設定同訪談內容嘅模擬解讀，用作 AI pre-validation，唔係真人市場證據，亦唔取代真人研究。
+
+Research goal: Understand how this founder currently decides roadmap and feature priority, what evidence and pressure shape those decisions, what she can defend publicly versus what she privately worries about, and only after that test whether an AI synthetic-user platform fits her workflow.
+
+## Surface Read
+
+- Said: 佢最近最貼身參與嘅決定，主要係新用戶 setup flow 同功能取捨，尤其係應唔應該喺入口位加問題，定收窄核心用例。
+- Said: 佢講咗一次因為見到 trial 用戶喺要求先填背景資料嗰頁停低，甚至冇完成，所以直接 cut 走一半前置問題，改為先俾人入主畫面再補資料。
+- Said: 佢明確話，當阻力太近入口，而且產品未先提供回報時，呢類問題未必需要等更多 sample size 先決定。
+- Said: 佢接受用戶先填資料，但前提係價值交換要清楚，即係填完之後會即刻換到咩內容或體驗。
+- Said: 佢而家判斷一個畫面有冇清楚交代價值，主要睇自己隔一排再入去係咪一眼明，仲有 trial 用戶填完之後有冇繼續探索。
+- Said: 對 AI synthetic-user 平台，佢會先用嚟判斷入口問題值唔值得擺喺最前，但前提係平台要交代判斷原因，而唔係淨係俾結論。
+- Said: 佢最少要見到判斷路徑、具體摩擦來源，同埋可對照改法，先會信可以照住改。
+- Said: 如果分析將複雜流失位講到太單線、冇講假設、冇提供相反解讀、或者一開口就推大改，佢會覺得只係講得順唔值得照跟。
+- Said: 如果平台可以將可疑位、判斷形成方式、其他合理解讀同細改版選項連代價攤開，佢會較願意照住試。
+- Said: 如果每次都要佢自己補返假設、幫個系統收尾，短 sanity check 都會變成另一份工，佢就會停用。
+- Seemed to optimize for: 佢似乎主要優先緊可辯護嘅判斷質量，同時要減少入口摩擦，同埋避免將自己帶入一種『分析好完整但其實仍然要自己重做一次』嘅假效率。
+- Implicit: 佢冇直接講『時間唔夠』，但好多判斷都圍繞住唔想再做重複拆題同補假設。
+- Implicit: 佢冇直接講『我驚 AI 誤導我』，但反覆要求判斷路徑、相反解讀、假設透明，顯示佢其實好防黑盒過度自信。
+- Implicit: 佢冇直接講預算，但『值唔值得一再開返』同『唔好變另一份工』透露咗佢對持續使用成本非常敏感。
+
+## Likely Drivers
+
+- [high] 佢對『價值交換要清楚先值得要求用戶付出』有好穩定嘅判斷框架，所以一見到入口位先收資料但未畀回報，就會快速判定係設計錯位。 (core_value, mixed)
+  Why: 呢個價值觀解釋咗點解佢喺 setup flow 問題上唔係由文案靚唔靚出發，而係由『有冇先向用戶索取信任』去判斷。
+  Transcript refs: exchange_2.persona, exchange_3.persona, exchange_4.persona, exchange_6.persona
+  Profile refs: values.core_values, values.fears, product_reaction_rules.first_checks
+- [high] 佢決策時唔係單純追求更多 evidence quantity，而係追求一個能夠解釋行為點樣發生嘅機制；所以當摩擦已經近入口而且模式明顯時，佢會覺得再加 sample size 未必增加判斷價值。 (decision_style, mixed)
+  Why: 呢個解釋到佢點解可以喺見到少量但高訊號嘅阻滯後快速 cut 問題，同時又唔代表佢係草率。
+  Transcript refs: exchange_3.persona, exchange_5.persona, exchange_9.persona
+  Profile refs: personality_belief.decision_style, human_difference_axes.decision_tempo, deep_research_notes.what_generates_good_signal_from_her
+- [high] 佢對工具信任係有條件嘅，核心條件係可追溯推理、假設透明、同可比較嘅替代解讀，而唔係品牌感或結論本身講得順。 (trust_pattern, mostly_observed)
+  Why: 呢個係佢對 synthetic-user 平台最核心嘅採納門檻；若果平台做唔到，佢唔會將它納入週常判斷流程。
+  Transcript refs: exchange_6.persona, exchange_7.persona, exchange_8.persona, exchange_11.persona, exchange_12.persona
+  Profile refs: personality_belief.trust_orientation, values.core_values, product_reaction_rules.negative_signals, contradiction_map
+- [high] 佢日常工作高度碎片化，所以任何新方法如果要佢自己補完太多推理缺口，就會由『省判斷力』變成『增加認知維護成本』。 (daily_constraint, mixed)
+  Why: 呢個驅動佢將『我仲需唔需要由頭再判一次』當成重複使用與否嘅分水嶺。
+  Transcript refs: exchange_10.persona, exchange_11.persona, exchange_12.persona
+  Profile refs: life_story.current_daily_routine, human_difference_axes.fragmentation reality, human_difference_axes.life load, problem_context.active_pain_points
+- [medium] 佢過去喺細團隊見過『好有自信但證據好薄』嘅產品決定，令佢特別警覺任何過度簡化、多數只提供單一路徑解釋嘅分析。 (past_experience, mostly_inferred)
+  Why: 所以佢一聽到平台可能將複雜流失位講成單一原因，就即刻進入防衛性審核模式。
+  Transcript refs: exchange_8.persona
+  Profile refs: life_arc, life_story.career_path, values.fears, deep_research_notes.attention_pattern
+- [high] 佢想快，但唔接受以模糊化思考換取速度，所以只會接受『幫我做取捨』而唔係『替我跳過判斷』嘅工具角色。 (identity_or_role, mixed)
+  Why: 呢個解釋到點解佢願意保留短 sanity check，但拒絕要自己重新拆題；佢要保留最終控制權，但唔想做重工。
+  Transcript refs: exchange_9.persona, exchange_11.persona, exchange_12.persona
+  Profile refs: human_difference_axes.control preference, human_difference_axes.need for explanation, contradiction_map
+
+## Unspoken Constraints
+
+- [high] 新工具必須好快就可以套入一個真實 setup 決定，唔可以先要求高投入 onboarding。
+  Why likely: 佢反覆將使用價值定義為幫自己處理『每星期都會撞到』嘅判斷，而唔係提供一次性靚分析。
+- [high] 輸出要足夠可辯護，因為佢唔只係自己內部參考，亦在意之後能唔能夠向自己或其他人交代點解要改。
+  Why likely: 佢要求判斷路徑、相反解讀、代價比較，顯示佢重視可 defend 嘅 reasoning，而唔只係方向感。
+- [high] 佢對持續認知成本比對單次功能價值更敏感；即使分析本身唔錯，只要每次都要她補洞，就會被視為不值得。
+  Why likely: 佢將停用條件描述成『幫佢收尾』，即係工具若不能完成足夠比例嘅思考整理，就無法進入固定流程。
+
+## Value Tensions
+
+- [high] 速度 vs 可辯護性: 佢想快啲 cut 掉明顯入口摩擦，避免拖慢 trial。 vs 佢又要求每個建議有清楚判斷路徑、假設、相反解讀，先肯照改。
+- [high] 想減少自己重做分析 vs 保留最終控制權: 佢想平台將可疑位、推理、替代解讀攤開，令自己唔使由頭拆題。 vs 佢仍然會保留短 sanity check，唔會完全盲跟。
+- [high] 開放用 AI 加快驗證 vs 抗拒黑盒包裝成 certainty: 佢願意先喺入口問題判斷用 synthetic-user 平台。 vs 只要平台講得太單線、太肯定、冇假設透明，佢就會抽離。
+
+## Missed Follow-Up Questions
+
+- [high] 你話『可疑位、判斷形成方式、其他合理解讀攤開』先幫到你，邊一部分如果做得最好，先最有機會令你減少自己做 sanity check？
+  Why: 可以分清楚佢最在意係推理透明、替代方案比較，定係代價評估，從而確認真正嘅採納門檻。
+- [high] 當你最終冇跟住某個分析去改，通常係因為你手上有相反證據，定係因為你覺得嗰個分析未處理到足夠多可能性？
+  Why: 可以拆開『證據衝突』同『方法唔可信』兩種拒絕原因，幫助理解佢嘅信任崩位。
+- [medium] 你提到『每星期都會撞到』嘅 setup 判斷，如果平台真係有用，你預期佢每次至少幫你慳到邊一段工夫？
+  Why: 呢條可以將抽象嘅 workflow fit 轉成具體節省位，亦更易判斷重複使用同付費意圖。

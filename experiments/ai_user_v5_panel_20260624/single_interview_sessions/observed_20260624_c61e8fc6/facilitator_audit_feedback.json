@@ -1,0 +1,215 @@
+{
+  "artifact_version": "facilitator_audit_feedback_v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "generic"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Strong coverage and generally natural probing, with the main improvement need being stricter evidence discipline before concept introduction and tighter separation between hypothetical reactions and behavioral proof.",
+    "primary_failure_mode": "The facilitator moved into concept validation before fully exhausting the highest-signal current-state uncertainty and occasionally embedded value claims into participant-facing concept framing.",
+    "depth_vs_coverage_assessment": "Coverage was high and depth was often good, but one important pre-concept depth thread was skipped: what the participant could defend publicly versus what still felt uncertain in the real recalled decision."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "premature_concept_transition",
+      "severity": "medium",
+      "why_it_matters": "Introducing the concept before finishing the most decision-relevant current-state probe weakens later interpretation because hypothetical reactions are less grounded in actual decision behavior.",
+      "observed_pattern": "The interview established a real recent event, but did not directly probe what the participant felt able to defend versus what still felt uncertain before moving into the concept."
+    },
+    {
+      "tag": "solution_loaded_concept_intro",
+      "severity": "medium",
+      "why_it_matters": "When the concept description includes built-in benefits, it biases the participant toward usefulness and reduces neutrality.",
+      "observed_pattern": "The concept was introduced with promised upside such as finding assumption gaps and objections early, rather than with a thinner workflow description."
+    },
+    {
+      "tag": "coverage_over_depth_on_decision_context",
+      "severity": "medium",
+      "why_it_matters": "If the interview goal includes decision or prioritization behavior, missing one high-signal causal probe can leave the later adoption story under-grounded.",
+      "observed_pattern": "The interview covered many required areas, but skipped a direct question on what evidence the participant could publicly stand behind versus what remained privately unresolved in the recalled event."
+    },
+    {
+      "tag": "hypothetical_adoption_overinterpreted",
+      "severity": "medium",
+      "why_it_matters": "Retention, workflow impact, and adoption claims become unreliable if they are inferred from stated future intent rather than analogous past behavior.",
+      "observed_pattern": "Later answers about where the tool would fit and when it would still be rechecked were useful, but they remained hypothetical and should not be treated as behavioral retention evidence."
+    },
+    {
+      "tag": "analyst_interpretation_not_labeled",
+      "severity": "low",
+      "why_it_matters": "When synthesis introduces a causal label not stated by the participant, future systems can overlearn analyst framing instead of interview evidence.",
+      "observed_pattern": "Some synthesized labels compressed the participant's workflow stance into stronger shorthand than the transcript itself used."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "public_vs_private_uncertainty cue",
+      "priority": "high",
+      "participant_signal": "The participant described turning messy feedback into defensible next-step judgments and separating surface praise from decision-relevant hesitation.",
+      "missed_followup_question": "In that actual decision, what part of your recommendation could you defend confidently in the room, and what part still felt uncertain to you even after the synthesis?",
+      "generic_learning": "Before concept introduction, explicitly separate publicly defensible evidence from privately unresolved uncertainty in a recalled real decision."
+    },
+    {
+      "trigger_type": "roadmap_or_priority relevance gap",
+      "priority": "high",
+      "participant_signal": "The participant gave a strong example about synthesis and review preparation, but not a concrete feature-priority or sequencing tradeoff.",
+      "missed_followup_question": "What concrete decision changed because of that evidence: scope, sequence, priority, or whether to proceed at all?",
+      "generic_learning": "If the research goal mentions prioritization or roadmap effects, require one probe that forces the participant to name the changed decision, not just the improved understanding."
+    },
+    {
+      "trigger_type": "minority_signal_threshold cue",
+      "priority": "medium",
+      "participant_signal": "The participant repeatedly distinguished surface comments from decision-relevant behavior and later asked for minority views and exceptions to be preserved.",
+      "missed_followup_question": "Can you recall a time when an objection or minority signal looked important at first but later turned out not to matter, and how you distinguished that?",
+      "generic_learning": "When a participant values contradiction and exceptions, probe their threshold for separating meaningful minority signal from noise."
+    },
+    {
+      "trigger_type": "trust_conflict calibration cue",
+      "priority": "medium",
+      "participant_signal": "The participant wanted traceability and said they would recheck outputs that looked too neat.",
+      "missed_followup_question": "If a tool showed a clear evidence trail but its conclusion still conflicted with your own first read, what would you check first?",
+      "generic_learning": "Test how participants resolve conflict between tool output and their own judgment to understand real trust calibration rather than stated trust criteria alone."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant appears primarily concerned with whether outputs are smooth or messy.",
+      "possible_underlying_driver": "The deeper driver may be reputational and evidentiary defensibility rather than a simple stylistic preference for nuance.",
+      "why_the_surface_frame_is_weak": "The transcript supports concern about being able to defend judgments under scrutiny, not merely dislike of tidy summaries.",
+      "generic_learning": "When a participant criticizes outputs for being 'too neat,' probe what failure that neatness would cause in an actual decision setting."
+    },
+    {
+      "observed_surface_frame": "The participant seems to want a tool that saves synthesis time.",
+      "possible_underlying_driver": "The stronger driver may be reducing avoidable rework without sacrificing auditability.",
+      "why_the_surface_frame_is_weak": "The participant consistently subordinated efficiency to credibility and rechecking ability.",
+      "generic_learning": "Do not collapse time-saving language into a productivity driver without testing what safeguards the participant refuses to give up."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical future-use statements were close to being treated as evidence of retention or stable workflow insertion.",
+      "severity": "high",
+      "generic_learning": "Treat stated future conditions as hypothetical unless supported by analogous past behavior with a comparable tool, workflow, or decision aid."
+    },
+    {
+      "issue": "A synthesized workflow label compressed the participant's stance into stronger analyst wording than the transcript directly supported.",
+      "severity": "medium",
+      "generic_learning": "When adding summary labels, either ground them in direct phrasing from the participant or mark them explicitly as analyst interpretation."
+    },
+    {
+      "issue": "Product implications in synthesis extended beyond what one synthetic concept-validation interview can support.",
+      "severity": "medium",
+      "generic_learning": "Translate single-interview implications into testable hypotheses for follow-up rather than product-level conclusions."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept-validation mode, do not introduce the concept until the facilitator has extracted one concrete unresolved uncertainty from the recalled real decision, not just the participant's process description.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If the research goal references prioritization, roadmap, scope, or sequencing, require at least one participant-facing probe that asks what concrete decision changed because of the evidence.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "When a participant describes making evidence 'defensible' or avoiding being misled by tidy summaries, trigger a probe that separates what they could defend publicly from what still felt privately uncertain.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Do not let hypothetical willingness-to-use, repeat-use, or trust-threshold answers become retention or adoption evidence unless the interview also captures analogous past behavior.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant values preserved disagreement or exceptions, ask for one case where an apparent objection did not deserve action, to reveal their threshold for distinguishing signal from noise.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Prefer exhausting the highest-signal current-state decision probe before switching into concept reaction, even when coverage is progressing well.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "decision_rule",
+      "text": "Use a lean concept introduction that describes the workflow change without embedding benefits or promised outcomes.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "cf_public_private_split",
+      "rule": "Before concept introduction, when a recalled decision is established, ask what evidence the participant could defend confidently and what still remained uncertain.",
+      "source_tags": [
+        "premature_concept_transition",
+        "coverage_over_depth_on_decision_context"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_changed_decision_probe",
+      "rule": "If the interview goal includes decision impact, require one probe that names the changed action: scope, sequence, priority, launch, or no-go.",
+      "source_tags": [
+        "coverage_over_depth_on_decision_context"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_hypothetical_boundary",
+      "rule": "Separate 'would try once,' 'would use in a bounded step,' and 'would continue relying on' as distinct evidence classes.",
+      "source_tags": [
+        "hypothetical_adoption_overinterpreted"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_neutral_concept_intro",
+      "rule": "Describe the candidate tool or workflow neutrally first; ask usefulness and risk before mentioning potential benefits.",
+      "source_tags": [
+        "solution_loaded_concept_intro"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_signal_vs_noise_probe",
+      "rule": "When a participant emphasizes contradiction, minority views, or edge cases, ask how they decide which objections matter and which do not.",
+      "source_tags": [
+        "coverage_over_depth_on_decision_context"
+      ],
+      "confidence": "medium",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The facilitator missed a chance to ask about who specifically would challenge the participant in review and what organizational pressures shaped the need for defensible evidence.",
+      "block_reason": "Specific stakeholder types and review dynamics could turn into project- or organization-shaped priors if carried forward too literally.",
+      "rewrite_as_generic": "When a participant emphasizes needing to defend conclusions, ask what real-world challenge context makes that defensibility necessary."
+    },
+    {
+      "blocked_item": "The interview did not fully realize the study's stated interest in roadmap and feature-priority decisions because the recalled example stayed closer to prototype-review preparation.",
+      "block_reason": "The exact mismatch depends partly on this study's project framing and should not become a hardcoded domain assumption.",
+      "rewrite_as_generic": "When the stated research goal includes downstream decision impact, ensure at least one recalled event reaches the final tradeoff or changed action, not only the preparatory analysis."
+    }
+  ]
+}

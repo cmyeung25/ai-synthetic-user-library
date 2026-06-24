@@ -1,0 +1,128 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 3,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "pass",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "warn",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The facilitator established a concrete recent event before introducing the concept, using [exchange_2.persona] and [exchange_3.persona] to anchor the problem in observed behavior.",
+    "Questions were mostly short, single-focus, and conversational; none of the asked turns used participant-facing research jargon or analytical labels.",
+    "A real contrast case was obtained in [exchange_4.persona], which improved rigor by testing when upfront questions do not create drop-off.",
+    "Concept trust and repeat-use were kept behaviorally bounded as hypothetical conditions rather than mislabeled as proof; the synthesis explicitly preserves several unknowns in pricing and retention."
+  ],
+  "findings": [
+    {
+      "category": "synthesis_overreach",
+      "severity": "high",
+      "observation": "Several synthesis outputs generalize beyond the actual interview scope. The research goal was about roadmap and feature-priority decisions plus public-vs-private defensibility, but the transcript only reaches one onboarding/setup-flow decision path. Despite that, the synthesis makes broader product-shaping claims such as \"the product should prioritize\" and \"the product should focus\" in `key_insights`, and frames adoption logic more generally than the evidence supports.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_5.persona",
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Constrain synthesis to the tested slice: setup-flow entrance-question decisions. Rewrite product implications as bounded hypotheses for this persona only, and state that roadmap-level prioritization and broader founder decision logic were not established in this interview."
+    },
+    {
+      "category": "coverage_against_goal",
+      "severity": "medium",
+      "observation": "Coverage is marked complete, but important parts of the stated research goal were not participant-tested: how much of roadmap/priority she carries herself versus others, what evidence she can defend publicly versus what she privately worries about, and how synthetic output would interact with conflicting analytics or real user conversations. Observer interventions explicitly requested these areas, but asked turns never covered them.",
+      "evidence_refs": [
+        "OBSERVER INTERVENTIONS.intervention_id:1",
+        "OBSERVER INTERVENTIONS.intervention_id:2",
+        "OBSERVER INTERVENTIONS.intervention_id:3",
+        "exchange_1.persona",
+        "exchange_12.persona"
+      ],
+      "recommendation": "Do not treat coverage as complete relative to the research goal. Add direct participant-facing probes on decision ownership, defensible evidence versus private worries, and conflict resolution when synthetic output disagrees with other evidence sources."
+    },
+    {
+      "category": "premature_concept_narrowing",
+      "severity": "medium",
+      "observation": "The interview narrowed quickly from the founder's broader product-decision context to one onboarding setup-flow case, then stayed there through concept validation. That yielded depth on one use case but weakened domain-fit assessment for the broader founder workflow named in the goal.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.facilitator",
+        "exchange_6.facilitator",
+        "exchange_9.persona"
+      ],
+      "recommendation": "Before concept introduction, capture one more real decision dimension from the original goal, such as feature-priority tradeoffs or publicly defensible versus privately worrying evidence, then decide whether setup flow is truly the dominant decision bottleneck."
+    },
+    {
+      "category": "planning_quality",
+      "severity": "medium",
+      "observation": "Observer steering identified higher-value missing evidence, but the run accepted a narrower path and then declared closure. In particular, intervention 2 asked for missing evidence, pressure/runway, public-versus-private defensibility, and exact tradeoff; intervention 3 asked about conflict with analytics or real conversations. Those were not asked before close.",
+      "evidence_refs": [
+        "OBSERVER INTERVENTIONS.intervention_id:2",
+        "OBSERVER INTERVENTIONS.intervention_id:3",
+        "FACILITATOR TRACE.decision_status:asked",
+        "FACILITATOR TRACE.decision_status:not_asked_at_close"
+      ],
+      "recommendation": "Tighten closure rules so `coverage_complete` requires the current research goal's named decision dimensions, not only the concept-mode template fields. Observer interventions should also update required coverage targets when they introduce critical gaps."
+    },
+    {
+      "category": "evidence_reference_quality",
+      "severity": "low",
+      "observation": "Most synthesis claims cite transcript refs, but some sections rely on mixed evidence types without clearly separating observed behavior from hypothetical concept reaction. For example, `first_value_requirement`, `retention_risk`, and parts of `assumption_validation` are largely grounded in hypothetical answers from [exchange_6.persona] through [exchange_12.persona].",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "exchange_10.persona",
+        "exchange_11.persona",
+        "exchange_12.persona",
+        "SYNTHESIS.first_value_requirement",
+        "SYNTHESIS.retention_risk"
+      ],
+      "recommendation": "Label those sections explicitly as stated adoption criteria or hypothetical retention conditions, not behavioral proof. Keep observed-event evidence and concept-reaction evidence in separate buckets throughout the report."
+    }
+  ],
+  "required_improvements": [
+    "Bound synthesis and design implications to the actual tested setup-flow use case and one synthetic persona; remove broader founder-workflow claims not established in transcript evidence.",
+    "Revise coverage logic so the interview cannot close while the research goal's unresolved areas remain unprobed, especially decision ownership, public-vs-private defensibility, and evidence-conflict handling.",
+    "Separate observed behavior from hypothetical concept reaction in synthesis headings, assumption statuses, and supporting references."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask who actually carries roadmap and priority calls day to day, and where this founder decides alone versus with others.",
+      "Probe one specific case of what she could defend publicly in a roadmap decision versus what she privately worried about but could not easily defend.",
+      "Test what she would do if synthetic-user output conflicts with analytics, sales feedback, or a real user conversation.",
+      "Reconfirm whether setup-flow entrance questions are the main recurring decision bottleneck, or just one convenient example."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct participant-facing question on missing evidence at the time of the real decision and what pressure made waiting costly.",
+      "Ask for one recalled feature-priority or roadmap tradeoff outside onboarding to verify domain fit beyond setup flow.",
+      "Ask how she resolves disagreement between competing evidence sources before treating the platform as workflow-embedded.",
+      "If concept validation is rerun, distinguish current workaround steps from hypothetical adoption thresholds in the transcript and synthesis."
+    ],
+    "prompt_adjustments": [
+      "Make the facilitator prompt treat the stated research goal as binding coverage, not just the generic concept-validation checklist.",
+      "Require one explicit probe on decision ownership and one on publicly defensible versus privately worrying evidence before concept introduction.",
+      "Add a synthesis rule: product implications must be tagged `persona-specific hypothesis` unless supported by multiple interviews or observed use.",
+      "Add an evidence-type guardrail so hypothetical concept reactions cannot be phrased as observed retention or adoption behavior."
+    ],
+    "turn_budget_guidance": "The current turn budget is sufficient; the issue was not shortage of turns but early narrowing and permissive closure. Keep the same budget, but reserve 2-3 turns before concept intro for unresolved research-goal dimensions."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a synthetic interview artifact. Findings address interview quality, evidence discipline, and synthesis fidelity within simulated data boundaries; they are not judgments about real market truth or actual user behavior."
+}

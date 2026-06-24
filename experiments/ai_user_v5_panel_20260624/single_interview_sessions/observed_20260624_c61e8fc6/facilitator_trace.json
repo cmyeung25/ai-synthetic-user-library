@@ -1,0 +1,761 @@
+[
+  {
+    "interview_phase": "recent_behaviour",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "先收集一個最近、可重構的功能優先次序決定事件，對齊研究樽頸在於提升概念塑造與研究前判斷的證據質素，而不是先談方案反應；目前未有具體事件，故先建立行為基線與後續工作流程脈絡。",
+    "message_to_persona": "講下你最近一次要定 roadmap 或功能優先次序嗰陣，實際上發生咗咩事？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當時想回答邊個最重要嘅產品或研究問題？",
+      "當時用咗咩研究、prototype 或其他訊號去判斷？",
+      "有咩公開上講得好實，但你私下其實仲有保留？",
+      "依家做 priority decision 時主要 workaround 係點？",
+      "之後邊個位先適合引入 AI synthetic-user platform 去測 fit？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "opening_context",
+    "probing_strategy": "warm_background",
+    "decision_rationale": "No transcript yet. I am starting with the observer’s requested warm context question, rewritten to stay neutral and participant-led before any recent-event probe. This supports the core bottleneck of understanding current concept-shaping and research-prep workflow so later concept validation is grounded in real behaviour rather than assumptions.",
+    "message_to_persona": "你近排主要做開邊一類設計或者研究工作？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What kind of design or research work is she closest to lately?",
+      "How involved is she in roadmap or feature-priority decisions versus synthesis/prototype work?",
+      "What is one recent concrete concept-shaping or research-planning event to anchor the interview before concept introduction?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "anchor_to_recent_event",
+    "decision_rationale": "參與者目前只提供咗一般工作描述，未有具體事件；先錨定佢提到嘅一次「將散亂 feedback 整理成可判斷下一步」嘅最近經歷，建立實際情境先，再追工作流程同痛點。",
+    "message_to_persona": "你可唔可以講一次最近將啲好散嘅訪談 feedback 整理成下一步判斷嘅經歷？",
+    "evidence_updates": [
+      {
+        "claim": "近排主要做產品前期工作，包括概念驗證、prototype 測試，同整理訪談發現。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "會將零散、表面有道理但未必站得住腳嘅 feedback 整理成可用嚟判斷下一步嘅材料。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次具體係咩項目或決定情境？",
+      "當時佢想釐清乜嘢不確定性？",
+      "佢點樣實際整理訪談 feedback，同用咗咩工具或步驟？",
+      "整理之後實際影響咗咩決定，仲有邊啲位仍然模糊？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround",
+    "probing_strategy": "workaround_function_probe",
+    "decision_rationale": "未介紹概念，因為當前 workaround 仍未建立。受訪者已提供高訊號線索：佢唔跟『整體易用』呢類總結，而係回看猶豫位同重複問題；下一步應追問當次點樣實際整理同用咩工具，先建立現況流程證據。",
+    "message_to_persona": "嗰次你實際係點樣由啲訪談內容搵到嗰啲猶豫位同重複問題？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者近排主要做產品前期工作，包括概念驗證、prototype 測試，同整理訪談發現。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者認為工作重點不是美化畫面，而是把零散、看似有道理但未必站得住腳的 feedback 整理成可判斷下一步的內容。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "最近一次具體事件是 onboarding prototype 測試。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在該事件中，不同受訪者表面上對流程評價不一，但在權限選擇或連接帳戶步驟出現停頓並提出本不應在該時點才出現的問題。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者沒有直接採用『整體易用』這類總結，而是回看猶豫起點和重複問題，並向 PM 建議先收窄選項及更早解釋設定原因。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者當次用咩步驟或工具整理訪談內容並定位猶豫位？",
+      "現有 workflow 入面，邊一部分最花時間或者最易令判斷失真？",
+      "受訪者而家會接受邊類 AI／synthetic 輸出作為前期輔助，邊類一定唔會信？",
+      "如果之後介紹概念，咩證據形式先會令佢覺得唔只係『好似有道理』？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "evidence_conflict_probe",
+    "decision_rationale": "The strongest unresolved cue is the conflict between top-line positive feedback and observed hesitation at the permissions/account-linking step. A specific conflict-resolution probe is more neutral and higher signal than the previously proposed broad process question, and it stays on the same recent decision before introducing the concept.",
+    "message_to_persona": "當時有人話流程清楚，但去到揀權限嗰步又停低，你最後點判斷邊啲 feedback 只係表面、邊啲先值得改？",
+    "evidence_updates": [
+      {
+        "claim": "Participant recently worked on an onboarding prototype test where interview feedback sounded inconsistent.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Some participants said the flow was clear, but hesitated when choosing permissions or connecting an account and asked questions that surfaced earlier uncertainty.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant did not rely on general statements like 'easy to use' and instead traced where hesitation started and which questions repeated.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant recommended narrowing options and explaining the reason for the setting earlier rather than adding more content.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What made the participant treat certain positive comments as shallow in this event?",
+      "What specific evidence from the session was strong enough for the participant to defend the recommendation to the PM?",
+      "What uncertainty still remained after making the tradeoff recommendation?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround",
+    "probing_strategy": "workaround_function_probe",
+    "decision_rationale": "最後一答出現高訊號線索：佢唔信口頭評價，而係用停頓、重睇、補故事去判斷，反映有一套實際整理方法。依深挖規則，先追問佢當見到參與者「自己補故事」時實際會點做，既可加深 driver，也開始補 current_workaround。",
+    "message_to_persona": "見到有人要自己補故事先敢揀時，你當下通常會點樣整理同判斷呢個位？",
+    "evidence_updates": [
+      {
+        "claim": "參與者近期主要做前期產品工作，包括概念驗證、prototype 測試，以及整理訪談發現去支持下一步判斷。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在一次 onboarding prototype 測試中，受訪者雖然口頭說流程清楚，但到權限或連接帳戶步驟會停下來並提出本不該在該時刻才出現的問題。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會把重點放在『哪一刻開始猶豫』和『哪些問題重複出現』，並據此建議 PM 先收窄選項、提早解釋設定原因，而不是增加內容。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不會先相信受訪者口頭說『清楚』，而是觀察停頓、重看、以及是否突然提出不應在當刻才問的問題。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對參與者而言，行為層面的猶豫比表面正面評價更值得優先修改；若只是口頭覺得不自然但不影響前進，通常只記錄不立即更動。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當參與者看到『自己補故事』這類訊號時，現有整理流程具體怎樣運作？",
+      "她依賴哪些工具或框架去把這些行為訊號轉成可行的下一步？",
+      "這套整理方法在哪些情況足夠，哪些情況仍然令她覺得證據不夠？",
+      "在整理訪談訊號到決策建議之間，最大的時間或協作摩擦是甚麼？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "Recent behaviour and workaround are established. The participant gave a high-signal cue around needing reasons and safety before decisions, so the next step is to introduce the concept neutrally and learn which part feels immediately useful before probing trust thresholds and decision impact.",
+    "message_to_persona": "如果有個平台俾你喺真人研究前，先用一組 synthetic users 去 interview 一個概念、文案或者 prototype，幫你提早搵出假設漏洞同反對位，你第一下最想試佢邊部分？",
+    "evidence_updates": [
+      {
+        "claim": "The participant treats behaviour at the decision moment as stronger evidence than positive verbal feedback.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "In the onboarding prototype case, several participants slowed down at the permissions step and generated their own explanations before proceeding.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant documents both what people say and what they needed to infer before feeling safe enough to decide.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant appears to value evidence that reveals missing rationale or safety cues before users commit to an action.",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "Which part of the concept feels useful versus suspicious on first reaction?",
+      "What proof or evidence trace would make synthetic-user output feel actionable rather than like polished AI theatre?",
+      "Which named output would actually change, delay, or verify a real product decision?",
+      "What repeated workflow use case would bring the participant back in month two rather than making this another layer?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "threshold_probe",
+    "decision_rationale": "最後一句高訊號在於受訪者擔心工具把分歧過早整理成太順的故事。現時缺口是信任邊界與門檻，不應先跳去更廣的採用或定價，因此先追問甚麼具體證據會令他相信輸出不是在砌故事。",
+    "message_to_persona": "如果佢最後整理到一個好順嘅結論，你要見到乜先會信佢唔係砌故仔？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者近來主要做前期產品工作，包括概念驗證、prototype 測試和整理訪談發現。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在一次 onboarding prototype 測試中，受訪者沒有依賴整體正面評價，而是根據參與者在權限與連接帳戶步驟的停頓和重複問題，建議先收窄選項並提前說明設定原因。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者判斷 feedback 是否值得改，主要看參與者在哪一刻停下、重看或提出不應在當下才出現的問題，而不是先信口頭上說『清楚』。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當多個參與者需要自己補故事才敢作決定時，受訪者會把這視為系統未提供足夠理由與安全感，而不只是文案細節。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對 synthetic-user 平台的首要興趣在於，它能否及早指出需要用戶自行腦補才能前進的位置，並保留分歧與反對意見，而不是過早整理成流暢單一故事。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者對 synthetic 輸出的最低信任門檻是甚麼？",
+      "哪些具體輸出形式或證據痕跡會令他相信平台有保留分歧，而非只做順滑總結？",
+      "即使輸出看來有用，在哪些情況下他仍然不會把這工具放進真實工作流程？",
+      "若平台指出某個反對位或腦補位，受訪者在真實決策中會因此改變甚麼行動、延後甚麼、或額外驗證甚麼？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "decision_mapping",
+    "probing_strategy": "output_to_decision_probe",
+    "decision_rationale": "概念反應同信任門檻已有基礎，但仍未知道一個具名輸出會唔會改變佢真實決定。上一答高訊號在於佢要求可反查、保留矛盾，所以先用一個貼住 onboarding 例子的輸出去測 action follow-through。",
+    "message_to_persona": "如果佢喺 review 前標到「權限嗰步多人都要自己腦補先敢揀」，你實際會改邊個決定？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對 synthetic-user 平台最先想測的是能否提早指出表面合理但在決定位會露餡的概念或 prototype。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者重視平台是否保留分歧與反對位，而不是過快整理成順滑故事。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者的信任門檻包括可追溯推理鏈、區分一致訊號與矛盾/少數例外，以及可反查結論依據。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "如果平台輸出一個具名風險訊號，會唔會改變參與者在真實 review 裡的決定或優先次序？",
+      "哪類輸出即使看起來合理，參與者仍會選擇不用或另外驗證？",
+      "這個工具若進入現有 workflow，最先插入哪一步，會取代或縮小哪個現有步驟？",
+      "甚麼重複場景會令參與者在第二個月繼續使用，而不是把它視為額外一層？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "contrast_probe",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "概念反應、信任門檻同 output-to-decision 已有具體證據；目前未補到非使用邊界。根據上一輪佢話會因為輸出而改 review 重點，下一步先用對比事件測試乜情況下同類輸出都唔會改變做法，避免只收正面採用故事。",
+    "message_to_persona": "有冇一次都係做前期 review，但你就算早知有人會喺決定位猶豫，都唔會加多一層呢類工具？",
+    "evidence_updates": [
+      {
+        "claim": "當分析輸出指出用戶在權限步驟需要先自行腦補才敢選擇時，參與者會把下一輪評審重點從文案 wording 轉到 flow 與理由呈現。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者把這類輸出對應到具體決策：先考慮減少選項或提前說明要取權限的原因，而不是繼續 refine 表面 wording。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "在甚麼類型的前期 review 或項目裡，參與者即使預先看到類似訊號也不會使用這類工具？",
+      "這類工具若進入真實流程，最自然會插在哪一個現有步驟之前或之後？",
+      "甚麼重複場景會令參與者持續回來用，而不是只試一次？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "recalled_contrast_event",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "adoption_path",
+    "probing_strategy": "replacement_probe",
+    "decision_rationale": "Current-state event and one concrete output-to-decision mapping are established. The observer’s proposed question is leading and bundles a non-use assumption, so I replaced it with a neutral single-focus probe on workflow replacement, which is still missing and is required before pricing/retention closure.",
+    "message_to_persona": "如果呢類標記真係可信，你會少做邊一步前期整理或者 review 準備？",
+    "evidence_updates": [
+      {
+        "claim": "Participant’s recent work is early-stage product/research work including concept validation, prototype testing, and synthesizing interview findings into next-step decisions.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "In a recent onboarding prototype test, participants said the flow was clear but slowed down at permissions/account connection and asked unexpected questions at the decision point.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant prioritizes observed hesitation, re-reading, and decision disruption over positive surface-level comments when deciding what to change.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "When several users need to invent a rationale before proceeding, the participant interprets it as insufficient reason/safety from the system rather than a copy-detail issue, and documents spoken comments separately from actual decision behaviour.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant’s first-value reaction to the concept is early detection of places where users must self-justify before moving forward, provided disagreement and objections are preserved rather than smoothed into a neat story.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Trust in synthetic output depends on evidence traceability from raw input to conclusion, including visible contradictions and exceptions plus the ability to inspect why some objections are weighted more heavily than others.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "If the system flagged that many users had to self-justify at the permissions step, the participant would change the review focus from wording refinement to flow simplification and earlier explanation of rationale.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "Which existing synthesis or review-preparation step the concept would replace, shorten, or leave unchanged in the participant’s workflow.",
+      "What failure mode would make the concept flatten nuance or edge cases enough that they would not rely on it.",
+      "How the participant would handle conflict between neat synthetic output and messier real-user material.",
+      "What first-week adoption success would look like in an actual workflow rather than as a general reaction.",
+      "What conditions would make the concept not worth using even if its outputs look interesting."
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "已覆蓋近期行為、現有 workaround、概念反應、信任邊界同輸出到決定映射；而家最大缺口係未測到非使用邊界同重複使用條件。參與者剛說只會減少手動初步整理但仍會抽查，適合追問一個對比情境，釐清咩情況下佢仍然唔會用呢個平台，補足 contrast 與 repeat_use_condition。",
+    "message_to_persona": "咩情況下你就算有呢個平台都照樣會自己由頭整理一次？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近主要做前期產品概念驗證、prototype 測試，同整理訪談發現去支持下一步判斷。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在一次 onboarding prototype 測試中，參與者不是跟隨整體正面評價，而是根據用戶在權限步驟的猶豫與重複問題，建議先收窄選項和提早解釋設定原因。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者判斷 feedback 時，較重視決定點上的停頓、重看和臨時提問，而不是口頭上說『清楚』。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當多個用戶需要『自己補故事』才敢繼續，參與者會把它視為系統未提供足夠理由與安全感，而非單純文案問題。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對 synthetic-user 平台的首要興趣在於能否及早指出哪些位置需要用戶自行腦補，以及能否保留分歧和反對意見，而不是過早整理成順滑故事。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "信任門檻是可追溯的證據鏈：需要看到原始輸入到結論的過程、一致訊號、矛盾與少數例外，並可反查判斷理由。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若平台可信地標示『多人在權限步驟要自己腦補才敢揀』，參與者會把下一輪重點由 wording 調整改為 flow 與理由呈現調整。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若平台穩定做到把訪談重點拆成『表面評價』與『決定位卡住位』，參與者會減少一次手動初步整理，但仍保留抽查。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩情況會令參與者即使有平台仍然要自己由頭整理一次？",
+      "平台要穩定到咩程度，先會由『減少一次手動整理』變成真正的重複使用習慣？",
+      "呢個平台最自然會嵌入喺佢現有 workflow 邊一個 review 或準備節點？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "recalled_contrast_event",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "service_embedding",
+    "probing_strategy": "workflow_insertion_probe",
+    "decision_rationale": "Coverage is still missing on workflow insertion. The last answer gave a high-signal trust boundary around messy, conflicting materials, so the next question should pin down where the tool fits in the real workflow under that condition rather than closing.",
+    "message_to_persona": "如果材料好亂但佢至少幫你先標出啲互相撞嘅講法，你會放佢喺而家邊一步用？",
+    "evidence_updates": [
+      {
+        "claim": "Participant currently does a manual pre-review pass to separate surface-level feedback from decision-blocking points.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "If the platform reliably performs that separation, the participant would reduce one round of manual synthesis but still keep spot-checking.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant would re-do the synthesis manually when the output becomes too clean too quickly or when objections/minority exceptions disappear.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "The participant does not trust the platform alone when source material is messy, mixed-language, or stakeholder views conflict.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "Where exactly in the participant's existing workflow the tool would be inserted.",
+      "Whether the tool is used before solo synthesis, before review prep, or only as a secondary check.",
+      "Who would realistically use it first in the team flow under messy-input conditions."
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_threshold",
+    "probing_strategy": "threshold_probe",
+    "decision_rationale": "Coverage is complete, but the latest answer gives a high-signal boundary: the tool is only a pre-map and not review-ready. A threshold probe on what extra evidence would make it review-usable is the highest-value remaining gap.",
+    "message_to_persona": "要去到你肯直接拎入 review，佢要多畀到乜證據先夠？",
+    "evidence_updates": [
+      {
+        "claim": "Participant would use the platform before formal synthesis or before real-user research to surface conflicting statements and areas to re-check, not as direct review input.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_10.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant treats the platform as a front-end mapping aid rather than a substitute for their own synthesis.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_8.persona",
+          "exchange_10.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Trust breaks when conclusions become too clean too quickly or when minority/contradictory signals disappear, especially in messy mixed-language stakeholder material.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona",
+          "exchange_10.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "What exact evidence trace would make the participant comfortable bringing the platform's output directly into review rather than only using it as a pre-map?",
+      "Would there still be review contexts where they would not trust direct use even if traceability improved?"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "close",
+    "probing_strategy": "evidence_sufficiency",
+    "decision_rationale": "Coverage and required depth are complete. The last answer adds a concrete trust threshold and contrast requirement; another question is likely to repeat established themes rather than materially change the evidence map.",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "Participant would only take the platform's output directly into review if it provides a clear trace back to the original material behind each judgment.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_11.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant wants minority views explicitly separated rather than averaged into a single conclusion.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_11.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant wants contrast examples showing the system does not automatically treat every objection as high risk.",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_11.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "Participant would currently use the platform as a pre-synthesis map and keep human verification before review unless traceability and calibrated risk judgment are visible.",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_10.persona",
+          "exchange_11.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "Would the participant's threshold differ when the source material is cleaner and less contradictory than the mixed-language, stakeholder-conflict case they described?",
+      "What specific output format would make the trace path fastest to defend inside a live review setting?"
+    ],
+    "should_end": true,
+    "end_reason": "Concept-validation coverage and required deepening are complete; the strongest remaining gaps are format refinements rather than material adoption evidence.",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "not_asked_at_close"
+  }
+]
