@@ -83,6 +83,8 @@ def _build_conversation_provider(
         return MockConversationProvider()
     if backend == "codex":
         config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_cli")
+    elif backend == "codex-sdk":
+        config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_sdk_node")
     else:
         config = load_openai_provider_config()
     if model:
@@ -104,6 +106,8 @@ def _build_facilitator_provider(
 
     if backend == "codex":
         config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_cli")
+    elif backend == "codex-sdk":
+        config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_sdk_node")
     else:
         config = load_openai_provider_config()
     if model:
@@ -501,9 +505,10 @@ def _build_parser() -> argparse.ArgumentParser:
     chat_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     chat_cmd.add_argument("--session-dir", type=Path, default=Path("conversations"))
     chat_cmd.add_argument("--resume", dest="session_id")
-    chat_cmd.add_argument("--backend", choices=["mock", "codex", "openai"], default="mock")
+    chat_cmd.add_argument("--backend", choices=["mock", "codex", "codex-sdk", "openai"], default="mock")
     chat_cmd.add_argument("--model")
     chat_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"])
+    chat_cmd.add_argument("--friction-mode", choices=["off", "light", "natural", "high"], default="off")
     chat_cmd.add_argument("--message", action="append", dest="messages")
 
     interview_cmd = subparsers.add_parser("run-facilitated-interview")
@@ -517,12 +522,14 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd.add_argument("--language", default="Traditional Chinese")
     interview_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     interview_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
-    interview_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
+    interview_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
     interview_cmd.add_argument("--model", default="gpt-5.4")
     interview_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     interview_cmd.add_argument("--max-turns", type=int)
     interview_cmd.add_argument("--soft-turn-limit", type=int)
     interview_cmd.add_argument("--hard-turn-limit", type=int)
+    interview_cmd.add_argument("--friction-mode", choices=["off", "light", "natural", "high"], default="off")
+    interview_cmd.add_argument("--approved-learning-rules-path", type=Path)
     interview_cmd.add_argument("--debug-progress", action="store_true")
 
     observer_cmd = subparsers.add_parser("observe-facilitated-interview")
@@ -537,12 +544,14 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--language", default="Traditional Chinese")
     observer_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     observer_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
-    observer_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
+    observer_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
     observer_cmd.add_argument("--model", default="gpt-5.4")
     observer_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     observer_cmd.add_argument("--max-turns", type=int)
     observer_cmd.add_argument("--soft-turn-limit", type=int)
     observer_cmd.add_argument("--hard-turn-limit", type=int)
+    observer_cmd.add_argument("--friction-mode", choices=["off", "light", "natural", "high"], default="off")
+    observer_cmd.add_argument("--approved-learning-rules-path", type=Path)
     observer_cmd.add_argument("--action", action="append", dest="actions")
     observer_cmd.add_argument("--debug-progress", action="store_true")
 
@@ -557,23 +566,27 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_generic_cmd.add_argument("--core-assumption-count", type=int, default=8)
     concept_panel_generic_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     concept_panel_generic_cmd.add_argument("--output-dir", type=Path, default=Path("experiments"))
-    concept_panel_generic_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
+    concept_panel_generic_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
     concept_panel_generic_cmd.add_argument("--model", default="gpt-5.4")
-    concept_panel_generic_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="low")
+    concept_panel_generic_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     concept_panel_generic_cmd.add_argument("--max-turns", type=int)
     concept_panel_generic_cmd.add_argument("--soft-turn-limit", type=int)
     concept_panel_generic_cmd.add_argument("--hard-turn-limit", type=int)
+    concept_panel_generic_cmd.add_argument("--friction-mode", choices=["off", "light", "natural", "high"], default="off")
+    concept_panel_generic_cmd.add_argument("--approved-learning-rules-path", type=Path)
     concept_panel_generic_cmd.add_argument("--debug-progress", action="store_true")
 
     concept_panel_cmd = subparsers.add_parser("run-followup-copilot-panel")
     concept_panel_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     concept_panel_cmd.add_argument("--output-dir", type=Path, default=Path("experiments"))
-    concept_panel_cmd.add_argument("--backend", choices=["codex", "openai"], default="codex")
+    concept_panel_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
     concept_panel_cmd.add_argument("--model", default="gpt-5.4")
-    concept_panel_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="low")
+    concept_panel_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     concept_panel_cmd.add_argument("--max-turns", type=int)
     concept_panel_cmd.add_argument("--soft-turn-limit", type=int)
     concept_panel_cmd.add_argument("--hard-turn-limit", type=int)
+    concept_panel_cmd.add_argument("--friction-mode", choices=["off", "light", "natural", "high"], default="off")
+    concept_panel_cmd.add_argument("--approved-learning-rules-path", type=Path)
     concept_panel_cmd.add_argument("--debug-progress", action="store_true")
 
     concept_summary_generic_cmd = subparsers.add_parser("summarize-concept-panel")
@@ -586,6 +599,30 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_summary_cmd = subparsers.add_parser("summarize-followup-copilot-panel")
     concept_summary_cmd.add_argument("--run-dir", type=Path, required=True)
     concept_summary_cmd.add_argument("--persona-id", action="append", dest="persona_ids", required=True)
+
+    facilitator_audit_runs_cmd = subparsers.add_parser("aggregate-facilitator-audit-runs")
+    facilitator_audit_runs_cmd.add_argument("--run-dir", type=Path, action="append", dest="run_dirs", required=True)
+    facilitator_audit_runs_cmd.add_argument("--output-dir", type=Path, required=True)
+    facilitator_audit_runs_cmd.add_argument("--label", default="Facilitator Audit Learning Report")
+
+    promote_learning_rules_cmd = subparsers.add_parser("promote-facilitator-learning-rules")
+    promote_learning_rules_cmd.add_argument("--report-path", type=Path, required=True)
+    promote_learning_rules_cmd.add_argument("--registry-path", type=Path, required=True)
+    promote_learning_rules_cmd.add_argument("--rule-id", action="append", dest="rule_ids", required=True)
+    promote_learning_rules_cmd.add_argument("--approved-by", default="")
+    promote_learning_rules_cmd.add_argument("--note", default="")
+
+    disable_learning_rules_cmd = subparsers.add_parser("disable-facilitator-learning-rules")
+    disable_learning_rules_cmd.add_argument("--registry-path", type=Path, required=True)
+    disable_learning_rules_cmd.add_argument("--rule-id", action="append", dest="rule_ids", required=True)
+    disable_learning_rules_cmd.add_argument("--disabled-by", default="")
+    disable_learning_rules_cmd.add_argument("--note", default="")
+
+    compare_learning_effects_cmd = subparsers.add_parser("compare-facilitator-learning-effects")
+    compare_learning_effects_cmd.add_argument("--baseline-run-dir", type=Path, action="append", dest="baseline_run_dirs", required=True)
+    compare_learning_effects_cmd.add_argument("--candidate-run-dir", type=Path, action="append", dest="candidate_run_dirs", required=True)
+    compare_learning_effects_cmd.add_argument("--output-dir", type=Path, required=True)
+    compare_learning_effects_cmd.add_argument("--label", default="Facilitator Learning Effect Report")
 
     return parser
 
@@ -1615,7 +1652,7 @@ def _cmd_chat_with_persona(args: argparse.Namespace) -> int:
                 f"Session uses provider '{session.provider}'. Resume it with --backend {session.provider}."
             )
     else:
-        session, persona, persona_folder = runtime.start(args.persona_id)
+        session, persona, persona_folder = runtime.start(args.persona_id, friction_mode=args.friction_mode)
 
     print(f"Synthetic User: {session.persona_name} ({session.persona_id})")
     print(session.synthetic_only_disclaimer)
@@ -1689,6 +1726,7 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
         persona_provider=persona_provider,
         observer=observer,
         progress_writer=progress_writer,
+        approved_learning_rules_path=args.approved_learning_rules_path,
     )
     print("Synthetic-user interview for AI pre-validation only; not human market evidence.")
     output = runtime.run(
@@ -1703,6 +1741,7 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
         max_turns=hard_limit,
         soft_turn_limit=soft_limit,
         hard_turn_limit=hard_limit,
+        friction_mode=args.friction_mode,
     )
     print(f"\nInterview completed: {output}")
     print(f"Transcript: {output / 'transcript.md'}")
@@ -1792,6 +1831,7 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
         persona_provider=persona_provider,
         quality_provider=quality_provider,
         progress_writer=progress_writer,
+        approved_learning_rules_path=args.approved_learning_rules_path,
     )
     soft_limit, hard_limit = _resolve_interview_turn_policy(args, default_soft=12, default_hard=16)
     if args.interview_id:
@@ -1809,6 +1849,7 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
             max_turns=hard_limit,
             soft_turn_limit=soft_limit,
             hard_turn_limit=hard_limit,
+            friction_mode=args.friction_mode,
         )
     interview_id = session.interview_id
     print("Synthetic-user interview for AI pre-validation only; not human market evidence.")
@@ -1866,6 +1907,7 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
     if session.status == "completed":
         print(f"Insights: {folder / 'insights.md'}")
         print(f"Persona driver trace: {folder / 'persona_driver_trace.md'}")
+        print(f"Facilitator audit feedback: {folder / 'facilitator_audit_feedback.md'}")
     print(f"Quality: {folder / 'quality_evaluation.md'}")
     return 0 if session.status != "failed" else 1
 
@@ -1902,10 +1944,13 @@ def _cmd_run_concept_panel(args: argparse.Namespace) -> int:
         max_turns=hard_limit,
         soft_turn_limit=soft_limit,
         hard_turn_limit=hard_limit,
+        friction_mode=args.friction_mode,
         progress_writer=progress_writer,
+        approved_learning_rules_path=args.approved_learning_rules_path,
     )
     print(f"Panel completed: {output}")
     print(f"Summary: {output / 'panel_summary.md'}")
+    print(f"Facilitator audit digest: {output / 'facilitator_audit_panel.md'}")
     return 0
 
 
@@ -1933,10 +1978,13 @@ def _cmd_run_followup_copilot_panel(args: argparse.Namespace) -> int:
         max_turns=hard_limit,
         soft_turn_limit=soft_limit,
         hard_turn_limit=hard_limit,
+        friction_mode=args.friction_mode,
         progress_writer=progress_writer,
+        approved_learning_rules_path=args.approved_learning_rules_path,
     )
     print(f"Panel completed: {output}")
     print(f"Summary: {output / 'panel_summary.md'}")
+    print(f"Facilitator audit digest: {output / 'facilitator_audit_panel.md'}")
     return 0
 
 
@@ -1951,6 +1999,7 @@ def _cmd_summarize_concept_panel(args: argparse.Namespace) -> int:
         core_assumption_count=args.core_assumption_count,
     )
     print(f"Panel summary rebuilt for {', '.join(args.persona_ids)}: {output / 'panel_summary.md'}")
+    print(f"Facilitator audit digest rebuilt: {output / 'facilitator_audit_panel.md'}")
     return 0
 
 
@@ -1959,6 +2008,66 @@ def _cmd_summarize_followup_copilot_panel(args: argparse.Namespace) -> int:
 
     output = summarize_existing_concept_panel(run_dir=args.run_dir, persona_ids=args.persona_ids)
     print(f"Panel summary rebuilt for {', '.join(args.persona_ids)}: {output / 'panel_summary.md'}")
+    print(f"Facilitator audit digest rebuilt: {output / 'facilitator_audit_panel.md'}")
+    return 0
+
+
+def _cmd_aggregate_facilitator_audit_runs(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.facilitator.concept_panel import aggregate_facilitator_audit_runs
+
+    output = aggregate_facilitator_audit_runs(
+        run_dirs=args.run_dirs,
+        output_dir=args.output_dir,
+        label=args.label,
+    )
+    print(f"Facilitator audit learning report: {output / 'facilitator_audit_learning_report.md'}")
+    return 0
+
+
+def _cmd_promote_facilitator_learning_rules(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.facilitator.learning import promote_facilitator_learning_rules
+
+    registry = promote_facilitator_learning_rules(
+        report_path=args.report_path,
+        registry_path=args.registry_path,
+        rule_ids=args.rule_ids,
+        approved_by=args.approved_by,
+        approval_note=args.note,
+    )
+    print(f"Promoted {len(args.rule_ids)} facilitator learning rules to {args.registry_path}")
+    print(f"Registry markdown: {args.registry_path.with_suffix('.md')}")
+    print(f"Approved rules now active: {len(registry.get('approved_rules', []))}")
+    return 0
+
+
+def _cmd_disable_facilitator_learning_rules(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.facilitator.learning import disable_facilitator_learning_rules
+
+    registry = disable_facilitator_learning_rules(
+        registry_path=args.registry_path,
+        rule_ids=args.rule_ids,
+        disabled_by=args.disabled_by,
+        disable_note=args.note,
+    )
+    active_count = sum(1 for item in registry.get("approved_rules", []) if item.get("status") == "approved")
+    disabled_count = sum(1 for item in registry.get("approved_rules", []) if item.get("status") == "disabled")
+    print(f"Disabled {len(args.rule_ids)} facilitator learning rules in {args.registry_path}")
+    print(f"Registry markdown: {args.registry_path.with_suffix('.md')}")
+    print(f"Active rules remaining: {active_count}")
+    print(f"Disabled rules total: {disabled_count}")
+    return 0
+
+
+def _cmd_compare_facilitator_learning_effects(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.facilitator.concept_panel import compare_facilitator_learning_effects
+
+    output = compare_facilitator_learning_effects(
+        baseline_run_dirs=args.baseline_run_dirs,
+        candidate_run_dirs=args.candidate_run_dirs,
+        output_dir=args.output_dir,
+        label=args.label,
+    )
+    print(f"Facilitator learning effect report: {output / 'facilitator_learning_effect_report.md'}")
     return 0
 
 
@@ -2009,6 +2118,10 @@ def main(argv: list[str] | None = None) -> int:
         "run-followup-copilot-panel": _cmd_run_followup_copilot_panel,
         "summarize-concept-panel": _cmd_summarize_concept_panel,
         "summarize-followup-copilot-panel": _cmd_summarize_followup_copilot_panel,
+        "aggregate-facilitator-audit-runs": _cmd_aggregate_facilitator_audit_runs,
+        "promote-facilitator-learning-rules": _cmd_promote_facilitator_learning_rules,
+        "disable-facilitator-learning-rules": _cmd_disable_facilitator_learning_rules,
+        "compare-facilitator-learning-effects": _cmd_compare_facilitator_learning_effects,
     }
     try:
         return handlers[args.command](args)

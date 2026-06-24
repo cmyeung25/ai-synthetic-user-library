@@ -1,0 +1,633 @@
+{
+  "run_id": "concept_panel_20260623_07e6d5c8",
+  "topic": "Aladdin solution in retail customer",
+  "language": "Traditional Chinese",
+  "core_assumption_count": 8,
+  "persona_count": 1,
+  "problem_strength_counts": {
+    "medium": 1
+  },
+  "average_quality_score": 3.0,
+  "driver_type_counts": {
+    "daily_constraint": 3,
+    "trust_pattern": 1,
+    "core_value": 1,
+    "decision_style": 1,
+    "emotional_protection": 1
+  },
+  "common_likely_drivers": [
+    {
+      "driver": "She follows a trust-by-proof pattern: immediate utility does not remove the need for method, scope, and motive transparency.",
+      "driver_type": "trust_pattern",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Even when she says the feature sounds useful, her next questions are how risk is calculated, whether other accounts are included, whether it is truly free, and whether it is really a sales funnel. That is consistent with operational trust rather than brand-level trust."
+    },
+    {
+      "driver": "She is especially alert to hidden commercial intent because 'free' loses value if it creates pressure or cleanup work.",
+      "driver_type": "emotional_protection",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_it_matters_here": "Her skepticism about whether free is really free and whether data will be used for marketing suggests a defensive filter against workflows that begin as service and end as sales pressure. That likely protects both time and dignity."
+    },
+    {
+      "driver": "She is highly sensitive to fragmentation because her attention is already split across many short mobile sessions.",
+      "driver_type": "daily_constraint",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Her strongest positive reaction is about not having to piece data together across apps, notes, WhatsApp, and statements. This fits a life where even useful tasks get delayed when they require stitching context across sources."
+    },
+    {
+      "driver": "She needs prompts to be situationally justified, not constantly present, because interruption cost is part of product value.",
+      "driver_type": "daily_constraint",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "She does not reject reminders outright; she rejects reminders without a clear reason. That matches a life where many systems already demand attention, so notification discipline becomes part of trust."
+    },
+    {
+      "driver": "She resists automation that jumps from diagnosis to action; she prefers guided judgment with low-pressure options.",
+      "driver_type": "decision_style",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "When told a category is overweight, she does not want an automatic strong recommendation or product pitch. She wants quantified explanation, option framing, and space to choose smaller actions or wait. That reflects a sequential, judgment-preserving decision style."
+    },
+    {
+      "driver": "She uses review moments as preventive checks when ordinary-life cash obligations make downside feel concrete.",
+      "driver_type": "daily_constraint",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Her trigger was not abstract interest in investing; it was a budget-relevant moment where school fees and volatile news made allocation mistakes feel costly. That helps explain why she frames the feature around avoiding unpleasant surprises rather than maximizing returns."
+    },
+    {
+      "driver": "She wants bounded data sharing: relevant portfolio data is acceptable, unrelated behavioral or banking data is not.",
+      "driver_type": "core_value",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Her permission boundary is precise rather than absolute. She accepts data needed for the stated job, but rejects broader collection and wants granular consent, retention clarity, and limits on downstream use. That precision is a stable privacy logic, not a one-off objection."
+    }
+  ],
+  "common_unspoken_constraints": [
+    {
+      "constraint": "A useful experience probably needs to respect existing mental categories such as 'long hold' versus 'cash-adjacent' money.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_likely": "She already tracks holdings partly by intended role, not just product label. If the health check ignores that framing, it may feel mismatched to how she actually thinks about the portfolio."
+    },
+    {
+      "constraint": "She may delay adoption if account-linking looks like a one-time admin burden with uncertain payoff.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_likely": "She likes one narrow use case first and is sensitive to setup friction, especially when value is not immediate."
+    },
+    {
+      "constraint": "She may not trust outputs that cannot distinguish temporary market moves from structural allocation drift.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_likely": "Her next-step logic depends on whether the issue is short-term fluctuation versus real overweight, so a coarse alert would fail her decision process."
+    },
+    {
+      "constraint": "The feature likely has to work in a very short mobile session, possibly during commute or between tasks.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_likely": "She explicitly describes checking on the MTR and repeatedly emphasizes quick visibility, short prompts, and reduced assembly work."
+    }
+  ],
+  "common_value_tensions": [
+    {
+      "tension": "Caution versus desire to avoid preventable mistakes",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She will not react impulsively to a risk flag and wants to verify whether the issue is real. vs She still seeks tools that help her catch drift before needing money or discovering a problem too late."
+    },
+    {
+      "tension": "Control versus low-maintenance usage",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She wants granular permissions, quantified explanations, editable responses, and the option to ignore. vs She does not want to keep babysitting the system or tune it constantly; it should already be useful when opened."
+    },
+    {
+      "tension": "Convenience versus suspicion of convenience-led selling",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She wants one place to see portfolio concentration and risk without manual stitching. vs She immediately questions whether the free tool is really a lead-in to product pushing."
+    },
+    {
+      "tension": "Privacy protection versus willingness to share for clear utility",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She rejects unrelated banking-data access and wants clear limits on retention and marketing use. vs She is willing to share specific holdings and transaction-related portfolio data when the purpose is obvious."
+    }
+  ],
+  "facilitator_primary_failure_modes": [
+    {
+      "failure_mode": "Coverage over depth after concept introduction, especially around function-specific value, trust causality, and action thresholds.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "example_assessment": "Strong breadth across required areas, but several participant clues that could have produced more decision-useful causal evidence were left at the surface level."
+    }
+  ],
+  "common_missed_high_value_followups": [
+    {
+      "question": "Can you describe one reminder you would open and one you would ignore, and what makes the difference?",
+      "trigger_type": "embedding_signal",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "When participants want low-interruption delivery, ask for open-versus-ignore examples to operationalize timing and message quality."
+    },
+    {
+      "question": "How do those personal categories affect how you judge whether the portfolio is off, and would a generic view miss something important?",
+      "trigger_type": "workaround_signal",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "When a participant uses a personal classification system, probe what decision logic that workaround preserves."
+    },
+    {
+      "question": "If the tool covered only part of your portfolio at first, in what situations would that still be useful, and when would it become not worth using?",
+      "trigger_type": "partial_coverage_tradeoff",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "Probe minimum viable completeness whenever value appears to depend on full aggregation or full context."
+    },
+    {
+      "question": "If you could have only one first, a complete consolidated view or a strong diagnostic explanation, which would change your behavior more and why?",
+      "trigger_type": "contrast_signal",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "Use forced contrasts to isolate the true driver when multiple feature benefits are mentioned together."
+    },
+    {
+      "question": "What specific explanation or comparison would be clear enough for you to change what you do, and what would still feel too vague?",
+      "trigger_type": "threshold_signal",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When participants say an explanation must be 'clear', ask for the minimum acceptable form and the failure case."
+    },
+    {
+      "question": "What would make this feel like a neutral service rather than a sales path, and what would make you stop trusting it immediately?",
+      "trigger_type": "trust_signal",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When a participant raises motive suspicion unprompted, probe both trust-builders and trust-breakers before moving on."
+    }
+  ],
+  "common_likely_misclassified_drivers": [
+    {
+      "possible_underlying_driver": "The deeper issue may be motive distrust and fear of commercial pressure rather than data minimization alone.",
+      "observed_surface_frame": "The participant is privacy-sensitive about data access.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "generic_learning": "When data-boundary objections appear, test whether the core issue is privacy, manipulation risk, prior bad experiences, or all three."
+    },
+    {
+      "possible_underlying_driver": "The stronger driver may be preventive control under time pressure: reducing the chance of being surprised at the wrong moment, not just saving effort.",
+      "observed_surface_frame": "The participant seems mainly to want convenience from having everything in one place.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "generic_learning": "Probe what the current workaround protects against before classifying the need as simple convenience."
+    },
+    {
+      "possible_underlying_driver": "They may actually need a diagnosis that preserves independent judgment by separating signal from noise and mapping to low-pressure options.",
+      "observed_surface_frame": "The participant wants plain-language risk explanation.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Ling"
+      ],
+      "generic_learning": "Do not reduce 'clear explanation' to readability only; probe what decision function the explanation must serve."
+    }
+  ],
+  "assumption_matrix": [
+    {
+      "assumption_index": 1,
+      "assumption": "此 persona 目前有整體投資組合檢視需要。",
+      "status_counts": {
+        "supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "supported",
+          "rationale": "有近期具體行為：上月尾因現金需要同市況波動而主動檢視，並實際跨銀行 app、基金戶口、Notes、月結單拼資料。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 2,
+      "assumption": "手動整合多來源資料係明顯摩擦點。",
+      "status_counts": {
+        "supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "supported",
+          "rationale": "佢直接描述要去幾個地方拼資料「幾煩」，而且會「拖住唔想再睇」，屬具體行為後果。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 3,
+      "assumption": "如果 Portfolio Health Check 可一次過整合組合與風險，對此 persona 有實際價值。",
+      "status_counts": {
+        "partially_supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "partially_supported",
+          "rationale": "只有概念引入後嘅反應，佢話「第一下會覺得有啲用」並指向節省拼資料；但未有真實使用或強類比行為證據。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 4,
+      "assumption": "此 persona 願意為完整分析授權必要投資資料，但只限最小範圍。",
+      "status_counts": {
+        "partially_supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "partially_supported",
+          "rationale": "佢清楚列出可接受資料類型與拒絕項目，顯示條件式接受；但仍屬概念場景下陳述，未見實際授權行為。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 5,
+      "assumption": "分析結果本身會直接推動佢即時調倉。",
+      "status_counts": {
+        "weakened": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "weakened",
+          "rationale": "佢明確表示「多數唔會即刻大郁」，通常會先判斷係短期波動定結構性偏重，表示分析較可能影響觀察或停止加倉，而非直接交易。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 6,
+      "assumption": "只要有提醒，佢就會持續回來看。",
+      "status_counts": {
+        "weakened": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "weakened",
+          "rationale": "佢只接受低干擾、有明確理由、貼近投資檢視時刻嘅提醒；無理由或亂推會削弱重用。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 7,
+      "assumption": "銀行可用此服務自然承接到產品銷售。",
+      "status_counts": {
+        "invalidated": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "invalidated",
+          "rationale": "佢多次主動提出對推銷的警惕，並要求先講清楚偏重程度、差距與非產品式選項；「唔好一上嚟就推產品」直接反駁此假設。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 8,
+      "assumption": "此 persona 需要銀行提供白話、可行動但保留自主權嘅解讀。",
+      "status_counts": {
+        "partially_supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2004",
+          "persona_name": "Wong Mei Ling",
+          "status": "partially_supported",
+          "rationale": "概念後反應一致指向要白話解釋、具體選項、可忽略；但仍未見真實跟進案例。"
+        }
+      ]
+    }
+  ],
+  "additional_persona_specific_findings": [],
+  "personas": [
+    {
+      "persona_id": "su_2004",
+      "persona_name": "Wong Mei Ling",
+      "interview_id": "observed_20260623_f5bb8b24",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "不適用；研究設定已披露為免費服務。",
+        "monthly_comfort_range": "不適用／未測試。",
+        "payment_justification": [
+          "無可用證據；逐字稿只顯示佢會追問「係咪真係免費，定後面其實想推產品」，唔可以推論付費意願。"
+        ],
+        "evidence_strength": "unknown"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "如果開到就見到整體組合同偏離位置，佢可節省手動拼資料。",
+          "如果提醒有明確觸發理由，而且只喺投資總覽頁或月結單後等相關時刻出現，較符合佢使用情境。",
+          "如果提供白話風險解釋，同時容許快速忽略或調整，較可能形成偶爾回看習慣。"
+        ],
+        "drop_off_reasons": [
+          "如果仍然要去幾個地方拼資料。",
+          "如果提醒頻繁或無端端推送。",
+          "如果偏離解釋含糊。",
+          "如果看起來借分析做產品推銷。",
+          "如果資料授權範圍過闊或保存用途不透明。"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 3,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 3,
+        "causal_rigor": 4,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 3,
+        "overall": 3
+      },
+      "top_likely_drivers": [
+        {
+          "driver": "She uses review moments as preventive checks when ordinary-life cash obligations make downside feel concrete.",
+          "driver_type": "daily_constraint",
+          "why_it_matters_here": "Her trigger was not abstract interest in investing; it was a budget-relevant moment where school fees and volatile news made allocation mistakes feel costly. That helps explain why she frames the feature around avoiding unpleasant surprises rather than maximizing returns.",
+          "evidence_refs": [
+            "exchange_1.persona"
+          ],
+          "profile_source_refs": [
+            "values.core_values",
+            "values.fears",
+            "pricing_logic.what_makes_price_feel_fair",
+            "discovery_path.trial_trigger"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        },
+        {
+          "driver": "She is highly sensitive to fragmentation because her attention is already split across many short mobile sessions.",
+          "driver_type": "daily_constraint",
+          "why_it_matters_here": "Her strongest positive reaction is about not having to piece data together across apps, notes, WhatsApp, and statements. This fits a life where even useful tasks get delayed when they require stitching context across sources.",
+          "evidence_refs": [
+            "exchange_2.persona",
+            "exchange_3.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "current_context",
+            "discovery_path.phone_use_pattern",
+            "human_difference_axes.fragmentation_reality",
+            "life_story.current_daily_routine"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        },
+        {
+          "driver": "She follows a trust-by-proof pattern: immediate utility does not remove the need for method, scope, and motive transparency.",
+          "driver_type": "trust_pattern",
+          "why_it_matters_here": "Even when she says the feature sounds useful, her next questions are how risk is calculated, whether other accounts are included, whether it is truly free, and whether it is really a sales funnel. That is consistent with operational trust rather than brand-level trust.",
+          "evidence_refs": [
+            "exchange_3.persona",
+            "exchange_5.persona",
+            "exchange_8.persona"
+          ],
+          "profile_source_refs": [
+            "values.trust_requirements",
+            "personality_belief.trust_orientation",
+            "human_difference_axes.trust_style",
+            "product_reaction_rules.first_checks"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mostly_observed"
+        }
+      ],
+      "top_unspoken_constraints": [
+        {
+          "constraint": "The feature likely has to work in a very short mobile session, possibly during commute or between tasks.",
+          "why_likely": "She explicitly describes checking on the MTR and repeatedly emphasizes quick visibility, short prompts, and reduced assembly work.",
+          "evidence_refs": [
+            "exchange_1.persona",
+            "exchange_6.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "current_context",
+            "discovery_path.phone_use_pattern",
+            "deep_research_notes.attention_pattern"
+          ],
+          "confidence": "high"
+        },
+        {
+          "constraint": "She may not trust outputs that cannot distinguish temporary market moves from structural allocation drift.",
+          "why_likely": "Her next-step logic depends on whether the issue is short-term fluctuation versus real overweight, so a coarse alert would fail her decision process.",
+          "evidence_refs": [
+            "exchange_5.persona",
+            "exchange_8.persona"
+          ],
+          "profile_source_refs": [
+            "personality_belief.risk_tolerance",
+            "human_difference_axes.need_for_explanation"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "value_tensions": [
+        {
+          "tension": "Convenience versus suspicion of convenience-led selling",
+          "side_a": "She wants one place to see portfolio concentration and risk without manual stitching.",
+          "side_b": "She immediately questions whether the free tool is really a lead-in to product pushing.",
+          "evidence_refs": [
+            "exchange_2.persona",
+            "exchange_3.persona",
+            "exchange_8.persona"
+          ],
+          "profile_source_refs": [
+            "contradictions",
+            "values.trust_requirements"
+          ],
+          "confidence": "high"
+        },
+        {
+          "tension": "Control versus low-maintenance usage",
+          "side_a": "She wants granular permissions, quantified explanations, editable responses, and the option to ignore.",
+          "side_b": "She does not want to keep babysitting the system or tune it constantly; it should already be useful when opened.",
+          "evidence_refs": [
+            "exchange_4.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "contradictions",
+            "human_difference_axes.control_preference",
+            "pricing_logic.pricing_objection"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "missed_follow_up_questions": [
+        {
+          "question": "When you say a risk explanation needs to be '白話', what is the minimum version that would feel clear enough for you to act on?",
+          "why_this_would_clarify": "This would distinguish whether she needs simple category-level summaries, scenario examples, benchmark comparisons, or explicit recommended thresholds.",
+          "priority": "high"
+        },
+        {
+          "question": "Have you had a past experience where a 'free' banking tool or advisor flow turned into product pressure, or is this more a general concern?",
+          "why_this_would_clarify": "It would separate a stable trust pattern from a specific learned scar, which changes how deeply embedded the skepticism is.",
+          "priority": "high"
+        }
+      ],
+      "facilitator_primary_failure_mode": "Coverage over depth after concept introduction, especially around function-specific value, trust causality, and action thresholds.",
+      "facilitator_missed_followups": [
+        {
+          "trigger_type": "trust_signal",
+          "priority": "high",
+          "participant_signal": "The participant immediately questioned whether the feature was truly free, how risk was calculated, and whether it was a path to product pushing.",
+          "missed_followup_question": "What would make this feel like a neutral service rather than a sales path, and what would make you stop trusting it immediately?",
+          "generic_learning": "When a participant raises motive suspicion unprompted, probe both trust-builders and trust-breakers before moving on."
+        },
+        {
+          "trigger_type": "threshold_signal",
+          "priority": "high",
+          "participant_signal": "The participant said they would act only if the explanation clearly distinguished short-term movement from real imbalance.",
+          "missed_followup_question": "What specific explanation or comparison would be clear enough for you to change what you do, and what would still feel too vague?",
+          "generic_learning": "When participants say an explanation must be 'clear', ask for the minimum acceptable form and the failure case."
+        }
+      ],
+      "facilitator_likely_misclassified_drivers": [
+        {
+          "observed_surface_frame": "The participant seems mainly to want convenience from having everything in one place.",
+          "possible_underlying_driver": "The stronger driver may be preventive control under time pressure: reducing the chance of being surprised at the wrong moment, not just saving effort.",
+          "why_the_surface_frame_is_weak": "The recent behavior was triggered by a consequential moment, so consolidation may matter because it protects against missed problems, not merely because it is easier.",
+          "generic_learning": "Probe what the current workaround protects against before classifying the need as simple convenience."
+        },
+        {
+          "observed_surface_frame": "The participant is privacy-sensitive about data access.",
+          "possible_underlying_driver": "The deeper issue may be motive distrust and fear of commercial pressure rather than data minimization alone.",
+          "why_the_surface_frame_is_weak": "The participant repeatedly linked acceptable access to limits on selling and transparency of purpose, suggesting a broader trust pattern than privacy alone.",
+          "generic_learning": "When data-boundary objections appear, test whether the core issue is privacy, manipulation risk, prior bad experiences, or all three."
+        }
+      ]
+    }
+  ],
+  "synthetic_only_disclaimer": "This panel contains synthetic AI pre-validation only. It cannot establish market demand, pricing, prevalence, or replace interviews with real people."
+}

@@ -1,0 +1,219 @@
+{
+  "artifact_version": "1.0",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "generic"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Coverage was completed efficiently, but the facilitator accepted several high-signal statements at face value and moved on before probing thresholds, causal priorities, and trust evidence standards. The main improvement area is converting broad concept-validation coverage into deeper decision-grade learning.",
+    "primary_failure_mode": "Coverage over depth after initial concept fit was established.",
+    "depth_vs_coverage_assessment": "The interview covered all required areas in seven exchanges, but depth was thin in the most decision-relevant areas: what explanation earns trust, what evidence prevents false-alarm dismissal, which friction is most disqualifying, and what concrete output would change behavior."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "missed_threshold_probe",
+      "severity": "high",
+      "why_it_matters": "Participants often state a condition such as 'make it clear' or 'don't ask for too much' without specifying the minimum acceptable threshold. Without threshold probing, findings stay too vague to guide future facilitation.",
+      "observed_pattern": "The facilitator captured concerns about clarity, permissions, and noise, but did not ask what exact explanation, permission scope, or alert frequency would cross the participant's acceptability threshold."
+    },
+    {
+      "tag": "coverage_over_depth",
+      "severity": "high",
+      "why_it_matters": "Completing a checklist can hide the fact that key mechanisms remain unexamined. Decision-quality interviewing requires at least one deeper causal probe where the participant gives a dense signal.",
+      "observed_pattern": "After each broad answer, the facilitator advanced to the next coverage area instead of deepening the most information-rich points."
+    },
+    {
+      "tag": "missed_contrast_probe",
+      "severity": "medium",
+      "why_it_matters": "Contrast questions force prioritization and reveal the strongest adoption or rejection driver.",
+      "observed_pattern": "The participant named multiple possible drop-off causes, but the facilitator did not ask which would matter most if only one problem remained."
+    },
+    {
+      "tag": "surface_acceptance_of_trust_claim",
+      "severity": "high",
+      "why_it_matters": "Trust statements are often composites of privacy concern, setup burden, control preference, and explainability. Treating them as a single driver weakens reusable learning.",
+      "observed_pattern": "The facilitator heard resistance to sharing data and requests for understandable calculation, but did not separate whether the main issue was data sensitivity, effort, or lack of transparency."
+    },
+    {
+      "tag": "missed_consequence_probe",
+      "severity": "medium",
+      "why_it_matters": "When a participant says they would verify before acting, the next step is to learn what evidence would satisfy them. That clarifies whether the concept can actually reduce work.",
+      "observed_pattern": "The facilitator learned that the participant would cross-check alerts elsewhere, but did not ask what proof would allow them to stop cross-checking or act with confidence."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "trust_boundary_statement",
+      "priority": "high",
+      "participant_signal": "The participant said they needed to quickly understand how the system calculates and would hesitate if too much external data were requested up front.",
+      "missed_followup_question": "What exact explanation would be enough for you to trust the result on first use?",
+      "generic_learning": "When a participant asks for clarity or transparency, probe for the minimum explanation standard rather than recording 'needs clarity' as a complete insight."
+    },
+    {
+      "trigger_type": "verification_habit",
+      "priority": "high",
+      "participant_signal": "The participant said they would inspect the alert, compare it against other sources, and only adjust gradually if it still seemed valid.",
+      "missed_followup_question": "What would you need to see to believe the alert is valid enough that you would not need a manual cross-check?",
+      "generic_learning": "If a participant says they would verify a recommendation elsewhere, ask for the evidence standard that would reduce or eliminate that verification step."
+    },
+    {
+      "trigger_type": "multi-friction_dropoff",
+      "priority": "high",
+      "participant_signal": "The participant named several abandonment risks: vague alerts, repeated permission expansion, repeated reconnection, and too many steps.",
+      "missed_followup_question": "If only one of those problems remained, which one by itself would be most likely to make you stop using it?",
+      "generic_learning": "When multiple frictions are listed, force prioritization so the strongest driver is not lost in an undifferentiated list."
+    },
+    {
+      "trigger_type": "timing_preference",
+      "priority": "medium",
+      "participant_signal": "The participant wanted the feature at routine check-in moments and only on meaningful changes, not too frequently.",
+      "missed_followup_question": "What would make a notification feel meaningfully important versus just more noise?",
+      "generic_learning": "When participants mention alert fatigue, probe for the threshold between signal and noise rather than treating 'too frequent' as sufficiently specific."
+    },
+    {
+      "trigger_type": "positive_concept_reaction",
+      "priority": "medium",
+      "participant_signal": "The participant said the concept seemed somewhat useful because it could reduce manual stitching across sources.",
+      "missed_followup_question": "Even if it were clear and low-permission, in what situation would this still not be useful to you?",
+      "generic_learning": "After an initial positive reaction, add one disconfirming probe to learn the concept's non-use boundary."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant appears privacy-sensitive about external data access.",
+      "possible_underlying_driver": "The stronger driver may be a mix of control preservation, setup burden, and desire for analysis-only boundaries, not privacy alone.",
+      "why_the_surface_frame_is_weak": "The transcript includes concern about what the system can do, how much effort setup requires, and whether permissions are clearly separated. Collapsing these into 'privacy concern' loses causal precision.",
+      "generic_learning": "When permission resistance appears, separate sensitivity to data exposure, operational control, onboarding effort, and action authority before labeling the driver."
+    },
+    {
+      "observed_surface_frame": "The participant wants quick, simple summaries.",
+      "possible_underlying_driver": "The deeper need may be confidence-efficient review: fast comprehension that still feels auditable before action.",
+      "why_the_surface_frame_is_weak": "The participant did not just ask for brevity; they also described cross-checking and gradual adjustment. Simplicity alone does not explain the behavior.",
+      "generic_learning": "Do not equate a request for speed or simplicity with low engagement; probe whether the participant wants less depth, or just faster access to defensible depth."
+    },
+    {
+      "observed_surface_frame": "The participant would use the feature if it saves time.",
+      "possible_underlying_driver": "Time saving may be secondary to reducing uncertainty without surrendering control.",
+      "why_the_surface_frame_is_weak": "The participant repeatedly returned to explanation quality, false-alarm checking, and permission boundaries. Pure convenience is an incomplete framing.",
+      "generic_learning": "When 'save time' appears, ask what protected value the time-saving preserves: confidence, control, reduced stress, fewer mistakes, or something else."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical concept reactions were sometimes treated too close to established future behavior in downstream synthesis.",
+      "severity": "high",
+      "generic_learning": "Keep observed current behavior separate from stated preferences and predicted future reactions. Tagging each claim by evidence type prevents overstatement."
+    },
+    {
+      "issue": "A workflow implication was inferred more strongly than the transcript supported.",
+      "severity": "medium",
+      "generic_learning": "Do not convert one participant's imagined future use into a firm process model unless the participant explicitly describes that operating pattern."
+    },
+    {
+      "issue": "Several synthesized implications bundled direct quotes and facilitator inference without clearly separating them.",
+      "severity": "medium",
+      "generic_learning": "Where an insight mixes observation and interpretation, label the observed statement first and the inference second so future reviewers can audit the leap."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "When a participant says a concept is useful only if it is 'clear,' 'fast,' 'not too much,' or 'not too frequent,' ask one threshold question that defines the minimum acceptable standard before moving on.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "When a participant says they would verify, compare, or double-check before acting, ask what evidence would be sufficient to reduce that extra verification step.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "If a participant names three or more possible frictions or drop-off causes, ask them to choose the single biggest one and explain why.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "In concept-validation synthesis, label each conclusion as one of: observed current behavior, stated preference, or hypothetical future reaction.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "After an initial positive concept reaction, prioritize one disconfirming non-use probe before covering additional checklist topics.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "decision_rule",
+      "text": "Do not stop at full topical coverage if the participant has introduced an unprobed trust threshold, evidence standard, or prioritized friction that could materially change interpretation.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "CF-001",
+      "rule": "When participants describe a trust boundary, ask what specific explanation or boundary marker would make first-use trust sufficient.",
+      "source_tags": [
+        "missed_threshold_probe",
+        "surface_acceptance_of_trust_claim"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-002",
+      "rule": "When participants say they would cross-check before acting, probe for the minimum proof needed to avoid that cross-check.",
+      "source_tags": [
+        "missed_consequence_probe",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-003",
+      "rule": "Force prioritization when multiple adoption blockers are named; do not record a flat list without ranking.",
+      "source_tags": [
+        "missed_contrast_probe"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-004",
+      "rule": "Separate convenience claims from the underlying value being protected by convenience, such as control, confidence, or reduced cognitive load.",
+      "source_tags": [
+        "likely_misclassified_driver_patterns"
+      ],
+      "confidence": "medium",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The interview did not test which specific analytics outputs within the proposed portfolio tool would materially change real decisions.",
+      "block_reason": "This is anchored to the specific product scope and named capability set rather than a purely generic interviewing pattern.",
+      "rewrite_as_generic": "When a study goal includes multiple candidate outputs within one concept, compare them directly instead of validating only the umbrella concept."
+    },
+    {
+      "blocked_item": "The interview did not sufficiently probe what presentation would feel advisory versus sales-led within the retail banking journey.",
+      "block_reason": "This is tied to the project's service-embedding context and anti-selling requirement.",
+      "rewrite_as_generic": "When a concept may blur support and promotion, ask what wording, handoff, or call to action would make the experience feel helpful versus agenda-driven."
+    },
+    {
+      "blocked_item": "The synthesis included specific design and experiment implications for this portfolio feature that went beyond one participant's evidence.",
+      "block_reason": "The design implications are product-shaped and not safe as facilitator-core priors.",
+      "rewrite_as_generic": "Constrain downstream recommendations to the exact level of certainty supported by the interview, especially when the source is a single hypothetical concept reaction."
+    }
+  ]
+}

@@ -1,0 +1,360 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "No transcript exists, so I start with a broad but concrete prompt about the participant's most recent portfolio-review behaviour before introducing the concept or asking about preferences.",
+    "message_to_persona": "可唔可以講下你最近一次主動睇自己投資組合係咩時候？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次投資組合管理事件係咩",
+      "當時觸發佢去睇組合嘅原因",
+      "佢實際用咗咩方法或工具",
+      "目前 workaround 係點",
+      "之後先引入概念並測試 trust、action 同 repeat use"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "journey_reconstruction",
+    "decision_rationale": "The participant gave a recent concrete event; the biggest gap is the current workaround. I am anchoring on that same night and asking about the exact tools/screens used, without introducing the concept yet.",
+    "message_to_persona": "嗰晚你主要靠咩畫面或者方法去判斷個組合有冇偏咗？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次主動查看投資組合發生在上個星期日晚上，孩子睡後進行。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當時同時打開了銀行 app 和券商 app。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "觸發原因是見到市況有些波動，想確認基金與股票比例是否偏離，以及順手查看現金部位。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當晚實際用了哪些畫面、數字或心法判斷配置是否偏離",
+      "目前跨銀行 app 與券商 app 的 workaround 是否零碎或足夠",
+      "之後可在理解現況後再中性引入 Portfolio Health Check",
+      "概念引入後需測試 trust boundary、action follow-through、repeat-use condition、service embedding"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "Recent behaviour and current method are now grounded in a specific event, so it is appropriate to introduce the concept neutrally and capture first reaction before probing trust, action, or embedding.",
+    "message_to_persona": "如果你個銀行app有個免費嘅Portfolio Health Check，會幫你一頁睇到整體持倉分布、集中度同風險提醒，你第一下會覺得邊部分對你最有用？",
+    "evidence_updates": [
+      {
+        "claim": "參與者通常先看資產分布頁，快速判斷股票、基金、現金比例是否偏離原本預期。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會再掃描持倉升跌，留意是否有一兩隻升得太多而令比重突出。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "即使留意到比重突出，參與者未必會即刻調整，只會先記低。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "Portfolio Health Check第一反應中，邊類輸出最貼近佢現有決策",
+      "佢對銀行提供呢類整體分析嘅信任同資料邊界係點",
+      "見到風險提醒之後實際會做咩",
+      "咩情況下會持續用而唔係只試一次",
+      "呢類功能應該擺喺咩客戶旅程時刻先最有用"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "action_probe",
+    "probing_strategy": "counterfactual",
+    "decision_rationale": "The participant has identified concentration as the most useful output and already set an explanation boundary for vague risk alerts. The next highest-signal gap is whether a concrete signal would change behaviour, which covers action follow-through without yet bundling trust or retention.",
+    "message_to_persona": "如果佢清楚話你有一兩隻持倉比重高咗，你通常下一步會點做？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對 Portfolio Health Check 的第一反應是最先看集中度。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者認為集中度最容易在平時放住不理時慢慢偏離而自己未必即時察覺。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者其次會看持倉分布和風險提醒。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果風險提醒過於空泛，例如只說波動較高，參與者會忽略它。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "看到具體集中度訊號後，參與者實際會採取什麼行動",
+      "什麼表達方式會讓輸出可信而不是被忽略",
+      "這類功能應該出現在什麼時刻或介面位置最有用",
+      "什麼情況下這個功能會變成持續使用習慣"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_probe",
+    "probing_strategy": "causal_probe",
+    "decision_rationale": "The participant described a concrete follow-through path and said vague alerts are ignored. The next highest-signal gap is the trust boundary: what information would make a concentration alert feel credible enough to act on.",
+    "message_to_persona": "要去到咩解釋程度，你先會信呢個集中度提醒值得你跟進？",
+    "evidence_updates": [
+      {
+        "claim": "如果看到持倉比重過高，參與者通常不會立刻賣出。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會先回看比重升高的原因，例如因為價格上升或之前曾加碼但未再平衡。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會把調整決定與現金需要一起考慮。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者可能選擇分幾次減持，或先記住等下一次再檢查。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "銀行app要提供哪些具體解釋或證據，參與者才會信任提醒",
+      "這類功能應該出現在什麼時刻或流程位置最有用",
+      "什麼情況下這功能會變成持續習慣而不是偶爾看看"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "service_embedding_probe",
+    "probing_strategy": "feature_to_moment_mapping",
+    "decision_rationale": "Trust boundary is now concrete. The highest-value remaining gap is where this should appear in the participant's real workflow, because that also sets up what would make it part of a routine later.",
+    "message_to_persona": "呢類提醒你會想喺咩時候見到最啱？",
+    "evidence_updates": [
+      {
+        "claim": "參與者需要集中度提醒指出是哪一兩隻持倉拉高了比重。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望看到目前比重大概去到多少，以及與原本分布差多遠。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望系統用易明語言說明如果暫時不處理，風險會是什麼。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "只有紅色感嘆號而沒有具體解釋的提醒不會建立信任。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這類功能應該在什麼客戶旅程時刻出現最有用",
+      "什麼條件下這個功能會變成持續使用習慣而不是只看一次"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "repeat_use_condition",
+    "decision_rationale": "The remaining required gap is repeat-use condition. The participant has already specified preferred moments and notification boundaries, so the next question should isolate what would make the feature become part of an ongoing habit rather than occasional checking.",
+    "message_to_persona": "咩情況下你會一路用呢個功能，唔係淨係間中先望一次？",
+    "evidence_updates": [
+      {
+        "claim": "參與者希望在自己主動打開查看投資組合時看到這類提醒。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者也接受在月尾本來會順手查看戶口的時間看到提醒。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不希望平日收到太多主動通知，除非偏離非常明顯，否則會當成騷擾。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "什麼條件會讓這個功能成為持續使用習慣而不是偶爾查看一次"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "close",
+    "probing_strategy": "coverage_complete",
+    "decision_rationale": "Required concept-validation areas are covered with concrete behavioural context, current workaround, concept reaction, trust boundary, action path, service timing, and repeat-use condition. Another question is unlikely to materially change the evidence map.",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "參與者只會持續使用這個功能，如果它能幫他節省判斷時間。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "提醒準確度會直接影響持續使用，參與者不接受系統經常錯誤催促他調整。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望看完後能快速判斷是否需要跟進。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者重視功能能否取代自己抄去別處做比較的動作。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "required_coverage_complete",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef35b-b8d5-7f82-bf27-da181f2d3983",
+    "decision_status": "not_asked_at_close"
+  }
+]

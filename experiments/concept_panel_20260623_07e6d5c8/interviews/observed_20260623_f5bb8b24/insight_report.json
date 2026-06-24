@@ -1,0 +1,190 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "「上個月尾，我先至認真逐隻睇一次。」",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "「我喺地鐵上面就開銀行app同基金戶口對一對，主要係想知而家個配置有冇太偏。」",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "「如果要去幾個地方先拼得齊，我會覺得幾煩，亦容易拖住唔想再睇。」",
+        "evidence_ref": "exchange_2.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上次認真檢視發生喺「上個月尾」，觸發因素係要交學校雜費加上見到市況反覆新聞。",
+      "當時佢喺地鐵用銀行 app 同基金戶口對配置，目標係確認配置有冇太偏、避免到要用錢先發現無留意。",
+      "佢會再睇 Notes 入面記低嘅買入價同用途，偶爾翻 WhatsApp 或 email 月結單去拼返整體組合。",
+      "跨幾個地方先拼得齊會令佢覺得麻煩，甚至拖延再檢視。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 睇部分投資持倉。",
+      "另外開基金戶口對資料。",
+      "用 Notes 記買入價同「大概用途」。",
+      "偶爾翻 WhatsApp 或 email 入面嘅月結單補資料。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "唔可以為咗整合資料而攞走與配置分析無關嘅銀行關係資料。",
+      "唔可以無明顯理由地亂推提醒。",
+      "唔可以一上嚟就推產品。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "戶口持倉",
+      "產品種類",
+      "買入成本",
+      "大概市值",
+      "交易日期"
+    ],
+    "rejected_data_access": [
+      "日常消費資料",
+      "人工出糧資料",
+      "其他無關交易",
+      "整份銀行關係資料"
+    ],
+    "required_trust_explanation": [
+      "要可以逐項授權。",
+      "要講清楚資料會保存幾耐。",
+      "要講清楚會唔會用嚟推銷。",
+      "要講清楚點樣計風險。",
+      "要講清楚係咪真係免費。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "首次打開就要「一次過睇到分散成點、風險有冇偏咗」。",
+      "唔使再自己逐個戶口拼資料。",
+      "如果顯示偏離，要講清楚係短期波動定真係某類資產比重高咗好多。",
+      "風險解釋要夠白話。"
+    ],
+    "time_to_value": "即開即見到整體組合同偏離原因；如果要另外拼資料，首用價值會明顯下降。",
+    "abandonment_triggers": [
+      "只覆蓋部分戶口。",
+      "風險點計講唔清。",
+      "名義免費但實際帶推銷意圖。",
+      "解釋含糊，令佢「未必會跟住做」。",
+      "平時無端端推送。",
+      "提醒無理由。",
+      "唔容易快速忽略或改返。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "不適用；研究設定已披露為免費服務。",
+    "monthly_comfort_range": "不適用／未測試。",
+    "payment_justification": [
+      "無可用證據；逐字稿只顯示佢會追問「係咪真係免費，定後面其實想推產品」，唔可以推論付費意願。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "如果開到就見到整體組合同偏離位置，佢可節省手動拼資料。",
+      "如果提醒有明確觸發理由，而且只喺投資總覽頁或月結單後等相關時刻出現，較符合佢使用情境。",
+      "如果提供白話風險解釋，同時容許快速忽略或調整，較可能形成偶爾回看習慣。"
+    ],
+    "drop_off_reasons": [
+      "如果仍然要去幾個地方拼資料。",
+      "如果提醒頻繁或無端端推送。",
+      "如果偏離解釋含糊。",
+      "如果看起來借分析做產品推銷。",
+      "如果資料授權範圍過闊或保存用途不透明。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "此 persona 目前有整體投資組合檢視需要。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "有近期具體行為：上月尾因現金需要同市況波動而主動檢視，並實際跨銀行 app、基金戶口、Notes、月結單拼資料。"
+    },
+    {
+      "assumption": "手動整合多來源資料係明顯摩擦點。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona"
+      ],
+      "rationale": "佢直接描述要去幾個地方拼資料「幾煩」，而且會「拖住唔想再睇」，屬具體行為後果。"
+    },
+    {
+      "assumption": "如果 Portfolio Health Check 可一次過整合組合與風險，對此 persona 有實際價值。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona"
+      ],
+      "rationale": "只有概念引入後嘅反應，佢話「第一下會覺得有啲用」並指向節省拼資料；但未有真實使用或強類比行為證據。"
+    },
+    {
+      "assumption": "此 persona 願意為完整分析授權必要投資資料，但只限最小範圍。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona"
+      ],
+      "rationale": "佢清楚列出可接受資料類型與拒絕項目，顯示條件式接受；但仍屬概念場景下陳述，未見實際授權行為。"
+    },
+    {
+      "assumption": "分析結果本身會直接推動佢即時調倉。",
+      "status": "weakened",
+      "evidence_refs": [
+        "exchange_5.persona"
+      ],
+      "rationale": "佢明確表示「多數唔會即刻大郁」，通常會先判斷係短期波動定結構性偏重，表示分析較可能影響觀察或停止加倉，而非直接交易。"
+    },
+    {
+      "assumption": "只要有提醒，佢就會持續回來看。",
+      "status": "weakened",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "佢只接受低干擾、有明確理由、貼近投資檢視時刻嘅提醒；無理由或亂推會削弱重用。"
+    },
+    {
+      "assumption": "銀行可用此服務自然承接到產品銷售。",
+      "status": "invalidated",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "佢多次主動提出對推銷的警惕，並要求先講清楚偏重程度、差距與非產品式選項；「唔好一上嚟就推產品」直接反駁此假設。"
+    },
+    {
+      "assumption": "此 persona 需要銀行提供白話、可行動但保留自主權嘅解讀。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "概念後反應一致指向要白話解釋、具體選項、可忽略；但仍未見真實跟進案例。"
+    }
+  ],
+  "key_insights": [
+    "Because 佢最近真實係因現金需要同市況波動先臨時打開多個地方對配置，this persona would likely 只喺有事件觸發時先檢視整體組合，而唔係主動高頻管理，unless 服務可以喺相關時刻零額外整理成本咁呈現。 This means the product should 先服務事件觸發式檢視，而唔好假設每日或高頻使用。",
+    "Because 跨 app、Notes、月結單手動拼資料會令佢覺得麻煩，甚至「拖住唔想再睇」，this persona would likely 放棄較完整但較費事嘅檢視，unless 一打開已經見到整體組合同偏離重點。 This means the product should 把首要價值放喺自動整合與即時摘要，而唔係先堆更多分析層。",
+    "Because 佢對推銷動機、資料範圍、保存期限同風險算法都有明確戒心，this persona would likely 停留喺觀望甚至唔授權，unless 授權可逐項控制、用途透明，而且結果頁先提供中立選項而非產品推介。 This means the product should 把信任說明與非銷售式承接做成核心體驗，而唔係放喺次要說明。",
+    "Because 佢見到偏離時「多數唔會即刻大郁」，而且如果解釋含糊就「未必會跟住做」，this persona would likely 把服務當作判斷輔助而非交易指令，unless 系統能清楚區分短期波動同結構性偏離。 This means the product should 以診斷、差距解釋同下一步選項為主，避免暗示單一路徑交易建議。"
+  ],
+  "next_experiment": "在現有銀行 app 做一個最小可點擊原型，只測一個入口同一個結果頁：於投資總覽頁或月結單後出現有理由的短提示，點入後即見整體資產分佈、偏離原因、資料來源範圍、及三個非產品式下一步選項（例如暫停加倉／改投另一邊／先觀察）。招募同類 persona 做 5-7 次任務式訪談，只觀察兩件事：1. 佢有冇即刻理解點解值得睇；2. 佢會唔會因資料授權與推銷疑慮而中止。",
+  "evidence_gaps": [
+    "未知道此 persona 平時冇現金需要或冇市況新聞時，會否主動定期檢視。",
+    "未有真實使用整合後頁面的行為，只得概念反應。",
+    "未知道如果只覆蓋本行持倉而未覆蓋外部戶口，價值會跌到幾多。",
+    "未知道佢對『風險解釋夠白話』的最低可接受表達形式係咩。",
+    "研究設定已指明免費，所以無有效價格或月二留存支付訊號。"
+  ],
+  "synthetic_only_disclaimer": "以上只係基於單一 synthetic persona 訪談逐字稿嘅概念驗證整理，屬模擬前驗證證據，唔代表真人市場需求、採納率或付費意願。"
+}

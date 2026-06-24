@@ -1,0 +1,507 @@
+{
+  "run_id": "concept_panel_20260623_b0590039",
+  "topic": "Aladdin Solution In Retail Banking",
+  "language": "Natural Cantonese Traditional Chinese",
+  "core_assumption_count": 8,
+  "persona_count": 1,
+  "problem_strength_counts": {
+    "medium": 1
+  },
+  "average_quality_score": 4.0,
+  "driver_type_counts": {
+    "core_value": 1,
+    "decision_style": 2,
+    "trust_pattern": 1,
+    "daily_constraint": 1,
+    "other": 1
+  },
+  "common_likely_drivers": [
+    {
+      "driver": "Financial steadiness matters more to her than optimization upside, so she checks investments as part of broader cash-flow reassurance rather than as a separate investing activity.",
+      "driver_type": "core_value",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "This explains why her portfolio review starts from bills, cash, and upcoming deductions before risk analysis. The health check is attractive only insofar as it helps her maintain an overall sense of stability."
+    },
+    {
+      "driver": "Her daily life is fragmented but disciplined, so usefulness is judged by whether the next step is obvious inside a short attention window.",
+      "driver_type": "daily_constraint",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "She describes checking during homework supervision and wants immediate key points, light prompts, and no repeated reconnection. That fits a phone-based, interruption-heavy routine rather than a dedicated portfolio-management session."
+    },
+    {
+      "driver": "She filters for signal quality quickly and drops tools that create background admin or alert fatigue.",
+      "driver_type": "decision_style",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Her threshold for repeated use is not novelty; it is whether the feature consistently highlights meaningful change and stays quiet otherwise."
+    },
+    {
+      "driver": "She has a strong review-before-action habit and wants automation to inform, not decide.",
+      "driver_type": "decision_style",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Her response to alerts is to inspect, cross-check, and adjust slowly. A tool that jumps from analysis to recommendation or transaction would likely trigger resistance."
+    },
+    {
+      "driver": "She is willing to tolerate complexity only when it remains legible and under her control.",
+      "driver_type": "other",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_it_matters_here": "She already manually reconstructs a cross-app picture in her head, which is cumbersome, yet still preferable to opaque automation. The feature becomes valuable only if it reduces effort without hiding the logic."
+    },
+    {
+      "driver": "Trust is earned through transparent boundaries, especially around permissions and what the system can or cannot touch.",
+      "driver_type": "trust_pattern",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Her detailed distinction between analysis-only access and transfer-capable access suggests she is not reacting to 'data sharing' in the abstract; she is evaluating concrete exposure and controllability."
+    }
+  ],
+  "common_unspoken_constraints": [
+    {
+      "constraint": "She likely has limited patience for any onboarding that feels like a second financial admin task.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_likely": "She repeatedly anchors value to time saved, few steps, and not having to reconnect each time."
+    },
+    {
+      "constraint": "She likely wants the feature to coexist with, not replace, her existing app-checking routine.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_likely": "She describes verifying against other apps even after receiving a risk alert, suggesting continued parallel checking rather than full delegation."
+    },
+    {
+      "constraint": "She may be especially sensitive to anything that could expose household-linked information, not just her own holdings.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_likely": "She explicitly excludes family-related data and the persona profile flags accidental family-information exposure as a fear."
+    },
+    {
+      "constraint": "She probably needs explanation in plain operational terms, not market jargon.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_likely": "She asks to quickly understand how the calculation works and focuses on practical questions like concentration and unusual movement rather than investment theory."
+    }
+  ],
+  "common_value_tensions": [
+    {
+      "tension": "Accepting useful institutional tools versus demanding higher privacy justification from new data flows",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "A bank-integrated view could reduce manual reconstruction across apps. vs External linking and sensitive permissions face a higher trust bar, especially if they touch family or transfer capability."
+    },
+    {
+      "tension": "Convenience versus control",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She wants one place that saves time across fragmented accounts. vs She resists broad permissions, opaque calculation, and direct action without review."
+    },
+    {
+      "tension": "Monitoring for reassurance versus avoiding noise",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She wants timely prompts around monthly review and material change. vs She does not want frequent alerts that become clutter or pressure."
+    }
+  ],
+  "facilitator_primary_failure_modes": [
+    {
+      "failure_mode": "Coverage over depth after initial concept fit was established.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "example_assessment": "The interview covered all required areas in seven exchanges, but depth was thin in the most decision-relevant areas: what explanation earns trust, what evidence prevents false-alarm dismissal, which friction is most disqualifying, and what concrete output would change behavior."
+    }
+  ],
+  "common_missed_high_value_followups": [
+    {
+      "question": "Even if it were clear and low-permission, in what situation would this still not be useful to you?",
+      "trigger_type": "positive_concept_reaction",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "After an initial positive reaction, add one disconfirming probe to learn the concept's non-use boundary."
+    },
+    {
+      "question": "If only one of those problems remained, which one by itself would be most likely to make you stop using it?",
+      "trigger_type": "multi-friction_dropoff",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When multiple frictions are listed, force prioritization so the strongest driver is not lost in an undifferentiated list."
+    },
+    {
+      "question": "What exact explanation would be enough for you to trust the result on first use?",
+      "trigger_type": "trust_boundary_statement",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When a participant asks for clarity or transparency, probe for the minimum explanation standard rather than recording 'needs clarity' as a complete insight."
+    },
+    {
+      "question": "What would make a notification feel meaningfully important versus just more noise?",
+      "trigger_type": "timing_preference",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "When participants mention alert fatigue, probe for the threshold between signal and noise rather than treating 'too frequent' as sufficiently specific."
+    },
+    {
+      "question": "What would you need to see to believe the alert is valid enough that you would not need a manual cross-check?",
+      "trigger_type": "verification_habit",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "If a participant says they would verify a recommendation elsewhere, ask for the evidence standard that would reduce or eliminate that verification step."
+    }
+  ],
+  "common_likely_misclassified_drivers": [
+    {
+      "possible_underlying_driver": "The deeper need may be confidence-efficient review: fast comprehension that still feels auditable before action.",
+      "observed_surface_frame": "The participant wants quick, simple summaries.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "generic_learning": "Do not equate a request for speed or simplicity with low engagement; probe whether the participant wants less depth, or just faster access to defensible depth."
+    },
+    {
+      "possible_underlying_driver": "The stronger driver may be a mix of control preservation, setup burden, and desire for analysis-only boundaries, not privacy alone.",
+      "observed_surface_frame": "The participant appears privacy-sensitive about external data access.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "generic_learning": "When permission resistance appears, separate sensitivity to data exposure, operational control, onboarding effort, and action authority before labeling the driver."
+    },
+    {
+      "possible_underlying_driver": "Time saving may be secondary to reducing uncertainty without surrendering control.",
+      "observed_surface_frame": "The participant would use the feature if it saves time.",
+      "persona_count": 1,
+      "personas": [
+        "Iris Cheung"
+      ],
+      "generic_learning": "When 'save time' appears, ask what protected value the time-saving preserves: confidence, control, reduced stress, fewer mistakes, or something else."
+    }
+  ],
+  "assumption_matrix": [
+    {
+      "assumption_index": 1,
+      "assumption": "佢而家用分散式、淺層查看方式，主要係想快速確認資金安全感同現金節奏，而唔係主動做深入投資判斷。",
+      "status_counts": {
+        "supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2005",
+          "persona_name": "Iris Cheung",
+          "status": "supported",
+          "rationale": "有直接近期行為支持：佢明講『唔係想研究啲咩走勢』，而且通常『唔會睇得好深』，先看現金、扣數、供款，異常先再追查。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 2,
+      "assumption": "概念要被持續使用，關鍵可能唔係分析深度，而係輸出是否夠快、夠清楚，同埋唔需要交出太多資料。",
+      "status_counts": {
+        "partially_supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2005",
+          "persona_name": "Iris Cheung",
+          "status": "partially_supported",
+          "rationale": "方向上有明確偏好證據，但主要來自概念後反應，不是已發生的採用或留存行為；因此只能部分支持。"
+        }
+      ]
+    }
+  ],
+  "additional_persona_specific_findings": [],
+  "personas": [
+    {
+      "persona_id": "su_2005",
+      "persona_name": "Iris Cheung",
+      "interview_id": "observed_20260623_d5cb892a",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "不適用：研究設定已指明為免費服務。",
+        "monthly_comfort_range": "不適用／未測。",
+        "payment_justification": [
+          "無可用證據；訪談無測試付費，亦無實際類比消費行為。"
+        ],
+        "evidence_strength": "unknown"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "真係幫到佢慳時間。",
+          "月尾對數時可一眼見到重點變化、風險、分布。",
+          "只喺月尾／出糧後或明顯異常時出現。",
+          "連接保持穩定，唔使重複授權。"
+        ],
+        "drop_off_reasons": [
+          "提醒太空泛。",
+          "推送太密。",
+          "經常要求更多權限。",
+          "每次都要重新連接。",
+          "操作流程太長。"
+        ],
+        "workflow_effect": "adds_layer"
+      },
+      "quality": {
+        "neutrality": 4,
+        "probing_quality": 4,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 3,
+        "causal_rigor": 4,
+        "hypothesis_validation_rigor": 4,
+        "synthesis_fidelity": 3,
+        "overall": 4
+      },
+      "top_likely_drivers": [
+        {
+          "driver": "Financial steadiness matters more to her than optimization upside, so she checks investments as part of broader cash-flow reassurance rather than as a separate investing activity.",
+          "driver_type": "core_value",
+          "why_it_matters_here": "This explains why her portfolio review starts from bills, cash, and upcoming deductions before risk analysis. The health check is attractive only insofar as it helps her maintain an overall sense of stability.",
+          "evidence_refs": [
+            "exchange_1.persona",
+            "exchange_2.persona"
+          ],
+          "profile_source_refs": [
+            "values.core_values",
+            "problem_context.jobs_to_be_done",
+            "human_difference_axes.relationship_to_money"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        },
+        {
+          "driver": "She has a strong review-before-action habit and wants automation to inform, not decide.",
+          "driver_type": "decision_style",
+          "why_it_matters_here": "Her response to alerts is to inspect, cross-check, and adjust slowly. A tool that jumps from analysis to recommendation or transaction would likely trigger resistance.",
+          "evidence_refs": [
+            "exchange_5.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "technology_attitude.automation_openness",
+            "human_difference_axes.control_preference",
+            "personality_belief.decision_style"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        },
+        {
+          "driver": "Trust is earned through transparent boundaries, especially around permissions and what the system can or cannot touch.",
+          "driver_type": "trust_pattern",
+          "why_it_matters_here": "Her detailed distinction between analysis-only access and transfer-capable access suggests she is not reacting to 'data sharing' in the abstract; she is evaluating concrete exposure and controllability.",
+          "evidence_refs": [
+            "exchange_3.persona",
+            "exchange_4.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "values.fears",
+            "technology_attitude.privacy_concern",
+            "adoption_style.trust_requirements",
+            "human_difference_axes.trust_style"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        }
+      ],
+      "top_unspoken_constraints": [
+        {
+          "constraint": "She likely has limited patience for any onboarding that feels like a second financial admin task.",
+          "why_likely": "She repeatedly anchors value to time saved, few steps, and not having to reconnect each time.",
+          "evidence_refs": [
+            "exchange_3.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "values.fears",
+            "problem_context.active_pain_points",
+            "deep_research_notes.adoption_model"
+          ],
+          "confidence": "high"
+        },
+        {
+          "constraint": "She likely wants the feature to coexist with, not replace, her existing app-checking routine.",
+          "why_likely": "She describes verifying against other apps even after receiving a risk alert, suggesting continued parallel checking rather than full delegation.",
+          "evidence_refs": [
+            "exchange_2.persona",
+            "exchange_5.persona"
+          ],
+          "profile_source_refs": [
+            "adoption_style",
+            "human_difference_axes.control_preference"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "value_tensions": [
+        {
+          "tension": "Convenience versus control",
+          "side_a": "She wants one place that saves time across fragmented accounts.",
+          "side_b": "She resists broad permissions, opaque calculation, and direct action without review.",
+          "evidence_refs": [
+            "exchange_3.persona",
+            "exchange_4.persona",
+            "exchange_5.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "contradiction_map",
+            "human_difference_axes.control_preference",
+            "technology_attitude.automation_openness"
+          ],
+          "confidence": "high"
+        },
+        {
+          "tension": "Monitoring for reassurance versus avoiding noise",
+          "side_a": "She wants timely prompts around monthly review and material change.",
+          "side_b": "She does not want frequent alerts that become clutter or pressure.",
+          "evidence_refs": [
+            "exchange_6.persona",
+            "exchange_7.persona"
+          ],
+          "profile_source_refs": [
+            "discovery_path_&_daily_friction.attention_shape",
+            "deep_research_notes.dropoff_model"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "missed_follow_up_questions": [
+        {
+          "question": "When you say you need to 'quickly understand how it calculates,' what exact explanation would be enough for you to trust the result on first use?",
+          "why_this_would_clarify": "This would separate explanation needs from general privacy hesitation and make her trust threshold more concrete.",
+          "priority": "high"
+        },
+        {
+          "question": "If the health check showed a concentration risk, what comparison or proof would make you believe it was not a false alarm?",
+          "why_this_would_clarify": "Her transcript shows a verification habit, but not the actual evidence standard she would use.",
+          "priority": "high"
+        }
+      ],
+      "facilitator_primary_failure_mode": "Coverage over depth after initial concept fit was established.",
+      "facilitator_missed_followups": [
+        {
+          "trigger_type": "trust_boundary_statement",
+          "priority": "high",
+          "participant_signal": "The participant said they needed to quickly understand how the system calculates and would hesitate if too much external data were requested up front.",
+          "missed_followup_question": "What exact explanation would be enough for you to trust the result on first use?",
+          "generic_learning": "When a participant asks for clarity or transparency, probe for the minimum explanation standard rather than recording 'needs clarity' as a complete insight."
+        },
+        {
+          "trigger_type": "verification_habit",
+          "priority": "high",
+          "participant_signal": "The participant said they would inspect the alert, compare it against other sources, and only adjust gradually if it still seemed valid.",
+          "missed_followup_question": "What would you need to see to believe the alert is valid enough that you would not need a manual cross-check?",
+          "generic_learning": "If a participant says they would verify a recommendation elsewhere, ask for the evidence standard that would reduce or eliminate that verification step."
+        }
+      ],
+      "facilitator_likely_misclassified_drivers": [
+        {
+          "observed_surface_frame": "The participant appears privacy-sensitive about external data access.",
+          "possible_underlying_driver": "The stronger driver may be a mix of control preservation, setup burden, and desire for analysis-only boundaries, not privacy alone.",
+          "why_the_surface_frame_is_weak": "The transcript includes concern about what the system can do, how much effort setup requires, and whether permissions are clearly separated. Collapsing these into 'privacy concern' loses causal precision.",
+          "generic_learning": "When permission resistance appears, separate sensitivity to data exposure, operational control, onboarding effort, and action authority before labeling the driver."
+        },
+        {
+          "observed_surface_frame": "The participant wants quick, simple summaries.",
+          "possible_underlying_driver": "The deeper need may be confidence-efficient review: fast comprehension that still feels auditable before action.",
+          "why_the_surface_frame_is_weak": "The participant did not just ask for brevity; they also described cross-checking and gradual adjustment. Simplicity alone does not explain the behavior.",
+          "generic_learning": "Do not equate a request for speed or simplicity with low engagement; probe whether the participant wants less depth, or just faster access to defensible depth."
+        }
+      ]
+    }
+  ],
+  "synthetic_only_disclaimer": "This panel contains synthetic AI pre-validation only. It cannot establish market demand, pricing, prevalence, or replace interviews with real people."
+}

@@ -359,6 +359,138 @@ FACILITATOR_QUALITY_SCHEMA: dict[str, Any] = {
     },
 }
 
+FACILITATOR_AUDIT_TAG_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["tag", "severity", "why_it_matters", "observed_pattern"],
+    "properties": {
+        "tag": {"type": "string"},
+        "severity": {"type": "string", "enum": ["low", "medium", "high"]},
+        "why_it_matters": {"type": "string"},
+        "observed_pattern": {"type": "string"},
+    },
+}
+
+HIGH_VALUE_MISSED_FOLLOWUP_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "trigger_type", "priority", "participant_signal", "missed_followup_question", "generic_learning",
+    ],
+    "properties": {
+        "trigger_type": {"type": "string"},
+        "priority": {"type": "string", "enum": ["low", "medium", "high"]},
+        "participant_signal": {"type": "string"},
+        "missed_followup_question": {"type": "string"},
+        "generic_learning": {"type": "string"},
+    },
+}
+
+MISCLASSIFIED_DRIVER_PATTERN_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "observed_surface_frame", "possible_underlying_driver", "why_the_surface_frame_is_weak", "generic_learning",
+    ],
+    "properties": {
+        "observed_surface_frame": {"type": "string"},
+        "possible_underlying_driver": {"type": "string"},
+        "why_the_surface_frame_is_weak": {"type": "string"},
+        "generic_learning": {"type": "string"},
+    },
+}
+
+EVIDENCE_HANDLING_ISSUE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["issue", "severity", "generic_learning"],
+    "properties": {
+        "issue": {"type": "string"},
+        "severity": {"type": "string", "enum": ["low", "medium", "high"]},
+        "generic_learning": {"type": "string"},
+    },
+}
+
+PROMPT_ADJUSTMENT_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["adjustment_type", "text", "reuse_scope", "safe_for_global_reuse"],
+    "properties": {
+        "adjustment_type": {
+            "type": "string",
+            "enum": ["decision_rule", "stop_rule", "followup_trigger_rule", "evidence_rule", "contrast_rule", "question_priority_rule"],
+        },
+        "text": {"type": "string"},
+        "reuse_scope": {"type": "string", "enum": ["global", "interview_mode_only", "manual_review_only"]},
+        "safe_for_global_reuse": {"type": "boolean"},
+    },
+}
+
+CARRY_FORWARD_RULE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["rule_id", "rule", "source_tags", "confidence", "safe_for_global_reuse"],
+    "properties": {
+        "rule_id": {"type": "string"},
+        "rule": {"type": "string"},
+        "source_tags": {"type": "array", "items": {"type": "string"}},
+        "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+        "safe_for_global_reuse": {"type": "boolean"},
+    },
+}
+
+BLOCKED_FEEDBACK_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["blocked_item", "block_reason", "rewrite_as_generic"],
+    "properties": {
+        "blocked_item": {"type": "string"},
+        "block_reason": {"type": "string"},
+        "rewrite_as_generic": {"type": "string"},
+    },
+}
+
+FACILITATOR_AUDIT_FEEDBACK_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "artifact_version", "feedback_scope", "applies_to", "summary", "facilitator_feedback_tags",
+        "high_value_missed_followups", "likely_misclassified_driver_patterns", "evidence_handling_issues",
+        "prompt_adjustments", "carry_forward_rules", "blocked_feedback",
+    ],
+    "properties": {
+        "artifact_version": {"type": "string"},
+        "feedback_scope": {"type": "string", "enum": ["interview", "panel", "batch"]},
+        "applies_to": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["interview_mode", "domains", "safe_for_global_reuse"],
+            "properties": {
+                "interview_mode": {"type": "array", "items": {"type": "string"}},
+                "domains": {"type": "array", "items": {"type": "string"}},
+                "safe_for_global_reuse": {"type": "boolean"},
+            },
+        },
+        "summary": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["overall_assessment", "primary_failure_mode", "depth_vs_coverage_assessment"],
+            "properties": {
+                "overall_assessment": {"type": "string"},
+                "primary_failure_mode": {"type": "string"},
+                "depth_vs_coverage_assessment": {"type": "string"},
+            },
+        },
+        "facilitator_feedback_tags": {"type": "array", "items": FACILITATOR_AUDIT_TAG_SCHEMA},
+        "high_value_missed_followups": {"type": "array", "items": HIGH_VALUE_MISSED_FOLLOWUP_SCHEMA},
+        "likely_misclassified_driver_patterns": {"type": "array", "items": MISCLASSIFIED_DRIVER_PATTERN_SCHEMA},
+        "evidence_handling_issues": {"type": "array", "items": EVIDENCE_HANDLING_ISSUE_SCHEMA},
+        "prompt_adjustments": {"type": "array", "items": PROMPT_ADJUSTMENT_SCHEMA},
+        "carry_forward_rules": {"type": "array", "items": CARRY_FORWARD_RULE_SCHEMA},
+        "blocked_feedback": {"type": "array", "items": BLOCKED_FEEDBACK_SCHEMA},
+    },
+}
+
 
 class FacilitatorProvider(Protocol):
     provider_name: str
@@ -381,6 +513,10 @@ class FacilitatorProvider(Protocol):
     ) -> tuple[dict[str, Any], str]: ...
 
     def evaluate_quality(
+        self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
+    ) -> tuple[dict[str, Any], str]: ...
+
+    def generate_audit_feedback(
         self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
     ) -> tuple[dict[str, Any], str]: ...
 
@@ -494,6 +630,137 @@ def validate_quality_evaluation(payload: dict[str, Any]) -> None:
     ]
     if verdict != "pass" and not any(isinstance(item, list) and item for item in hint_lists):
         raise ValueError("Warn or fail quality evaluations require at least one actionable improvement hint.")
+
+
+_PROJECT_SPECIFIC_MARKERS = (
+    "aladdin",
+    "mpf",
+    "portfolio health check",
+    "hong kong",
+    "rm ",
+    "rm-",
+    "retail bank",
+    "wealth dashboard",
+)
+
+
+def _contains_project_specific_marker(text: str) -> bool:
+    lowered = text.casefold()
+    return any(marker in lowered for marker in _PROJECT_SPECIFIC_MARKERS)
+
+
+def normalize_facilitator_audit_feedback(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(payload)
+    normalized.setdefault("artifact_version", "v1")
+    normalized.setdefault("feedback_scope", "interview")
+    applies_to = normalized.get("applies_to")
+    if not isinstance(applies_to, dict):
+        applies_to = {}
+    applies_to.setdefault("interview_mode", [])
+    applies_to.setdefault("domains", ["generic"])
+    applies_to.setdefault("safe_for_global_reuse", True)
+    normalized["applies_to"] = applies_to
+    summary = normalized.get("summary")
+    if not isinstance(summary, dict):
+        summary = {}
+    summary.setdefault("overall_assessment", "")
+    summary.setdefault("primary_failure_mode", "")
+    summary.setdefault("depth_vs_coverage_assessment", "")
+    normalized["summary"] = summary
+
+    for key in (
+        "facilitator_feedback_tags",
+        "high_value_missed_followups",
+        "likely_misclassified_driver_patterns",
+        "evidence_handling_issues",
+        "prompt_adjustments",
+        "carry_forward_rules",
+        "blocked_feedback",
+    ):
+        value = normalized.get(key)
+        normalized[key] = value if isinstance(value, list) else []
+
+    blocked: list[dict[str, Any]] = list(normalized["blocked_feedback"])
+    safe_prompt_adjustments: list[dict[str, Any]] = []
+    for item in normalized["prompt_adjustments"]:
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text", ""))
+        safe_flag = bool(item.get("safe_for_global_reuse", False))
+        if safe_flag and _contains_project_specific_marker(text):
+            blocked.append({
+                "blocked_item": text,
+                "block_reason": "project_specific_content",
+                "rewrite_as_generic": "",
+            })
+            continue
+        safe_prompt_adjustments.append(item)
+    normalized["prompt_adjustments"] = safe_prompt_adjustments
+
+    safe_rules: list[dict[str, Any]] = []
+    for item in normalized["carry_forward_rules"]:
+        if not isinstance(item, dict):
+            continue
+        rule_text = str(item.get("rule", ""))
+        safe_flag = bool(item.get("safe_for_global_reuse", False))
+        if safe_flag and _contains_project_specific_marker(rule_text):
+            blocked.append({
+                "blocked_item": rule_text,
+                "block_reason": "project_specific_content",
+                "rewrite_as_generic": "",
+            })
+            continue
+        safe_rules.append(item)
+    normalized["carry_forward_rules"] = safe_rules
+    normalized["blocked_feedback"] = blocked
+
+    if blocked:
+        normalized["applies_to"]["safe_for_global_reuse"] = False
+    return normalized
+
+
+def validate_facilitator_audit_feedback(payload: dict[str, Any]) -> None:
+    for key in FACILITATOR_AUDIT_FEEDBACK_SCHEMA["required"]:
+        if key not in payload:
+            raise ValueError(f"Facilitator audit feedback is missing '{key}'.")
+    if payload.get("feedback_scope") not in {"interview", "panel", "batch"}:
+        raise ValueError("Facilitator audit feedback has an invalid feedback_scope.")
+    applies_to = payload.get("applies_to")
+    if not isinstance(applies_to, dict):
+        raise ValueError("Facilitator audit feedback applies_to must be an object.")
+    if not isinstance(applies_to.get("interview_mode"), list):
+        raise ValueError("Facilitator audit feedback interview_mode must be a list.")
+    if not isinstance(applies_to.get("domains"), list):
+        raise ValueError("Facilitator audit feedback domains must be a list.")
+    if not isinstance(applies_to.get("safe_for_global_reuse"), bool):
+        raise ValueError("Facilitator audit feedback safe_for_global_reuse must be a boolean.")
+    summary = payload.get("summary")
+    if not isinstance(summary, dict):
+        raise ValueError("Facilitator audit feedback summary must be an object.")
+    for key in ("overall_assessment", "primary_failure_mode", "depth_vs_coverage_assessment"):
+        if not isinstance(summary.get(key), str):
+            raise ValueError(f"Facilitator audit feedback summary field '{key}' must be a string.")
+    for key in (
+        "facilitator_feedback_tags",
+        "high_value_missed_followups",
+        "likely_misclassified_driver_patterns",
+        "evidence_handling_issues",
+        "prompt_adjustments",
+        "carry_forward_rules",
+        "blocked_feedback",
+    ):
+        if not isinstance(payload.get(key), list):
+            raise ValueError(f"Facilitator audit feedback field '{key}' must be a list.")
+    for item in payload.get("carry_forward_rules", []):
+        if not isinstance(item, dict):
+            raise ValueError("Facilitator audit feedback carry_forward_rules must contain objects.")
+        if bool(item.get("safe_for_global_reuse", False)) and _contains_project_specific_marker(str(item.get("rule", ""))):
+            raise ValueError("Global-safe carry_forward_rules cannot contain project-specific content.")
+    for item in payload.get("prompt_adjustments", []):
+        if not isinstance(item, dict):
+            raise ValueError("Facilitator audit feedback prompt_adjustments must contain objects.")
+        if bool(item.get("safe_for_global_reuse", False)) and _contains_project_specific_marker(str(item.get("text", ""))):
+            raise ValueError("Global-safe prompt_adjustments cannot contain project-specific content.")
 
 
 def validate_hypothesis_assessment(payload: dict[str, Any]) -> None:
@@ -642,6 +909,23 @@ class OpenAIFacilitatorProvider:
             if key not in payload:
                 raise ValueError(f"Facilitator quality evaluation is missing '{key}'.")
         validate_quality_evaluation(payload)
+        metadata = getattr(self.client, "last_transport_metadata", {})
+        session_id = str(metadata.get("codex_session_id", "")) or provider_session_id
+        return payload, session_id
+
+    def generate_audit_feedback(
+        self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
+    ) -> tuple[dict[str, Any], str]:
+        is_codex = self.client.config.transport == "codex_cli"
+        payload = self.client.create_json_response(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            output_schema=FACILITATOR_AUDIT_FEEDBACK_SCHEMA,
+            codex_session_id=provider_session_id or None,
+            persist_codex_session=is_codex,
+        )
+        payload = normalize_facilitator_audit_feedback(payload)
+        validate_facilitator_audit_feedback(payload)
         metadata = getattr(self.client, "last_transport_metadata", {})
         session_id = str(metadata.get("codex_session_id", "")) or provider_session_id
         return payload, session_id

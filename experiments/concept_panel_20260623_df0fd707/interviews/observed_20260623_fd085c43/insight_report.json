@@ -1,0 +1,165 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "「短時間連住幾日都跌，連我本身分散開嗰幾樣都一齊明顯向下，我就會開始覺得唔對路」",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "「再唔望清楚就可能太遲」",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "「嗰種我會當係正常噪音，唔想自己愈望愈想亂郁」",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次主動檢視係上個禮拜日晚，因為見到市場波動新聞而打開銀行 app 睇基金、月供表現同戶口現金；當晚冇即刻調整。",
+      "佢用『連住幾日下跌、而且多個已分散持倉一齊明顯向下』作為再深入檢查門檻，而唔係固定百分比。",
+      "如果只係單日跌、而且只影響一兩樣持倉、月供同現金位無受影響，佢會停手，避免因噪音而亂動作。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "自己喺銀行 app 睇幾隻基金同月供表現。",
+      "同時檢查戶口現金是否足夠。",
+      "見到提示或波動時，先自行打開持倉明細判斷係集中、波動，定短期市場震盪。",
+      "通常再觀察一兩日，並對返原本月供同現金安排先決定。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "保留自己先睇清楚再決定的節奏。",
+      "唔可以一出結果就導向買新產品或轉倉。",
+      "唔可以太密提示，避免變成噪音。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "使用佢現有持倉資料去指出集中度、風險是否偏離原本設定。",
+      "用清楚可解釋的規則，說明判斷基於咩持倉資料同大概界線。"
+    ],
+    "rejected_data_access": [
+      "黑箱式判斷，唔講點得出結論。",
+      "一打開就將產品放前面，或者任何流程直接導去產品推薦。"
+    ],
+    "required_trust_explanation": [
+      "先講清楚而家個組合有咩問題，而唔係先推產品。",
+      "講到『用咗我現有持倉咩資料、界線大概點定』。",
+      "容許『暫時唔處理』或者只係再觀察，唔好將每個結果都變成交易建議。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一眼睇到短的健康摘要，並清楚指出問題類型，例如太集中或風險同原設定唔夾。",
+      "能直接睇到點解會有提示，同埋可進一步睇明細。",
+      "語言要『講人話』，唔係黑箱。",
+      "用完之後仍由佢自己決定是否處理，而唔係被帶去買產品。"
+    ],
+    "time_to_value": "首次打開即時",
+    "abandonment_triggers": [
+      "每次講法差唔多，冇新資訊。",
+      "要撳幾層先睇到重點。",
+      "最後又兜去產品推薦。",
+      "提示太密，被當成噪音。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "不適用；研究前提已設定此服務免費，受訪者只對『真係免費』有提及，唔構成付費訊號。",
+    "monthly_comfort_range": "未知／不適用",
+    "payment_justification": [
+      "冇可用證據去判斷月費接受度。",
+      "受訪者只講過如果『真係免費、講人話、畀我自己睇完先決定做唔做嘢』會開嚟望下，屬概念反應唔係付費行為。"
+    ],
+    "evidence_strength": "hypothetical"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "只喺有變化時提供新資訊，例如指出係加倉定市場變動令集中度改變。",
+      "能展示影響大細，例如偏離原設定幾多、較上月惡化定改善。",
+      "嵌入喺月供後／月尾檢視時的短摘要，或真有異常時的清楚提示。"
+    ],
+    "drop_off_reasons": [
+      "內容重覆，只係換句話叫佢留意風險。",
+      "進入重點前要撳幾層。",
+      "再次變成產品銷售入口。",
+      "提醒過密。"
+    ],
+    "workflow_effect": "adds_layer"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "呢位零售銀行客會因市場波動主動檢查投資組合，而唔係完全被動。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "佢描述咗最近一次真實事件：見到市場波動新聞後主動開 app 睇表現與現金，並有明確再深入檢查門檻。"
+    },
+    {
+      "assumption": "整體風險／集中度摘要對呢位客有潛在幫助。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_10.persona"
+      ],
+      "rationale": "佢對概念有『少少興趣』，亦講到想見到集中度、風險偏離與變化原因；但呢啲都係概念反應，未有真實使用行為。"
+    },
+    {
+      "assumption": "只要係免費，呢位客就會採用 Portfolio Health Check。",
+      "status": "weakened",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_9.persona"
+      ],
+      "rationale": "免費只係最低門檻之一；佢同時明確要求非銷售、可解釋、可自行決定，否則會停用。"
+    },
+    {
+      "assumption": "風險提示會直接推動佢即時買賣。",
+      "status": "invalidated",
+      "evidence_refs": [
+        "exchange_6.persona"
+      ],
+      "rationale": "佢明確話『多數唔會即刻跟住個提示郁』，通常會先查明細，再觀察一兩日。"
+    },
+    {
+      "assumption": "將功能嵌入銀行 app 現有檢視節點，會比獨立銷售式入口更貼近佢流程。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "佢清楚指出想喺月供後／月尾總覽中順手見到，異常時才主動提醒；但仍屬概念偏好，未經實際使用驗證。"
+    },
+    {
+      "assumption": "重複使用主要取決於是否持續提供『有變化』的新資訊。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_9.persona",
+        "exchange_10.persona"
+      ],
+      "rationale": "佢對留存門檻講得具體，但仍是預測性回答，未有真實月二留存行為。"
+    }
+  ],
+  "key_insights": [
+    "Because 佢最近係見到市場波動先主動開 app，而且用『連跌幾日兼多個持倉一齊向下』做門檻，this persona would 只喺感覺可能『太遲』之前先再深入睇，unless 波動只屬單日、局部而且唔影響月供同現金。This means the product should 用事件觸發同摘要式呈現去配合佢現有檢視頻率，而唔好預設高頻常駐互動。",
+    "Because 佢明確怕『愈望愈想亂郁』同『每次講嘅都差唔多』，this persona would 關掉過密或重覆訊息，unless 每次都講到今次點解同上次唔同、影響大細有幾多。This means the product should 只喺狀態有變化時提醒，並突出變化來源、偏離幅度同較上次的變化。",
+    "Because 佢對『借檢查推產品』有即時防備，this persona would 先把功能當成潛在銷售包裝，unless 畫面先講問題、解釋判斷依據，並容許『暫時唔處理』。This means the product should 把分析、理據同非交易結尾放前面，將產品推薦明確後置甚至分離。",
+    "Because 佢見到提示後通常會先自己打開持倉明細，再觀察一兩日對返原本安排，this persona would 把 Health Check 當成二次核對工具而唔係交易指令，unless 提示非常具體而且有理據。This means the product should 直接連到相關持倉明細與原因拆解，支援『理解』先於『行動』。",
+    "Because 佢想喺月供後／月尾見到短摘要，但只喺異常時接受明確提示，this persona would 接受輕量嵌入現有銀行旅程，unless 功能打斷流程或一彈就導去買產品。This means the product should 分成被動摘要同異常提示兩種入口，並保持由總覽到明細的自助路徑。"
+  ],
+  "next_experiment": "用這位 persona 類型客戶的匿名持倉快照，做一個最小可點擊原型，只測兩個畫面：1) 月尾／月供後首頁短摘要；2) 連跌幾日後的異常提示。兩個版本唯一差異係結尾有冇產品 CTA。觀察佢會唔會打開、能否講出提示原因、是否覺得被銷售、以及會唔會去睇持倉明細而唔係即時交易。",
+  "evidence_gaps": [
+    "冇真實使用資料，未驗證佢實際會否打開 Health Check、點擊明細，或回訪。",
+    "冇測試任何具體分析指標、圖表形式、字眼或閾值設計。",
+    "冇證據顯示佢會否接受 RM 參與、人工解說或跨渠道跟進。",
+    "冇付款或付費替代品行為，不能推論價格。",
+    "只有單一 synthetic persona，保留為個案級、反證亦同樣有價值。"
+  ],
+  "synthetic_only_disclaimer": "此報告只基於單一 synthetic interview transcript，屬模擬前期概念驗證材料，不代表真人市場證據或普遍需求。"
+}

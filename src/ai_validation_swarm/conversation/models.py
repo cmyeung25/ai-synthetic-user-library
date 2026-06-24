@@ -14,6 +14,7 @@ class ConversationTurn:
     created_at: str = field(default_factory=utc_now_iso)
     intent_level: str = ""
     confidence: str = ""
+    behavior_signals: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -29,10 +30,14 @@ class ConversationSession:
     model: str
     prompt_version: str
     provider_session_id: str = ""
+    friction_mode: str = "off"
+    friction_axes: dict[str, Any] = field(default_factory=dict)
     created_at: str = field(default_factory=utc_now_iso)
     updated_at: str = field(default_factory=utc_now_iso)
     status: str = "active"
     synthetic_only_disclaimer: str = "Synthetic user for AI pre-validation only; not human market evidence."
+    conversation_realism_score: int = 0
+    conversation_realism_summary: dict[str, Any] = field(default_factory=dict)
     turns: list[ConversationTurn] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -46,7 +51,8 @@ class ConversationSession:
         allowed = {
             "session_id", "persona_id", "persona_name", "persona_version", "provider",
             "model", "prompt_version", "created_at", "updated_at", "status",
-            "synthetic_only_disclaimer", "provider_session_id",
+            "synthetic_only_disclaimer", "provider_session_id", "friction_mode",
+            "friction_axes", "conversation_realism_score", "conversation_realism_summary",
         }
         values = {key: value for key, value in payload.items() if key in allowed}
         return cls(**values, turns=turns)

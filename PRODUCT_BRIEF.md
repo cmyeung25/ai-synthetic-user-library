@@ -1,92 +1,79 @@
 # AI Validation Swarm Product Brief
 
-## 1. 產品定位
+## Positioning
 
-AI Validation Swarm 是一個「AI pre-validation engine」，用大量結構化 synthetic users 幫 founder 在真人訪談之前，提早發現：
+AI Validation Swarm is a `synthetic behavior research platform` and `human behavior simulation platform`.
 
-- 概念盲點
-- 定位問題
-- 價格阻力
-- 關鍵 objection
-- 敏感議題與品牌風險
-- 下一步真人驗證方向
+The long-term product goal is not to automate interview logistics. The long-term product goal is to replace parts of traditional user research workflows that currently depend on human interviews by generating behaviorally plausible synthetic evidence at scale.
 
-它不是 market proof system，也不是自動保證 PMF 的工具。
+## Platform Vision
 
-## 2. 核心主張
+The platform should help teams understand how real people are likely to:
 
-系統只應主張：
+- interpret a problem
+- decide whether the problem matters
+- compare alternatives
+- hesitate because of trust, effort, or risk
+- react to value propositions, concepts, and prototypes
+- decide whether to adopt, reject, delay, or workaround
 
-- 用 synthetic users 進行早期假設壓測
-- 用多 persona 反應暴露盲點
-- 用 auditor agent 提前標記敏感風險
-- 用 report 把 AI 討論轉成可執行的真人驗證計劃
+The core belief is that synthetic users are valuable only if they can guide teams toward realistic human behavior, not merely generate articulate answers.
 
-系統不應主張：
+## Strategic Focus
 
-- AI users 可以證明市場一定會買
-- synthetic users 可以取代真人研究
-- 敏感族群可以被直接用來做歧視式 targeting
+The platform should be built first for the stages where interview-led research is slow, expensive, and frequently repeated:
 
-## 3. 主要用戶
+- `discovery`
+- `concept evaluation`
+- `prototype validation`
 
-- 早期 founder
-- startup product lead
-- growth / validation consultant
-- agency strategist
+This repo should prioritize capabilities that strengthen:
 
-## 4. 典型輸入
+- behavioral realism
+- decision prediction
+- evidence quality
+- calibration against plausible human behavior
+- scalable research throughput
 
-- startup idea brief
-- target market 定義
-- validation objective
-- pricing / landing page / MVP 假設
-- founder 明示限制與已知風險
+## Current Stage
 
-## 5. 典型輸出
+The repository currently implements a validation and calibration engine, not replacement-grade proof.
 
-- problem resonance
-- solution attractiveness
-- willingness to pay signals
-- objection map
-- buying triggers
-- segment fit summary
-- sensitive topic / privacy / fairness / inclusion / political sensitivity risk
-- recommended repositioning
-- suggested concierge MVP
-- suggested 7-day no-code validation plan
-- suggested real-user interview script
+Current outputs must still be described as:
 
-## 6. POC 階段的產品邊界
+- synthetic evidence
+- pre-human or pre-fieldwork research support
+- non-final market proof
 
-本階段只做無 UI、本地可重跑的 validation engine：
+That boundary is a product-stage constraint, not the platform vision.
 
-- CLI / script based
-- local JSON + SQLite
-- prompt version-controlled
-- run artifacts fully archived
-- provider abstraction，不綁定單一 LLM vendor
+## Ideal Users
 
-本階段不做：
+- founders testing product hypotheses
+- product teams exploring problem-solution fit
+- researchers and strategists screening concepts before live studies
+- innovation teams that need faster iteration loops than recruiting live participants allows
 
-- frontend UI
-- auth
-- billing
-- multi-tenant workspace
-- team collaboration
-- production queue / webhook
+## Inputs
 
-## 7. 成功標準
+- product or concept brief
+- target segment definition
+- research question or hypothesis
+- prototype, messaging, pricing, or workflow concept
 
-Milestone 0 到 Milestone 5 的 POC 成功條件：
+## Outputs
 
-1. 可生成並儲存 synthetic users
-2. 可按 target market 與 panel type 抽樣
-3. 可對同一 founder brief 進行多 persona 回應
-4. 可輸出安全格式的 auditor findings
-5. 可生成可閱讀的 Markdown report
-6. 可保留完整 run trace，便於重跑、比對與評估
+- predicted reactions and objections
+- behavioral drivers and barriers
+- segment differences
+- trust and adoption risk signals
+- concept or prototype weaknesses
+- next-step human validation gaps
 
-## 8. 一句話設計原則
+## Non-Goals
 
-先把「可重複、可追溯、可評估」做好，再考慮 UI 與 SaaS 化。
+Do not optimize the product around:
+
+- generic interview automation without stronger simulation quality
+- polished reporting that does not improve research signal
+- broad SaaS surface area that does not move the core engine closer to replacing interviewer-led work

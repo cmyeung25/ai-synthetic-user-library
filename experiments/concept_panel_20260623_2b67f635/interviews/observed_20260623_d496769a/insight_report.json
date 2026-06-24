@@ -1,0 +1,160 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "我自己手動夾真係幾散",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "跟住喺手機Notes寫低大概金額同比例，最多再用計數機撳一撳，所以其實都幾粗略",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "尤其想快啲知道自己其實偏咗去邊一類風險",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月尾因為要交學校費同睇屋企固定開支，主動打開銀行同券商 app 睇現金比重同基金跌幅。",
+      "會分開在銀行 app 睇現金同基金、在券商 app 睇股票同 ETF，再用手機 Notes 同計數機手動拼湊。",
+      "見到潛在風險提示時，不會即刻調倉，會先睇計法，再開返幾個戶口交叉核對。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "分開用銀行 app 同券商 app 睇持倉。",
+      "用手機 Notes 記低大概金額同比例。",
+      "用計數機粗略計整體分布。",
+      "遇到風險提示時再人手對多次戶口確認。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "唔想一開始未見到結果就要交好多資料。",
+      "唔想長期連住外部戶口不停抓資料。",
+      "權限說明要清楚。",
+      "解釋唔可以太籠統。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "先見到部分結果或明確價值後，再考慮進一步授權。",
+      "授權範圍清晰、用途講明。",
+      "避免重複重新連戶口同重做設定。"
+    ],
+    "rejected_data_access": [
+      "未見結果就要登入其他券商。",
+      "一開始就要交晒交易明細。",
+      "長期持續抓資料。",
+      "權限寫得含糊。"
+    ],
+    "required_trust_explanation": [
+      "要講清楚點樣計出結果。",
+      "要幫用戶分辨係市場波動定持倉過度集中。",
+      "結果要可以被用戶用自己戶口資料核對。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "自動快過自己手動夾一次。",
+      "清楚指出比上個月邊類資產重咗、風險點變。",
+      "用簡單字解釋風險訊號，不係空泛提醒。"
+    ],
+    "time_to_value": "首次使用要好快見到整合後嘅整體畫面同有用提醒，否則容易中止授權。",
+    "abandonment_triggers": [
+      "要先做太多連戶口或設定。",
+      "提醒似廣告或廢話。",
+      "解釋太籠統。",
+      "結果睇落有誤導性，要用戶自己花太多時間驗證。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費有加分，但唔足以單獨驅動採用。",
+    "monthly_comfort_range": "不適用；本研究情境已設定免費。",
+    "payment_justification": [
+      "受訪者重點唔係價錢，而係有冇真係省時間、資訊夠唔夠實用、授權是否可信。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次都快過手動整合。",
+      "能穩定顯示相對上月的資產權重與風險變化。",
+      "唔使重複連戶口或重做設定。",
+      "提醒有內容，唔係泛泛而談。"
+    ],
+    "drop_off_reasons": [
+      "push 時機唔啱，被當成廣告。",
+      "每次要重做授權或設定。",
+      "提醒冇新意或冇決策價值。",
+      "對結果準確性缺乏信心。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客仍以碎片化、產品層級方式管理投資，而非真正整體組合視角。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "此受訪者目前以銀行 app、券商 app、Notes、計數機分開拼湊，明顯屬碎片化管理。"
+    },
+    {
+      "assumption": "零售客能指出某些 Aladdin 類分析在實際流程中有幫助，前提是翻譯成簡單可用的零售語言。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "他明確重視風險偏向、月對月變化、簡單解釋，同時拒絕籠統輸出。"
+    },
+    {
+      "assumption": "最高價值用例取決於具體客戶時刻，而不是單純曝光機構級分析細節。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "最適合的時刻是月尾或本來就在 app 內看結餘、轉錢時，不是無差別 push。"
+    },
+    {
+      "assumption": "信任、資料分享舒適度、解釋方式會明顯影響免費功能是否進入日常行為。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "即使免費，若授權過深、說明含糊、解釋空泛或要反覆設定，仍不會形成習慣。"
+    },
+    {
+      "assumption": "部分能力應以自助零售介面呈現，部分則可能更適合輔助服務。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者想先自助查看結果與計法，但未直接談到 RM 或 assisted service 邊界，因此只部分支持。"
+    }
+  ],
+  "key_insights": [
+    "受訪者的核心痛點不是『想做更高級分析』，而是現時整體組合視圖太分散、太粗略，令月尾資金壓力時難以快速判斷。",
+    "對他有價值的不是抽象 analytics，而是幫他即刻睇到自己偏咗去邊類風險，以及相對上月有咩變化。",
+    "免費只是入場券；真正採用門檻是授權負擔低、結果先於深授權、權限清晰、解釋具體。",
+    "風險提示不會直接觸發交易，第一步係驗證結果可信度，所以產品要支援『點解會咁』而唔只係『你有風險』。",
+    "最佳嵌入點係本來已有財務檢視心態的時刻，例如月尾、睇結餘、轉錢前後；隨機 push 會被視為廣告。"
+  ],
+  "next_experiment": "用另一位不同投資習慣的香港零售銀行 persona 測試兩種低摩擦體驗：1. 先給有限整體結果再邀請逐步授權；2. 直接要求完整外部連結，觀察對信任、理解同重複使用意願的差異。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，未覆蓋不同資產規模、年齡、風險取向或 RM 依賴程度。",
+    "未測具體哪些 analytics 輸出格式最容易理解，例如 alert、dashboard、report。",
+    "未直接測試哪些能力應留在 RM 端而不應直接 customer-facing。",
+    "未取得真實 contrast case，例如在市場大跌時是否仍沿用相同行為。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 的概念驗證前置洞察，用來收斂假設同設計下一輪研究，不能當成人類市場證據或因果結論。"
+}

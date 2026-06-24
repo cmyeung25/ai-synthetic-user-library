@@ -1,0 +1,134 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and current workaround before introducing the concept, which is appropriate for `concept_validation` (`exchange_1`, `exchange_2`).",
+    "Most asked questions had a single conversational focus and sounded natural in Cantonese rather than analytical or framework-like (`exchange_1` to `exchange_7`).",
+    "The facilitator adapted coverage efficiently instead of reading a long questionnaire, and stopped at a reasonable point once all required concept-validation slots were at least touched (`FACILITATOR TRACE.close`, `COVERAGE STATUS`).",
+    "The synthesis preserves some uncertainty explicitly, especially on pricing and synthetic-only limits (`SYNTHESIS.pricing_signal`, `SYNTHESIS.synthetic_only_disclaimer`)."
+  ],
+  "findings": [
+    {
+      "category": "concept_intro",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded and compound. It bundles `免費`, a named solution, and three promised outputs in one turn, which can steer value selection toward researcher-supplied components rather than participant-led unmet needs.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "FACILITATOR TRACE.concept_intro"
+      ],
+      "recommendation": "Introduce the concept more neutrally and with fewer bundled claims, then probe one dimension at a time. For example, first ask what would help in the existing review moment, then test a narrower concept variant."
+    },
+    {
+      "category": "participant_evidence_quality",
+      "severity": "medium",
+      "observation": "Several key product implications are derived from hypothetical reactions rather than observed behavior. Action follow-through, trust threshold, timing, and repeat use are all based on imagined use of the proposed feature, not on an actual prior use of a similar tool.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "recommendation": "Label these outputs as hypothetical preference evidence, not behavioral proof. Add probes about any past alerts, portfolio tools, or advisor nudges the participant actually received and how they responded."
+    },
+    {
+      "category": "synthesis_overreach",
+      "severity": "high",
+      "observation": "The synthesis makes product-shaping claims that exceed the evidence from one synthetic interview. `workflow_effect: replaces_workflow`, `highest value use case`, and multiple `supported` assumption statuses read stronger than the transcript warrants.",
+      "evidence_refs": [
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Downgrade claims to persona-specific and provisional wording. Avoid claiming replacement of workflow or broad retail-customer patterns unless supported by multiple interviews and at least some observed behavior beyond hypothetical concept reactions."
+    },
+    {
+      "category": "evidence_reference_discipline",
+      "severity": "medium",
+      "observation": "Some synthesis sections rest on valid refs but still blur the line between what was said and what was inferred. For example, `first_use_success` and `abandonment_triggers` synthesize design rules from scattered hypothetical statements without clearly marking them as inference.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.first_value_requirement"
+      ],
+      "recommendation": "Separate direct participant statements from analyst inference. Use fields such as `stated_by_participant` versus `analyst_inference`, and only attach exact refs to the former."
+    },
+    {
+      "category": "coverage_depth",
+      "severity": "medium",
+      "observation": "Although required coverage is marked complete, the interview did not distinctly separate curiosity, trial, payment, and month-two retention. Retention was asked, pricing was not tested, and first-try willingness was not isolated from general usefulness.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "exchange_7.facilitator",
+        "SYNTHESIS.pricing_signal"
+      ],
+      "recommendation": "In future concept-validation runs, isolate: 1) what would make them try it once, 2) what would make them trust it enough to act, 3) what would make them keep using it after a month, and 4) whether they would ever pay."
+    },
+    {
+      "category": "domain_fit_alignment",
+      "severity": "medium",
+      "observation": "The interview captured the disruption source well, but evidence about changed actions inside the banking journey is thinner. The synthesis moves toward service embedding and customer-journey design without directly probing what the participant would do inside the bank app versus outside it beyond timing preferences.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Probe the exact in-app action path: what screen they would open next, whether they would rebalance there, save for later, contact RM, or ignore it. Tie embedding recommendations to changed actions, not only preferred timing."
+    }
+  ],
+  "required_improvements": [
+    "Reduce concept selling in the intro by removing bundled benefits and testing narrower prompts.",
+    "Mark hypothetical concept reactions as hypothetical throughout synthesis instead of treating them as behavioral validation.",
+    "Downgrade or remove overstrong synthesis claims such as workflow replacement and broad assumption support from a single synthetic interview.",
+    "Add participant-facing probes that separate first-use curiosity, trust-to-act, repeat use, and willingness to pay.",
+    "Probe concrete bank-journey actions after seeing the concept so service-embedding recommendations are based on changed actions, not just stated preferences."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for a concrete past case where the participant received any investment alert, summary, or advisor prompt and what they actually did next.",
+      "After concept exposure, ask what exact screen or action they would take inside the bank journey: rebalance, defer, note it, or contact someone.",
+      "Test first-use willingness separately from ongoing retention: what would make them open it once versus keep relying on it monthly.",
+      "Probe whether they would trust the bank to aggregate all holdings, including external assets, before inferring full-portfolio adoption."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct probe on trial behavior: 'What would make you tap into this the first time instead of ignoring it?'",
+      "Add a direct probe on payment distinct from usefulness: 'If this stopped being free, what if anything would still feel worth paying for?'",
+      "Add a direct probe on setup/privacy boundaries if cross-account aggregation is part of the concept.",
+      "Add a direct probe on assisted-service boundary: when would they want RM/help instead of self-serve guidance?"
+    ],
+    "prompt_adjustments": [
+      "In `concept_validation`, instruct the facilitator to avoid packaging multiple promised benefits in the first concept turn.",
+      "Require synthesis to tag each claim as `observed_behavior`, `stated_preference`, or `analyst_inference`.",
+      "Add a guardrail that broad design implications and assumption statuses must be phrased as persona-specific when based on one synthetic interview.",
+      "Encourage one follow-up on concrete in-app next action before closing whenever service embedding is a research goal."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy is broadly sufficient for one persona, but reserve 1-2 additional turns for distinct probes on trial behavior, payment, and exact in-app next action before declaring concept-validation coverage complete."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic concept-validation interview. Any needs, POVs, HMWs, product implications, or confidence about Hong Kong retail-banking users should remain provisional until validated with multiple real participant interviews."
+}

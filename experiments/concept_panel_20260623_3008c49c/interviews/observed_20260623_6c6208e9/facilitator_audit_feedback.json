@@ -1,0 +1,249 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "user_research",
+      "concept_testing"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "The facilitator achieved broad required coverage with natural flow, but accepted several high-signal participant clues without enough causal or contrast probing. The main improvement is to trade one or two later coverage questions for deeper follow-up on trust criteria, benchmark meaning, non-action paths, and channel boundaries.",
+    "primary_failure_mode": "Coverage was completed before the facilitator extracted the decision rules underneath the participant's stated preferences.",
+    "depth_vs_coverage_assessment": "Coverage was strong and efficient, but depth was uneven. Several participant signals that could have clarified mechanism, thresholds, and alternatives were acknowledged and then left underexplored."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "benefit_led_concept_intro",
+      "severity": "medium",
+      "why_it_matters": "Pre-loading the concept with promised value can inflate positive reactions and reduce the usefulness of first-response evidence.",
+      "observed_pattern": "The concept was introduced with built-in benefit framing rather than a neutral description of what the participant would see."
+    },
+    {
+      "tag": "missed_mechanism_probe",
+      "severity": "high",
+      "why_it_matters": "When participants say they need to know how a system judges something, the facilitator needs the specific proof standard, not just the general desire for explanation.",
+      "observed_pattern": "The participant asked for judgment transparency, but the interview stopped short of probing what exact explanation format or benchmark would cross the trust threshold."
+    },
+    {
+      "tag": "coverage_over_depth",
+      "severity": "high",
+      "why_it_matters": "Completing a coverage checklist can leave important causal distinctions unresolved, which weakens reuse of the interview evidence.",
+      "observed_pattern": "After collecting acceptable top-line answers for each required area, the facilitator moved on instead of deepening a few high-signal moments."
+    },
+    {
+      "tag": "binary_followup_framing",
+      "severity": "medium",
+      "why_it_matters": "Either-or questions can hide participant-preferred alternatives and make embedding or workflow preferences appear narrower than they are.",
+      "observed_pattern": "A later embedding question constrained the response to self-serve versus human follow-up instead of first asking what should happen next."
+    },
+    {
+      "tag": "missing_nonuse_contrast",
+      "severity": "high",
+      "why_it_matters": "Without a contrasting non-use or dismiss case, facilitators risk overlearning from the successful-use path.",
+      "observed_pattern": "The interview established when the concept might fit, but not when the participant would ignore, dismiss, or defer it."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "trust_threshold_signal",
+      "priority": "high",
+      "participant_signal": "The participant said they would immediately want to know how the system made its judgment and would not trust a high-level label alone.",
+      "missed_followup_question": "What exact evidence or comparison would make the judgment feel credible enough to act on, and what would still feel too vague?",
+      "generic_learning": "When participants request explanation, probe for the minimum proof standard and the rejection threshold, not just the fact that explanation matters."
+    },
+    {
+      "trigger_type": "benchmark_ambiguity",
+      "priority": "high",
+      "participant_signal": "The participant asked for comparison against a more diversified approach, but the benchmark source remained undefined.",
+      "missed_followup_question": "When you say you want a comparison, do you mean versus your own past pattern, a target plan, a peer group, or some general rule of thumb?",
+      "generic_learning": "When participants ask for comparison or norms, identify the reference class they trust before treating benchmarking as a validated need."
+    },
+    {
+      "trigger_type": "non_action_path",
+      "priority": "high",
+      "participant_signal": "The participant said they would first inspect the issue and might still decide not to change anything.",
+      "missed_followup_question": "If the alert looked real but you decided not to act, what would make you leave it alone, and what would you want the product to do next?",
+      "generic_learning": "Probe the no-action branch after an alert to separate curiosity, diagnosis, monitoring, and action readiness."
+    },
+    {
+      "trigger_type": "anti_sales_boundary",
+      "priority": "high",
+      "participant_signal": "The participant accepted possible follow-up help later but explicitly resisted anything that felt like a sales chase.",
+      "missed_followup_question": "If follow-up were offered, what format would feel helpful rather than pressuring?",
+      "generic_learning": "When participants reject a channel or follow-up style, map the acceptable boundary conditions instead of stopping at the rejection."
+    },
+    {
+      "trigger_type": "retention_claim",
+      "priority": "medium",
+      "participant_signal": "The participant said repeated reminders would only work if they showed concrete change and why it matters now.",
+      "missed_followup_question": "Can you describe the smallest change that would still be worth opening, versus a change you would dismiss as noise?",
+      "generic_learning": "For repeat-use claims, probe the materiality threshold so retention drivers are not left as vague preference statements."
+    },
+    {
+      "trigger_type": "contrast_case_missing",
+      "priority": "high",
+      "participant_signal": "The interview established one recent checking moment tied to an existing routine but did not test an opposite case.",
+      "missed_followup_question": "Tell me about a recent time you did not check this area even though you could have. What made it not worth your attention then?",
+      "generic_learning": "After a concrete use case, ask for a contrasting non-use case to bound when the concept will be ignored."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant wants explanation before trusting the output.",
+      "possible_underlying_driver": "Need for personally legible evidence and decision control, not just a generic desire for more detail.",
+      "why_the_surface_frame_is_weak": "Treating this as a simple explanation preference misses the possibility that the participant is testing whether the system preserves their autonomy and supports self-verification.",
+      "generic_learning": "When a participant asks how something is judged, consider whether the real driver is control, auditability, or error-avoidance rather than information density alone."
+    },
+    {
+      "observed_surface_frame": "The participant prefers to understand things in-app before any human follow-up.",
+      "possible_underlying_driver": "Protection against unwanted escalation or persuasion, not merely channel preference.",
+      "why_the_surface_frame_is_weak": "A self-serve preference can mask a stronger boundary around pressure, commitment, or being routed into a workflow they did not choose.",
+      "generic_learning": "Do not code self-serve preference too early as a format choice; test whether it is actually a boundary against escalation or loss of control."
+    },
+    {
+      "observed_surface_frame": "The participant wants monthly reminders only when something changed.",
+      "possible_underlying_driver": "Low attention tolerance for repeated low-signal interruptions, with an implicit materiality threshold.",
+      "why_the_surface_frame_is_weak": "Framing this only as a desire for freshness overlooks the need to define what counts as meaningful change and why some deltas are ignorable.",
+      "generic_learning": "When participants ask for change-based updates, probe what counts as material change before treating the driver as simple preference for novelty."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical post-concept statements were at risk of being treated as stronger behavioral proof than the transcript supports.",
+      "severity": "medium",
+      "generic_learning": "Keep observed current behavior, stated preference, and hypothetical concept reaction clearly separated in both questioning and synthesis."
+    },
+    {
+      "issue": "A design implication was inferred from a single successful-use context without a contrasting non-use case.",
+      "severity": "medium",
+      "generic_learning": "Do not generalize workflow fit from one context until the interview also tests when the participant would ignore or defer the concept."
+    },
+    {
+      "issue": "A constrained either-or question risked narrowing the evidence about preferred next steps.",
+      "severity": "medium",
+      "generic_learning": "Use open discovery before channel or workflow options so the evidence reflects participant structure rather than interviewer structure."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept-validation interviews, introduce the concept with a neutral description of what appears or happens, without embedding value claims unless the value claim itself is under test.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant questions how a judgment is made, ask at least one follow-up to define the minimum credible evidence, comparison, or threshold they would need.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "After one concrete use case is established, ask for a contrasting non-use or dismissal case before concluding workflow fit or repeat-use conditions.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "When a participant says they would not act immediately, probe the no-action branch: what would make them monitor, postpone, ignore, or escalate.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Prefer deepening one or two high-signal participant cues over completing lower-value later coverage questions when the missing depth affects trust, thresholds, or action logic.",
+      "reuse_scope": "interview_mode_only",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Require synthesis labels to distinguish observed behavior, stated preference, and hypothetical reaction, and prevent stronger conclusion labels when evidence is mostly hypothetical.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "Use an open question before any self-serve-versus-human or channel-choice framing when exploring what should happen after a complex result.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not stop at coverage complete if at least one unresolved high-signal clue remains about trust threshold, acceptable benchmark, materiality threshold, or anti-escalation boundary.",
+      "reuse_scope": "interview_mode_only",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "CF-001",
+      "rule": "When a participant asks how a system reached its conclusion, follow up until the acceptable proof standard is concrete.",
+      "source_tags": [
+        "missed_mechanism_probe",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-002",
+      "rule": "After a participant describes a likely use moment, collect one contrasting non-use moment before inferring fit or retention.",
+      "source_tags": [
+        "missing_nonuse_contrast",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-003",
+      "rule": "Probe the no-action path after alerts or recommendations to distinguish monitoring behavior from action intent.",
+      "source_tags": [
+        "missed_mechanism_probe",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-004",
+      "rule": "Use open-ended next-step questions before offering channel or follow-up options.",
+      "source_tags": [
+        "binary_followup_framing"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-005",
+      "rule": "Separate behavioral evidence from hypothetical concept reactions in both questioning and synthesis confidence labels.",
+      "source_tags": [
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The facilitator should specifically probe which benchmark for diversification this participant would trust in this financial context.",
+      "block_reason": "The underlying interviewing lesson is reusable, but the original phrasing is too tied to a domain-specific analytic construct.",
+      "rewrite_as_generic": "When a participant asks for a comparison standard, clarify which reference point they trust rather than assuming one benchmark format."
+    },
+    {
+      "blocked_item": "The facilitator should ask earlier whether overview-page embedding is better than other retail-banking journey placements.",
+      "block_reason": "This is a product-design conclusion about a specific journey, not a generic interviewing rule.",
+      "rewrite_as_generic": "Before concluding where a concept fits in a workflow, test at least one alternative context and one non-use context."
+    },
+    {
+      "blocked_item": "The facilitator should probe what kind of follow-up would avoid feeling like sales outreach in this banking setting.",
+      "block_reason": "The anti-sales concern is expressed in a specific service context, though the interviewing pattern is reusable.",
+      "rewrite_as_generic": "When a participant rejects a follow-up channel because it feels pressuring, ask what acceptable outreach boundaries would look like."
+    }
+  ]
+}

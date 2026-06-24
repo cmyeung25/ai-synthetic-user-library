@@ -1,0 +1,208 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "generic"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "The facilitator handled sequencing and conversational tone well, but accepted several high-signal statements at surface level and then let synthesis treat hypothetical concept reactions as stronger evidence than the interview earned.",
+    "primary_failure_mode": "Coverage completion outran evidence depth, especially around action change, repeat use, and separation of observed behaviour from hypothetical reactions.",
+    "depth_vs_coverage_assessment": "Coverage was completed efficiently, but one or two additional depth probes would likely have produced substantially better evidence for downstream synthesis."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "coverage_over_depth",
+      "severity": "high",
+      "why_it_matters": "Completing the checklist without deepening the strongest clues leaves synthesis to over-infer from thin evidence.",
+      "observed_pattern": "After the participant exposed a meaningful current shortcut and decision threshold in `exchange_2.persona` and `exchange_3.persona`, the interview moved to concept testing instead of probing one concrete consequence or exception case."
+    },
+    {
+      "tag": "hypothetical_as_behavioral_evidence",
+      "severity": "high",
+      "why_it_matters": "When hypothetical reactions are treated like observed behaviour, concept feedback becomes overstated and downstream decisions become less reliable.",
+      "observed_pattern": "Questions in `exchange_4.facilitator`, `exchange_6.facilitator`, and `exchange_7.facilitator` elicited stated reactions and intentions, but later synthesis treated some of those as evidence of actual workflow change or durable reuse."
+    },
+    {
+      "tag": "solution_loaded_concept_intro",
+      "severity": "medium",
+      "why_it_matters": "Embedding value cues inside the concept description can bias the participant toward reacting to the framing rather than revealing their own evaluation criteria.",
+      "observed_pattern": "`exchange_4.facilitator` introduced the concept with built-in positive framing such as free, simple, and named benefits before the participant defined what help would matter most."
+    },
+    {
+      "tag": "missed_threshold_probe",
+      "severity": "medium",
+      "why_it_matters": "Threshold probes reveal when a participant switches from monitoring to action, which is often more decision-useful than generic preference statements.",
+      "observed_pattern": "The participant described acting only when change feels noticeable in `exchange_3.persona`, but the facilitator did not ask what qualifies as noticeable or what happens right at the boundary."
+    },
+    {
+      "tag": "imprecise_evidence_labeling",
+      "severity": "low",
+      "why_it_matters": "If trace labels overstate evidence type, later synthesis is more likely to blur stated intent, recalled behaviour, and inference.",
+      "observed_pattern": "The trace labels hypothetical probes as consequence-oriented evidence and uses hypothesis-style targets in a concept-validation interview, even though no tested hypothesis was in play."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "threshold_signal",
+      "priority": "high",
+      "participant_signal": "The participant said they usually ignore small movement and only dig deeper when the drop feels obvious or the news feels alarming in `exchange_3.persona`.",
+      "missed_followup_question": "Can you think of a recent time it was close to that line but you still decided not to dig in, and what made it stay in the 'leave it' bucket?",
+      "generic_learning": "When a participant names an action threshold, probe the boundary case or near-miss before moving on."
+    },
+    {
+      "trigger_type": "workaround_protection_signal",
+      "priority": "high",
+      "participant_signal": "The participant relies on a fast top-line check and memory comparison in `exchange_2.persona` and `exchange_3.persona`.",
+      "missed_followup_question": "What does that quick check help you avoid or protect you from in that moment?",
+      "generic_learning": "When a workaround is lightweight and recurring, probe what burden, risk, or effort it is protecting against."
+    },
+    {
+      "trigger_type": "trust_concern_signal",
+      "priority": "medium",
+      "participant_signal": "The participant raised suspicion about permissions and follow-up selling immediately upon concept introduction in `exchange_4.persona`.",
+      "missed_followup_question": "What would make it feel like a legitimate tool instead of something trying to push you somewhere?",
+      "generic_learning": "When a participant volunteers distrust early, isolate the legitimacy cues before broadening into multiple trust-boundary examples."
+    },
+    {
+      "trigger_type": "action_intent_signal",
+      "priority": "high",
+      "participant_signal": "The participant said they would not act immediately and would verify or postpone in `exchange_6.persona`.",
+      "missed_followup_question": "Tell me about the last time you saw something concerning and what you actually did step by step after that.",
+      "generic_learning": "If concept action remains hypothetical, anchor it against one recalled real follow-through case before treating it as decision-impact evidence."
+    },
+    {
+      "trigger_type": "repeat_use_signal",
+      "priority": "medium",
+      "participant_signal": "The participant gave stated conditions for reuse in `exchange_7.persona`.",
+      "missed_followup_question": "What would make you open it a second or third time instead of forgetting it after the first try?",
+      "generic_learning": "Separate first-use appeal from repeat-use triggers with a concrete second-use probe rather than a generic reuse question."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant appears to want more analysis depth from the concept.",
+      "possible_underlying_driver": "The stronger driver may be reducing effort and ambiguity during quick triage, not maximizing analytical richness.",
+      "why_the_surface_frame_is_weak": "The participant consistently described fast checking, postponement, and minimal effort. Interest in extra detail appeared conditional on making the next step easier, not on analysis for its own sake.",
+      "generic_learning": "Do not equate requests for clearer breakdowns with appetite for more analysis; test whether the real driver is effort reduction, confidence, or actionability."
+    },
+    {
+      "observed_surface_frame": "The participant's main issue is feature preference around concentration or risk views.",
+      "possible_underlying_driver": "The underlying driver may be preserving control and avoiding unwanted escalation after engaging with a tool.",
+      "why_the_surface_frame_is_weak": "The participant's early spontaneous concern in `exchange_4.persona` was not only about information content but about permissions and downstream pressure, suggesting governance and control cues may matter as much as feature content.",
+      "generic_learning": "When a participant reacts to a concept with both utility and boundary concerns, avoid classifying the driver as purely feature-related until the control concern is isolated."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Observed behaviour and hypothetical concept reactions were not kept cleanly separate in downstream interpretation.",
+      "severity": "high",
+      "generic_learning": "Tag each answer by evidence type and prevent synthesis from using hypothetical statements as proof of current behaviour or durable outcome."
+    },
+    {
+      "issue": "Stated repeat-use conditions were allowed to stand in for retention evidence.",
+      "severity": "medium",
+      "generic_learning": "Treat reuse answers as conditional intent unless the participant anchors them to recalled repeat behaviour or a concrete second-use scenario."
+    },
+    {
+      "issue": "Participant language about what they might do next was stronger in synthesis than in the transcript.",
+      "severity": "medium",
+      "generic_learning": "When action change is unobserved, summarize it as possible triage support or stated intent, not as confirmed workflow replacement or decision change."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "In concept-validation interviews, label every participant answer as one of: recalled behaviour, current routine, hypothetical reaction, hypothetical intent, or inference, and forbid synthesis from merging these categories.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant names a threshold, shortcut, near-miss, or 'usually I just...' pattern, ask one depth probe on the boundary or tradeoff before introducing the concept.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Before asking about repeat use or embedding, prioritize one probe that anchors whether the concept would change a recalled real action or non-action case.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant expresses interest plus distrust in the same answer, ask a contrast probe that distinguishes 'helpful tool' from 'thing I avoid' before moving to later coverage items.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "decision_rule",
+      "text": "Introduce concepts with the minimum necessary description. Avoid built-in value claims unless those attributes are the explicit variable under test.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not stop solely because coverage flags are complete if action impact or reuse evidence is still hypothetical and a single high-yield follow-up could anchor it in a recalled case.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "cf_rule_01",
+      "rule": "When a participant states an action threshold, probe one concrete threshold-present or threshold-near-miss case before moving on.",
+      "source_tags": [
+        "missed_threshold_probe",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_rule_02",
+      "rule": "Keep concept-reaction evidence separate from current-behaviour evidence in both trace labels and synthesis outputs.",
+      "source_tags": [
+        "hypothetical_as_behavioral_evidence",
+        "imprecise_evidence_labeling"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_rule_03",
+      "rule": "Ask at least one contrast or consequence probe that reveals what the current workaround is protecting against.",
+      "source_tags": [
+        "coverage_over_depth"
+      ],
+      "confidence": "medium",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_rule_04",
+      "rule": "Treat stated reuse conditions as provisional until they are anchored to a concrete second-use scenario or recalled repeat behaviour.",
+      "source_tags": [
+        "hypothetical_as_behavioral_evidence"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The concept was framed with specific attributes and analytic dimensions that likely steered reactions toward those particular capabilities.",
+      "block_reason": "This is tied to the named concept and its domain-specific feature bundle rather than a reusable facilitator rule if stated directly.",
+      "rewrite_as_generic": "When introducing any concept, remove bundled value claims and avoid naming multiple benefit dimensions unless those dimensions are the explicit comparison variables."
+    },
+    {
+      "blocked_item": "The interview did not test whether this service should appear in a particular banking moment or channel relative to the participant's investment workflow.",
+      "block_reason": "The original point is too tied to this product context and journey design question.",
+      "rewrite_as_generic": "When the study concerns service placement, ask one probe about where the participant would naturally encounter the concept inside their current path and one contrast probe about where it would feel mistimed or intrusive."
+    }
+  ]
+}

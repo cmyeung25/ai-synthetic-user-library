@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Protocol
 
+from ai_validation_swarm.conversation.realism import BEHAVIOR_SIGNALS
 from ai_validation_swarm.domain.models import PersonaSkill
 from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
 
@@ -15,11 +16,15 @@ INTENT_LEVELS = {
 RESPONSE_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["reply", "intent_level", "confidence"],
+    "required": ["reply", "intent_level", "confidence", "behavior_signals"],
     "properties": {
         "reply": {"type": "string"},
         "intent_level": {"type": "string", "enum": sorted(INTENT_LEVELS)},
         "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+        "behavior_signals": {
+            "type": "array",
+            "items": {"type": "string", "enum": sorted(BEHAVIOR_SIGNALS)},
+        },
     },
 }
 
@@ -158,6 +163,7 @@ class ChatResult:
     intent_level: str
     confidence: str
     provider_session_id: str = ""
+    behavior_signals: list[str] = field(default_factory=list)
 
 
 @dataclass(slots=True)
@@ -205,6 +211,11 @@ class OpenAIConversationProvider:
         reply = str(payload.get("reply", "")).replace("\ufffc", "").strip()
         intent = str(payload.get("intent_level", "unclear")).strip()
         confidence = str(payload.get("confidence", "low")).strip()
+        behavior_signals = [
+            str(item).strip()
+            for item in payload.get("behavior_signals", [])
+            if str(item).strip() in BEHAVIOR_SIGNALS
+        ]
         if not reply:
             raise ValueError("Conversation provider returned an empty reply.")
         if intent not in INTENT_LEVELS:
@@ -218,6 +229,7 @@ class OpenAIConversationProvider:
             intent_level=intent,
             confidence=confidence,
             provider_session_id=transport_session_id or provider_session_id,
+            behavior_signals=behavior_signals,
         )
 
     def generate_persona_driver_trace(
@@ -251,20 +263,40 @@ class MockConversationProvider:
 
         if not latest or len(latest.split()) < 3:
             reply = "I need a more concrete example before I can judge whether this fits my life. What exactly would I need to do?"
-            return ChatResult(reply=reply, intent_level="unclear", confidence="high")
+            return ChatResult(
+                reply=reply,
+                intent_level="unclear",
+                confidence="high",
+                behavior_signals=["clarification_request"],
+            )
         if any(word in lowered for word in ("price", "pricing", "pay", "subscription", "價錢", "月費")):
             objection = profile.pricing_logic.get("pricing_objection", "I would need the value and exit terms to be clearer.")
             reply = f"{objection} I can understand the offer without being ready to pay for it."
-            return ChatResult(reply=reply, intent_level="understands", confidence="medium")
+            return ChatResult(
+                reply=reply,
+                intent_level="understands",
+                confidence="medium",
+                behavior_signals=["hesitation"],
+            )
         if any(word in lowered for word in ("privacy", "gender", "identity", "data", "私隱", "身份")):
             reply = voice.get("example_hard_rejection") or "I would not continue unless the audience and data controls were explicit."
-            return ChatResult(reply=str(reply), intent_level="rejects", confidence="high")
+            return ChatResult(
+                reply=str(reply),
+                intent_level="rejects",
+                confidence="high",
+                behavior_signals=["refusal_or_disinterest"],
+            )
         positive = voice.get("example_positive_reaction")
         if positive:
             return ChatResult(reply=str(positive), intent_level="willing_to_try", confidence="medium")
         questions = reactions.get("questions_they_would_ask", [])
         question = str(questions[0]) if questions else "What would this change in one ordinary week?"
-        return ChatResult(reply=f"I understand the direction, but I would test one small case first. {question}", intent_level="curious", confidence="medium")
+        return ChatResult(
+            reply=f"I understand the direction, but I would test one small case first. {question}",
+            intent_level="curious",
+            confidence="medium",
+            behavior_signals=["clarification_request"],
+        )
 
     def generate_persona_driver_trace(
         self, *, system_prompt: str, user_prompt: str, persona: PersonaSkill,

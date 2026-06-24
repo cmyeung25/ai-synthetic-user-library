@@ -1,0 +1,566 @@
+{
+  "run_id": "concept_panel_20260623_df0fd707",
+  "topic": "Aladdin solution in retail customer",
+  "language": "Natural Cantonese Traditional Chinese",
+  "core_assumption_count": 8,
+  "persona_count": 1,
+  "problem_strength_counts": {
+    "medium": 1
+  },
+  "average_quality_score": 4.0,
+  "driver_type_counts": {
+    "core_value": 2,
+    "decision_style": 1,
+    "daily_constraint": 1,
+    "knowledge_gap": 1,
+    "past_experience": 1
+  },
+  "common_likely_drivers": [
+    {
+      "driver": "Control-preserving decision style",
+      "driver_type": "decision_style",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "She does not want the tool to collapse analysis into action. She wants review control, the ability to inspect detail, and space to wait before making a move, especially under volatility."
+    },
+    {
+      "driver": "Downside-aware financial mindset",
+      "driver_type": "core_value",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "She monitors for signs that a situation may require attention, but avoids overreacting to ordinary market noise. Her behavior reflects caution, containment, and preserving stability over chasing optimization."
+    },
+    {
+      "driver": "Interruption-shaped routine fit",
+      "driver_type": "daily_constraint",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "She prefers short summaries at existing review moments and low-noise alerts only when something materially changes. That suggests the feature must fit into fragmented, time-limited checking habits rather than requiring a dedicated analysis session."
+    },
+    {
+      "driver": "Need for concrete, change-based explanation",
+      "driver_type": "knowledge_gap",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "She is not asking for abstract analytics sophistication. She wants the system to explain what changed, why it changed, and how far it moved from prior state or intended setup. That is a comprehension requirement, not just a UX preference."
+    },
+    {
+      "driver": "Reliability-over-hype trust filter",
+      "driver_type": "core_value",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_it_matters_here": "Her answers consistently test whether the feature is genuinely useful in ordinary use or just polished packaging for sales. She looks for plain explanation, visible logic, and restraint before trusting the output."
+    },
+    {
+      "driver": "Sales-resistance built from prior overpromising-software skepticism",
+      "driver_type": "past_experience",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_it_matters_here": "Her repeated concern that the check could be a disguised product push likely reflects accumulated exposure to tools or services that claim to help but add agenda, friction, or noise. She is testing motive as much as function."
+    }
+  ],
+  "common_unspoken_constraints": [
+    {
+      "constraint": "Any feature that requires too much tapping, reading, or session time will lose her quickly even if the analytics are sound.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_likely": "She asks for a short summary in routine moments, dislikes repeated generic content, and says she will stop if it takes several layers to reach the point."
+    },
+    {
+      "constraint": "She likely needs mobile-first continuity and resumability rather than a desktop-style analysis workflow.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "medium": 1
+      },
+      "example_why_likely": "Her portfolio check happens at night inside the bank app in short bursts, and her broader profile emphasizes phone-based fragmented management."
+    },
+    {
+      "constraint": "She may treat recommendation-heavy presentation as evidence the bank's incentives are misaligned with her needs.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_likely": "She repeatedly frames the core trust question as 'help me understand' versus 'use this to sell me something.'"
+    },
+    {
+      "constraint": "She will discount analytics that cannot separate structural risk change from temporary market movement.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_why_likely": "She explicitly distinguishes normal one-day noise from multi-day, broad-based decline and asks for explanations of whether change came from her actions or market movement."
+    }
+  ],
+  "common_value_tensions": [
+    {
+      "tension": "Wants more clarity, but resists being pushed into action",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She is interested in a portfolio-level view that helps her see concentration and risk more clearly. vs She does not want alerts or diagnostics to bypass her judgment or funnel her into transactions."
+    },
+    {
+      "tension": "Wants simplicity, but only if it is substantively informative",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She asks for a short summary and low-friction entry points. vs She rejects simplified outputs when they become repetitive, generic, or black-box."
+    },
+    {
+      "tension": "Wants timely warnings, but dislikes noise and emotional escalation",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "confidence_counts": {
+        "high": 1
+      },
+      "example_frame": "She wants alerts when there is a real change such as several down days or concentration jump. vs She explicitly avoids over-checking and wants alerts that are clear but not alarming or frequent."
+    }
+  ],
+  "facilitator_primary_failure_modes": [
+    {
+      "failure_mode": "Mildly leading concept framing combined with insufficient probing from generic concept reaction into specific output-to-decision mapping.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "example_assessment": "Coverage and depth goals were met efficiently, but some depth was spent on generic feature fit rather than on which exact outputs would change a real decision or non-decision."
+    }
+  ],
+  "common_missed_high_value_followups": [
+    {
+      "question": "During that waiting period, what are you trying to confirm or rule out before deciding whether to act?",
+      "trigger_type": "participant described waiting before acting",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When participants delay action, probe what uncertainty they are resolving; this reveals whether the concept supports decision-making or merely adds another notification."
+    },
+    {
+      "question": "What is the minimum explanation you would need before the result feels credible enough to consider, rather than ignore?",
+      "trigger_type": "participant requested transparency into how a judgment was reached",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When a participant asks for transparency, probe for the minimum sufficient explanation standard instead of stopping at a general desire for explainability."
+    },
+    {
+      "question": "What presentation boundary would preserve trust: diagnosis only, a separate optional next-step area, or some other clear separation?",
+      "trigger_type": "participant expressed sales-motive concern",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "When trust depends on perceived motive, probe the exact boundary between diagnosis and recommendation that keeps the experience credible."
+    },
+    {
+      "question": "Which comparison would make that change feel most decision-useful: versus your prior state, your intended target, or a typical reference point?",
+      "trigger_type": "participant defined value as change-based information",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When users ask for 'new information,' pin down the comparison baseline that makes an update actionable."
+    }
+  ],
+  "common_likely_misclassified_drivers": [
+    {
+      "possible_underlying_driver": "A broader need to preserve attention and decision control under limited cognitive bandwidth",
+      "observed_surface_frame": "Desire for alerts at certain moments",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "When participants specify timing or placement, probe what the timing protects them from, such as overload, anxiety, distraction, or impulsive action."
+    },
+    {
+      "possible_underlying_driver": "Conditional evaluation based on neutrality, control, and explanation sufficiency rather than simple price or access appeal",
+      "observed_surface_frame": "Interest in a free feature",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "Do not treat initial interest as a value signal until you isolate the conditions that make the participant willing to rely on the output."
+    }
+  ],
+  "depth_completion_counts": {
+    "complete": 1
+  },
+  "common_missing_depth_probes": [],
+  "assumption_matrix": [
+    {
+      "assumption_index": 1,
+      "assumption": "呢位零售銀行客會因市場波動主動檢查投資組合，而唔係完全被動。",
+      "status_counts": {
+        "supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "supported",
+          "rationale": "佢描述咗最近一次真實事件：見到市場波動新聞後主動開 app 睇表現與現金，並有明確再深入檢查門檻。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 2,
+      "assumption": "整體風險／集中度摘要對呢位客有潛在幫助。",
+      "status_counts": {
+        "partially_supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "partially_supported",
+          "rationale": "佢對概念有『少少興趣』，亦講到想見到集中度、風險偏離與變化原因；但呢啲都係概念反應，未有真實使用行為。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 3,
+      "assumption": "只要係免費，呢位客就會採用 Portfolio Health Check。",
+      "status_counts": {
+        "weakened": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "weakened",
+          "rationale": "免費只係最低門檻之一；佢同時明確要求非銷售、可解釋、可自行決定，否則會停用。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 4,
+      "assumption": "風險提示會直接推動佢即時買賣。",
+      "status_counts": {
+        "invalidated": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "invalidated",
+          "rationale": "佢明確話『多數唔會即刻跟住個提示郁』，通常會先查明細，再觀察一兩日。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 5,
+      "assumption": "將功能嵌入銀行 app 現有檢視節點，會比獨立銷售式入口更貼近佢流程。",
+      "status_counts": {
+        "partially_supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "partially_supported",
+          "rationale": "佢清楚指出想喺月供後／月尾總覽中順手見到，異常時才主動提醒；但仍屬概念偏好，未經實際使用驗證。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 6,
+      "assumption": "重複使用主要取決於是否持續提供『有變化』的新資訊。",
+      "status_counts": {
+        "partially_supported": 1
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "partially_supported",
+          "rationale": "佢對留存門檻講得具體，但仍是預測性回答，未有真實月二留存行為。"
+        }
+      ]
+    }
+  ],
+  "additional_persona_specific_findings": [],
+  "personas": [
+    {
+      "persona_id": "su_2001",
+      "persona_name": "Ivy Chan",
+      "interview_id": "observed_20260623_fd085c43",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "不適用；研究前提已設定此服務免費，受訪者只對『真係免費』有提及，唔構成付費訊號。",
+        "monthly_comfort_range": "未知／不適用",
+        "payment_justification": [
+          "冇可用證據去判斷月費接受度。",
+          "受訪者只講過如果『真係免費、講人話、畀我自己睇完先決定做唔做嘢』會開嚟望下，屬概念反應唔係付費行為。"
+        ],
+        "evidence_strength": "hypothetical"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "只喺有變化時提供新資訊，例如指出係加倉定市場變動令集中度改變。",
+          "能展示影響大細，例如偏離原設定幾多、較上月惡化定改善。",
+          "嵌入喺月供後／月尾檢視時的短摘要，或真有異常時的清楚提示。"
+        ],
+        "drop_off_reasons": [
+          "內容重覆，只係換句話叫佢留意風險。",
+          "進入重點前要撳幾層。",
+          "再次變成產品銷售入口。",
+          "提醒過密。"
+        ],
+        "workflow_effect": "adds_layer"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 4,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 4,
+        "causal_rigor": 4,
+        "hypothesis_validation_rigor": 4,
+        "synthesis_fidelity": 3,
+        "overall": 4
+      },
+      "top_likely_drivers": [
+        {
+          "driver": "Reliability-over-hype trust filter",
+          "driver_type": "core_value",
+          "why_it_matters_here": "Her answers consistently test whether the feature is genuinely useful in ordinary use or just polished packaging for sales. She looks for plain explanation, visible logic, and restraint before trusting the output.",
+          "evidence_refs": [
+            "exchange_4.persona",
+            "exchange_5.persona",
+            "exchange_8.persona",
+            "exchange_9.persona"
+          ],
+          "profile_source_refs": [
+            "values.core_values",
+            "personality_belief.trust_orientation",
+            "product_reaction_rules.negative_signals",
+            "human_difference_axes.trust_style"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        },
+        {
+          "driver": "Control-preserving decision style",
+          "driver_type": "decision_style",
+          "why_it_matters_here": "She does not want the tool to collapse analysis into action. She wants review control, the ability to inspect detail, and space to wait before making a move, especially under volatility.",
+          "evidence_refs": [
+            "exchange_3.persona",
+            "exchange_5.persona",
+            "exchange_6.persona",
+            "exchange_8.persona"
+          ],
+          "profile_source_refs": [
+            "personality_belief.decision_style",
+            "technology_attitude.automation_openness",
+            "human_difference_axes.control_preference",
+            "contradiction_map"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        },
+        {
+          "driver": "Interruption-shaped routine fit",
+          "driver_type": "daily_constraint",
+          "why_it_matters_here": "She prefers short summaries at existing review moments and low-noise alerts only when something materially changes. That suggests the feature must fit into fragmented, time-limited checking habits rather than requiring a dedicated analysis session.",
+          "evidence_refs": [
+            "exchange_1.persona",
+            "exchange_7.persona",
+            "exchange_8.persona",
+            "exchange_9.persona"
+          ],
+          "profile_source_refs": [
+            "life_story.current_daily_routine",
+            "problem_context.active_pain_points",
+            "human_difference_axes.life_load",
+            "human_difference_axes.fragmentation_reality"
+          ],
+          "confidence": "high",
+          "observed_vs_inferred": "mixed"
+        }
+      ],
+      "top_unspoken_constraints": [
+        {
+          "constraint": "Any feature that requires too much tapping, reading, or session time will lose her quickly even if the analytics are sound.",
+          "why_likely": "She asks for a short summary in routine moments, dislikes repeated generic content, and says she will stop if it takes several layers to reach the point.",
+          "evidence_refs": [
+            "exchange_7.persona",
+            "exchange_8.persona",
+            "exchange_9.persona"
+          ],
+          "profile_source_refs": [
+            "life_story.current_daily_routine",
+            "behavior_profile.decision_blockers",
+            "human_difference_axes.life_load"
+          ],
+          "confidence": "high"
+        },
+        {
+          "constraint": "She likely needs mobile-first continuity and resumability rather than a desktop-style analysis workflow.",
+          "why_likely": "Her portfolio check happens at night inside the bank app in short bursts, and her broader profile emphasizes phone-based fragmented management.",
+          "evidence_refs": [
+            "exchange_1.persona",
+            "exchange_8.persona"
+          ],
+          "profile_source_refs": [
+            "values.trust_requirements",
+            "problem_context.jobs_to_be_done",
+            "human_difference_axes.fragmentation_reality"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "value_tensions": [
+        {
+          "tension": "Wants more clarity, but resists being pushed into action",
+          "side_a": "She is interested in a portfolio-level view that helps her see concentration and risk more clearly.",
+          "side_b": "She does not want alerts or diagnostics to bypass her judgment or funnel her into transactions.",
+          "evidence_refs": [
+            "exchange_4.persona",
+            "exchange_5.persona",
+            "exchange_6.persona"
+          ],
+          "profile_source_refs": [
+            "human_difference_axes.control_preference",
+            "contradiction_map"
+          ],
+          "confidence": "high"
+        },
+        {
+          "tension": "Wants simplicity, but only if it is substantively informative",
+          "side_a": "She asks for a short summary and low-friction entry points.",
+          "side_b": "She rejects simplified outputs when they become repetitive, generic, or black-box.",
+          "evidence_refs": [
+            "exchange_7.persona",
+            "exchange_8.persona",
+            "exchange_9.persona",
+            "exchange_10.persona"
+          ],
+          "profile_source_refs": [
+            "human_difference_axes.guidance_preference",
+            "human_difference_axes.complexity_tolerance",
+            "contradiction_map"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "missed_follow_up_questions": [
+        {
+          "question": "When you say you would trust it more if it shows how it reached the judgment, what is the minimum explanation that feels enough to you: asset breakdown, comparison to your past allocation, or plain-language reason codes?",
+          "why_this_would_clarify": "This would separate her need for transparency from any need for deeper technical analytics, and make the acceptable explanation boundary more concrete.",
+          "priority": "high"
+        },
+        {
+          "question": "If the alert says concentration rose, which comparison matters more to you: versus your own target, versus last month, or versus a general benchmark?",
+          "why_this_would_clarify": "She clearly values change-based context, but the transcript does not reveal which baseline would make the insight actionable to her.",
+          "priority": "high"
+        }
+      ],
+      "facilitator_primary_failure_mode": "Mildly leading concept framing combined with insufficient probing from generic concept reaction into specific output-to-decision mapping.",
+      "facilitator_missed_followups": [
+        {
+          "trigger_type": "participant requested transparency into how a judgment was reached",
+          "priority": "high",
+          "participant_signal": "The participant asked to see what data was used and roughly how the judgment boundary was set.",
+          "missed_followup_question": "What is the minimum explanation you would need before the result feels credible enough to consider, rather than ignore?",
+          "generic_learning": "When a participant asks for transparency, probe for the minimum sufficient explanation standard instead of stopping at a general desire for explainability."
+        },
+        {
+          "trigger_type": "participant described waiting before acting",
+          "priority": "high",
+          "participant_signal": "The participant said they would usually wait and re-check before taking action after an alert.",
+          "missed_followup_question": "During that waiting period, what are you trying to confirm or rule out before deciding whether to act?",
+          "generic_learning": "When participants delay action, probe what uncertainty they are resolving; this reveals whether the concept supports decision-making or merely adds another notification."
+        }
+      ],
+      "facilitator_likely_misclassified_drivers": [
+        {
+          "observed_surface_frame": "Interest in a free feature",
+          "possible_underlying_driver": "Conditional evaluation based on neutrality, control, and explanation sufficiency rather than simple price or access appeal",
+          "why_the_surface_frame_is_weak": "The participant's positive reaction was heavily qualified by distrust of agenda, desire for self-directed review, and need for visible reasoning.",
+          "generic_learning": "Do not treat initial interest as a value signal until you isolate the conditions that make the participant willing to rely on the output."
+        },
+        {
+          "observed_surface_frame": "Desire for alerts at certain moments",
+          "possible_underlying_driver": "A broader need to preserve attention and decision control under limited cognitive bandwidth",
+          "why_the_surface_frame_is_weak": "The timing preference may reflect noise management and interruption tolerance more than a simple channel or placement preference.",
+          "generic_learning": "When participants specify timing or placement, probe what the timing protects them from, such as overload, anxiety, distraction, or impulsive action."
+        }
+      ],
+      "depth_complete": true,
+      "missing_depth_probes": [],
+      "required_depth_probes": [
+        "threshold_probe",
+        "contrast_probe",
+        "driver_deepening_probe"
+      ]
+    }
+  ],
+  "synthetic_only_disclaimer": "This panel contains synthetic AI pre-validation only. It cannot establish market demand, pricing, prevalence, or replace interviews with real people."
+}

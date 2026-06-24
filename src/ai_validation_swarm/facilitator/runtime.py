@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ai_validation_swarm.conversation.providers import ConversationProvider
+from ai_validation_swarm.conversation.realism import validate_friction_mode
 from ai_validation_swarm.conversation.runtime import (
     DRIVER_TRACE_PROMPT_VERSION,
     ConversationRuntime,
@@ -13,7 +14,9 @@ from ai_validation_swarm.conversation.runtime import (
 )
 from ai_validation_swarm.domain.models import utc_now_iso
 from ai_validation_swarm.facilitator.concept_protocols import load_concept_protocol
+from ai_validation_swarm.facilitator.learning import build_approved_facilitator_learning_prompt_fragment
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
+from ai_validation_swarm.facilitator.optimism import attach_over_optimism_risks
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.storage.files import ensure_dir, load_persona, write_json
 
@@ -28,9 +31,9 @@ CONCEPT_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "current_workaround",
     "concept_reaction",
     "trust_boundary",
-    "payment_conditions",
-    "retention_repeat_use",
-    "founder_assumption_check",
+    "action_followthrough",
+    "repeat_use_condition",
+    "service_embedding",
 )
 ROOT_CAUSE_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "recent_behaviour",
@@ -43,6 +46,19 @@ HYPOTHESIS_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "consequence",
     "hypothesis_condition",
     "alternative_condition",
+)
+CONCEPT_VALIDATION_DEPTH_REQUIREMENTS: tuple[str, ...] = (
+    "threshold_probe",
+    "contrast_probe",
+    "driver_deepening_probe",
+    "output_to_decision_probe",
+)
+CONCEPT_INTRO_PREREQUISITES: tuple[str, ...] = (
+    "recent_real_decision",
+    "missing_evidence",
+    "pressure",
+    "defensible_vs_uncertain",
+    "decision_change",
 )
 
 
@@ -64,6 +80,8 @@ class FacilitatedInterviewRuntime:
         persona_provider: ConversationProvider,
         observer: Callable[[str, str], None] | None = None,
         progress_writer: Callable[[str], None] | None = None,
+        approved_learning_rules_path: Path | None = None,
+        max_approved_learning_rules: int = 5,
     ) -> None:
         self.data_dir = data_dir
         self.session_dir = session_dir
@@ -71,6 +89,8 @@ class FacilitatedInterviewRuntime:
         self.persona_provider = persona_provider
         self.observer = observer or (lambda role, message: None)
         self.progress_writer = progress_writer
+        self.approved_learning_rules_path = approved_learning_rules_path
+        self.max_approved_learning_rules = max_approved_learning_rules
 
     def _progress(self, message: str) -> None:
         if self.progress_writer is not None:
@@ -90,6 +110,7 @@ class FacilitatedInterviewRuntime:
         max_turns: int = 10,
         soft_turn_limit: int | None = None,
         hard_turn_limit: int | None = None,
+        friction_mode: str = "off",
     ) -> Path:
         if not research_goal.strip():
             raise ValueError("Research goal cannot be empty.")
@@ -113,7 +134,7 @@ class FacilitatedInterviewRuntime:
             session_dir=interview_folder / "persona_runtime",
             provider=self.persona_provider,
         )
-        persona_session, _, _ = persona_runtime.start(persona_id)
+        persona_session, _, _ = persona_runtime.start(persona_id, friction_mode=validate_friction_mode(friction_mode))
         session = InterviewSession(
             interview_id=interview_id,
             persona_id=persona_id,
@@ -135,12 +156,14 @@ class FacilitatedInterviewRuntime:
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
             persona_conversation_session_id=persona_session.session_id,
+            persona_friction_mode=persona_session.friction_mode,
             persona_driver_trace_prompt_version=DRIVER_TRACE_PROMPT_VERSION,
             max_turns=hard_limit,
             soft_turn_limit=soft_limit,
             hard_turn_limit=hard_limit,
         )
         self._update_coverage_status(session)
+        self._annotate_approved_learning_rules(session)
         self._save(session, interview_folder)
         self._progress(
             f"start interview_id={interview_id} persona={persona_id} mode={mode} "
@@ -231,6 +254,13 @@ class FacilitatedInterviewRuntime:
             )
         self._enforce_synthesis_evidence_scope(session, synthesis)
         session.facilitator_provider_session_id = facilitator_session_id
+        persona_runtime.close(persona_session)
+        conversation_realism = self._persona_conversation_realism(interview_folder, session)
+        synthesis = attach_over_optimism_risks(
+            synthesis,
+            conversation_realism=conversation_realism,
+            interview_mode=session.interview_mode,
+        )
         session.insight_report = synthesis
         self._progress("generating_persona_driver_trace")
         driver_trace, trace_session_id = persona_runtime.generate_persona_driver_trace(
@@ -246,7 +276,6 @@ class FacilitatedInterviewRuntime:
         session.persona_driver_trace_provider_session_id = trace_session_id
         session.status = "completed"
         session.updated_at = utc_now_iso()
-        persona_runtime.close(persona_session)
         self._save(session, interview_folder)
         write_json(interview_folder / "insight_report.json", synthesis)
         write_json(interview_folder / "persona_driver_trace.json", driver_trace)
@@ -257,6 +286,20 @@ class FacilitatedInterviewRuntime:
         )
         self._progress(f"completed interview_id={interview_id}")
         return interview_folder
+
+    @staticmethod
+    def _persona_conversation_realism(interview_folder: Path, session: InterviewSession) -> dict[str, Any]:
+        if not session.persona_conversation_session_id:
+            return {}
+        report_path = (
+            interview_folder
+            / "persona_runtime"
+            / session.persona_conversation_session_id
+            / "conversation_realism_report.json"
+        )
+        if not report_path.exists():
+            return {}
+        return json.loads(report_path.read_text(encoding="utf-8"))
 
     @staticmethod
     def _resolve_turn_limits(
@@ -284,9 +327,467 @@ class FacilitatedInterviewRuntime:
         return ROOT_CAUSE_COVERAGE_REQUIREMENTS
 
     @staticmethod
+    def _depth_requirements(interview_mode: str) -> tuple[str, ...]:
+        if interview_mode == "concept_validation":
+            return CONCEPT_VALIDATION_DEPTH_REQUIREMENTS
+        return ()
+
+    @staticmethod
+    def _normalize_probe_text(value: str) -> str:
+        return (value or "").casefold().replace("-", "_").replace(" ", "_")
+
+    @staticmethod
+    def _question_indicates_threshold(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "what exact",
+            "what would make",
+            "what would still",
+            "what would be enough",
+            "what would count as",
+            "what kind of change",
+            "how much",
+            "minimum",
+            "clear enough",
+            "stop trusting",
+            "too vague",
+            "too pushy",
+            "meaningful change",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_indicates_contrast(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "if only",
+            "would it still",
+            "would you still",
+            "when would you ignore",
+            "when would it not",
+            "what if it only",
+            "which matters more",
+            "which one matters more",
+            "or would it",
+            "rather than",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_indicates_driver_deepening(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "what mistake",
+            "what failure",
+            "what would you need to see",
+            "what would break trust",
+            "why that",
+            "which one by itself",
+            "which one would",
+            "what does each",
+            "what job",
+            "what gap",
+            "what protects against",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_mentions_specific_output(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "concentration",
+            "allocation",
+            "risk profile",
+            "risk-profile",
+            "mismatch",
+            "exposure",
+            "sector",
+            "region",
+            "country",
+            "currency",
+            "fx",
+            "stress test",
+            "scenario",
+            "drawdown",
+            "attribution",
+            "factor",
+            "volatility",
+            "alert",
+            "cash flow",
+            "income impact",
+            "goal success",
+            "interest rate",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_mentions_decision_mapping(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "what would you do",
+            "would you do anything",
+            "would you change",
+            "would it change",
+            "would that make you",
+            "would that be enough to",
+            "would you still hold",
+            "would you keep holding",
+            "would you wait",
+            "would you ignore",
+            "would you leave it",
+            "would you reduce",
+            "would you rebalance",
+            "would you sell",
+            "would you buy",
+            "would you top up",
+            "would you move",
+            "would you stay with",
+            "or still do nothing",
+            "or would you still not",
+            "or would you still wait",
+            "rather than just",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_mentions_missing_evidence(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "what evidence was missing",
+            "what was still missing",
+            "what did you still not know",
+            "what was still unclear",
+            "what would you still need to know",
+            "what was the gap",
+            "missing evidence",
+            "evidence gap",
+            "仲差咩證據",
+            "仲未有咩 evidence",
+            "仲未清楚咩",
+            "仲未知咩",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_mentions_pressure(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "what pressure",
+            "who was pushing",
+            "what made waiting costly",
+            "what made it urgent",
+            "what deadline",
+            "how much time",
+            "stakeholder pressure",
+            "time pressure",
+            "runway",
+            "delivery pressure",
+            "邊個催",
+            "有咩壓力",
+            "時間壓力",
+            "點解等唔到",
+            "趕住",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_mentions_defensibility(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "what could you defend",
+            "what could you say in the room",
+            "what were you less sure about",
+            "what still worried you",
+            "what still felt shaky",
+            "publicly",
+            "privately",
+            "defend publicly",
+            "private worry",
+            "公開",
+            "心入面",
+            "其實仲唔穩",
+            "仲擔心咩",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _question_mentions_decision_change(question: str) -> bool:
+        lowered = question.casefold()
+        markers = (
+            "what did you change",
+            "what changed in the end",
+            "what did you delay",
+            "what did you cut",
+            "what shipped first",
+            "what moved later",
+            "what did you prioritize",
+            "what became lower priority",
+            "go or no-go",
+            "scope",
+            "sequence",
+            "priority",
+            "最後改咗咩",
+            "最後實際改",
+            "延後",
+            "優先次序",
+            "先做邊個",
+        )
+        return any(marker in lowered for marker in markers)
+
+    @staticmethod
+    def _concept_intro_prerequisite_flags(
+        *,
+        question: str,
+        phase: str,
+        strategy: str,
+        basis: str,
+    ) -> dict[str, bool]:
+        normalized_phase = FacilitatedInterviewRuntime._normalize_probe_text(phase)
+        normalized_strategy = FacilitatedInterviewRuntime._normalize_probe_text(strategy)
+        event_like_basis = basis in {"current_event", "recalled_contrast_event"}
+        recent_real_decision = (
+            basis == "current_event"
+            and (
+                "recent" in normalized_phase
+                or "event" in normalized_phase
+                or "incident" in normalized_phase
+                or "recent" in normalized_strategy
+                or "event" in normalized_strategy
+            )
+        )
+        missing_evidence = event_like_basis and (
+            "missing_evidence" in normalized_phase
+            or "missing_evidence" in normalized_strategy
+            or "evidence_gap" in normalized_phase
+            or "evidence_gap" in normalized_strategy
+            or FacilitatedInterviewRuntime._question_mentions_missing_evidence(question)
+        )
+        pressure = event_like_basis and (
+            "pressure" in normalized_phase
+            or "pressure" in normalized_strategy
+            or "stakeholder" in normalized_phase
+            or "stakeholder" in normalized_strategy
+            or FacilitatedInterviewRuntime._question_mentions_pressure(question)
+        )
+        defensible_vs_uncertain = event_like_basis and (
+            "defensibility" in normalized_phase
+            or "defensibility" in normalized_strategy
+            or "public_private" in normalized_phase
+            or "public_private" in normalized_strategy
+            or FacilitatedInterviewRuntime._question_mentions_defensibility(question)
+        )
+        decision_change = event_like_basis and (
+            "decision_outcome" in normalized_phase
+            or "decision_outcome" in normalized_strategy
+            or "tradeoff" in normalized_phase
+            or "tradeoff" in normalized_strategy
+            or "priority" in normalized_phase
+            or "priority" in normalized_strategy
+            or "scope" in normalized_phase
+            or "scope" in normalized_strategy
+            or "sequence" in normalized_phase
+            or "sequence" in normalized_strategy
+            or "go_no_go" in normalized_phase
+            or "go_no_go" in normalized_strategy
+            or FacilitatedInterviewRuntime._question_mentions_decision_change(question)
+        )
+        return {
+            "recent_real_decision": recent_real_decision,
+            "missing_evidence": missing_evidence,
+            "pressure": pressure,
+            "defensible_vs_uncertain": defensible_vs_uncertain,
+            "decision_change": decision_change,
+        }
+
+    @staticmethod
+    def _concept_intro_prerequisite_status(session: InterviewSession) -> dict[str, Any]:
+        covered = {item: False for item in CONCEPT_INTRO_PREREQUISITES}
+        for exchange in session.exchanges:
+            basis = FacilitatedInterviewRuntime._effective_question_basis(
+                exchange.facilitator_question,
+                exchange.question_evidence_basis,
+            )
+            flags = FacilitatedInterviewRuntime._concept_intro_prerequisite_flags(
+                question=exchange.facilitator_question,
+                phase=exchange.facilitator_phase,
+                strategy=exchange.probing_strategy,
+                basis=basis,
+            )
+            for item in CONCEPT_INTRO_PREREQUISITES:
+                if flags.get(item):
+                    covered[item] = True
+        return {
+            "required": list(CONCEPT_INTRO_PREREQUISITES),
+            "covered": {item: bool(covered[item]) for item in CONCEPT_INTRO_PREREQUISITES},
+            "missing": [item for item in CONCEPT_INTRO_PREREQUISITES if not covered[item]],
+            "ready": all(covered.values()),
+        }
+
+    @staticmethod
+    def _concept_already_introduced(session: InterviewSession) -> bool:
+        return any(
+            "concept" in FacilitatedInterviewRuntime._normalize_probe_text(exchange.facilitator_phase)
+            or "scenario" in FacilitatedInterviewRuntime._normalize_probe_text(exchange.facilitator_phase)
+            or "concept" in FacilitatedInterviewRuntime._normalize_probe_text(exchange.probing_strategy)
+            for exchange in session.exchanges
+        )
+
+    @staticmethod
+    def _decision_attempts_concept_progression(
+        session: InterviewSession,
+        decision: FacilitatorDecision,
+    ) -> bool:
+        if decision.should_end:
+            return False
+        if FacilitatedInterviewRuntime._concept_already_introduced(session):
+            return False
+        basis = FacilitatedInterviewRuntime._effective_question_basis(
+            decision.message_to_persona,
+            decision.question_evidence_basis,
+        )
+        normalized_phase = FacilitatedInterviewRuntime._normalize_probe_text(decision.interview_phase)
+        normalized_strategy = FacilitatedInterviewRuntime._normalize_probe_text(decision.probing_strategy)
+        if basis == "hypothetical":
+            return True
+        concept_markers = (
+            "concept",
+            "scenario",
+            "reaction",
+            "fit",
+            "trust",
+            "pricing",
+            "retention",
+            "repeat",
+            "service_embedding",
+            "workflow_insertion",
+            "adoption",
+            "output_to_decision",
+            "decision_mapping",
+        )
+        return (
+            any(marker in normalized_phase for marker in concept_markers)
+            or any(marker in normalized_strategy for marker in concept_markers)
+        )
+
+    @staticmethod
+    def _concept_intro_gap_instruction(gap: str) -> tuple[str, str]:
+        mapping = {
+            "recent_real_decision": (
+                "recent_event",
+                "Ask for one specific recent real decision event before any concept exposure.",
+            ),
+            "missing_evidence": (
+                "missing_evidence_probe",
+                "Ask what evidence was still missing in that real decision and what they still could not tell.",
+            ),
+            "pressure": (
+                "pressure_probe",
+                "Ask what stakeholder, timing, runway, or delivery pressure made waiting costly in that real decision.",
+            ),
+            "defensible_vs_uncertain": (
+                "defensibility_probe",
+                "Ask what they could defend publicly in that decision and what still felt privately uncertain.",
+            ),
+            "decision_change": (
+                "decision_outcome_probe",
+                "Ask what actually changed in scope, sequence, priority, or go-no-go because of that decision.",
+            ),
+        }
+        return mapping.get(
+            gap,
+            (
+                "recent_event",
+                "Ask one short current-state question that fills the highest-value missing pre-concept evidence gap.",
+            ),
+        )
+
+    @staticmethod
+    def _depth_probe_flags(
+        *,
+        question: str,
+        phase: str,
+        strategy: str,
+        target: str,
+        basis: str,
+    ) -> dict[str, bool]:
+        normalized_phase = FacilitatedInterviewRuntime._normalize_probe_text(phase)
+        normalized_strategy = FacilitatedInterviewRuntime._normalize_probe_text(strategy)
+        normalized_target = FacilitatedInterviewRuntime._normalize_probe_text(target)
+        threshold_keywords = (
+            "threshold",
+            "credibility",
+            "materiality",
+            "proof",
+            "priority",
+            "ranking",
+            "trust_source",
+            "action_threshold",
+        )
+        contrast_keywords = (
+            "contrast",
+            "counterexample",
+            "disconfirm",
+            "non_use",
+            "tradeoff",
+            "opposite",
+        )
+        deepening_keywords = (
+            "driver",
+            "deepen",
+            "workaround_function",
+            "trust_source",
+            "action_threshold",
+            "tradeoff",
+            "priority",
+            "ranking",
+            "threshold",
+        )
+        output_mapping_keywords = (
+            "output_to_decision",
+            "decision_mapping",
+            "function_to_decision",
+            "analytic_mapping",
+            "output_mapping",
+            "decision_threshold",
+        )
+        threshold_probe = (
+            any(keyword in normalized_strategy for keyword in threshold_keywords)
+            or any(keyword in normalized_phase for keyword in threshold_keywords)
+            or FacilitatedInterviewRuntime._question_indicates_threshold(question)
+        )
+        contrast_probe = (
+            basis == "recalled_contrast_event"
+            or normalized_target == "alternative_condition"
+            or any(keyword in normalized_strategy for keyword in contrast_keywords)
+            or any(keyword in normalized_phase for keyword in contrast_keywords)
+            or FacilitatedInterviewRuntime._question_indicates_contrast(question)
+        )
+        driver_deepening_probe = (
+            any(keyword in normalized_strategy for keyword in deepening_keywords)
+            or any(keyword in normalized_phase for keyword in deepening_keywords)
+            or FacilitatedInterviewRuntime._question_indicates_driver_deepening(question)
+        )
+        output_to_decision_probe = (
+            any(keyword in normalized_strategy for keyword in output_mapping_keywords)
+            or any(keyword in normalized_phase for keyword in output_mapping_keywords)
+            or (
+                FacilitatedInterviewRuntime._question_mentions_specific_output(question)
+                and FacilitatedInterviewRuntime._question_mentions_decision_mapping(question)
+            )
+        )
+        return {
+            "threshold_probe": threshold_probe,
+            "contrast_probe": contrast_probe,
+            "driver_deepening_probe": driver_deepening_probe,
+            "output_to_decision_probe": output_to_decision_probe,
+        }
+
+    @staticmethod
     def _update_coverage_status(session: InterviewSession) -> None:
         requirements = FacilitatedInterviewRuntime._coverage_requirements(session.interview_mode)
+        depth_requirements = FacilitatedInterviewRuntime._depth_requirements(session.interview_mode)
         covered = {item: False for item in requirements}
+        depth_covered = {item: False for item in depth_requirements}
         for exchange in session.exchanges:
             basis = FacilitatedInterviewRuntime._effective_question_basis(
                 exchange.facilitator_question,
@@ -302,12 +803,19 @@ class FacilitatedInterviewRuntime:
                 covered["concept_reaction"] = True
             if "trust_boundary" in covered and ("trust" in phase or "privacy" in phase or "data" in phase):
                 covered["trust_boundary"] = True
-            if "payment_conditions" in covered and ("pricing" in phase or "payment" in phase or "booking" in phase):
-                covered["payment_conditions"] = True
-            if "retention_repeat_use" in covered and ("retention" in phase or "repeat" in phase or "month" in phase):
-                covered["retention_repeat_use"] = True
-            if "founder_assumption_check" in covered and ("founder" in phase or "assumption" in phase or "closure" in phase):
-                covered["founder_assumption_check"] = True
+            if "action_followthrough" in covered and (
+                "action" in phase or "follow" in phase or "next_step" in phase or "decision" in phase
+            ):
+                covered["action_followthrough"] = True
+            if "repeat_use_condition" in covered and (
+                "retention" in phase or "repeat" in phase or "month" in phase or "habit" in phase
+            ):
+                covered["repeat_use_condition"] = True
+            if "service_embedding" in covered and (
+                "embed" in phase or "journey" in phase or "channel" in phase or "placement" in phase
+                or "workflow" in phase or "rm" in phase
+            ):
+                covered["service_embedding"] = True
             if "target_behaviour" in covered and (target == "target_behaviour" or basis == "current_event"):
                 covered["target_behaviour"] = True
             if "participant_cause" in covered and (target == "participant_cause" or "cause" in phase or "root_cause" in phase):
@@ -318,15 +826,33 @@ class FacilitatedInterviewRuntime:
                 covered["hypothesis_condition"] = True
             if "alternative_condition" in covered and (target == "alternative_condition" or "counterexample" in phase or "contrast" in phase):
                 covered["alternative_condition"] = True
+            depth_flags = FacilitatedInterviewRuntime._depth_probe_flags(
+                question=exchange.facilitator_question,
+                phase=exchange.facilitator_phase,
+                strategy=exchange.probing_strategy,
+                target=exchange.question_evidence_target,
+                basis=basis,
+            )
+            for item in depth_requirements:
+                if depth_flags.get(item):
+                    depth_covered[item] = True
         session.coverage_status = {
             "requirements": list(requirements),
             "covered": {key: bool(covered.get(key, False)) for key in requirements},
             "missing": [key for key in requirements if not covered.get(key, False)],
             "coverage_complete": all(covered.get(key, False) for key in requirements),
+            "depth_requirements": list(depth_requirements),
+            "depth_covered": {key: bool(depth_covered.get(key, False)) for key in depth_requirements},
+            "depth_missing": [key for key in depth_requirements if not depth_covered.get(key, False)],
+            "depth_complete": all(depth_covered.get(key, False) for key in depth_requirements),
             "soft_limit_reached": len(session.exchanges) >= session.soft_turn_limit,
             "hard_limit_reached": len(session.exchanges) >= session.hard_turn_limit,
             "exchange_count": len(session.exchanges),
         }
+        if session.interview_mode == "concept_validation":
+            concept_gate = FacilitatedInterviewRuntime._concept_intro_prerequisite_status(session)
+            session.coverage_status["concept_intro_prerequisites"] = concept_gate
+            session.coverage_status["concept_intro_allowed"] = concept_gate["ready"]
 
     @staticmethod
     def _should_finalize_after_exchange(session: InterviewSession) -> bool:
@@ -336,7 +862,10 @@ class FacilitatedInterviewRuntime:
             return True
         if len(session.exchanges) < session.soft_turn_limit:
             return False
-        if session.coverage_status.get("coverage_complete"):
+        if (
+            session.coverage_status.get("coverage_complete")
+            and session.coverage_status.get("depth_complete", True)
+        ):
             session.stop_reason = "soft_turn_limit_with_required_coverage_met"
             return True
         return False
@@ -366,6 +895,38 @@ class FacilitatedInterviewRuntime:
         system_prompt: str,
     ) -> FacilitatorDecision:
         basis = self._effective_question_basis(decision.message_to_persona, decision.question_evidence_basis)
+        if session.interview_mode == "concept_validation":
+            self._update_coverage_status(session)
+            concept_gate = session.coverage_status.get("concept_intro_prerequisites", {})
+            if (
+                not concept_gate.get("ready", False)
+                and self._decision_attempts_concept_progression(session, decision)
+            ):
+                missing = concept_gate.get("missing", [])
+                next_gap = missing[0] if missing else "recent_real_decision"
+                phase_hint, gap_instruction = self._concept_intro_gap_instruction(next_gap)
+                rejected = decision.to_dict()
+                rejected["question_evidence_basis"] = basis
+                rejected["decision_status"] = "rejected_by_concept_timing_gate"
+                session.facilitator_decisions.append(rejected)
+                correction = (
+                    "CONCEPT TIMING GATE: Do not introduce or advance the AI synthetic-user concept yet. "
+                    "In concept-validation mode, the current-state interview must first cover five participant-facing "
+                    "items from one recent real decision: the event itself, missing evidence, stakeholder/time pressure, "
+                    "what was publicly defensible versus privately uncertain, and what actually changed in scope, sequence, "
+                    "priority, or go-no-go. "
+                    f"Current missing prerequisites: {', '.join(missing) or '(none listed)'}. "
+                    f"Ask one short, neutral current-state question next. Use a phase or strategy label like "
+                    f"'{phase_hint}' so the runtime can audit the gap. {gap_instruction} "
+                    "Do not mention the concept, synthetic users, AI, trust, pricing, retention, or workflow fit in this turn.\n\n"
+                    f"REJECTED QUESTION:\n{decision.message_to_persona}\n\n"
+                    f"TRANSCRIPT:\n{self._plain_transcript(session)}"
+                )
+                return self.facilitator_provider.next_turn(
+                    system_prompt=system_prompt,
+                    user_prompt=correction,
+                    provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
+                )
         if session.interview_mode != "validate_hypothesis":
             return decision
         recalled_count = sum(
@@ -431,8 +992,7 @@ class FacilitatedInterviewRuntime:
             provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
         )
 
-    @staticmethod
-    def _facilitator_system_prompt(session: InterviewSession) -> str:
+    def _facilitator_system_prompt(self, session: InterviewSession) -> str:
         root = _repo_root()
         skill = _read(root / "skills" / "design-research-facilitator" / "SKILL.md")
         prompt = _read(root / "src" / "ai_validation_swarm" / "prompts" / "facilitator-interview" / "v2.md")
@@ -440,7 +1000,26 @@ class FacilitatedInterviewRuntime:
         if session.interview_mode == "concept_validation":
             concept = load_concept_protocol(session.concept_protocol_version, label=session.concept_label)
             concept_protocol = concept.prompt_text
-        return f"{prompt}\n\nFACILITATOR SKILL:\n{skill}\n\nCONCEPT VALIDATION PROTOCOL:\n{concept_protocol}"
+        approved_rules_text, _ = build_approved_facilitator_learning_prompt_fragment(
+            self.approved_learning_rules_path,
+            max_rules=self.max_approved_learning_rules,
+        )
+        sections = [
+            prompt,
+            f"FACILITATOR SKILL:\n{skill}",
+        ]
+        if approved_rules_text:
+            sections.append(approved_rules_text)
+        sections.append(f"CONCEPT VALIDATION PROTOCOL:\n{concept_protocol}")
+        return "\n\n".join(section for section in sections if section)
+
+    def _annotate_approved_learning_rules(self, session: InterviewSession) -> None:
+        _, rule_ids = build_approved_facilitator_learning_prompt_fragment(
+            self.approved_learning_rules_path,
+            max_rules=self.max_approved_learning_rules,
+        )
+        session.approved_learning_rules_source = str(self.approved_learning_rules_path or "")
+        session.approved_learning_rule_ids = rule_ids
 
     @staticmethod
     def _synthesis_system_prompt(interview_mode: str = "explore_root_cause") -> str:
@@ -500,6 +1079,10 @@ class FacilitatedInterviewRuntime:
             f"TURN POLICY:\nsoft={session.soft_turn_limit}, hard={session.hard_turn_limit}\n\n"
             "REQUIRED COVERAGE:\n"
             f"{json.dumps(session.coverage_status.get('requirements', []), ensure_ascii=False, separators=(',', ':'))}\n\n"
+            "DEPTH-FIRST STOP RULE:\n"
+            "Do not stop at topic coverage in concept_validation mode. Before ending, complete the required depth probes shown in DEPTH REQUIREMENTS, including at least one named-output-to-concrete-decision mapping probe.\n\n"
+            "DEPTH REQUIREMENTS:\n"
+            f"{json.dumps(session.coverage_status.get('depth_requirements', []), ensure_ascii=False, separators=(',', ':'))}\n\n"
             "No interview transcript exists yet. Choose and return the first interview question."
         )
 
@@ -512,6 +1095,8 @@ class FacilitatedInterviewRuntime:
             f"CONCEPT LABEL: {session.concept_label or '(none)'}\n\n"
             "COVERAGE STATUS:\n"
             f"{json.dumps(session.coverage_status, ensure_ascii=False, separators=(',', ':'))}\n\n"
+            "DEPTH-FIRST RULE:\n"
+            "If the participant has given a high-signal cue and depth status is incomplete, ask the highest-value threshold, contrast/non-use, driver-deepening, or named-output-to-decision follow-up before closing.\n\n"
             "INTERVIEW TRANSCRIPT TO DATE:\n"
             f"{FacilitatedInterviewRuntime._plain_transcript(session)}\n\n"
             "Use the transcript to choose the next question or end the interview."
@@ -720,6 +1305,12 @@ class FacilitatedInterviewRuntime:
             lines.extend(["", "## Hypothesis Assessment", ""])
             lines.append(f"- Verdict: {assessment.get('verdict', 'not_tested')}")
             lines.append(f"- Confidence: {assessment.get('confidence', 'low')}")
+        lines.extend(["", "## Potential Over-Optimism Risks", ""])
+        risks = report.get("potential_over_optimism_risks", [])
+        for item in risks:
+            lines.append(f"- {item}")
+        if not risks:
+            lines.append("- No explicit over-optimism risks were generated.")
         lines.extend(["", "## How Might We", ""])
         for item in report.get("how_might_we_questions", []):
             lines.append(f"- {item}")
@@ -761,5 +1352,11 @@ class FacilitatedInterviewRuntime:
             lines.append(f"- [{item.get('status', 'unknown')}] {item.get('assumption', '')}")
         lines.extend(["", "## Key Insights", ""])
         for item in report.get("key_insights", []): lines.append(f"- {item}")
+        lines.extend(["", "## Potential Over-Optimism Risks", ""])
+        risks = report.get("potential_over_optimism_risks", [])
+        for item in risks:
+            lines.append(f"- {item}")
+        if not risks:
+            lines.append("- No explicit over-optimism risks were generated.")
         lines.extend(["", "## Next Experiment", "", str(report.get("next_experiment", ""))])
         return "\n".join(lines).rstrip() + "\n"

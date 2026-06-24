@@ -1,0 +1,176 @@
+{
+  "problem_evidence": {
+    "strength": "weak",
+    "supporting_quotes": [
+      {
+        "quote": "「其實我冇咩正式嘅投資組合」",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "「主要係確認冇乜大波動，跟住就算。」",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "「我唔會睇得好細」",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "「我通常會再對一對自己手機入面啲notes」",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次所謂查看「投資組合」，其實是在交完學校及屋企開支後，在手機銀行順手看 MPF 與戶口餘額。",
+      "查看目標主要是確認沒有明顯波動，以及現金是否足夠應付之後幾筆支出，不是做投資配置決策。",
+      "現時會把銀行 app、手機 notes、WhatsApp、月曆提醒拼合來估算短期支出與時間差。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用手機銀行看 MPF 大概結餘、是否明顯下跌、戶口現金餘額。",
+      "再對手機 notes 內已記下的學校、屋企、客戶相關支出時間。",
+      "有時翻 WhatsApp 或月曆提醒，確認有沒有快到期但銀行未見到的數。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "必須快，不想增加很多步驟。",
+      "必須用簡單字，手機上容易明。",
+      "不要一開始要求連更多戶口或與任務無關的資料。",
+      "不要用誇張語氣嚇人。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "可接受先在現有銀行 app 內，看該行已持有的戶口與 MPF 資料。",
+      "可接受低摩擦地在看完結餘或 MPF 後順手見到提示。"
+    ],
+    "rejected_data_access": [
+      "一開始要求連其他銀行戶口。",
+      "一開始要求連證券戶口。",
+      "要求通訊錄。",
+      "要求定位。",
+      "在未證明有用前索取多過完成此任務所需的資料。"
+    ],
+    "required_trust_explanation": [
+      "要先講清楚「邊一部分高咗」與「點解會咁講」。",
+      "輸出要可被原本銀行數字核對。",
+      "語氣不能太誇張，否則會被視為嚇人而不是有用。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "首次使用要一眼整合 MPF 與其他持有，減少自行拼湊。",
+      "要用簡單字說明風險。",
+      "要能快速進入，不需另外開太多權限。",
+      "第一次結果要夠準，且不誇張，讓用戶願意拿原始數字核對。"
+    ],
+    "time_to_value": "即時，最好在剛看完戶口結餘或 MPF 之後順手見到。",
+    "abandonment_triggers": [
+      "一開始就要求連更多資料或開過多權限。",
+      "提示太誇張。",
+      "通知太多。",
+      "內容空泛，沒有指出本來會漏掉的事。",
+      "不能幫助支出前後的實際安排。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "unknown",
+    "monthly_comfort_range": "不適用；訪談設定已指明此服務為免費，逐月付費訊號不可由本訪談推斷。",
+    "payment_justification": [
+      "本逐字稿沒有任何實際付費、類比付費或為同類提醒服務持續付費的行為證據。",
+      "參加者只表達『幾方便』與『會想撳入去睇下』，這不足以推斷付費或採用意圖。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次都要快。",
+      "每次都要提供本來可能會漏掉的提醒。",
+      "在看完結餘後可順手見到。",
+      "兩個星期後仍能幫到避開一次時間差，或在大額支出前作出有用提醒。"
+    ],
+    "drop_off_reasons": [
+      "參加者本身沒有正式投資組合管理習慣，天然重用頻率可能低。",
+      "若輸出空泛、誇張或通知過多，會很快被忽略。",
+      "若之後開始要求連更多資料，會增加棄用風險。"
+    ],
+    "workflow_effect": "adds_layer"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "這類零售客戶正主動做正式的投資組合管理，並有明確組合分析痛點。",
+      "status": "invalidated",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "參加者直接說「冇咩正式嘅投資組合」，最近一次查看也只是確認沒有大波動與現金安排，未見正式組合管理行為。"
+    },
+    {
+      "assumption": "參與者目前較少做正式投資組合管理，因為實際決策框架更偏向現金流與短期支出確認，而非投資配置優化。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "rationale": "最近具體行為與 workaround 都圍繞學費、屋企支出、現金是否夠用、到期數是否漏看；沒有出現配置調整或報酬優化行為。"
+    },
+    {
+      "assumption": "參與者採用新功能的門檻主要受『是否準確且不誇張』與『資料索取是否過度』影響。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "參加者對概念明確提出這兩個條件，但這仍是概念後反應，不是已發生採用行為；可視為偏好與採用條件，未達行為層級支持。"
+    },
+    {
+      "assumption": "功能若嵌入喺支出後或有新提醒前後嘅檢查時刻，對參與者會比獨立投資儀表板更有實際價值。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "最近行為確實發生在支出後檢查；概念後亦明確偏好在看完結餘或 MPF 後、以及大額支出前後出現。但未見與『獨立儀表板』直接比較的真實使用結果。"
+    },
+    {
+      "assumption": "是否持續使用呢個功能，主要受輸出是否準確、不誇張同貼近手頭安排影響，而唔單係功能範圍多寡。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "參加者清楚描述了重用條件與棄用觸發，但這些仍屬假設性月二保留反應，未有實際持續使用或類似工具留存的行為類比。"
+    },
+    {
+      "assumption": "一眼整合 MPF 與其他持有，對這位參加者會構成明顯首用價值。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "現時確有手動拼湊資料行為，概念反應亦說「幾方便」及可減少自己拼回情況；但尚未證明這價值足以持續改變行為。"
+    }
+  ],
+  "key_insights": [
+    "Because 佢最近實際只係喺交完學校同屋企開支後「順手睇下MPF同戶口入面啲錢」去確認現金與大波動，而唔係做正式配置檢查, this persona would likely 把 Portfolio Health Check 當成支出前後的現金與風險 sanity check，而唔係長時間研究工具, unless 之後持倉變複雜到需要更主動管理. This means the product should 先服務『短期安排安全感』場景，避免一開始包裝成深度投資分析。",
+    "Because 佢而家要自己用手機銀行、notes、WhatsApp、月曆去拼返支出時間差, this persona would likely 打開一個能夠即場整合現有資料的提醒, unless 個提醒只重複佢已知資訊. This means the product should 優先指出『銀行未必即時反映但快將影響安排』的情境，而唔係只講抽象風險。",
+    "Because 佢明確話「未必即刻好信」，會先睇「講得準唔準」同「會唔會搞到太誇張嚇人」, this persona would likely 先核對提示與原本銀行數字，再決定之後有冇價值, unless 解釋已經清楚到可直接對上原始數據. This means the product should 每個風險提示都附上簡單原因與對應數字來源。",
+    "Because 佢對資料索取邊界好敏感，尤其係其他銀行戶口、證券戶口、通訊錄、定位, this persona would likely 在首屏或首用就停下來, unless 功能先用現有銀行內資料證明到有用. This means the product should 採取『先用本行已有資料，後續再漸進要求擴展』的設計，而不是預設全量連結。",
+    "Because 佢只會喺睇完結餘/MPF後順手望一望，而且容忍度低於誇張通知, this persona would likely 睇幾次後就忽略功能, unless 每次都快而且真係幫佢避到一次時間差或大額支出前的漏看. This means the product should 把成功門檻定義為少量高相關提醒，而不是高頻觸達。"
+  ],
+  "next_experiment": "在現有手機銀行原型內做一個最小可點擊流程：只用本行已有戶口與 MPF 資料，在『查看戶口結餘後』插入一張 Portfolio Health Check 卡片，僅顯示 1 個與即將到來大額支出/時間差相關的簡單風險提示與原因。找同類 persona 做 5-7 次任務式測試，觀察他們會否主動點入、能否用原始數字核對、以及會否覺得誇張或多餘。",
+  "evidence_gaps": [
+    "沒有觀察到參加者實際收到風險提示後是否會採取投資調整，只知道會先查證。",
+    "沒有真實月二留存或同類工具持續使用行為，重用條件仍屬假設。",
+    "沒有比較不同提示內容、語氣、頻率對信任的影響。",
+    "沒有證據顯示 Aladdin 式較深層分析在這位 persona 身上比簡單現金/風險提醒更有價值。",
+    "本逐字稿只反映一位低投資管理強度 persona，不能外推到其他零售客群。"
+  ],
+  "synthetic_only_disclaimer": "此報告只根據提供的 synthetic interview transcript 整理，屬模擬性前期概念驗證材料，不可視為真人市場證據。"
+}

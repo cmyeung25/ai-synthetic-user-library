@@ -1,0 +1,229 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "generic"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Coverage was completed efficiently, but the facilitator accepted several high-signal cues without enough depth and let a somewhat solution-loaded concept framing shape the evidence too early.",
+    "primary_failure_mode": "Coverage over depth after concept introduction, especially around function-specific value, trust causality, and action thresholds.",
+    "depth_vs_coverage_assessment": "Strong breadth across required areas, but several participant clues that could have produced more decision-useful causal evidence were left at the surface level."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "solution_loaded_concept_intro",
+      "severity": "medium",
+      "why_it_matters": "Preloading benefit claims can inflate positive reactions and blur whether the participant values the capability itself or the facilitator's framing.",
+      "observed_pattern": "The concept was introduced with built-in value language and free pricing before the participant's reaction was elicited."
+    },
+    {
+      "tag": "coverage_over_depth",
+      "severity": "high",
+      "why_it_matters": "Completing coverage without drilling into the highest-signal clues produces weaker causal evidence and weaker reuse value for future interviews.",
+      "observed_pattern": "Once all required coverage areas were touched, the interview moved forward rather than deepening on trust concerns, explanation thresholds, or partial-coverage tradeoffs."
+    },
+    {
+      "tag": "missed_threshold_probe",
+      "severity": "high",
+      "why_it_matters": "Participants often state preferences in abstract terms; threshold probes reveal what must be true before behavior changes.",
+      "observed_pattern": "The participant named conditions like 'clear explanation', 'meaningful change', and 'not too pushy', but the facilitator did not quantify or operationalize them."
+    },
+    {
+      "tag": "missed_contrast_probe",
+      "severity": "medium",
+      "why_it_matters": "Contrast questions help separate which feature component actually drives value instead of bundling multiple benefits together.",
+      "observed_pattern": "Aggregation, analytics, explanation clarity, and non-sales handling stayed bundled rather than being compared against each other."
+    },
+    {
+      "tag": "surface_acceptance_of_trust_concern",
+      "severity": "medium",
+      "why_it_matters": "Trust objections can stem from prior scars, general privacy standards, or anti-sales concerns; these imply different facilitation and design learnings.",
+      "observed_pattern": "The participant raised suspicion about motive and data use, but the facilitator only captured acceptable data scope and did not probe what specifically created distrust."
+    },
+    {
+      "tag": "hypothetical_evidence_overextension",
+      "severity": "high",
+      "why_it_matters": "Treating stated future preferences as if they validate likely behavior weakens synthesis rigor and can leak speculative conclusions into reusable guidance.",
+      "observed_pattern": "Later synthesis language leaned beyond what one real behavior example plus several hypothetical responses could support."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "trust_signal",
+      "priority": "high",
+      "participant_signal": "The participant immediately questioned whether the feature was truly free, how risk was calculated, and whether it was a path to product pushing.",
+      "missed_followup_question": "What would make this feel like a neutral service rather than a sales path, and what would make you stop trusting it immediately?",
+      "generic_learning": "When a participant raises motive suspicion unprompted, probe both trust-builders and trust-breakers before moving on."
+    },
+    {
+      "trigger_type": "threshold_signal",
+      "priority": "high",
+      "participant_signal": "The participant said they would act only if the explanation clearly distinguished short-term movement from real imbalance.",
+      "missed_followup_question": "What specific explanation or comparison would be clear enough for you to change what you do, and what would still feel too vague?",
+      "generic_learning": "When participants say an explanation must be 'clear', ask for the minimum acceptable form and the failure case."
+    },
+    {
+      "trigger_type": "contrast_signal",
+      "priority": "high",
+      "participant_signal": "The participant valued both consolidated data and risk interpretation, but the interview did not separate which mattered more.",
+      "missed_followup_question": "If you could have only one first, a complete consolidated view or a strong diagnostic explanation, which would change your behavior more and why?",
+      "generic_learning": "Use forced contrasts to isolate the true driver when multiple feature benefits are mentioned together."
+    },
+    {
+      "trigger_type": "partial_coverage_tradeoff",
+      "priority": "high",
+      "participant_signal": "The participant wanted a full view across accounts, but no follow-up tested whether incomplete coverage still had value.",
+      "missed_followup_question": "If the tool covered only part of your portfolio at first, in what situations would that still be useful, and when would it become not worth using?",
+      "generic_learning": "Probe minimum viable completeness whenever value appears to depend on full aggregation or full context."
+    },
+    {
+      "trigger_type": "embedding_signal",
+      "priority": "medium",
+      "participant_signal": "The participant wanted prompts only when there was a meaningful change or when already in a relevant workflow.",
+      "missed_followup_question": "Can you describe one reminder you would open and one you would ignore, and what makes the difference?",
+      "generic_learning": "When participants want low-interruption delivery, ask for open-versus-ignore examples to operationalize timing and message quality."
+    },
+    {
+      "trigger_type": "workaround_signal",
+      "priority": "medium",
+      "participant_signal": "The participant described using notes with intended role labels like long-hold versus cash-adjacent.",
+      "missed_followup_question": "How do those personal categories affect how you judge whether the portfolio is off, and would a generic view miss something important?",
+      "generic_learning": "When a participant uses a personal classification system, probe what decision logic that workaround preserves."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant seems mainly to want convenience from having everything in one place.",
+      "possible_underlying_driver": "The stronger driver may be preventive control under time pressure: reducing the chance of being surprised at the wrong moment, not just saving effort.",
+      "why_the_surface_frame_is_weak": "The recent behavior was triggered by a consequential moment, so consolidation may matter because it protects against missed problems, not merely because it is easier.",
+      "generic_learning": "Probe what the current workaround protects against before classifying the need as simple convenience."
+    },
+    {
+      "observed_surface_frame": "The participant is privacy-sensitive about data access.",
+      "possible_underlying_driver": "The deeper issue may be motive distrust and fear of commercial pressure rather than data minimization alone.",
+      "why_the_surface_frame_is_weak": "The participant repeatedly linked acceptable access to limits on selling and transparency of purpose, suggesting a broader trust pattern than privacy alone.",
+      "generic_learning": "When data-boundary objections appear, test whether the core issue is privacy, manipulation risk, prior bad experiences, or all three."
+    },
+    {
+      "observed_surface_frame": "The participant wants plain-language risk explanation.",
+      "possible_underlying_driver": "They may actually need a diagnosis that preserves independent judgment by separating signal from noise and mapping to low-pressure options.",
+      "why_the_surface_frame_is_weak": "The participant did not just ask for simplicity; they asked for distinctions, quantified context, and non-pushy next steps.",
+      "generic_learning": "Do not reduce 'clear explanation' to readability only; probe what decision function the explanation must serve."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical reactions and stated conditions were allowed to support design-direction language more strongly than the transcript warranted.",
+      "severity": "high",
+      "generic_learning": "Explicitly label evidence as observed behavior, stated future preference, or facilitator inference, and avoid promoting the latter two into validated direction."
+    },
+    {
+      "issue": "Single-participant resistance was framed too categorically in places where persona-scoped weakening would have been more accurate than broad invalidation.",
+      "severity": "medium",
+      "generic_learning": "Reserve strong labels like 'invalidated' for clearly contradicted assumptions within the evidence scope; otherwise use narrower language such as 'weakened' or 'untested beyond this case'."
+    },
+    {
+      "issue": "Distinct requirements were sometimes grouped together without preserving exact evidence traceability for each subclaim.",
+      "severity": "low",
+      "generic_learning": "When structuring requirements from multiple utterances, keep each requirement tied to its own precise evidence reference."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept-validation mode, introduce the concept without built-in benefit claims or price cues unless those specific variables are being tested.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant spontaneously questions motive, fairness, or hidden intent, ask at least one follow-up on what would increase trust and one on what would break trust before advancing.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "When a participant uses vague acceptance thresholds such as 'clear enough', 'meaningful change', or 'too pushy', convert at least one into a concrete threshold, example, or contrast probe.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "If the research goal asks which functions matter, prioritize at least one forced comparison that isolates feature components by expected decision change.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Tag every major synthesis claim as observed, stated, or inferred, and prevent inferred claims from being summarized as validated behavior.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not stop immediately after coverage completion if a participant has surfaced an unquantified trust boundary, action threshold, or feature tradeoff that could be resolved in one or two short probes.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "cf_01",
+      "rule": "When a participant raises an unsolicited trust concern, probe the causal source of the concern before narrowing into implementation details.",
+      "source_tags": [
+        "surface_acceptance_of_trust_concern",
+        "missed_threshold_probe"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_02",
+      "rule": "Use at least one threshold or contrast follow-up to separate stated usefulness from behavior-changing usefulness.",
+      "source_tags": [
+        "coverage_over_depth",
+        "missed_contrast_probe",
+        "missed_threshold_probe"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_03",
+      "rule": "Treat participant statements about future routine use as conditions to test, not as evidence of retention.",
+      "source_tags": [
+        "hypothetical_evidence_overextension"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_04",
+      "rule": "When multiple benefits are bundled in a concept reaction, isolate the primary driver with a forced tradeoff before concluding what matters most.",
+      "source_tags": [
+        "missed_contrast_probe",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The interview should have asked earlier about which specific analytics outputs from this banking portfolio-health concept matter most, such as drift, concentration, or other embedded analytics.",
+      "block_reason": "This is anchored to the product domain and named concept framing rather than a fully domain-agnostic interviewing rule.",
+      "rewrite_as_generic": "When the research goal asks which sub-features matter, require at least one participant-facing comparison that isolates the decision value of specific outputs rather than validating only the overall container concept."
+    },
+    {
+      "blocked_item": "The facilitator should have probed the value of partial visibility across external versus in-bank holdings for this investment portfolio workflow.",
+      "block_reason": "This is tied to a specific financial aggregation context.",
+      "rewrite_as_generic": "When a concept depends on combining information from multiple sources, probe the minimum acceptable completeness and the point at which partial coverage stops being useful."
+    }
+  ]
+}

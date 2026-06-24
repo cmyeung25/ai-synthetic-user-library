@@ -1,6 +1,8 @@
 # AI Validation Swarm
 
-AI Validation Swarm is a local, no-UI validation engine for testing founder assumptions against a library of structured synthetic users.
+AI Validation Swarm is building toward a synthetic-user human behavior simulation platform. The product north star is to replace parts of interview-led user research by simulating behaviorally plausible human decisions, objections, and adoption barriers at scale.
+
+Today, this repository still operates as a local, no-UI validation engine for testing founder assumptions against a library of structured synthetic users while that replacement-grade capability is being built and calibrated.
 
 This repository currently contains:
 
@@ -17,9 +19,20 @@ This repository currently contains:
 - SaaS-readiness contracts, tenant schemas, and market-distribution configs
 - basic tests
 
-## Scope
+## North Star
 
-This is not a market-proof engine. It is an AI pre-validation system designed to surface:
+The repository-wide working agreement lives in [AGENTS.md](/C:/Users/user/OneDrive/%E6%96%87%E4%BB%B6/AI%20Synthetic%20User%20Library/AGENTS.md).
+
+- Positioning: `human behavior simulation platform`
+- Long-term goal: replace parts of traditional user research workflows that depend on human interviews
+- Initial target stages: `discovery`, `concept evaluation`, `prototype validation`
+- Core belief: synthetic users are valuable only if they can generate behaviorally plausible responses that help predict real human behavior
+
+See [PRODUCT_BRIEF.md](/C:/Users/user/OneDrive/%E6%96%87%E4%BB%B6/AI%20Synthetic%20User%20Library/PRODUCT_BRIEF.md) for the locked positioning and platform vision.
+
+## Current Scope
+
+This repository is not yet a market-proof engine. In its current stage it is an AI validation and calibration system designed to surface:
 
 - concept blind spots
 - trust and pricing objections
@@ -201,7 +214,7 @@ ai-validation-swarm run-facilitated-interview `
   --backend codex
 ```
 
-The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, and `persona_driver_trace.md` so the team can inspect both the observed answers and the likely values, memories, or constraints sitting behind them. Synthetic interviews do not replace human research.
+The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, and `persona_driver_trace.md` so the team can inspect both the observed answers and the likely values, memories, or constraints sitting behind them. Current outputs should still be treated as synthetic evidence, not human market proof, while the platform is being calibrated toward replacement-grade reliability.
 
 ### Observer-controlled interview
 
@@ -236,4 +249,4 @@ If your system Python is unavailable, this workspace already has a bundled Pytho
 
 All reports must include this disclaimer:
 
-> This result is AI pre-validation only. It should not replace real user interviews, market tests, professional advice, or compliance review.
+> This result is synthetic research evidence only. It is not yet a substitute for real user interviews, market tests, professional advice, or compliance review.

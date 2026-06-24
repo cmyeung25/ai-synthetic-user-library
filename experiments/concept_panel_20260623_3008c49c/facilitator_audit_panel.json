@@ -1,0 +1,665 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "panel",
+  "run_id": "concept_panel_20260623_3008c49c",
+  "topic": "Aladdin Solution In Retail Banking",
+  "audited_persona_count": 2,
+  "persona_count": 4,
+  "ready_for_global_rule_count": 0,
+  "blocked_feedback_count": 5,
+  "top_failure_modes": [
+    {
+      "failure_mode": "Coverage was completed before the facilitator extracted the decision rules underneath the participant's stated preferences.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "example_assessment": "Coverage was strong and efficient, but depth was uneven. Several participant signals that could have clarified mechanism, thresholds, and alternatives were acknowledged and then left underexplored."
+    },
+    {
+      "failure_mode": "Coverage was prioritized over depth once required slots were filled, especially around trust calibration, workaround meaning, and what would actually change behavior.",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "example_assessment": "Good breadth and sequencing, but multiple answers contained clear follow-up hooks that were not pursued before closing."
+    }
+  ],
+  "recurring_feedback_tags": [
+    {
+      "tag": "benefit_led_concept_intro",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "observed_pattern": "The concept was introduced with built-in benefit framing rather than a neutral description of what the participant would see.",
+      "why_it_matters": "Pre-loading the concept with promised value can inflate positive reactions and reduce the usefulness of first-response evidence."
+    },
+    {
+      "tag": "binary_followup_framing",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "observed_pattern": "A later embedding question constrained the response to self-serve versus human follow-up instead of first asking what should happen next.",
+      "why_it_matters": "Either-or questions can hide participant-preferred alternatives and make embedding or workflow preferences appear narrower than they are."
+    },
+    {
+      "tag": "coverage_over_depth",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "observed_pattern": "After collecting acceptable top-line answers for each required area, the facilitator moved on instead of deepening a few high-signal moments.",
+      "why_it_matters": "Completing a coverage checklist can leave important causal distinctions unresolved, which weakens reuse of the interview evidence."
+    },
+    {
+      "tag": "early_driver_closure",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "observed_pattern": "The trace formed an explanatory account of the participant's behavior before probing competing reasons such as low complexity, low relevance, time scarcity, or tool sufficiency.",
+      "why_it_matters": "Assigning a motive too early can cause the facilitator to stop testing alternative explanations and miss disconfirming evidence."
+    },
+    {
+      "tag": "hypothetical_evidence_overweighting",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "observed_pattern": "Later synthesis and assumption scoring leaned on stated future reactions to infer product implications and usage patterns more strongly than the transcript supports.",
+      "why_it_matters": "Concept-response statements are useful, but they do not prove adoption, repeated use, or downstream behavior unless anchored to a behavioral analogue or threshold."
+    },
+    {
+      "tag": "missed_mechanism_probe",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "observed_pattern": "The participant asked for judgment transparency, but the interview stopped short of probing what exact explanation format or benchmark would cross the trust threshold.",
+      "why_it_matters": "When participants say they need to know how a system judges something, the facilitator needs the specific proof standard, not just the general desire for explanation."
+    },
+    {
+      "tag": "missed_trust_calibration_probe",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "observed_pattern": "The participant said they would first check whether the output was accurate and alarmist, but the interview moved to permission scope instead of probing what would make a warning feel credible versus overstated.",
+      "why_it_matters": "When a participant says they need to see whether something is 'accurate' or 'not exaggerated,' the facilitator needs concrete thresholds for credibility, not just a general trust boundary."
+    },
+    {
+      "tag": "missing_nonuse_contrast",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "observed_pattern": "The interview established when the concept might fit, but not when the participant would ignore, dismiss, or defer it.",
+      "why_it_matters": "Without a contrasting non-use or dismiss case, facilitators risk overlearning from the successful-use path."
+    },
+    {
+      "tag": "stacked_concept_intro",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "observed_pattern": "The concept was introduced with price, convenience, breadth, and explanation style combined in a single question, so the answer mixed convenience, trust, and permission concerns.",
+      "why_it_matters": "Bundling multiple favorable attributes into one concept question makes positive reaction hard to interpret and reduces diagnostic clarity."
+    },
+    {
+      "tag": "stop_rule_too_coverage_based",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "observed_pattern": "The interview ended after required fields were covered even though credibility criteria, value thresholds, and workaround function remained under-specified.",
+      "why_it_matters": "A stop rule based only on required-topic completion can end interviews before the highest-value unresolved ambiguity is clarified."
+    },
+    {
+      "tag": "workaround_without_function_probe",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "observed_pattern": "The facilitator captured that the participant uses notes, messaging history, and calendar reminders, but did not ask what gap each workaround covers or which missed-risk matters most.",
+      "why_it_matters": "Listing current tools is weaker than understanding what each tool protects against or compensates for."
+    }
+  ],
+  "common_missed_high_value_followups": [
+    {
+      "question": "Can you describe the smallest change that would still be worth opening, versus a change you would dismiss as noise?",
+      "trigger_type": "retention_claim",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "For repeat-use claims, probe the materiality threshold so retention drivers are not left as vague preference statements."
+    },
+    {
+      "question": "Can you think of an existing alert or reminder you kept using or stopped using for similar reasons?",
+      "trigger_type": "retention analogue cue",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "When repeat-use answers are hypothetical, ask for a real analogue to ground them in observed behavior."
+    },
+    {
+      "question": "If follow-up were offered, what format would feel helpful rather than pressuring?",
+      "trigger_type": "anti_sales_boundary",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When participants reject a channel or follow-up style, map the acceptable boundary conditions instead of stopping at the rejection."
+    },
+    {
+      "question": "If the alert looked real but you decided not to act, what would make you leave it alone, and what would you want the product to do next?",
+      "trigger_type": "non_action_path",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "Probe the no-action branch after an alert to separate curiosity, diagnosis, monitoring, and action readiness."
+    },
+    {
+      "question": "If the same warning appeared when nothing time-sensitive was happening, would you still look, or would it feel irrelevant?",
+      "trigger_type": "contrast cue",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "Use contrast probes to distinguish situational usefulness from general ongoing value."
+    },
+    {
+      "question": "Tell me about a recent time you did not check this area even though you could have. What made it not worth your attention then?",
+      "trigger_type": "contrast_case_missing",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "After a concrete use case, ask for a contrasting non-use case to bound when the concept will be ignored."
+    },
+    {
+      "question": "What does each tool help you avoid, and which kind of miss matters most when one of them fails?",
+      "trigger_type": "workaround fragmentation cue",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When a participant stitches together several tools, ask what specific job each one performs and what risk the workaround is protecting against."
+    },
+    {
+      "question": "What exact evidence or comparison would make the judgment feel credible enough to act on, and what would still feel too vague?",
+      "trigger_type": "trust_threshold_signal",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When participants request explanation, probe for the minimum proof standard and the rejection threshold, not just the fact that explanation matters."
+    },
+    {
+      "question": "What kind of change would be large enough to make you do something different rather than just verify and move on?",
+      "trigger_type": "consequence threshold cue",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "After a participant describes a verification step, probe the threshold at which the information changes action."
+    },
+    {
+      "question": "What would make a warning feel accurate to you, and what would make it feel exaggerated or not worth trusting?",
+      "trigger_type": "credibility cue",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When participants mention accuracy or alarmism, probe for concrete credibility criteria, not just general trust sentiment."
+    },
+    {
+      "question": "When you say you want a comparison, do you mean versus your own past pattern, a target plan, a peer group, or some general rule of thumb?",
+      "trigger_type": "benchmark_ambiguity",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When participants ask for comparison or norms, identify the reference class they trust before treating benchmarking as a validated need."
+    }
+  ],
+  "common_likely_misclassified_drivers": [
+    {
+      "possible_underlying_driver": "Low attention tolerance for repeated low-signal interruptions, with an implicit materiality threshold.",
+      "observed_surface_frame": "The participant wants monthly reminders only when something changed.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "generic_learning": "When participants ask for change-based updates, probe what counts as material change before treating the driver as simple preference for novelty."
+    },
+    {
+      "possible_underlying_driver": "Need for personally legible evidence and decision control, not just a generic desire for more detail.",
+      "observed_surface_frame": "The participant wants explanation before trusting the output.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "generic_learning": "When a participant asks how something is judged, consider whether the real driver is control, auditability, or error-avoidance rather than information density alone."
+    },
+    {
+      "possible_underlying_driver": "Protection against unwanted escalation or persuasion, not merely channel preference.",
+      "observed_surface_frame": "The participant prefers to understand things in-app before any human follow-up.",
+      "persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "generic_learning": "Do not code self-serve preference too early as a format choice; test whether it is actually a boundary against escalation or loss of control."
+    },
+    {
+      "possible_underlying_driver": "The stronger barrier may instead be unclear incremental value relative to the current workaround, with permission concerns acting as a secondary filter.",
+      "observed_surface_frame": "The participant's main adoption barrier appeared to be permissions and trust.",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "generic_learning": "When users mention trust and permissions, also test whether the real blocker is insufficient incremental usefulness."
+    },
+    {
+      "possible_underlying_driver": "This may reflect several different causes, such as low complexity, low perceived relevance, limited time, or sufficient current tools, rather than one settled motive.",
+      "observed_surface_frame": "The participant seemed to be managing mainly around near-term arrangements and verification.",
+      "persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "generic_learning": "Do not lock onto one motivational story from a single recent-event description unless you have tested plausible alternatives."
+    }
+  ],
+  "distilled_prompt_adjustments": [
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "After a participant names the ideal moment for a feature, test the opposite or lower-relevance moment to determine whether the value is situational or general.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "After one concrete use case is established, ask for a contrasting non-use or dismissal case before concluding workflow fit or repeat-use conditions.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not end solely because required coverage is complete if one of the following remains unresolved: credibility threshold, action threshold, workaround function, or contrast between use and non-use moments.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "decision_rule",
+      "text": "Do not mark a motivational explanation as supported unless the interview tested at least one plausible alternative explanation for the same observed behavior.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not stop at coverage complete if at least one unresolved high-signal clue remains about trust threshold, acceptable benchmark, materiality threshold, or anti-escalation boundary.",
+      "reuse_scope": "interview_mode_only",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant describes a multi-tool workaround, ask what each tool covers and what failure or risk the workaround is protecting against.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant questions how a judgment is made, ask at least one follow-up to define the minimum credible evidence, comparison, or threshold they would need.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant says they need to see whether something is accurate, exaggerated, useful, or worth trusting, ask for the concrete threshold or example before moving on.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept-validation interviews, introduce the concept with a neutral description of what appears or happens, without embedding value claims unless the value claim itself is under test.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Prefer deepening one or two high-signal participant cues over completing lower-value later coverage questions when the missing depth affects trust, thresholds, or action logic.",
+      "reuse_scope": "interview_mode_only",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Require synthesis labels to distinguish observed behavior, stated preference, and hypothetical reaction, and prevent stronger conclusion labels when evidence is mostly hypothetical.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Tag each conclusion as observed behavior, stated preference, or hypothetical reaction, and do not let later synthesis collapse those categories.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "Use an open question before any self-serve-versus-human or channel-choice framing when exploring what should happen after a complex result.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "When a participant says they would not act immediately, probe the no-action branch: what would make them monitor, postpone, ignore, or escalate.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "When introducing a concept, keep the first reaction question focused on one variable only; separate capability, explanation style, access requirements, and pricing/value assumptions into later questions.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "distilled_carry_forward_rules": [
+    {
+      "rule_id": "CF-002",
+      "rule": "After a participant describes a likely use moment, collect one contrasting non-use moment before inferring fit or retention.",
+      "source_tags": [
+        "missing_nonuse_contrast",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_04",
+      "rule": "Keep synthesis persona-bounded and method-bounded when it relies mainly on hypothetical concept responses.",
+      "source_tags": [
+        "hypothetical_evidence_overweighting"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-003",
+      "rule": "Probe the no-action path after alerts or recommendations to distinguish monitoring behavior from action intent.",
+      "source_tags": [
+        "missed_mechanism_probe",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-005",
+      "rule": "Separate behavioral evidence from hypothetical concept reactions in both questioning and synthesis confidence labels.",
+      "source_tags": [
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_02",
+      "rule": "Treat fragmented workarounds as a signal to map function, failure, and protection, not just enumerate tools.",
+      "source_tags": [
+        "workaround_without_function_probe"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_03",
+      "rule": "Use at least one threshold or consequence probe after a participant describes a verification step, so the interview distinguishes checking from action change.",
+      "source_tags": [
+        "missed_trust_calibration_probe",
+        "stop_rule_too_coverage_based"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-004",
+      "rule": "Use open-ended next-step questions before offering channel or follow-up options.",
+      "source_tags": [
+        "binary_followup_framing"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-001",
+      "rule": "When a participant asks how a system reached its conclusion, follow up until the acceptable proof standard is concrete.",
+      "source_tags": [
+        "missed_mechanism_probe",
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_01",
+      "rule": "When participants express conditional trust, probe for the exact evidence that would make the output feel credible versus dismissible before shifting topics.",
+      "source_tags": [
+        "missed_trust_calibration_probe",
+        "hypothetical_evidence_overweighting"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "ready_for_global_candidate_rules": [],
+  "blocked_feedback_patterns": [
+    {
+      "blocked_item": "The facilitator should ask earlier whether overview-page embedding is better than other retail-banking journey placements.",
+      "block_reason": "This is a product-design conclusion about a specific journey, not a generic interviewing rule.",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ]
+    },
+    {
+      "blocked_item": "The facilitator should probe what kind of follow-up would avoid feeling like sales outreach in this banking setting.",
+      "block_reason": "The anti-sales concern is expressed in a specific service context, though the interviewing pattern is reusable.",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ]
+    },
+    {
+      "blocked_item": "The facilitator should specifically probe which benchmark for diversification this participant would trust in this financial context.",
+      "block_reason": "The underlying interviewing lesson is reusable, but the original phrasing is too tied to a domain-specific analytic construct.",
+      "support_persona_count": 1,
+      "personas": [
+        "Wong Mei Lin"
+      ]
+    },
+    {
+      "blocked_item": "The interview did not adequately test whether deeper analytics capabilities would change decisions compared with simpler reminder-style outputs in this specific product area.",
+      "block_reason": "This observation is tied to the project's feature set and product framing rather than a universally reusable facilitation rule.",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ]
+    },
+    {
+      "blocked_item": "The synthesis turned one participant's workflow into design guidance about where this service should live in the banking journey.",
+      "block_reason": "The product-placement implication is too tied to the specific concept and domain context.",
+      "support_persona_count": 1,
+      "personas": [
+        "Maggie Lau"
+      ]
+    }
+  ],
+  "synthetic_only_disclaimer": "This facilitator audit digest is synthetic offline learning evidence only. It should be reviewed before any rule is promoted into the facilitator core."
+}

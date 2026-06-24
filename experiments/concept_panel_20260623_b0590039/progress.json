@@ -1,0 +1,731 @@
+{
+  "run_id": "concept_panel_20260623_b0590039",
+  "interviews": [
+    {
+      "persona_id": "su_2005",
+      "persona_name": "Iris Cheung",
+      "interview_id": "observed_20260623_d5cb892a",
+      "status": "completed",
+      "error": "",
+      "folder": "experiments\\concept_panel_20260623_b0590039\\interviews\\observed_20260623_d5cb892a",
+      "report": {
+        "problem_evidence": {
+          "strength": "medium",
+          "supporting_quotes": [
+            {
+              "quote": "「唔係想研究啲咩走勢，主要係…想確認下啲錢擺成點，自己心入面有個數。」",
+              "evidence_ref": "exchange_1.persona"
+            },
+            {
+              "quote": "「我通常唔會睇得好深…如果見到個數有啲唔對路，我先再撳入去睇邊一部分郁得比較多。」",
+              "evidence_ref": "exchange_2.persona"
+            }
+          ],
+          "recent_behavior_evidence": [
+            "最近一次檢視發生喺上個月尾、晚飯後等小朋友做功課時，屬順手對數而唔係主動研究投資。",
+            "現時要分開銀行 app 同 MPF app 睇，先看現金、信用卡扣數、自動轉賬，再看 MPF 總數同供款是否正常。",
+            "平時只做淺層檢查；見到『唔對路』先再追查。"
+          ]
+        },
+        "current_workaround": {
+          "existing_workaround": [
+            "月尾或有生活開支壓力感時，手動開銀行 app 睇現金、扣數、自動轉賬。",
+            "再開 MPF app 睇總數變化同供款入帳。",
+            "靠自己『心入面砌返埋』銀行內外資產概況。",
+            "見到異常時，先再撳入去逐部分核對。"
+          ],
+          "pain_level": "medium",
+          "switching_difficulty": "medium",
+          "what_must_not_change": [
+            "唔想每次重新連接外部帳戶。",
+            "唔想撳好多步先見到重點。",
+            "唔想被高頻提醒打擾。"
+          ]
+        },
+        "trust_boundary": {
+          "accepted_data_access": [
+            "戶口類型",
+            "持有咩產品",
+            "每樣大概金額範圍",
+            "過去一段時間嘅大概變動"
+          ],
+          "rejected_data_access": [
+            "交易明細",
+            "家人相關資料",
+            "可以直接轉賬嘅權限"
+          ],
+          "required_trust_explanation": [
+            "要『好快睇得明佢點樣計』。",
+            "要清楚分開邊啲資料只係用嚟分析、邊啲唔會郁到佢啲錢。",
+            "如果提醒出現，內容要講清楚係集中度問題定波動變大，否則會先停一停。"
+          ]
+        },
+        "first_value_requirement": {
+          "first_use_success": [
+            "一入去已經見到重點。",
+            "清楚指出邊度變動大、風險有冇高咗。",
+            "可以對返其他戶口嘅大概分布。",
+            "唔使重新連接，亦唔使行好多步。"
+          ],
+          "time_to_value": "要喺一入去嗰下就見到重點。",
+          "abandonment_triggers": [
+            "一開始就要交太多外部帳戶資料。",
+            "提醒內容空泛。",
+            "成日再要求更多權限。",
+            "提醒太密，變成雜訊。",
+            "每次都要重新連接或操作步驟太多。"
+          ]
+        },
+        "pricing_signal": {
+          "free_trial_need": "不適用：研究設定已指明為免費服務。",
+          "monthly_comfort_range": "不適用／未測。",
+          "payment_justification": [
+            "無可用證據；訪談無測試付費，亦無實際類比消費行為。"
+          ],
+          "evidence_strength": "unknown"
+        },
+        "retention_risk": {
+          "continuation_reasons": [
+            "真係幫到佢慳時間。",
+            "月尾對數時可一眼見到重點變化、風險、分布。",
+            "只喺月尾／出糧後或明顯異常時出現。",
+            "連接保持穩定，唔使重複授權。"
+          ],
+          "drop_off_reasons": [
+            "提醒太空泛。",
+            "推送太密。",
+            "經常要求更多權限。",
+            "每次都要重新連接。",
+            "操作流程太長。"
+          ],
+          "workflow_effect": "adds_layer"
+        },
+        "assumption_validation": [
+          {
+            "assumption": "佢而家用分散式、淺層查看方式，主要係想快速確認資金安全感同現金節奏，而唔係主動做深入投資判斷。",
+            "status": "supported",
+            "evidence_refs": [
+              "exchange_1.persona",
+              "exchange_2.persona"
+            ],
+            "rationale": "有直接近期行為支持：佢明講『唔係想研究啲咩走勢』，而且通常『唔會睇得好深』，先看現金、扣數、供款，異常先再追查。"
+          },
+          {
+            "assumption": "概念要被持續使用，關鍵可能唔係分析深度，而係輸出是否夠快、夠清楚，同埋唔需要交出太多資料。",
+            "status": "partially_supported",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_4.persona",
+              "exchange_7.persona"
+            ],
+            "rationale": "方向上有明確偏好證據，但主要來自概念後反應，不是已發生的採用或留存行為；因此只能部分支持。"
+          }
+        ],
+        "key_insights": [
+          "Because 佢最近一次檢視其實係月尾順手對數、而且「唔係想研究啲咩走勢」, this persona would likely只喺對數時段或者見到明顯異常先打開呢類功能, unless 提示真係對應到大變動而且唔騷擾。 This means the product should 嵌入月尾／出糧後檢查時刻，同時用高門檻異常觸發，避免高頻推送。",
+          "Because 佢而家要分開幾個 app 睇，仲要「自己心入面砌返埋」, this persona would likely試用一個整合檢視, unless 首屏仍然睇唔出重點或者每次都要重新連接。 This means the product should 首屏直接顯示變動最大項、風險變化同大概分布，並盡量保留連接狀態去取代手動拼湊。",
+          "Because 佢對資料權限界線好敏感，收到提醒後亦會先對返自己幾個 app 啲數, this persona would likely延遲授權同延遲行動, unless 計法、資料用途同只讀邊界講得非常清楚。 This means the product should 先用最少只讀資料做分析，逐層申請額外資料，並把『分析權限』同『可轉賬權限』明確分開。",
+          "Because 佢講明「多數唔會即刻做交易」同「唔會一下子郁太多」, this persona would likely把提醒當成核對與慢慢調整嘅起點, unless 提醒證據不足或似推銷。 This means the product should 先支援理解與核對，再支援小幅調整，而唔係把提醒直接設計成交易 CTA。"
+        ],
+        "next_experiment": "喺現有銀行 app 內，對少量有銀行資產加外部 MPF／投資帳戶嘅客戶，喺月尾或出糧後推一次只讀式『Portfolio Health Check』原型：首屏只顯示重點變動、風險變化、分布摘要，外部資料只申請最少授權。量度 1) 開啟後 60 秒內能否講得出「邊度變咗」；2) 最少授權接受率；3) 之後是否仍需返回原本 app 大量核對；4) 是否因提醒太空泛或權限要求而即時退出。",
+        "evidence_gaps": [
+          "無觀察到真實使用『Portfolio Health Check』後嘅行為，只得概念反應。",
+          "無證據顯示佢會否長期信任銀行整合外部資產數據。",
+          "無測試不同提醒文案、頻率、閾值對開啟與反感嘅影響。",
+          "無測試如果分析覆蓋銀行內資產但未覆蓋全部外部資產，佢會否覺得結果足夠可信。",
+          "無價格或付費證據；任何付費推論都不成立。"
+        ],
+        "synthetic_only_disclaimer": "以上只係基於單一 synthetic persona 訪談逐句整理嘅概念驗證摘要，屬模擬前期研究材料，不可當作真人市場證據或普遍需求證明。"
+      },
+      "quality": {
+        "overall_verdict": "warn",
+        "scores": {
+          "neutrality": 4,
+          "probing_quality": 4,
+          "conversation_naturalness": 4,
+          "evidence_discipline": 3,
+          "causal_rigor": 4,
+          "hypothesis_validation_rigor": 4,
+          "synthesis_fidelity": 3,
+          "overall": 4
+        },
+        "checks": {
+          "leading_question_risk": "pass",
+          "repetition_risk": "pass",
+          "premature_root_cause_risk": "pass",
+          "mechanical_five_whys_risk": "pass",
+          "evidence_reference_quality": "warn",
+          "synthesis_overreach_risk": "warn",
+          "conversation_naturalness": "pass",
+          "persona_over_structuring_risk": "pass",
+          "interviewer_jargon_risk": "pass",
+          "domain_fit_alignment": "warn",
+          "hypothesis_confirmation_bias_risk": "pass",
+          "hypothesis_judge_alignment": "pass"
+        },
+        "strengths": [
+          "The interview established a concrete recent event and current workaround before introducing the concept (`exchange_1`-`exchange_2`).",
+          "Most spoken questions have one conversational focus and avoid facilitator jargon; the Cantonese phrasing is natural and participant-facing throughout.",
+          "Concept coverage was adapted efficiently rather than read as a long checklist: reaction, trust boundary, likely next step, timing, and repeat-use condition were each probed once.",
+          "The stop decision was reasonable because all required concept-validation coverage areas were participant-facing and marked covered by `exchange_7`."
+        ],
+        "findings": [
+          {
+            "category": "Evidence discipline",
+            "severity": "medium",
+            "observation": "Several synthesis outputs turn hypothetical concept reactions into stronger product implications than the transcript supports. `service_embedding` and `retention` are explored only through imagined future use, but `key_insights` and `next_experiment` sometimes read as if behavior is established rather than conjectural.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "exchange_7.persona",
+              "SYNTHESIS.key_insights",
+              "SYNTHESIS.next_experiment"
+            ],
+            "recommendation": "Label these claims explicitly as hypothetical concept feedback from one synthetic persona, and separate observed current behavior from predicted future adoption conditions."
+          },
+          {
+            "category": "Synthesis fidelity",
+            "severity": "medium",
+            "observation": "`retention_risk.workflow_effect` is stated as `adds_layer`, but the participant never said the feature would add a layer rather than replace manual stitching. The closer evidence is that they want quicker synthesis and fewer steps, and would still cross-check alerts before acting.",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_5.persona",
+              "exchange_7.persona",
+              "SYNTHESIS.retention_risk.workflow_effect"
+            ],
+            "recommendation": "Replace that field with a narrower statement tied to the transcript, such as 'may initially coexist with manual cross-checking' or remove it if the schema implies stronger certainty."
+          },
+          {
+            "category": "Domain fit",
+            "severity": "medium",
+            "observation": "The research goal asks which Aladdin-based analytics functions would materially help in real decisions and how they should embed into retail journeys without generic product selling. The interview validated a generic `Portfolio Health Check`, but did not isolate which specific analytics outputs matter beyond broad risk/distribution/change summaries, nor what concrete journey handoff would feel useful versus salesy.",
+            "evidence_refs": [
+              "exchange_3.facilitator",
+              "exchange_5.persona",
+              "exchange_6.persona",
+              "RESEARCH GOAL"
+            ],
+            "recommendation": "In the next rerun, probe specific candidate outputs one at a time and ask how each would change an actual review or adjustment decision, plus what presentation would feel advisory versus promotional."
+          },
+          {
+            "category": "Concept validation rigor",
+            "severity": "low",
+            "observation": "Curiosity, trial, and repeat-use were mostly kept distinct, but payment was handled only in synthesis rather than participant-facing probing. That is acceptable because the concept was framed as free, yet the report should be careful not to imply any willingness-to-pay learning occurred.",
+            "evidence_refs": [
+              "exchange_3.facilitator",
+              "SYNTHESIS.pricing_signal"
+            ],
+            "recommendation": "Keep `pricing_signal` clearly marked as untested and avoid folding it into broader value conclusions."
+          },
+          {
+            "category": "Reference quality",
+            "severity": "low",
+            "observation": "Most references are valid, but some synthesis bullets compress multiple claims into paraphrases without preserving which part is observed versus inferred. For example, the first `key_insights` bullet blends observed timing with an inferred usage trigger threshold.",
+            "evidence_refs": [
+              "exchange_1.persona",
+              "exchange_6.persona",
+              "SYNTHESIS.key_insights"
+            ],
+            "recommendation": "Split each insight into `stated evidence` and `inference` so downstream readers can audit what the persona actually said."
+          }
+        ],
+        "required_improvements": [
+          "Tighten synthesis so hypothetical concept reactions are not presented as behaviorally established product truths.",
+          "Probe specific analytics outputs and anti-sales embedding conditions more directly; the current interview validates a broad concept, not which Aladdin functions materially help.",
+          "Constrain report fields like `workflow_effect`, design implications, and experiment framing to what one synthetic persona actually evidenced."
+        ],
+        "improvement_hints": {
+          "next_interview_focus": [
+            "Ask which one specific summary would be most useful on a real month-end check: concentration, unusual drawdown, asset allocation drift, or cash-flow impact.",
+            "Ask for one concrete example of what would feel helpful versus what would feel like the bank trying to sell a product.",
+            "Ask what evidence or explanation would make an alert trustworthy enough to save them a manual cross-check.",
+            "Test whether incomplete coverage of outside assets still has value, or makes the summary unusable."
+          ],
+          "coverage_gap_actions": [
+            "Add a participant-facing probe on which exact analytics output changes a real decision, not just whether a generic health check sounds useful.",
+            "Add a participant-facing probe on journey embedding: in-app dashboard, statement moment, push alert, RM follow-up, or self-serve drill-down, and why.",
+            "Add a participant-facing disconfirming probe: when would this feature still not help even if it were clear and low-permission?",
+            "If product-selling avoidance is central, ask directly what wording or CTA would make the experience feel promotional rather than advisory."
+          ],
+          "prompt_adjustments": [
+            "In concept-validation mode, require the synthesis to tag each conclusion as `observed current behavior`, `stated preference`, or `hypothetical future reaction`.",
+            "Add an observer rule that blocks broad product-shaping implications unless they cite a direct participant statement about that specific function or journey moment.",
+            "Encourage one short disconfirming probe after positive concept reaction to test non-use conditions beyond permissions and noise.",
+            "For domain-specific goals, require at least one question that compares candidate functional outputs rather than validating only a generic umbrella concept."
+          ],
+          "turn_budget_guidance": "The current turn budget was sufficient for baseline concept coverage, but it is too tight for function-level prioritization and anti-sales embedding detail. Widen the soft budget by 2-3 exchanges in reruns so one or two specific analytics outputs can be tested individually and one disconfirming probe can be added."
+        },
+        "human_review_needed": false,
+        "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview and its artifacts. Findings assess method and evidence discipline within the simulation only, not real-user truth or market validity."
+      },
+      "persona_driver_trace": {
+        "synthetic_only_disclaimer": "This analysis is based on a synthetic persona artifact and interview transcript for AI pre-validation only. It does not replace human research evidence.",
+        "surface_read": {
+          "what_the_persona_explicitly_said": [
+            "She checks her portfolio in ordinary household moments, specifically after dinner while supervising her son's homework, mainly to confirm where money stands rather than study markets (`exchange_1.persona`).",
+            "Her review flow is sequential and shallow-first: cash balance, upcoming card deductions and transfers, then MPF total and contribution status, with deeper inspection only if something looks off (`exchange_2.persona`).",
+            "A free portfolio health check feels somewhat useful because her holdings are split across apps, but only if she can quickly understand how it calculates and does not require too much external account data up front (`exchange_3.persona`).",
+            "She would initially allow only limited external-data access such as account type, products held, rough value range, and broad changes over time; she would not initially allow transaction details, family-related data, or transfer-capable permissions (`exchange_4.persona`).",
+            "If a risk alert appears, she would not trade immediately; she would first inspect the explanation, compare against her other apps, and only adjust gradually if it still seems valid (`exchange_5.persona`).",
+            "She wants the feature to appear at monthly review moments or after salary, and only lightly alert on meaningful changes; frequent prompts would become noise (`exchange_6.persona`).",
+            "She would reuse the feature if it saves time by surfacing key changes and risk shifts immediately, preserves rough cross-account distribution visibility, and avoids repeated reconnection or many steps; vague alerts or repeated permission expansion would stop usage (`exchange_7.persona`)."
+          ],
+          "what_they_seemed_to_optimize_for": "Low-friction oversight with preserved control: fast situational clarity, reversible interpretation before action, and tight limits on data access and notification volume.",
+          "what_stayed_implicit": [
+            "How much of her hesitation is about privacy versus simple setup burden.",
+            "Whether her current investing confidence is low, moderate, or merely low-attention.",
+            "How much she trusts the bank brand specifically versus trusting only transparent workflows.",
+            "Whether she would want human follow-up after an alert or prefers self-serve only.",
+            "What level of explanation would feel 'quickly understandable' in practice."
+          ]
+        },
+        "likely_drivers": [
+          {
+            "driver": "Financial steadiness matters more to her than optimization upside, so she checks investments as part of broader cash-flow reassurance rather than as a separate investing activity.",
+            "driver_type": "core_value",
+            "why_it_matters_here": "This explains why her portfolio review starts from bills, cash, and upcoming deductions before risk analysis. The health check is attractive only insofar as it helps her maintain an overall sense of stability.",
+            "evidence_refs": [
+              "exchange_1.persona",
+              "exchange_2.persona"
+            ],
+            "profile_source_refs": [
+              "values.core_values",
+              "problem_context.jobs_to_be_done",
+              "human_difference_axes.relationship_to_money"
+            ],
+            "confidence": "high",
+            "observed_vs_inferred": "mixed"
+          },
+          {
+            "driver": "She has a strong review-before-action habit and wants automation to inform, not decide.",
+            "driver_type": "decision_style",
+            "why_it_matters_here": "Her response to alerts is to inspect, cross-check, and adjust slowly. A tool that jumps from analysis to recommendation or transaction would likely trigger resistance.",
+            "evidence_refs": [
+              "exchange_5.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "technology_attitude.automation_openness",
+              "human_difference_axes.control_preference",
+              "personality_belief.decision_style"
+            ],
+            "confidence": "high",
+            "observed_vs_inferred": "mixed"
+          },
+          {
+            "driver": "Trust is earned through transparent boundaries, especially around permissions and what the system can or cannot touch.",
+            "driver_type": "trust_pattern",
+            "why_it_matters_here": "Her detailed distinction between analysis-only access and transfer-capable access suggests she is not reacting to 'data sharing' in the abstract; she is evaluating concrete exposure and controllability.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_4.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "values.fears",
+              "technology_attitude.privacy_concern",
+              "adoption_style.trust_requirements",
+              "human_difference_axes.trust_style"
+            ],
+            "confidence": "high",
+            "observed_vs_inferred": "mixed"
+          },
+          {
+            "driver": "Her daily life is fragmented but disciplined, so usefulness is judged by whether the next step is obvious inside a short attention window.",
+            "driver_type": "daily_constraint",
+            "why_it_matters_here": "She describes checking during homework supervision and wants immediate key points, light prompts, and no repeated reconnection. That fits a phone-based, interruption-heavy routine rather than a dedicated portfolio-management session.",
+            "evidence_refs": [
+              "exchange_1.persona",
+              "exchange_6.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "current_context",
+              "discovery_path_&_daily_friction.attention_shape",
+              "human_difference_axes.fragmentation_realit y",
+              "life_story.current_daily_routine"
+            ],
+            "confidence": "high",
+            "observed_vs_inferred": "mixed"
+          },
+          {
+            "driver": "She is willing to tolerate complexity only when it remains legible and under her control.",
+            "driver_type": "other",
+            "why_it_matters_here": "She already manually reconstructs a cross-app picture in her head, which is cumbersome, yet still preferable to opaque automation. The feature becomes valuable only if it reduces effort without hiding the logic.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "contradiction_map",
+              "interests_that_affect_buying.how_it_shapes_purchase_behaviour",
+              "human_difference_axes.complexity_tolerance"
+            ],
+            "confidence": "medium",
+            "observed_vs_inferred": "mixed"
+          },
+          {
+            "driver": "She filters for signal quality quickly and drops tools that create background admin or alert fatigue.",
+            "driver_type": "decision_style",
+            "why_it_matters_here": "Her threshold for repeated use is not novelty; it is whether the feature consistently highlights meaningful change and stays quiet otherwise.",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "values.fears",
+              "deep_research_notes.dropoff_model",
+              "product_reaction_rules.negative_signals"
+            ],
+            "confidence": "high",
+            "observed_vs_inferred": "mixed"
+          }
+        ],
+        "unspoken_constraints": [
+          {
+            "constraint": "She likely has limited patience for any onboarding that feels like a second financial admin task.",
+            "why_likely": "She repeatedly anchors value to time saved, few steps, and not having to reconnect each time.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "values.fears",
+              "problem_context.active_pain_points",
+              "deep_research_notes.adoption_model"
+            ],
+            "confidence": "high"
+          },
+          {
+            "constraint": "She likely wants the feature to coexist with, not replace, her existing app-checking routine.",
+            "why_likely": "She describes verifying against other apps even after receiving a risk alert, suggesting continued parallel checking rather than full delegation.",
+            "evidence_refs": [
+              "exchange_2.persona",
+              "exchange_5.persona"
+            ],
+            "profile_source_refs": [
+              "adoption_style",
+              "human_difference_axes.control_preference"
+            ],
+            "confidence": "medium"
+          },
+          {
+            "constraint": "She may be especially sensitive to anything that could expose household-linked information, not just her own holdings.",
+            "why_likely": "She explicitly excludes family-related data and the persona profile flags accidental family-information exposure as a fear.",
+            "evidence_refs": [
+              "exchange_4.persona"
+            ],
+            "profile_source_refs": [
+              "values.fears",
+              "technology_attitude.privacy_concern"
+            ],
+            "confidence": "high"
+          },
+          {
+            "constraint": "She probably needs explanation in plain operational terms, not market jargon.",
+            "why_likely": "She asks to quickly understand how the calculation works and focuses on practical questions like concentration and unusual movement rather than investment theory.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_5.persona"
+            ],
+            "profile_source_refs": [
+              "human_difference_axes.guidance_preference",
+              "human_difference_axes.need_for_explanation"
+            ],
+            "confidence": "medium"
+          }
+        ],
+        "value_tensions": [
+          {
+            "tension": "Convenience versus control",
+            "side_a": "She wants one place that saves time across fragmented accounts.",
+            "side_b": "She resists broad permissions, opaque calculation, and direct action without review.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_4.persona",
+              "exchange_5.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "contradiction_map",
+              "human_difference_axes.control_preference",
+              "technology_attitude.automation_openness"
+            ],
+            "confidence": "high"
+          },
+          {
+            "tension": "Monitoring for reassurance versus avoiding noise",
+            "side_a": "She wants timely prompts around monthly review and material change.",
+            "side_b": "She does not want frequent alerts that become clutter or pressure.",
+            "evidence_refs": [
+              "exchange_6.persona",
+              "exchange_7.persona"
+            ],
+            "profile_source_refs": [
+              "discovery_path_&_daily_friction.attention_shape",
+              "deep_research_notes.dropoff_model"
+            ],
+            "confidence": "high"
+          },
+          {
+            "tension": "Accepting useful institutional tools versus demanding higher privacy justification from new data flows",
+            "side_a": "A bank-integrated view could reduce manual reconstruction across apps.",
+            "side_b": "External linking and sensitive permissions face a higher trust bar, especially if they touch family or transfer capability.",
+            "evidence_refs": [
+              "exchange_3.persona",
+              "exchange_4.persona"
+            ],
+            "profile_source_refs": [
+              "contradiction_map",
+              "adoption_style.trust_requirements",
+              "technology_attitude.privacy_concern"
+            ],
+            "confidence": "high"
+          }
+        ],
+        "missed_follow_up_questions": [
+          {
+            "question": "When you say you need to 'quickly understand how it calculates,' what exact explanation would be enough for you to trust the result on first use?",
+            "why_this_would_clarify": "This would separate explanation needs from general privacy hesitation and make her trust threshold more concrete.",
+            "priority": "high"
+          },
+          {
+            "question": "If the health check showed a concentration risk, what comparison or proof would make you believe it was not a false alarm?",
+            "why_this_would_clarify": "Her transcript shows a verification habit, but not the actual evidence standard she would use.",
+            "priority": "high"
+          },
+          {
+            "question": "Which is the bigger reason you might stop using it after one try: too many permission requests, too many steps, or alerts that feel generic?",
+            "why_this_would_clarify": "This would identify the main drop-off driver instead of treating several frictions as equal.",
+            "priority": "medium"
+          },
+          {
+            "question": "Would you want this to stay fully self-serve, or would there be any point where you would want a banker to explain the result?",
+            "why_this_would_clarify": "This would clarify service-embedding boundaries without assuming she wants sales follow-up.",
+            "priority": "medium"
+          }
+        ]
+      },
+      "facilitator_audit_feedback": {
+        "artifact_version": "1.0",
+        "feedback_scope": "interview",
+        "applies_to": {
+          "interview_mode": [
+            "concept_validation"
+          ],
+          "domains": [
+            "generic"
+          ],
+          "safe_for_global_reuse": false
+        },
+        "summary": {
+          "overall_assessment": "Coverage was completed efficiently, but the facilitator accepted several high-signal statements at face value and moved on before probing thresholds, causal priorities, and trust evidence standards. The main improvement area is converting broad concept-validation coverage into deeper decision-grade learning.",
+          "primary_failure_mode": "Coverage over depth after initial concept fit was established.",
+          "depth_vs_coverage_assessment": "The interview covered all required areas in seven exchanges, but depth was thin in the most decision-relevant areas: what explanation earns trust, what evidence prevents false-alarm dismissal, which friction is most disqualifying, and what concrete output would change behavior."
+        },
+        "facilitator_feedback_tags": [
+          {
+            "tag": "missed_threshold_probe",
+            "severity": "high",
+            "why_it_matters": "Participants often state a condition such as 'make it clear' or 'don't ask for too much' without specifying the minimum acceptable threshold. Without threshold probing, findings stay too vague to guide future facilitation.",
+            "observed_pattern": "The facilitator captured concerns about clarity, permissions, and noise, but did not ask what exact explanation, permission scope, or alert frequency would cross the participant's acceptability threshold."
+          },
+          {
+            "tag": "coverage_over_depth",
+            "severity": "high",
+            "why_it_matters": "Completing a checklist can hide the fact that key mechanisms remain unexamined. Decision-quality interviewing requires at least one deeper causal probe where the participant gives a dense signal.",
+            "observed_pattern": "After each broad answer, the facilitator advanced to the next coverage area instead of deepening the most information-rich points."
+          },
+          {
+            "tag": "missed_contrast_probe",
+            "severity": "medium",
+            "why_it_matters": "Contrast questions force prioritization and reveal the strongest adoption or rejection driver.",
+            "observed_pattern": "The participant named multiple possible drop-off causes, but the facilitator did not ask which would matter most if only one problem remained."
+          },
+          {
+            "tag": "surface_acceptance_of_trust_claim",
+            "severity": "high",
+            "why_it_matters": "Trust statements are often composites of privacy concern, setup burden, control preference, and explainability. Treating them as a single driver weakens reusable learning.",
+            "observed_pattern": "The facilitator heard resistance to sharing data and requests for understandable calculation, but did not separate whether the main issue was data sensitivity, effort, or lack of transparency."
+          },
+          {
+            "tag": "missed_consequence_probe",
+            "severity": "medium",
+            "why_it_matters": "When a participant says they would verify before acting, the next step is to learn what evidence would satisfy them. That clarifies whether the concept can actually reduce work.",
+            "observed_pattern": "The facilitator learned that the participant would cross-check alerts elsewhere, but did not ask what proof would allow them to stop cross-checking or act with confidence."
+          }
+        ],
+        "high_value_missed_followups": [
+          {
+            "trigger_type": "trust_boundary_statement",
+            "priority": "high",
+            "participant_signal": "The participant said they needed to quickly understand how the system calculates and would hesitate if too much external data were requested up front.",
+            "missed_followup_question": "What exact explanation would be enough for you to trust the result on first use?",
+            "generic_learning": "When a participant asks for clarity or transparency, probe for the minimum explanation standard rather than recording 'needs clarity' as a complete insight."
+          },
+          {
+            "trigger_type": "verification_habit",
+            "priority": "high",
+            "participant_signal": "The participant said they would inspect the alert, compare it against other sources, and only adjust gradually if it still seemed valid.",
+            "missed_followup_question": "What would you need to see to believe the alert is valid enough that you would not need a manual cross-check?",
+            "generic_learning": "If a participant says they would verify a recommendation elsewhere, ask for the evidence standard that would reduce or eliminate that verification step."
+          },
+          {
+            "trigger_type": "multi-friction_dropoff",
+            "priority": "high",
+            "participant_signal": "The participant named several abandonment risks: vague alerts, repeated permission expansion, repeated reconnection, and too many steps.",
+            "missed_followup_question": "If only one of those problems remained, which one by itself would be most likely to make you stop using it?",
+            "generic_learning": "When multiple frictions are listed, force prioritization so the strongest driver is not lost in an undifferentiated list."
+          },
+          {
+            "trigger_type": "timing_preference",
+            "priority": "medium",
+            "participant_signal": "The participant wanted the feature at routine check-in moments and only on meaningful changes, not too frequently.",
+            "missed_followup_question": "What would make a notification feel meaningfully important versus just more noise?",
+            "generic_learning": "When participants mention alert fatigue, probe for the threshold between signal and noise rather than treating 'too frequent' as sufficiently specific."
+          },
+          {
+            "trigger_type": "positive_concept_reaction",
+            "priority": "medium",
+            "participant_signal": "The participant said the concept seemed somewhat useful because it could reduce manual stitching across sources.",
+            "missed_followup_question": "Even if it were clear and low-permission, in what situation would this still not be useful to you?",
+            "generic_learning": "After an initial positive reaction, add one disconfirming probe to learn the concept's non-use boundary."
+          }
+        ],
+        "likely_misclassified_driver_patterns": [
+          {
+            "observed_surface_frame": "The participant appears privacy-sensitive about external data access.",
+            "possible_underlying_driver": "The stronger driver may be a mix of control preservation, setup burden, and desire for analysis-only boundaries, not privacy alone.",
+            "why_the_surface_frame_is_weak": "The transcript includes concern about what the system can do, how much effort setup requires, and whether permissions are clearly separated. Collapsing these into 'privacy concern' loses causal precision.",
+            "generic_learning": "When permission resistance appears, separate sensitivity to data exposure, operational control, onboarding effort, and action authority before labeling the driver."
+          },
+          {
+            "observed_surface_frame": "The participant wants quick, simple summaries.",
+            "possible_underlying_driver": "The deeper need may be confidence-efficient review: fast comprehension that still feels auditable before action.",
+            "why_the_surface_frame_is_weak": "The participant did not just ask for brevity; they also described cross-checking and gradual adjustment. Simplicity alone does not explain the behavior.",
+            "generic_learning": "Do not equate a request for speed or simplicity with low engagement; probe whether the participant wants less depth, or just faster access to defensible depth."
+          },
+          {
+            "observed_surface_frame": "The participant would use the feature if it saves time.",
+            "possible_underlying_driver": "Time saving may be secondary to reducing uncertainty without surrendering control.",
+            "why_the_surface_frame_is_weak": "The participant repeatedly returned to explanation quality, false-alarm checking, and permission boundaries. Pure convenience is an incomplete framing.",
+            "generic_learning": "When 'save time' appears, ask what protected value the time-saving preserves: confidence, control, reduced stress, fewer mistakes, or something else."
+          }
+        ],
+        "evidence_handling_issues": [
+          {
+            "issue": "Hypothetical concept reactions were sometimes treated too close to established future behavior in downstream synthesis.",
+            "severity": "high",
+            "generic_learning": "Keep observed current behavior separate from stated preferences and predicted future reactions. Tagging each claim by evidence type prevents overstatement."
+          },
+          {
+            "issue": "A workflow implication was inferred more strongly than the transcript supported.",
+            "severity": "medium",
+            "generic_learning": "Do not convert one participant's imagined future use into a firm process model unless the participant explicitly describes that operating pattern."
+          },
+          {
+            "issue": "Several synthesized implications bundled direct quotes and facilitator inference without clearly separating them.",
+            "severity": "medium",
+            "generic_learning": "Where an insight mixes observation and interpretation, label the observed statement first and the inference second so future reviewers can audit the leap."
+          }
+        ],
+        "prompt_adjustments": [
+          {
+            "adjustment_type": "followup_trigger_rule",
+            "text": "When a participant says a concept is useful only if it is 'clear,' 'fast,' 'not too much,' or 'not too frequent,' ask one threshold question that defines the minimum acceptable standard before moving on.",
+            "reuse_scope": "global",
+            "safe_for_global_reuse": true
+          },
+          {
+            "adjustment_type": "followup_trigger_rule",
+            "text": "When a participant says they would verify, compare, or double-check before acting, ask what evidence would be sufficient to reduce that extra verification step.",
+            "reuse_scope": "global",
+            "safe_for_global_reuse": true
+          },
+          {
+            "adjustment_type": "contrast_rule",
+            "text": "If a participant names three or more possible frictions or drop-off causes, ask them to choose the single biggest one and explain why.",
+            "reuse_scope": "global",
+            "safe_for_global_reuse": true
+          },
+          {
+            "adjustment_type": "evidence_rule",
+            "text": "In concept-validation synthesis, label each conclusion as one of: observed current behavior, stated preference, or hypothetical future reaction.",
+            "reuse_scope": "global",
+            "safe_for_global_reuse": true
+          },
+          {
+            "adjustment_type": "question_priority_rule",
+            "text": "After an initial positive concept reaction, prioritize one disconfirming non-use probe before covering additional checklist topics.",
+            "reuse_scope": "global",
+            "safe_for_global_reuse": true
+          },
+          {
+            "adjustment_type": "decision_rule",
+            "text": "Do not stop at full topical coverage if the participant has introduced an unprobed trust threshold, evidence standard, or prioritized friction that could materially change interpretation.",
+            "reuse_scope": "global",
+            "safe_for_global_reuse": true
+          }
+        ],
+        "carry_forward_rules": [
+          {
+            "rule_id": "CF-001",
+            "rule": "When participants describe a trust boundary, ask what specific explanation or boundary marker would make first-use trust sufficient.",
+            "source_tags": [
+              "missed_threshold_probe",
+              "surface_acceptance_of_trust_claim"
+            ],
+            "confidence": "high",
+            "safe_for_global_reuse": true
+          },
+          {
+            "rule_id": "CF-002",
+            "rule": "When participants say they would cross-check before acting, probe for the minimum proof needed to avoid that cross-check.",
+            "source_tags": [
+              "missed_consequence_probe",
+              "coverage_over_depth"
+            ],
+            "confidence": "high",
+            "safe_for_global_reuse": true
+          },
+          {
+            "rule_id": "CF-003",
+            "rule": "Force prioritization when multiple adoption blockers are named; do not record a flat list without ranking.",
+            "source_tags": [
+              "missed_contrast_probe"
+            ],
+            "confidence": "high",
+            "safe_for_global_reuse": true
+          },
+          {
+            "rule_id": "CF-004",
+            "rule": "Separate convenience claims from the underlying value being protected by convenience, such as control, confidence, or reduced cognitive load.",
+            "source_tags": [
+              "likely_misclassified_driver_patterns"
+            ],
+            "confidence": "medium",
+            "safe_for_global_reuse": true
+          }
+        ],
+        "blocked_feedback": [
+          {
+            "blocked_item": "The interview did not test which specific analytics outputs within the proposed portfolio tool would materially change real decisions.",
+            "block_reason": "This is anchored to the specific product scope and named capability set rather than a purely generic interviewing pattern.",
+            "rewrite_as_generic": "When a study goal includes multiple candidate outputs within one concept, compare them directly instead of validating only the umbrella concept."
+          },
+          {
+            "blocked_item": "The interview did not sufficiently probe what presentation would feel advisory versus sales-led within the retail banking journey.",
+            "block_reason": "This is tied to the project's service-embedding context and anti-selling requirement.",
+            "rewrite_as_generic": "When a concept may blur support and promotion, ask what wording, handoff, or call to action would make the experience feel helpful versus agenda-driven."
+          },
+          {
+            "blocked_item": "The synthesis included specific design and experiment implications for this portfolio feature that went beyond one participant's evidence.",
+            "block_reason": "The design implications are product-shaped and not safe as facilitator-core priors.",
+            "rewrite_as_generic": "Constrain downstream recommendations to the exact level of certainty supported by the interview, especially when the source is a single hypothetical concept reaction."
+          }
+        ]
+      }
+    }
+  ]
+}

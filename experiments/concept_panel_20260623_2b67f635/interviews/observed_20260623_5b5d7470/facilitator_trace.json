@@ -1,0 +1,340 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "概念模式下先建立當前真實行為，未有逐字稿時先用中性開場問最近一次實際檢視投資組合的事件，避免過早帶入功能或假設。",
+    "message_to_persona": "可唔可以講下你最近一次睇自己投資組合係幾時，當時你實際做咗啲乜？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次實際檢視投資組合的觸發點是甚麼？",
+      "對方目前用甚麼方法或工具管理投資組合？",
+      "現有做法有甚麼盲點、摩擦或不清楚之處？",
+      "應在建立當前行為和 workaround 後再中性介紹 Portfolio Health Check。",
+      "之後需覆蓋 trust boundary、action follow-through、repeat-use condition、service embedding。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_method",
+    "probing_strategy": "workaround_probe",
+    "decision_rationale": "已取得最近一次具體事件，下一步先釐清現有做法與 workaround。對方提到會截圖留待之後再看，這是可追問的真實管理方法，較早引入概念更符合流程。",
+    "message_to_persona": "你嗰晚截圖留返之後，通常會點樣再跟進嗰啲持倉？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次檢視投資組合是在上星期日晚飯後，用手機銀行和證券 app 查看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當時主要查看基金和藍籌有沒有再跌，並對一對戶口現金。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當次沒有交易，只截圖留待之後再看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "截圖之後的跟進方式是甚麼？",
+      "平時管理投資組合還會用哪些工具或記錄方法？",
+      "現有做法有甚麼分散、費力或不清楚之處？",
+      "之後何時適合中性介紹 Portfolio Health Check？",
+      "對方對資料整合和分享的接受邊界在哪裡？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "first_reaction",
+    "decision_rationale": "最近行為同現有做法已初步建立，現在可中性帶入概念，先取第一反應，再按其回應追問信任、行動同嵌入時機。",
+    "message_to_persona": "如果你間銀行 app 有個免費嘅 Portfolio Health Check，會幫你整合持倉同用簡單方式解釋風險，你第一下覺得呢樣嘢對你有冇用？",
+    "evidence_updates": [
+      {
+        "claim": "參與者通常隔一兩日會再看一次持倉。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果持倉持續下跌，參與者會先記低大概價位，再判斷是否需要調整。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者多數不會即時買賣，而會等到出糧前後或處理完家庭固定開支後才決定。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者的投資決定會受現金流和家庭固定開支節奏影響。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這個概念第一反應中的有用或無用點是甚麼？",
+      "哪些分析內容會真正影響其決定，而哪些會太技術性？",
+      "對資料整合與外部資產連結的接受邊界在哪裡？",
+      "看完風險提示後實際會做甚麼？",
+      "甚麼情況下它會變成日常習慣，而不是只看一次？",
+      "這類功能應該出現在 app 內哪個時刻或是否需要 RM 配合？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "trust_probe",
+    "decision_rationale": "參與者已表達初步價值感，但同時提出對『包裝得勁、其實要自己再研究』的戒心。下一步直接追問甚麼呈現方式才會令它被視為真實有用，可同時收集信任與解釋邊界。",
+    "message_to_persona": "點樣嘅呈現方式先會令你覺得佢真係幫到手，唔係得個講字？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對 Portfolio Health Check 的第一反應是『有少少用』。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者認為若工具能更快看清持倉集中在哪類、以及波動大概去到哪裡，自己會看。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對過度包裝但實際上仍要自己重新研究的分析工具有戒心。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對參與者而言，這類工具的採用門檻與是否『簡單實用』有關。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "甚麼內容或格式會令輸出顯得簡單實用？",
+      "哪些資料來源或整合範圍會令他放心或抗拒？",
+      "如果看到集中度或波動提示，他下一步實際會做甚麼？",
+      "這功能要在甚麼時刻出現才會被持續使用？",
+      "這類分析應放在自助 app 還是配合 RM 解說較合適？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "action_followthrough",
+    "probing_strategy": "next_action_probe",
+    "decision_rationale": "已取得對呈現方式與信任邊界的具體偏好，下一步應測試看到分析後的實際行動，而不是再停留在功能描述。用對方剛提到的『乜都唔做會點／分散少少會差幾多』作錨點，可直接收集決策後續。",
+    "message_to_persona": "如果你見到佢話你而家太集中，仲順手比到你睇唔郁同分散少少個分別，你下一步通常會點做？",
+    "evidence_updates": [
+      {
+        "claim": "參與者認為有用的呈現方式是打開後直接指出哪部分太集中、風險大概去到哪裡，並用普通字講清楚後果。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望看到『如果現在甚麼都不做』與『如果分散少少』之間的差異，而不想自己逐項計算。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對參與者而言，這類工具的價值不只在資訊呈現，也在於減少自行計算和轉譯分析的工作。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "看到集中風險與情境差異後，他實際會採取甚麼行動？",
+      "甚麼條件下這功能會變成他日常會再看的工具？",
+      "這類功能最適合出現在 app 內哪個時刻，還是要配合 RM？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "repeat_use",
+    "probing_strategy": "retention_probe",
+    "decision_rationale": "已了解看到分析後的實際跟進方式，下一步用其『留低建議、過幾日再睇』的習慣去測試甚麼條件下此功能會變成持續使用，而不是一次性查看；之後再補服務嵌入時機。",
+    "message_to_persona": "要去到咩情況，你先會將呢個功能變成自己平時真係會定期睇嘅一部分？",
+    "evidence_updates": [
+      {
+        "claim": "參與者看到集中風險提示後，多數不會即時照做。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會先判斷提示中的差異是否大到值得調整，並考慮是否與手上現金安排衝突。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果分析講得清楚，參與者可能會先記下建議，過幾日再看一次，再決定是否慢慢調整一部分持倉。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "甚麼條件會令這功能成為其定期使用的一部分？",
+      "這類功能最適合放在甚麼客戶時刻或是否需要 RM 配合解說？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "service_embedding",
+    "probing_strategy": "moment_mapping",
+    "decision_rationale": "只剩 service embedding 未覆蓋，參與者已主動提到『月尾或者出糧前後』這個使用時機，適合順勢追問這功能應該在甚麼客戶時刻出現，避免再重複價值或留存問題。",
+    "message_to_persona": "如果要你最順手咁用到佢，你會想佢喺 app 入面咩時候出現？",
+    "evidence_updates": [
+      {
+        "claim": "參與者認為功能要能持續幫他節省時間，而且不需要重新輸入很多資料，才值得持續使用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會以連續幾次的實際體驗來判斷功能是否講得清楚、提醒是否過於打擾，以及是否真的幫助更快決定要不要留意某些持倉。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果功能持續有用，參與者會在月尾或出糧前後順手查看。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這類功能最適合在 app 內哪個具體時刻、流程或提醒位出現？",
+      "是否需要 RM 或其他服務配合，還是純自助已足夠？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "close",
+    "probing_strategy": "stop_rule",
+    "decision_rationale": "所需覆蓋已完成，且已有足夠證據涵蓋當前行為、workaround、概念反應、信任邊界、行動後續、重複使用條件及嵌入時機；再追問大概率只會重複。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "參與者希望功能在投資組合頁面一打開就顯示簡單摘要，不想再按幾層。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者也接受在月尾或出糧前後收到輕量提醒，但不希望提醒過於頻繁。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "required_coverage_complete",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef442-a428-7690-8065-6b8754a18459",
+    "decision_status": "not_asked_at_close"
+  }
+]

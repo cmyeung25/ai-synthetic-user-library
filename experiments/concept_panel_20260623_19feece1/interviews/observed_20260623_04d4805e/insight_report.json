@@ -1,0 +1,202 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "其實幾土法。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "最好一開就見到而家太集中喺邊類、波動大概去到邊，同埋點解佢咁判斷",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "如果仲要我先填好多資料或者開一堆權限，我就未必會再撳落去。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "我多數唔會即刻調。",
+        "evidence_ref": "exchange_5.persona"
+      },
+      {
+        "quote": "最好係我本身已經喺睇持倉、月供或者準備買入之前出現",
+        "evidence_ref": "exchange_6.persona"
+      },
+      {
+        "quote": "要佢真係次次都幫到手先得。",
+        "evidence_ref": "exchange_7.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月尾晚飯後，參與者因市況反覆而主動檢查投資組合。",
+      "實際流程是先在銀行 app 看現金和月供扣款，再去證券 app 看持倉、盈虧和通知，發現異常再回銀行 app 對日期和入帳。",
+      "面對集中度提示時，參與者傾向先理解原因和程度，再在下次供款或再買時慢慢調整，而不是即時交易。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 檢查現金、扣款、入帳。",
+      "用證券 app 檢查持倉金額、盈虧和通知。",
+      "兩個 app 之間手動來回比對，靠自己判斷是市值波動還是資金未過帳。",
+      "若發現偏離明顯，先記低，等下次供款或再買時再慢慢拉平均。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "要快，手機上順手睇完就算。",
+      "要講得清楚，唔可以只得紅黃綠燈。",
+      "不要一開始就要求大量設定、長期追蹤或自動同步。",
+      "不要平時無啦啦彈出，要貼近原本睇持倉或交易前流程。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "只用同一間銀行內已有持倉做組合檢查。",
+      "在既有銀行 app 內直接呈現分析結果。"
+    ],
+    "rejected_data_access": [
+      "一開始要求外部銀行戶口資料。",
+      "一開始要求 MPF、其他券商資料。",
+      "要求聯絡人或定位權限。",
+      "未證明價值前要求長期追蹤或自動同步。"
+    ],
+    "required_trust_explanation": [
+      "先證明實際用途，再談額外資料連結。",
+      "要解釋點解判斷集中或波動，而不是只給訊號燈。",
+      "提醒不能成日嚇人，否則會削弱信任。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一打開就見到目前太集中喺邊類。",
+      "一打開就見到波動大概去到邊。",
+      "清楚解釋點解系統會咁判斷。",
+      "最好放在睇持倉、月供或買入前等本來已有決策意圖的時刻。"
+    ],
+    "time_to_value": "即開即見，用第一次就要顯示與下一步決定直接相關的風險和分佈。",
+    "abandonment_triggers": [
+      "只有簡單紅黃綠燈，冇實際解釋。",
+      "未見價值就要填好多資料。",
+      "未見價值就要開一堆權限。",
+      "要求每次重新設定。",
+      "平時無預警彈出。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費已符合其使用前提；受訪者更在意先見到價值而非價格。",
+    "monthly_comfort_range": "不適用；本次概念設定為免費，訪談中亦未測試付費意願。",
+    "payment_justification": [
+      "受訪者的採納條件集中在清晰度、實用性、低設定成本和不過度索取資料，不是價格。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次月供前或加減持倉時都能快速幫到手。",
+      "能指出自己容易忽略的集中位。",
+      "解釋清楚，且不誇張嚇人。",
+      "不用每次重新設定，手機上可順手完成。"
+    ],
+    "drop_off_reasons": [
+      "只提供表面訊號，冇原因解釋。",
+      "提醒太頻密或太驚嚇。",
+      "要求外部資料或過多權限。",
+      "需要重複設定或操作成本高。",
+      "出現時機不對，打斷原本流程。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "Many retail banking customers still manage portfolios through fragmented, product-level, or event-driven views rather than a true whole-portfolio process.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "參與者明確以銀行 app 與證券 app 之間手動比對方式處理，觸發亦來自市況反覆，屬事件驅動和分散視圖。"
+    },
+    {
+      "assumption": "The most important retail blind spots vary by person and should emerge from behaviour and life context, not be assumed in advance.",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "此個案最在意的是集中度、波動解釋、提示不要過度驚嚇，以及操作 friction；未見其特別強調其他盲點如目標連結或 FX。單一個案只能部分支持異質性。"
+    },
+    {
+      "assumption": "Retail customers can identify specific Aladdin-type capabilities that would help if translated into practical retail decisions and simple explanations.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "參與者具體指出希望看到集中在哪類、波動程度及判斷原因，並說明這些資訊如何影響其供款或再買決定。"
+    },
+    {
+      "assumption": "The highest-value retail use cases are tied to real customer moments and workflows, not to exposing institutional detail for its own sake.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "參與者清楚把價值綁在睇持倉、月供、買入前等時刻，而非平常推送或抽象分析。"
+    },
+    {
+      "assumption": "Some capabilities belong directly in self-serve retail channels, while others are better as RM-supporting or assisted-service features.",
+      "status": "unknown",
+      "evidence_refs": [],
+      "rationale": "訪談未有直接測試 RM 介入或哪些功能應保留在 assisted service。"
+    },
+    {
+      "assumption": "Trust, data-sharing comfort, explanation style, and action threshold materially affect whether a free feature becomes part of normal behaviour.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "參與者多次把採納與重用條件連到資料邊界、清楚解釋、不過度驚嚇，以及自己通常不即時交易的節奏。"
+    },
+    {
+      "assumption": "Deep insight requires understanding the participant's behavioural root causes, not just their surface feature preferences.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "其真正工作不是『想看更多圖表』，而是想分辨異常是否來自資金流或市值波動，並避免在短期波動時亂動作。"
+    },
+    {
+      "assumption": "Customers can describe clear boundaries on what an Aladdin-powered retail experience should and should not do.",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "參與者能明確說出應做的事（清楚、快、指出忽略的集中位、在對的時刻出現）及不應做的事（過多權限、亂彈、重設、嚇人）。"
+    }
+  ],
+  "key_insights": [
+    "現況不是完整 portfolio 管理流程，而是跨銀行 app 與證券 app 的手動核對流程，主要目的是確認『數唔對路』究竟是市場波動還是資金未過帳。",
+    "對這位參與者有價值的不是抽象 risk score，而是可直接用於下一步決定的三件事：集中在哪類、波動去到邊、點解會有這個判斷。",
+    "功能應嵌在既有決策時刻，例如睇持倉、月供前、買入前；若在無意圖時亂推送，容易被視為打擾。",
+    "最重要的 trust boundary 是資料節制：先用本行已有資料證明價值，再談外部資產整合；一開始索取外部帳戶、MPF、其他券商、定位等會直接造成流失。",
+    "這位參與者的行動模式偏向漸進調整，不會因提示即時交易，所以輸出應支持『理解和記低，留待下次供款或買入時處理』的節奏。"
+  ],
+  "next_experiment": "用同類 persona 測兩個低保真版本：1) 在持倉頁/買入前頁面內嵌一個『集中度+原因解釋』卡片；2) 同樣內容用獨立 dashboard 入口呈現。比較哪一種更容易被理解、被信任，及是否更貼近其原有月供/加減持倉流程。",
+  "evidence_gaps": [
+    "未測試哪些分析適合留在 RM 或 assisted-service，而不是自助介面。",
+    "未測試外部資產整合在『已先證明價值之後』是否有接受空間。",
+    "未測試不同 explanation depth 的界線，例如一句解釋、圖表、情景分析哪種最剛好。",
+    "未測試提醒頻率和語氣的具體容忍度。",
+    "只是一位 synthetic persona，未能比較不同 V5 persona 之間對 blind spot、trust、service moment 的差異。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 的概念驗證前置訊號，不可當作真人市場證據或因果結論；所有洞察與假設仍需用真人訪談進一步驗證。"
+}

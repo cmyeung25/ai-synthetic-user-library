@@ -1,0 +1,189 @@
+{
+  "artifact_version": "1.0",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "generic"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Strong depth-first facilitation with good coverage discipline, but several prompts introduced assumptions about value and reuse, and the interview did not fully translate broad concept reactions into concrete decision-linked evidence.",
+    "primary_failure_mode": "Mildly leading concept framing combined with insufficient probing from generic concept reaction into specific output-to-decision mapping.",
+    "depth_vs_coverage_assessment": "Coverage and depth goals were met efficiently, but some depth was spent on generic feature fit rather than on which exact outputs would change a real decision or non-decision."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "solution_loaded_concept_intro",
+      "severity": "medium",
+      "why_it_matters": "Benefit-framed concept intros can inflate positive reactions and blur whether interest is in the concept itself or in the value implied by the question.",
+      "observed_pattern": "The concept was introduced with built-in value language about helping the participant assess risk/concentration, rather than neutrally presenting a possible feature and letting usefulness emerge from the participant."
+    },
+    {
+      "tag": "presumed_reuse",
+      "severity": "medium",
+      "why_it_matters": "Questions that assume repeat use can overstate retention intent and suppress signals that the feature may not deserve a second use.",
+      "observed_pattern": "The reuse probe framed regular use as the default before first establishing whether the participant would reopen the feature at all."
+    },
+    {
+      "tag": "generic_reaction_without_output_mapping",
+      "severity": "medium",
+      "why_it_matters": "Concept-validation evidence is stronger when stated usefulness is tied to a specific decision, threshold, or deferred action rather than left at a broad reaction level.",
+      "observed_pattern": "The interview captured trust, timing, and explanation needs, but did not sufficiently probe which specific output or explanation would change an actual decision or non-decision."
+    },
+    {
+      "tag": "stated_vs_observed_blurring_risk",
+      "severity": "low",
+      "why_it_matters": "When hypothetical reactions are treated too similarly to observed behavior, downstream learning can overclaim confidence.",
+      "observed_pattern": "The interview itself was mostly disciplined, but several later implications rested on predicted future use, follow-through, or retention rather than observed concept use."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "participant requested transparency into how a judgment was reached",
+      "priority": "high",
+      "participant_signal": "The participant asked to see what data was used and roughly how the judgment boundary was set.",
+      "missed_followup_question": "What is the minimum explanation you would need before the result feels credible enough to consider, rather than ignore?",
+      "generic_learning": "When a participant asks for transparency, probe for the minimum sufficient explanation standard instead of stopping at a general desire for explainability."
+    },
+    {
+      "trigger_type": "participant described waiting before acting",
+      "priority": "high",
+      "participant_signal": "The participant said they would usually wait and re-check before taking action after an alert.",
+      "missed_followup_question": "During that waiting period, what are you trying to confirm or rule out before deciding whether to act?",
+      "generic_learning": "When participants delay action, probe what uncertainty they are resolving; this reveals whether the concept supports decision-making or merely adds another notification."
+    },
+    {
+      "trigger_type": "participant defined value as change-based information",
+      "priority": "high",
+      "participant_signal": "The participant said repeat use depends on seeing what changed, why it changed, and by how much.",
+      "missed_followup_question": "Which comparison would make that change feel most decision-useful: versus your prior state, your intended target, or a typical reference point?",
+      "generic_learning": "When users ask for 'new information,' pin down the comparison baseline that makes an update actionable."
+    },
+    {
+      "trigger_type": "participant expressed sales-motive concern",
+      "priority": "medium",
+      "participant_signal": "The participant repeatedly distinguished helpful diagnosis from being routed toward a recommendation.",
+      "missed_followup_question": "What presentation boundary would preserve trust: diagnosis only, a separate optional next-step area, or some other clear separation?",
+      "generic_learning": "When trust depends on perceived motive, probe the exact boundary between diagnosis and recommendation that keeps the experience credible."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "Interest in a free feature",
+      "possible_underlying_driver": "Conditional evaluation based on neutrality, control, and explanation sufficiency rather than simple price or access appeal",
+      "why_the_surface_frame_is_weak": "The participant's positive reaction was heavily qualified by distrust of agenda, desire for self-directed review, and need for visible reasoning.",
+      "generic_learning": "Do not treat initial interest as a value signal until you isolate the conditions that make the participant willing to rely on the output."
+    },
+    {
+      "observed_surface_frame": "Desire for alerts at certain moments",
+      "possible_underlying_driver": "A broader need to preserve attention and decision control under limited cognitive bandwidth",
+      "why_the_surface_frame_is_weak": "The timing preference may reflect noise management and interruption tolerance more than a simple channel or placement preference.",
+      "generic_learning": "When participants specify timing or placement, probe what the timing protects them from, such as overload, anxiety, distraction, or impulsive action."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical responses about future action, repeat use, and retention created a risk of being treated as stronger evidence than observed behavior warrants.",
+      "severity": "medium",
+      "generic_learning": "Keep a hard distinction between observed behavior, stated intention, and conditional prediction, especially when synthesizing design or retention implications."
+    },
+    {
+      "issue": "The concept intro embedded benefit language, which weakens the evidentiary value of the immediate concept reaction.",
+      "severity": "medium",
+      "generic_learning": "When testing reactions to a concept, remove assumed benefits from the prompt so the participant must supply the perceived value themselves."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept-validation mode, introduce concepts without built-in benefit claims; describe the feature neutrally before asking for reaction.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Before asking when or how a feature should recur, first ask whether the participant would use it again at all and under what conditions.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant asks for explanation or transparency, require one follow-up that identifies the minimum explanation needed for credibility.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant says they would wait, monitor, or think before acting, require a follow-up on what uncertainty they are trying to resolve during that delay.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Do not treat predicted reuse, action, or trust as behavioral proof; label it explicitly as stated intention or conditional future behavior.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant says information must be 'new' or 'useful,' ask which comparison baseline makes it meaningfully different from last time.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "CF-001",
+      "rule": "Use neutral concept introductions that avoid implying usefulness, benefit, or value before the participant reacts.",
+      "source_tags": [
+        "solution_loaded_concept_intro"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-002",
+      "rule": "Sequence repeat-use probing as: would reuse at all, what would trigger reuse, then how it should appear.",
+      "source_tags": [
+        "presumed_reuse"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-003",
+      "rule": "When participants request transparency, probe for the minimum sufficient explanation rather than accepting explainability as a generic need.",
+      "source_tags": [
+        "generic_reaction_without_output_mapping"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-004",
+      "rule": "When participants defer action, probe the uncertainty being resolved during the delay to uncover the real decision job.",
+      "source_tags": [
+        "generic_reaction_without_output_mapping",
+        "stated_vs_observed_blurring_risk"
+      ],
+      "confidence": "medium",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The interview did not sufficiently test which specific analytics functions would materially help with this particular portfolio-management concept.",
+      "block_reason": "This is tied to the named concept, domain, and research goal rather than being universally reusable as-is.",
+      "rewrite_as_generic": "For concept-validation studies involving analytical outputs, require at least one probe that maps a specific output or explanation to a recent real decision, deferred decision, or non-decision."
+    },
+    {
+      "blocked_item": "Later synthesis implied concrete product-design conclusions from one synthetic participant's hypothetical reactions.",
+      "block_reason": "The affected implications were expressed in project-shaped product terms.",
+      "rewrite_as_generic": "In synthesis, frame design implications from single-participant hypothetical evidence as tentative hypotheses, not validated requirements."
+    }
+  ]
+}

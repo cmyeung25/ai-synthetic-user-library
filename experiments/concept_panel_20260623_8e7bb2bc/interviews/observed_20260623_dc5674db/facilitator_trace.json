@@ -1,0 +1,118 @@
+[
+  {
+    "interview_phase": "recent_behaviour_open",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "冇現有逐字稿，先用一條中性嘅近期事件問題建立真實投資組合管理行為，再按回答追問現時做法同 workaround；概念未應提早引入。技能檔案喺本地未找到，所以按用戶提供嘅 facilitator 規則執行。",
+    "message_to_persona": "可唔可以講返你最近一次睇自己投資組合嗰陣，當時實際做咗啲乜？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次投資組合檢視係由咩觸發？",
+      "參與者當時用咗邊啲工具、畫面或者人手方法？",
+      "之後可以點樣自然轉去現時 workaround 同盲點？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef34e-4f45-7b33-ae48-0e02e2d3adfd",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "domain_fit_check",
+    "probing_strategy": "clarification",
+    "decision_rationale": "參與者剛才描述的是一般銀行戶口查看，不是明確的投資組合管理行為。先用一條開放式澄清問題確認是否有相關投資行為可談，避免過早引入概念或把家用戶口管理當成投資證據。",
+    "message_to_persona": "咁你最近一次真係有睇過或者處理過股票、基金或者其他投資，係咩情況？",
+    "evidence_updates": [
+      {
+        "claim": "參與者表示自己沒有定期檢視投資組合的習慣。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者平時只會在手機 app 快速查看一般理財戶口餘額及有無異常扣數，之後就回去處理家用或工作。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "目前逐字稿中的已回憶事件更接近日常銀行戶口檢查，未足以證明有近期投資組合管理或投資監察行為。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者最近是否有任何具體投資相關事件可供回憶？",
+      "如果有，當時用了什麼工具或人手方法處理？",
+      "如果沒有，是否屬於弱 domain fit，需要及早結束或重設範圍？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef34e-4f45-7b33-ae48-0e02e2d3adfd",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "current_method",
+    "decision_rationale": "已經有一個具體投資事件，但只知她當時看了基金價格和大概贖回結果，未知道她平時怎樣判斷是否要動投資。下一步先補 current workaround，之後才適合引入概念或追 trust／action。",
+    "message_to_persona": "平時你真係要判斷應唔應該郁呢啲投資，你通常靠咩方法？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次投資相關行為，是在銀行 app 順手查看一隻以前買下、金額很小的基金。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "那次查看的觸發因素是家用和學校開支變密，想確認如果需要動用資金，基金大概會蝕還是賺。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當時沒有進行新買賣，只查看價格及大概贖回情況，因為不想在趕時間時亂作決定。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "目前看來，參與者的投資管理較偏向事件觸發和資金需要導向，而不是定期全組合檢視。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "她平時依靠什麼工具、畫面、規則或他人意見去判斷是否調動投資？",
+      "她避免在趕時間下決定的背後，是怕做錯、看不懂，還是覺得金額太小不值得花時間？",
+      "她目前的查看方式有沒有明顯盲點、資訊缺口或信任界線？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef34e-4f45-7b33-ae48-0e02e2d3adfd",
+    "decision_status": "asked"
+  }
+]

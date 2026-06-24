@@ -1,0 +1,128 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview correctly established a recent real event and the current workaround before introducing the concept (`exchange_1`-`exchange_2`).",
+    "Most asked questions kept a single conversational focus and stayed natural in Cantonese; there is no obvious Five Whys pattern or premature causal pressure.",
+    "Coverage was adapted rather than read out as a long questionnaire, and the stop decision at `not_asked_at_close` was reasonable once the required concept-validation areas were covered.",
+    "The synthesis preserves important weak evidence around pricing and retention by labeling those areas as untested or hypothetical rather than behavioral proof."
+  ],
+  "findings": [
+    {
+      "category": "Concept introduction neutrality",
+      "severity": "medium",
+      "observation": "The concept was introduced with benefit-loaded framing: `免費` plus `幫你一眼睇晒整體風險同分散情況` already implies speed and usefulness before the participant reacts. That weakens neutrality in `concept_validation` mode.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "FACILITATOR TRACE[2]"
+      ],
+      "recommendation": "Introduce the concept more neutrally, e.g. describe what appears in the app and ask for first reaction without pre-claiming convenience or comprehensiveness."
+    },
+    {
+      "category": "Forced-choice probe",
+      "severity": "medium",
+      "observation": "The final question narrows the response into researcher-supplied options: `喺 app 自己睇明，定係想之後有人再幫你跟進`. The participant still answered well, but the structure can suppress other embedding preferences such as saving, deferring, sharing, or ignoring.",
+      "evidence_refs": [
+        "exchange_8.facilitator",
+        "FACILITATOR TRACE[7]"
+      ],
+      "recommendation": "Use an open probe first, such as asking what should happen next when the app detects a complex change, then follow with options only if needed."
+    },
+    {
+      "category": "Synthesis overreach",
+      "severity": "medium",
+      "observation": "`workflow_effect: adds_layer` is not supported by the transcript. The participant explicitly preferred no extra interrupting layer and wanted the feature embedded in the overview or as a small reminder, which points in the opposite direction.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Remove or restate this as an open design consideration unless there is transcript evidence that the feature adds a new step."
+    },
+    {
+      "category": "Evidence strength inflation",
+      "severity": "medium",
+      "observation": "The first assumption is marked `supported`, but key parts of that claim rest on hypothetical concept reactions rather than observed repeated behavior. `第一步唔會即刻買賣` and wanting to self-serve first are useful signals, but they do not fully prove how the feature would function in real decisions over time.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_8.persona",
+        "SYNTHESIS.assumption_validation[0]"
+      ],
+      "recommendation": "Downgrade to `partially_supported` or explicitly separate observed current behavior from hypothetical projected concept use."
+    },
+    {
+      "category": "Domain-fit inference",
+      "severity": "medium",
+      "observation": "The report makes product-shaping claims about embedding inside the overview journey, but the interview only covered one month-end checking context. That is a useful fit signal for this persona, not yet a stronger statement about retail-banking journey design more broadly.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.key_insights[0]",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Keep journey implications explicitly bounded to this persona and test at least one contrasting context before treating the overview-page embedding as the default journey answer."
+    },
+    {
+      "category": "Question construction",
+      "severity": "low",
+      "observation": "The opening question is mildly compound: it asks both `幾時` and `咩事令你去睇`. It worked here, but separating time anchor from trigger can reduce answer compression.",
+      "evidence_refs": [
+        "exchange_1.facilitator"
+      ],
+      "recommendation": "Ask for the last occurrence first, then probe trigger if the participant does not volunteer it."
+    }
+  ],
+  "required_improvements": [
+    "Rewrite concept introduction to remove benefit-selling language and present the feature more neutrally.",
+    "Replace binary embedding/follow-up questions with an open participant-led probe before offering options.",
+    "Tighten synthesis so every design implication is explicitly bounded to one synthetic persona and every operational claim has direct transcript support.",
+    "Downgrade or qualify assumption verdicts that rely mainly on hypothetical post-concept statements rather than observed behavior."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one contrasting recent case where the participant did not open the portfolio, to bound when this feature would be ignored.",
+      "Probe what exact wording or benchmark would make `一般分散做法` feel helpful rather than preachy or sales-like.",
+      "Ask what the participant would do if the app showed a change but they had no intention to act, to separate curiosity from action follow-through.",
+      "Test one concrete reminder example and ask what part is worth opening versus dismissing."
+    ],
+    "coverage_gap_actions": [
+      "Add a participant-facing probe for non-use or dismissal conditions, not only the successful month-end scenario.",
+      "Probe current workaround limits more directly: what is hard to see today, what is easy enough already, and what would not justify a new summary card.",
+      "For service embedding, ask open-endedly what should happen after a complex alert before forcing channels such as self-serve versus human follow-up.",
+      "If benchmarking is important, ask what comparison baseline they would trust: own past allocation, peer norm, bank model, or risk-plan target."
+    ],
+    "prompt_adjustments": [
+      "In `concept_validation`, prohibit concept intros that pre-state value claims like `省時間`, `一眼睇晒`, or `免費` unless price is the object of the test.",
+      "Add a guardrail to prefer open follow-up questions before any either-or framing in participant-facing probes.",
+      "Require synthesis labels to distinguish `observed current behavior`, `stated preference`, and `hypothetical concept reaction` in assumption validation.",
+      "Add a check that any design implication stronger than `for this persona` must cite more than one behavioral context or be downgraded to a tentative experiment hypothesis."
+    ],
+    "turn_budget_guidance": "Current turn budget was sufficient for the required coverage. Keep the same soft/hard limits, but reserve 1-2 extra turns for a contrasting non-use case and one concrete reminder-message probe so embedding and retention claims are less one-sided."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a synthetic interview and its artifacts only. Findings are about methodological quality and evidence discipline within the provided simulation, not real-user truth."
+}

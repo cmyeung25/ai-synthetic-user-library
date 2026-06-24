@@ -1,0 +1,269 @@
+{
+  "synthetic_only_disclaimer": "This is a synthetic interpretation for AI pre-validation only. It does not replace human interview evidence.",
+  "surface_read": {
+    "what_the_persona_explicitly_said": [
+      "She checks her portfolio in short, practical moments tied to routine, such as after her daughter is asleep, and often in response to market-volatility news, but she does not act immediately (`exchange_1.persona`).",
+      "She judges 'too fast a drop' more by pattern and breadth than by a fixed threshold: several consecutive down days and multiple diversified holdings falling together trigger closer attention (`exchange_2.persona`).",
+      "She distinguishes normal noise from meaningful risk and deliberately avoids over-checking because too much monitoring can push her into bad reactive decisions (`exchange_3.persona`).",
+      "Her first reaction to a free Portfolio Health Check is guarded interest: she wants to know whether it is genuinely diagnostic or a disguised sales funnel (`exchange_4.persona`).",
+      "To trust the feature, she wants clear identification of the issue, some transparency into how the judgment was made, and an option to defer action rather than being pushed into switching or buying products (`exchange_5.persona`).",
+      "If a risk alert appears, she wants to inspect the underlying holdings and usually waits, cross-checks against her monthly contribution and cash setup, and only acts if the alert is specific and well reasoned (`exchange_6.persona`).",
+      "She would use the feature in two moments: lightweight periodic summaries after monthly contribution or month-end review, and stronger alerts only when conditions materially change, such as several down days or a concentration jump (`exchange_7.persona`).",
+      "She wants passive summaries embedded in normal account views and alerts that explain why they appeared and link to detail, without redirecting her into product purchase journeys (`exchange_8.persona`).",
+      "She would stop using the feature if it repeats generic warnings, hides the key point behind too many taps, or repeatedly routes into product recommendations (`exchange_9.persona`).",
+      "She defines 'new information' as change-based explanation: what changed, why it changed, and by how much versus her prior state or intended allocation (`exchange_10.persona`)."
+    ],
+    "what_they_seemed_to_optimize_for": "Practical oversight with low noise: enough signal to notice real portfolio drift or risk, while preserving control, avoiding reactive moves, and filtering out product-selling or repetitive prompts.",
+    "what_stayed_implicit": [
+      "Her portfolio review behavior appears shaped by fragmented time and mobile-first use, but she did not state that directly in the interview.",
+      "She did not explicitly discuss privacy or data permissions here, though her suspicion of hidden motives suggests broader trust boundaries.",
+      "She did not explicitly define a target risk framework or investing philosophy; her behavior is more heuristic and routine-based than formally model-driven in the transcript."
+    ]
+  },
+  "likely_drivers": [
+    {
+      "driver": "Reliability-over-hype trust filter",
+      "driver_type": "core_value",
+      "why_it_matters_here": "Her answers consistently test whether the feature is genuinely useful in ordinary use or just polished packaging for sales. She looks for plain explanation, visible logic, and restraint before trusting the output.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona",
+        "exchange_9.persona"
+      ],
+      "profile_source_refs": [
+        "values.core_values",
+        "personality_belief.trust_orientation",
+        "product_reaction_rules.negative_signals",
+        "human_difference_axes.trust_style"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Control-preserving decision style",
+      "driver_type": "decision_style",
+      "why_it_matters_here": "She does not want the tool to collapse analysis into action. She wants review control, the ability to inspect detail, and space to wait before making a move, especially under volatility.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.decision_style",
+        "technology_attitude.automation_openness",
+        "human_difference_axes.control_preference",
+        "contradiction_map"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Interruption-shaped routine fit",
+      "driver_type": "daily_constraint",
+      "why_it_matters_here": "She prefers short summaries at existing review moments and low-noise alerts only when something materially changes. That suggests the feature must fit into fragmented, time-limited checking habits rather than requiring a dedicated analysis session.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "exchange_9.persona"
+      ],
+      "profile_source_refs": [
+        "life_story.current_daily_routine",
+        "problem_context.active_pain_points",
+        "human_difference_axes.life_load",
+        "human_difference_axes.fragmentation_reality"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Downside-aware financial mindset",
+      "driver_type": "core_value",
+      "why_it_matters_here": "She monitors for signs that a situation may require attention, but avoids overreacting to ordinary market noise. Her behavior reflects caution, containment, and preserving stability over chasing optimization.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_6.persona"
+      ],
+      "profile_source_refs": [
+        "values.fears",
+        "personality_belief.risk_tolerance",
+        "human_difference_axes.risk_orientation",
+        "problem_context.jobs_to_be_done"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Need for concrete, change-based explanation",
+      "driver_type": "knowledge_gap",
+      "why_it_matters_here": "She is not asking for abstract analytics sophistication. She wants the system to explain what changed, why it changed, and how far it moved from prior state or intended setup. That is a comprehension requirement, not just a UX preference.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_10.persona"
+      ],
+      "profile_source_refs": [
+        "values.trust_requirements",
+        "human_difference_axes.need_for_explanation",
+        "product_reaction_rules.first_checks"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Sales-resistance built from prior overpromising-software skepticism",
+      "driver_type": "past_experience",
+      "why_it_matters_here": "Her repeated concern that the check could be a disguised product push likely reflects accumulated exposure to tools or services that claim to help but add agenda, friction, or noise. She is testing motive as much as function.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona",
+        "exchange_9.persona"
+      ],
+      "profile_source_refs": [
+        "life_story.frustrations",
+        "problem_context.active_pain_points",
+        "deep_research_notes.summary"
+      ],
+      "confidence": "medium",
+      "observed_vs_inferred": "mostly_inferred"
+    }
+  ],
+  "unspoken_constraints": [
+    {
+      "constraint": "Any feature that requires too much tapping, reading, or session time will lose her quickly even if the analytics are sound.",
+      "why_likely": "She asks for a short summary in routine moments, dislikes repeated generic content, and says she will stop if it takes several layers to reach the point.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "exchange_9.persona"
+      ],
+      "profile_source_refs": [
+        "life_story.current_daily_routine",
+        "behavior_profile.decision_blockers",
+        "human_difference_axes.life_load"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "She likely needs mobile-first continuity and resumability rather than a desktop-style analysis workflow.",
+      "why_likely": "Her portfolio check happens at night inside the bank app in short bursts, and her broader profile emphasizes phone-based fragmented management.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "values.trust_requirements",
+        "problem_context.jobs_to_be_done",
+        "human_difference_axes.fragmentation_reality"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "constraint": "She will discount analytics that cannot separate structural risk change from temporary market movement.",
+      "why_likely": "She explicitly distinguishes normal one-day noise from multi-day, broad-based decline and asks for explanations of whether change came from her actions or market movement.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_10.persona"
+      ],
+      "profile_source_refs": [
+        "human_difference_axes.reflection_style",
+        "personality_belief.decision_style"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "She may treat recommendation-heavy presentation as evidence the bank's incentives are misaligned with her needs.",
+      "why_likely": "She repeatedly frames the core trust question as 'help me understand' versus 'use this to sell me something.'",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona",
+        "exchange_9.persona"
+      ],
+      "profile_source_refs": [
+        "values.trust_requirements",
+        "product_reaction_rules.negative_signals",
+        "founder_misread_risk"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "value_tensions": [
+    {
+      "tension": "Wants more clarity, but resists being pushed into action",
+      "side_a": "She is interested in a portfolio-level view that helps her see concentration and risk more clearly.",
+      "side_b": "She does not want alerts or diagnostics to bypass her judgment or funnel her into transactions.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "profile_source_refs": [
+        "human_difference_axes.control_preference",
+        "contradiction_map"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Wants simplicity, but only if it is substantively informative",
+      "side_a": "She asks for a short summary and low-friction entry points.",
+      "side_b": "She rejects simplified outputs when they become repetitive, generic, or black-box.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona",
+        "exchange_9.persona",
+        "exchange_10.persona"
+      ],
+      "profile_source_refs": [
+        "human_difference_axes.guidance_preference",
+        "human_difference_axes.complexity_tolerance",
+        "contradiction_map"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Wants timely warnings, but dislikes noise and emotional escalation",
+      "side_a": "She wants alerts when there is a real change such as several down days or concentration jump.",
+      "side_b": "She explicitly avoids over-checking and wants alerts that are clear but not alarming or frequent.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "human_difference_axes.risk_orientation",
+        "values.core_values",
+        "problem_context.active_pain_points"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "missed_follow_up_questions": [
+    {
+      "question": "When you say you would trust it more if it shows how it reached the judgment, what is the minimum explanation that feels enough to you: asset breakdown, comparison to your past allocation, or plain-language reason codes?",
+      "why_this_would_clarify": "This would separate her need for transparency from any need for deeper technical analytics, and make the acceptable explanation boundary more concrete.",
+      "priority": "high"
+    },
+    {
+      "question": "If the alert says concentration rose, which comparison matters more to you: versus your own target, versus last month, or versus a general benchmark?",
+      "why_this_would_clarify": "She clearly values change-based context, but the transcript does not reveal which baseline would make the insight actionable to her.",
+      "priority": "high"
+    },
+    {
+      "question": "What would make you feel an alert is informative rather than sales-led once you tap in: no product cards at all, product suggestions hidden behind a second step, or a clear separation between diagnosis and optional next actions?",
+      "why_this_would_clarify": "Her strongest objection is motive-trust. This would identify the exact presentation boundary that preserves credibility.",
+      "priority": "high"
+    },
+    {
+      "question": "When you decide to wait one or two days before acting, what are you looking for in that period?",
+      "why_this_would_clarify": "This would expose her real decision rule under uncertainty and show whether analytics could support that waiting phase without pushing a trade.",
+      "priority": "medium"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "主要係想確認自己冇一路扣錢一路冇留意",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "我第一眼係睇而家總值同埋跌咗幾多",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "我會先睇佢點樣解釋風險、分散度，同埋有冇逼我即刻買其他產品",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "如果佢講得太空泛，我就當佢只係提醒，唔會照做",
+        "evidence_ref": "exchange_5.persona"
+      },
+      {
+        "quote": "最好係我本身開緊投資戶口、準備睇持倉嗰陣先出，而唔係平時突然 push",
+        "evidence_ref": "exchange_6.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次 portfolio 檢查由月尾見到信用卡同自動扣款一齊出而觸發。",
+      "查看順序係先睇總值同跌幅，再深入睇扣款或持倉變動明顯嘅項目。",
+      "對概念有初步興趣，但先用『解釋是否實際』同『有冇銷售味』做篩選。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "事件驅動先開投資戶口查看，而唔係固定 whole-portfolio 流程。",
+      "先用總值同跌幅做快速健康檢查。",
+      "再逐項撳入去睇扣款或持倉變動較明顯嘅位置。",
+      "遇到集中度提示時，會自行核對系統點定義集中，再對返自己原本買入理由。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "唔可以一開始就導向產品推介。",
+      "分析要先講清楚現有持倉發生咩事。",
+      "閱讀成本要低，最好兩三分鐘內睇完。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行 app 內免費功能可接受。",
+      "用現有銀行內持倉做整體風險、分散度解釋可接受。",
+      "如果能追蹤上月到今月變化，會增加可信度。"
+    ],
+    "rejected_data_access": [
+      "未解釋現況前就不停彈出轉倉或基金建議。",
+      "風險分析講得籠統，但推薦產品寫得好詳細。",
+      "平時突然 push 呢類提醒。"
+    ],
+    "required_trust_explanation": [
+      "先解釋而家持倉發生咩事，再談後續建議。",
+      "清楚定義『太集中』係按行業、地區定單一產品。",
+      "輸出要中立，唔似 sales script。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一入去就睇到整體風險同分散度嘅實際解釋。",
+      "能快速理解跌幅或集中度係由邊類持倉造成。",
+      "唔需要即刻採取交易動作都覺得有資訊價值。"
+    ],
+    "time_to_value": "2-3分鐘內見到可理解、可對照自己原本持倉理由嘅重點。",
+    "abandonment_triggers": [
+      "只得抽象風險分數。",
+      "重複講同一句『你風險偏高』。",
+      "提示太空泛，無法對應實際持倉。",
+      "過早導向產品銷售。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費已降低試用門檻，受訪者表示會撳入去望下。",
+    "monthly_comfort_range": "未知；本訪談未測價格，且研究設定為免費核心功能。",
+    "payment_justification": [
+      "本次冇收集有效付費依據。",
+      "價值判準集中喺是否實際、有新資訊、可快速完成，而唔係價格接受度。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次返去都睇到新嘢，而唔係重複訊息。",
+      "可跟上次比較，見到有冇改善同邊度變咗。",
+      "剛好嵌入月尾、派息後、買入後等本來會查看持倉嘅時刻。",
+      "兩三分鐘內可完成一次 review。"
+    ],
+    "drop_off_reasons": [
+      "內容重複、泛泛而談。",
+      "提醒喺錯誤時機出現，例如平時突然 push。",
+      "分析唔清楚、定義唔透明。",
+      "產品推薦比風險解釋更突出。"
+    ],
+    "workflow_effect": "adds_layer"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "客戶而家多數用碎片化、事件驅動方式管理 portfolio，而唔係真正 whole-portfolio 流程。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "此受訪者係因月尾見到扣款先順手查看，先看總值跌幅，再逐項深入，反映事件驅動同 product-level 檢查。"
+    },
+    {
+      "assumption": "有啲 Aladdin-type 能力只要翻譯成實際決策語言，就會有用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "受訪者明確想睇風險同分散度點解釋，亦會檢查『太集中』嘅定義，表示分析能力本身有潛在價值，但必須用可理解、可對照持倉理由嘅方式呈現。"
+    },
+    {
+      "assumption": "最高價值 use case 取決於 customer moment，而唔係單純 expose institutional analytics。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者只想喺自己本來準備睇持倉時見到提醒，例如月尾、派息後、買入後，而唔想平時突然 push。"
+    },
+    {
+      "assumption": "trust、解釋方式同 action threshold 會影響功能會唔會成為日常習慣。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "佢先看是否中立、是否有實際解釋；若太空泛就只當提醒；若每次有新資訊同可追蹤變化，先會每月主動再用。"
+    },
+    {
+      "assumption": "部分能力可能更適合 RM 輔助，而唔係直接 customer-facing。",
+      "status": "unknown",
+      "evidence_refs": [],
+      "rationale": "本次冇直接測到邊啲輸出應留喺 RM workflow。"
+    }
+  ],
+  "key_insights": [
+    "呢位受訪者管理投資組合唔係固定定期 review，而係被現金流、扣款同市況波動觸發先順手檢查。",
+    "佢而家嘅核心工作其實係『確認自己冇失控』，所以先睇總值同跌幅，再查異常變動。",
+    "Portfolio Health Check 對佢有吸引力，但前提唔係 analytics 有幾高級，而係講法夠唔夠實際、夠唔夠中立。",
+    "最敏感嘅 trust boundary 係 sales 感；一旦未講清現況就推產品，功能可信度會快速跌。",
+    "風險或集中度提示本身未必直接導致交易，真正作用係幫佢做更快、更有根據嘅 second look。"
+  ],
+  "next_experiment": "用第二位同類 persona 測試一個 2-3 分鐘內可完成嘅月尾 review flow：只展示『上月到今月有咩變化』『點解變』『是否需要你再看一眼』，刻意不放產品推薦，觀察佢會唔會覺得足夠實際同值得每月回來。",
+  "evidence_gaps": [
+    "未驗證外部資產整合接受度。",
+    "未測試邊類 analytics 最有用，例如 overlap、scenario、FX risk、stress test。",
+    "未確認邊啲輸出應 self-serve、邊啲應 RM-assisted。",
+    "未收集 contrast case，例如一位主動型投資者會否對 push alert 或更深 analytics 有唔同反應。",
+    "未測真實介面或文案，因此 concept reaction 仍屬假設性證據。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念驗證前測，屬方向性訊號，唔可以當作真人市場證據或因果定論。"
+}

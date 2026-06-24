@@ -1,0 +1,220 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "general"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Coverage was complete, but the facilitator accepted several high-signal cues without enough causal or contrast probing and later treated hypothetical concept reactions as stronger evidence than the interview supported.",
+    "primary_failure_mode": "Coverage was prioritized over depth once required slots were filled, especially around trust calibration, workaround meaning, and what would actually change behavior.",
+    "depth_vs_coverage_assessment": "Good breadth and sequencing, but multiple answers contained clear follow-up hooks that were not pursued before closing."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "stacked_concept_intro",
+      "severity": "high",
+      "why_it_matters": "Bundling multiple favorable attributes into one concept question makes positive reaction hard to interpret and reduces diagnostic clarity.",
+      "observed_pattern": "The concept was introduced with price, convenience, breadth, and explanation style combined in a single question, so the answer mixed convenience, trust, and permission concerns."
+    },
+    {
+      "tag": "missed_trust_calibration_probe",
+      "severity": "high",
+      "why_it_matters": "When a participant says they need to see whether something is 'accurate' or 'not exaggerated,' the facilitator needs concrete thresholds for credibility, not just a general trust boundary.",
+      "observed_pattern": "The participant said they would first check whether the output was accurate and alarmist, but the interview moved to permission scope instead of probing what would make a warning feel credible versus overstated."
+    },
+    {
+      "tag": "workaround_without_function_probe",
+      "severity": "medium",
+      "why_it_matters": "Listing current tools is weaker than understanding what each tool protects against or compensates for.",
+      "observed_pattern": "The facilitator captured that the participant uses notes, messaging history, and calendar reminders, but did not ask what gap each workaround covers or which missed-risk matters most."
+    },
+    {
+      "tag": "hypothetical_evidence_overweighting",
+      "severity": "high",
+      "why_it_matters": "Concept-response statements are useful, but they do not prove adoption, repeated use, or downstream behavior unless anchored to a behavioral analogue or threshold.",
+      "observed_pattern": "Later synthesis and assumption scoring leaned on stated future reactions to infer product implications and usage patterns more strongly than the transcript supports."
+    },
+    {
+      "tag": "early_driver_closure",
+      "severity": "medium",
+      "why_it_matters": "Assigning a motive too early can cause the facilitator to stop testing alternative explanations and miss disconfirming evidence.",
+      "observed_pattern": "The trace formed an explanatory account of the participant's behavior before probing competing reasons such as low complexity, low relevance, time scarcity, or tool sufficiency."
+    },
+    {
+      "tag": "stop_rule_too_coverage_based",
+      "severity": "medium",
+      "why_it_matters": "A stop rule based only on required-topic completion can end interviews before the highest-value unresolved ambiguity is clarified.",
+      "observed_pattern": "The interview ended after required fields were covered even though credibility criteria, value thresholds, and workaround function remained under-specified."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "credibility cue",
+      "priority": "high",
+      "participant_signal": "The participant said they would first see whether the feature was accurate and whether it sounded exaggerated.",
+      "missed_followup_question": "What would make a warning feel accurate to you, and what would make it feel exaggerated or not worth trusting?",
+      "generic_learning": "When participants mention accuracy or alarmism, probe for concrete credibility criteria, not just general trust sentiment."
+    },
+    {
+      "trigger_type": "workaround fragmentation cue",
+      "priority": "high",
+      "participant_signal": "The participant described using multiple tools together to keep track of upcoming obligations and timing.",
+      "missed_followup_question": "What does each tool help you avoid, and which kind of miss matters most when one of them fails?",
+      "generic_learning": "When a participant stitches together several tools, ask what specific job each one performs and what risk the workaround is protecting against."
+    },
+    {
+      "trigger_type": "consequence threshold cue",
+      "priority": "high",
+      "participant_signal": "The participant said they would check the warning and compare it with existing numbers before deciding whether it affected current plans.",
+      "missed_followup_question": "What kind of change would be large enough to make you do something different rather than just verify and move on?",
+      "generic_learning": "After a participant describes a verification step, probe the threshold at which the information changes action."
+    },
+    {
+      "trigger_type": "contrast cue",
+      "priority": "medium",
+      "participant_signal": "The participant framed the feature as useful around certain moments but did not indicate whether that usefulness extends outside those moments.",
+      "missed_followup_question": "If the same warning appeared when nothing time-sensitive was happening, would you still look, or would it feel irrelevant?",
+      "generic_learning": "Use contrast probes to distinguish situational usefulness from general ongoing value."
+    },
+    {
+      "trigger_type": "retention analogue cue",
+      "priority": "medium",
+      "participant_signal": "The participant gave hypothetical conditions for repeat use and abandonment.",
+      "missed_followup_question": "Can you think of an existing alert or reminder you kept using or stopped using for similar reasons?",
+      "generic_learning": "When repeat-use answers are hypothetical, ask for a real analogue to ground them in observed behavior."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant seemed to be managing mainly around near-term arrangements and verification.",
+      "possible_underlying_driver": "This may reflect several different causes, such as low complexity, low perceived relevance, limited time, or sufficient current tools, rather than one settled motive.",
+      "why_the_surface_frame_is_weak": "The transcript shows what the participant checked and when, but does not adequately compare alternative reasons for that pattern.",
+      "generic_learning": "Do not lock onto one motivational story from a single recent-event description unless you have tested plausible alternatives."
+    },
+    {
+      "observed_surface_frame": "The participant's main adoption barrier appeared to be permissions and trust.",
+      "possible_underlying_driver": "The stronger barrier may instead be unclear incremental value relative to the current workaround, with permission concerns acting as a secondary filter.",
+      "why_the_surface_frame_is_weak": "The participant also signaled that the feature must catch something they would otherwise miss, but that value threshold was not probed in comparable depth.",
+      "generic_learning": "When users mention trust and permissions, also test whether the real blocker is insufficient incremental usefulness."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical reactions to the concept were treated as stronger evidence of future usage and design fit than the interview supports.",
+      "severity": "high",
+      "generic_learning": "Separate observed behavior, stated preference, and hypothetical future reaction in both analysis and synthesis."
+    },
+    {
+      "issue": "A causal explanation for current behavior was marked too confidently without ruling out plausible alternatives.",
+      "severity": "medium",
+      "generic_learning": "Mark motive claims as provisional unless the interview includes contrast or alternative-cause probing."
+    },
+    {
+      "issue": "Stopping after slot completion left unresolved ambiguity in the most decision-relevant parts of the evidence.",
+      "severity": "medium",
+      "generic_learning": "Coverage completion is not enough if key mechanisms like credibility threshold or action threshold remain vague."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "Do not mark a motivational explanation as supported unless the interview tested at least one plausible alternative explanation for the same observed behavior.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant says they need to see whether something is accurate, exaggerated, useful, or worth trusting, ask for the concrete threshold or example before moving on.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant describes a multi-tool workaround, ask what each tool covers and what failure or risk the workaround is protecting against.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "After a participant names the ideal moment for a feature, test the opposite or lower-relevance moment to determine whether the value is situational or general.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Tag each conclusion as observed behavior, stated preference, or hypothetical reaction, and do not let later synthesis collapse those categories.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not end solely because required coverage is complete if one of the following remains unresolved: credibility threshold, action threshold, workaround function, or contrast between use and non-use moments.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "When introducing a concept, keep the first reaction question focused on one variable only; separate capability, explanation style, access requirements, and pricing/value assumptions into later questions.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "cf_01",
+      "rule": "When participants express conditional trust, probe for the exact evidence that would make the output feel credible versus dismissible before shifting topics.",
+      "source_tags": [
+        "missed_trust_calibration_probe",
+        "hypothetical_evidence_overweighting"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_02",
+      "rule": "Treat fragmented workarounds as a signal to map function, failure, and protection, not just enumerate tools.",
+      "source_tags": [
+        "workaround_without_function_probe"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_03",
+      "rule": "Use at least one threshold or consequence probe after a participant describes a verification step, so the interview distinguishes checking from action change.",
+      "source_tags": [
+        "missed_trust_calibration_probe",
+        "stop_rule_too_coverage_based"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_04",
+      "rule": "Keep synthesis persona-bounded and method-bounded when it relies mainly on hypothetical concept responses.",
+      "source_tags": [
+        "hypothetical_evidence_overweighting"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The interview did not adequately test whether deeper analytics capabilities would change decisions compared with simpler reminder-style outputs in this specific product area.",
+      "block_reason": "This observation is tied to the project's feature set and product framing rather than a universally reusable facilitation rule.",
+      "rewrite_as_generic": "When a concept can be delivered at multiple complexity levels, compare a lighter and heavier version in participant-facing terms and ask which would actually change a real decision."
+    },
+    {
+      "blocked_item": "The synthesis turned one participant's workflow into design guidance about where this service should live in the banking journey.",
+      "block_reason": "The product-placement implication is too tied to the specific concept and domain context.",
+      "rewrite_as_generic": "Avoid converting a single participant's hypothetical usage moment into a general placement rule; frame it as a tentative cue and validate with direct comparisons in later interviews."
+    }
+  ]
+}

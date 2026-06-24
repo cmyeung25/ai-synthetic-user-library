@@ -1,0 +1,324 @@
+[
+  {
+    "interview_phase": "opening_recent_event",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "先用中性開場，聚焦最近一次真實投資組合檢視行為，為之後了解現有做法同 workaround 建立具體事件基礎；未引入概念，避免預設痛點或功能需求。",
+    "message_to_persona": "你最近一次認真睇自己投資組合係咩時候？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次實際 portfolio 檢視或調整事件係咩。",
+      "當時由咩觸發佢去睇組合。",
+      "佢實際用咗咩工具、畫面或者人去處理。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_reconstruction",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "參與者已提供一個具體最近事件，並提到用銀行同證券 app 對一對。下一步先重建當晚實際點做，以取得 current_workaround 的行為證據，仍未適合引入概念。",
+    "message_to_persona": "你嗰晚喺銀行同證券 app 之間，實際係點樣對住嚟睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次認真檢視投資組合是在上個月尾晚飯後。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當時觸發檢視的背景是市況反覆，參與者想確認持倉不要亂放著。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "claim": "參與者當晚有打開銀行 app 和證券 app 對照查看供款基金及幾隻長期持有股票。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當晚具體查看順序、畫面和比較方式是什麼。",
+      "除兩個 app 外有沒有其他 workaround，例如截圖、心算、記事或問 RM。",
+      "他在檢視後有沒有採取行動或決定暫時不動。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_introduction",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "最近事件同現有做法已經有具體行為證據，依家可以中性引入概念，先測第一反應同感知價值，避免未理解現況就推功能。問題保持單一，未夾雜信任、行動或嵌入渠道。",
+    "message_to_persona": "如果你個銀行 app 有個免費嘅 Portfolio Health Check，可以幫你一眼睇返成個組合嘅風險同分佈，你第一下會點睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者現時用較手動的方法管理投資組合。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者通常先在銀行 app 檢查戶口現金及月供扣款是否正常，再到證券 app 查看持倉金額、盈虧和通知。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當數字看起來不對時，參與者會回到銀行 app 核對日期和入帳，以分辨是市值波動還是資金未過帳。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "他對 Portfolio Health Check 的第一反應是有用、無感、還是抗拒。",
+      "他覺得這類總覽最可能幫到哪個實際決定。",
+      "他對銀行提供這類分析的信任和中立性感受如何。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "causal_probe",
+    "decision_rationale": "參與者已自發提出兩個採納門檻：解釋要實際、以及唔想填好多資料或開太多權限。下一步先拆開信任/資料邊界，問一個最具體的阻力來源，避免同時混入行動或嵌入場景。",
+    "message_to_persona": "咁對你嚟講，去到邊種資料連結或者權限要求，你就會覺得太過界？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對概念的第一反應取決於輸出是否實際，而不是只有簡單紅黃綠燈。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望一打開就看到組合集中在哪類、波動大概到哪裡，以及判斷原因。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果需要先填很多資料或開很多權限，參與者可能不會繼續使用這個功能。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "哪些資料來源或權限要求會破壞他的信任。",
+      "看到風險或集中提示後，他實際會做什麼。",
+      "這功能應該在什麼時刻出現才最有用。",
+      "什麼情況下他會變成定期使用，而不是只試一次。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "action_followthrough",
+    "probing_strategy": "counterfactual_probe",
+    "decision_rationale": "信任邊界已經有清楚資料，下一步要測試見到分析結果後實際會點做，先分開『明白』同『會行動』。問題沿用佢重視集中度同波動嘅語言，保持單一情境。",
+    "message_to_persona": "如果你一打開見到佢話你而家太集中喺某一類，你下一步通常會做咩？",
+    "evidence_updates": [
+      {
+        "claim": "參與者只接受先用本銀行內持有的組合作檢查。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若一開始就要求外部銀行戶口、MPF、其他券商、聯絡人或定位資料，參與者會覺得要求過多。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在未見到明確用途前，若要開長期追蹤或自動同步，參與者多數會停止使用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "見到集中度提示後，他會查看什麼、找誰、還是先不動。",
+      "什麼情況下這功能會成為他日常會再用的工具。",
+      "這功能應該嵌在什麼時刻或畫面出現才最自然。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "service_embedding",
+    "probing_strategy": "feature_to_moment_mapping",
+    "decision_rationale": "行動跟進已經有具體反應，依家優先問功能應該喺邊個實際時刻出現，補 service embedding，並用佢真實流程相關場景去問，避免抽象偏好。之後仍可再追問咩條件會令佢持續使用。",
+    "message_to_persona": "呢個功能如果要對你真係有用，你覺得最應該喺咩時候出現？",
+    "evidence_updates": [
+      {
+        "claim": "參與者見到集中度提示後，多數不會即時調整持倉。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會先查看提示所指的類別和集中程度，再對照自己原本買入原因。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若只屬短期波動，參與者未必會行動；若偏離明顯，較可能記下來，等下次供款或再買時慢慢拉平均。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這功能應嵌在什麼具體時刻或畫面才最自然。",
+      "什麼條件下他會把這功能變成固定會再用的習慣，而不是只偶爾看。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_condition",
+    "probing_strategy": "causal_probe",
+    "decision_rationale": "大部分必要 coverage 已有，剩低 repeat-use condition。參與者已講到合適觸發時刻，下一步直接問咩條件會令佢持續用，而唔係試一次，能補 retention 證據且不重複前面問題。",
+    "message_to_persona": "咩情況先會令你之後真係固定再用呢個功能，而唔係睇一兩次就算？",
+    "evidence_updates": [
+      {
+        "claim": "參與者認為功能最適合在自己本來已在看持倉、月供或準備買入之前出現。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不希望功能在平時無預警彈出。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當功能出現在既有決策時刻，參與者較容易理解風險和分佈與自己下一步行動的關係。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "哪些具體條件會讓他把這功能納入固定投資流程。",
+      "他需要看到什麼持續價值，才不會只看一兩次。"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "close",
+    "probing_strategy": "sufficiency_check",
+    "decision_rationale": "所需 coverage 已完成，且最近行為、現有 workaround、概念反應、信任邊界、行動跟進、嵌入時刻同重用條件都有具體證據；再問大概率只會重複。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "參與者只有在功能每次月供前或加減持倉時都能快速、清楚、穩定地提供幫助，才會固定再用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望功能能指出自己容易忽略的集中位置，但不要經常用誇張提醒嚇人。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若每次都不用重新設定，而且可在手機上順手看完，參與者較可能養成重複使用習慣。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "required_coverage_complete_and_additional_probing_likely_repetitive",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef364-b5aa-7140-b37a-0427f3a941c7",
+    "decision_status": "not_asked_at_close"
+  }
+]

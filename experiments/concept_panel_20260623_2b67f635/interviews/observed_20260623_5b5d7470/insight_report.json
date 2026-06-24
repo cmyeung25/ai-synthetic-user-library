@@ -1,0 +1,161 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "上星期日晚，食完飯之後用手機銀行同證券app望咗一眼。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "之後冇買賣，只係截咗張圖留返自己遲啲再睇。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "多數我唔會即刻買賣，會等到下一次出糧前後，或者交完屋企啲固定開支先再決定。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "如果佢一打開就直接話俾我知，邊部分太集中、風險大概去到邊，同埋用好普通嘅字講清楚後果，我會覺得實際。",
+        "evidence_ref": "exchange_4.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次檢視係飯後用手機銀行同證券 app 快速查看基金、藍籌同現金。",
+      "現時 workaround 係截圖、隔一兩日再望、記低價位，再等出糧或家庭固定開支處理後先決定。",
+      "面對分析提示時唔會即時跟做，會先判斷差異夠唔夠大，同現金安排有冇衝突。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用手機銀行同證券 app 分開望持倉。",
+      "截圖留底，之後再跟進。",
+      "隔一兩日再檢查一次。",
+      "記低大概價位作手動追蹤。",
+      "等到出糧前後或交完固定開支後先決定有冇需要調整。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "唔可以迫佢即時交易。",
+      "唔可以要佢重新輸入好多資料。",
+      "提醒唔可以太煩。",
+      "資訊要一打開就睇到，唔好撳幾層。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "接受銀行 app 內直接整合持倉做摘要。",
+      "接受用簡單文字解釋集中度、波動同後果。",
+      "接受輕量提醒，特別係月尾或出糧前後。"
+    ],
+    "rejected_data_access": [
+      "唔接受要自己再做大量研究先明。",
+      "唔接受頻繁彈出式提醒。",
+      "唔接受重新輸入好多資料先用到。"
+    ],
+    "required_trust_explanation": [
+      "輸出要直接指出邊部分太集中、風險去到邊。",
+      "要用普通字講清楚後果。",
+      "最好比到『乜都唔做』同『分散少少』嘅分別，減少自行計算。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一打開就見到簡單摘要。",
+      "快速睇清楚持倉集中喺邊類。",
+      "大概知道風險或波動去到邊。",
+      "唔使自己逐樣計先明影響。"
+    ],
+    "time_to_value": "即開即見摘要，幾秒內明白重點",
+    "abandonment_triggers": [
+      "包裝到好似好叻，但其實要自己再研究一次。",
+      "要重新輸入好多資料。",
+      "提醒太頻密。",
+      "分析唔夠清楚，幫唔到快速決定。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費已足夠，今次訪談冇測試付費意願。",
+    "monthly_comfort_range": "unknown",
+    "payment_justification": [
+      "今次研究設定已假設免費，受訪者價值判斷集中喺慳時間、清晰度同實用性。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "連續幾次都幫到慳時間。",
+      "講得清楚。",
+      "提醒唔算煩。",
+      "真係幫到更快決定要唔要留意某啲持倉。",
+      "自然嵌入月尾或出糧前後嘅檢查節奏。"
+    ],
+    "drop_off_reasons": [
+      "輸出太包裝化。",
+      "仍然要自己重新研究。",
+      "提醒騷擾。",
+      "進入太深，要撳好多層。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "很多零售客戶以分散、事件驅動而非完整組合方式管理投資。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "此 persona 以手機銀行同證券 app 分開望，重點係跌咗未、現金夠唔夠，同出糧週期配合，唔係完整 portfolio process。"
+    },
+    {
+      "assumption": "有些 Aladdin 類分析能力如果翻譯成簡單決策語言，會對零售客戶有實際幫助。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "rationale": "受訪者明確指出集中度、波動、以及『唔做 vs 分散少少』差異有用，前提係用普通字直出重點。"
+    },
+    {
+      "assumption": "最高價值 use case 要貼近實際客戶時刻，而唔係展示機構級細節。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者想要首頁摘要同月尾/出糧前後輕提醒，反映價值在實際檢查節點，而非深度技術展示。"
+    },
+    {
+      "assumption": "信任、資料輸入負擔同提醒節奏會影響持續使用。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者多次強調要簡單實用、唔使重新輸入、提醒唔好煩，否則唔會養成習慣。"
+    },
+    {
+      "assumption": "部分能力可能更適合 RM 輔助而非完全自助。",
+      "status": "unknown",
+      "evidence_refs": [],
+      "rationale": "今次逐字稿未直接測到 RM 參與邊界。"
+    }
+  ],
+  "key_insights": [
+    "呢位 persona 目前係用『跌咗未 + 現金夠唔夠 + 出糧節奏』去管理，而唔係用完整組合觀。",
+    "Portfolio Health Check 對佢嘅價值核心唔係『更多分析』，而係『幫我唔使再自己逐樣計』。",
+    "最有感功能係集中度、風險/波動概覽，同簡單情景比較；要用普通字講後果。",
+    "行動門檻受現金流約束，分析就算有用，都未必即時觸發交易。",
+    "留存關鍵係持續慳時間、低輸入負擔、低打擾，而唔係一次性新鮮感。','最佳嵌入位係投資組合首頁摘要，加月尾或出糧前後嘅輕提醒。"
+  ],
+  "next_experiment": "下一輪用真人或更多 persona 測試兩種具體原型：1) 投資組合首頁一屏摘要；2) 月尾/出糧前後輕提醒卡。重點比較集中度提示、情景差異展示、文案簡化程度，同是否需要 RM 跟進入口。",
+  "evidence_gaps": [
+    "未測試外部資產整合的具體接受程度。",
+    "未測試 RM 介入是否增加信任或反而像銷售。",
+    "未測試哪些分析維度對佢係過度複雜，例如壓力測試、貨幣風險、行業/地區拆解。",
+    "只有一位 synthetic persona，未覆蓋不同資產規模、年齡、投資經驗或 RM 關係差異。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 嘅概念預驗證，唔可以當成人類用戶研究結論或市場證據；所有因果同產品判斷都需要再用真人訪談或行為測試驗證。"
+}

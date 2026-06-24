@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from ai_validation_swarm.conversation.providers import ConversationProvider
+from ai_validation_swarm.conversation.realism import validate_friction_mode
 from ai_validation_swarm.conversation.runtime import (
     DRIVER_TRACE_PROMPT_VERSION,
     ConversationRuntime,
@@ -14,6 +15,7 @@ from ai_validation_swarm.conversation.runtime import (
 from ai_validation_swarm.domain.models import utc_now_iso
 from ai_validation_swarm.facilitator.concept_protocols import load_concept_protocol
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
+from ai_validation_swarm.facilitator.optimism import attach_over_optimism_risks
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.facilitator.runtime import (
     FACILITATOR_PROMPT_VERSION,
@@ -28,6 +30,7 @@ from ai_validation_swarm.storage.files import ensure_dir, load_persona, read_jso
 
 
 QUALITY_PROMPT_VERSION = "facilitator-quality-evaluator/v2"
+FACILITATOR_AUDIT_FEEDBACK_PROMPT_VERSION = "facilitator-audit-feedback/v1"
 
 
 class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
@@ -40,6 +43,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         persona_provider: ConversationProvider,
         quality_provider: FacilitatorProvider,
         progress_writer=None,
+        approved_learning_rules_path: Path | None = None,
     ) -> None:
         super().__init__(
             data_dir=data_dir,
@@ -47,6 +51,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             facilitator_provider=facilitator_provider,
             persona_provider=persona_provider,
             progress_writer=progress_writer,
+            approved_learning_rules_path=approved_learning_rules_path,
         )
         self.quality_provider = quality_provider
 
@@ -64,6 +69,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         max_turns: int = 10,
         soft_turn_limit: int | None = None,
         hard_turn_limit: int | None = None,
+        friction_mode: str = "off",
     ) -> tuple[Path, InterviewSession]:
         if not research_goal.strip():
             raise ValueError("Research goal cannot be empty.")
@@ -86,7 +92,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             session_dir=folder / "persona_runtime",
             provider=self.persona_provider,
         )
-        persona_session, _, _ = persona_runtime.start(persona_id)
+        persona_session, _, _ = persona_runtime.start(persona_id, friction_mode=validate_friction_mode(friction_mode))
         session = InterviewSession(
             interview_id=interview_id,
             persona_id=persona_id,
@@ -108,9 +114,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
             persona_conversation_session_id=persona_session.session_id,
+            persona_friction_mode=persona_session.friction_mode,
             quality_provider=self.quality_provider.provider_name,
             quality_model=self.quality_provider.model_name,
             quality_prompt_version=QUALITY_PROMPT_VERSION,
+            facilitator_audit_feedback_prompt_version=FACILITATOR_AUDIT_FEEDBACK_PROMPT_VERSION,
             persona_driver_trace_prompt_version=DRIVER_TRACE_PROMPT_VERSION,
             max_turns=hard_limit,
             soft_turn_limit=soft_limit,
@@ -118,6 +126,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             status="requesting_facilitator",
         )
         self._update_coverage_status(session)
+        self._annotate_approved_learning_rules(session)
         self._save_controlled(session, folder)
         self._progress(
             f"start_observed interview_id={interview_id} persona={persona_id} mode={mode} "
@@ -291,7 +300,13 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
                 failed_operation=operation,
                 failed_payload=payload,
             )
-        if operation in {"judge_hypothesis_evidence", "synthesize", "generate_persona_driver_trace", "evaluate_quality"}:
+        if operation in {
+            "judge_hypothesis_evidence",
+            "synthesize",
+            "generate_persona_driver_trace",
+            "evaluate_quality",
+            "generate_facilitator_audit_feedback",
+        }:
             self._progress(f"retry_failed_stage operation={operation} interview_id={interview_id}")
             return self.finalize(interview_id, stop_reason=session.stop_reason or "observer_stop")
         raise ValueError(f"Unsupported failed operation '{operation}'.")
@@ -337,6 +352,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
                 return self._fail(session, folder, "synthesize", exc)
             session.facilitator_provider_session_id = facilitator_session_id
             self._enforce_synthesis_evidence_scope(session, synthesis)
+            synthesis = attach_over_optimism_risks(
+                synthesis,
+                conversation_realism=self._persona_conversation_realism(folder, session),
+                interview_mode=session.interview_mode,
+            )
             session.insight_report = synthesis
             write_json(folder / "insight_report.json", synthesis)
             (folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
@@ -348,7 +368,15 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             try:
                 self._generate_persona_driver_trace(folder, session)
             except Exception as exc:
-                return self._fail(session, folder, "generate_persona_driver_trace", exc)
+                warning = (
+                    "Persona driver trace generation failed; continuing without persona_driver_trace. "
+                    f"{exc}"
+                )
+                (folder / "persona_driver_trace.error.txt").write_text(str(exc), encoding="utf-8")
+                self._progress(f"persona_driver_trace_skipped interview_id={interview_id} error={exc}")
+                session.last_error = warning
+                session.updated_at = utc_now_iso()
+                self._save_controlled(session, folder)
 
         session.status = "evaluating_quality"
         self._save_controlled(session, folder)
@@ -362,6 +390,19 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             return self._fail(session, folder, "evaluate_quality", exc)
         session.quality_provider_session_id = quality_session_id
         session.quality_evaluation = quality
+        session.status = "auditing_facilitator"
+        self._save_controlled(session, folder)
+        self._progress(f"auditing_facilitator interview_id={interview_id}")
+        try:
+            audit_feedback, audit_session_id = self.quality_provider.generate_audit_feedback(
+                system_prompt=self._audit_feedback_system_prompt(),
+                user_prompt=self._audit_feedback_user_prompt(session),
+                provider_session_id=session.quality_provider_session_id,
+            )
+        except Exception as exc:
+            return self._fail(session, folder, "generate_facilitator_audit_feedback", exc)
+        session.facilitator_audit_feedback_provider_session_id = audit_session_id
+        session.facilitator_audit_feedback = audit_feedback
         session.status = "completed"
         session.last_error = ""
         session.failed_operation = ""
@@ -370,6 +411,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
         (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        write_json(folder / "facilitator_audit_feedback.json", audit_feedback)
+        (folder / "facilitator_audit_feedback.md").write_text(
+            self._render_audit_feedback(audit_feedback),
+            encoding="utf-8",
+        )
         self._progress(f"completed_observed interview_id={interview_id}")
         return session
 
@@ -380,9 +426,14 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         previous_path = folder / "quality_evaluation.json"
         if previous_path.exists():
             write_json(folder / "quality_evaluation.previous.json", read_json(previous_path))
+        audit_previous_path = folder / "facilitator_audit_feedback.json"
+        if audit_previous_path.exists():
+            write_json(folder / "facilitator_audit_feedback.previous.json", read_json(audit_previous_path))
         session.status = "evaluating_quality"
         session.quality_evaluation = {}
         session.quality_provider_session_id = ""
+        session.facilitator_audit_feedback = {}
+        session.facilitator_audit_feedback_provider_session_id = ""
         self._save_controlled(session, folder)
         self._progress(f"reevaluating_quality interview_id={interview_id}")
         try:
@@ -394,6 +445,19 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             return self._fail(session, folder, "evaluate_quality", exc)
         session.quality_provider_session_id = quality_session_id
         session.quality_evaluation = quality
+        session.status = "auditing_facilitator"
+        self._save_controlled(session, folder)
+        self._progress(f"auditing_facilitator interview_id={interview_id}")
+        try:
+            audit_feedback, audit_session_id = self.quality_provider.generate_audit_feedback(
+                system_prompt=self._audit_feedback_system_prompt(),
+                user_prompt=self._audit_feedback_user_prompt(session),
+                provider_session_id=session.quality_provider_session_id,
+            )
+        except Exception as exc:
+            return self._fail(session, folder, "generate_facilitator_audit_feedback", exc)
+        session.facilitator_audit_feedback_provider_session_id = audit_session_id
+        session.facilitator_audit_feedback = audit_feedback
         session.status = "completed"
         session.last_error = ""
         session.failed_operation = ""
@@ -402,6 +466,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
         (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        write_json(folder / "facilitator_audit_feedback.json", audit_feedback)
+        (folder / "facilitator_audit_feedback.md").write_text(
+            self._render_audit_feedback(audit_feedback),
+            encoding="utf-8",
+        )
         self._progress(f"completed_quality_reevaluation interview_id={interview_id}")
         return session
 
@@ -413,10 +482,13 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             write_json(folder / "insight_report.previous.json", session.insight_report)
         if session.quality_evaluation:
             write_json(folder / "quality_evaluation.previous.json", session.quality_evaluation)
+        if session.facilitator_audit_feedback:
+            write_json(folder / "facilitator_audit_feedback.previous.json", session.facilitator_audit_feedback)
         if session.persona_driver_trace:
             write_json(folder / "persona_driver_trace.previous.json", session.persona_driver_trace)
         session.insight_report = {}
         session.quality_evaluation = {}
+        session.facilitator_audit_feedback = {}
         session.persona_driver_trace = {}
         session.persona_driver_trace_provider_session_id = ""
         if session.hypothesis_evidence_judgment:
@@ -424,6 +496,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.hypothesis_evidence_judgment = {}
         session.hypothesis_evidence_judge_provider_session_id = ""
         session.quality_provider_session_id = ""
+        session.facilitator_audit_feedback_provider_session_id = ""
         session.status = "synthesizing"
         session.last_error = ""
         session.failed_operation = ""
@@ -455,6 +528,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             return self._fail(session, folder, "synthesize", exc)
         session.facilitator_provider_session_id = facilitator_session_id
         self._enforce_synthesis_evidence_scope(session, synthesis)
+        synthesis = attach_over_optimism_risks(
+            synthesis,
+            conversation_realism=self._persona_conversation_realism(folder, session),
+            interview_mode=session.interview_mode,
+        )
         session.insight_report = synthesis
         write_json(folder / "insight_report.json", synthesis)
         (folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
@@ -479,11 +557,29 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             return self._fail(session, folder, "evaluate_quality", exc)
         session.quality_provider_session_id = quality_session_id
         session.quality_evaluation = quality
+        session.status = "auditing_facilitator"
+        self._save_controlled(session, folder)
+        self._progress(f"auditing_facilitator interview_id={interview_id}")
+        try:
+            audit_feedback, audit_session_id = self.quality_provider.generate_audit_feedback(
+                system_prompt=self._audit_feedback_system_prompt(),
+                user_prompt=self._audit_feedback_user_prompt(session),
+                provider_session_id=session.quality_provider_session_id,
+            )
+        except Exception as exc:
+            return self._fail(session, folder, "generate_facilitator_audit_feedback", exc)
+        session.facilitator_audit_feedback_provider_session_id = audit_session_id
+        session.facilitator_audit_feedback = audit_feedback
         session.status = "completed"
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
         (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        write_json(folder / "facilitator_audit_feedback.json", audit_feedback)
+        (folder / "facilitator_audit_feedback.md").write_text(
+            self._render_audit_feedback(audit_feedback),
+            encoding="utf-8",
+        )
         self._progress(f"completed_resynthesis interview_id={interview_id}")
         return session
 
@@ -509,6 +605,37 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.persona_driver_trace_provider_session_id = provider_session_id
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
+        write_json(folder / "persona_driver_trace.json", payload)
+        (folder / "persona_driver_trace.md").write_text(
+            self._render_persona_driver_trace(session),
+            encoding="utf-8",
+        )
+
+    @staticmethod
+    def _audit_feedback_system_prompt() -> str:
+        root = _repo_root()
+        return _read(root / "src" / "ai_validation_swarm" / "prompts" / "facilitator-audit-feedback" / "v1.md")
+
+    @staticmethod
+    def _audit_feedback_user_prompt(session: InterviewSession) -> str:
+        return "\n\n".join([
+            f"INTERVIEW MODE:\n{session.interview_mode}",
+            f"RESEARCH GOAL:\n{session.research_goal}",
+            f"PRODUCT CONTEXT:\n{session.product_context or '(none)'}",
+            f"CONCEPT LABEL:\n{session.concept_label or '(none)'}",
+            f"STOP REASON:\n{session.stop_reason or '(none)'}",
+            "COVERAGE STATUS:\n" + json.dumps(session.coverage_status, ensure_ascii=False, separators=(",", ":")),
+            f"TRANSCRIPT:\n{FacilitatedInterviewRuntime._plain_transcript(session)}",
+            "FACILITATOR TRACE:\n"
+            + json.dumps(FacilitatedInterviewRuntime._audit_trace(session), ensure_ascii=False, separators=(",", ":")),
+            "OBSERVER INTERVENTIONS:\n"
+            + json.dumps(session.observer_interventions, ensure_ascii=False, separators=(",", ":")),
+            "SYNTHESIS:\n" + json.dumps(session.insight_report, ensure_ascii=False, separators=(",", ":")),
+            "QUALITY EVALUATION:\n"
+            + json.dumps(session.quality_evaluation, ensure_ascii=False, separators=(",", ":")),
+            "PERSONA DRIVER TRACE:\n"
+            + json.dumps(session.persona_driver_trace, ensure_ascii=False, separators=(",", ":")),
+        ])
 
     def _ask_persona(
         self,
@@ -713,4 +840,48 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
                 lines.append(f"- Prompt change: {item}")
             if hints.get("turn_budget_guidance"):
                 lines.append(f"- Turn budget: {hints.get('turn_budget_guidance')}")
+        return "\n".join(lines).rstrip() + "\n"
+
+    @staticmethod
+    def _render_audit_feedback(audit_feedback: dict[str, Any]) -> str:
+        summary = audit_feedback.get("summary", {})
+        applies_to = audit_feedback.get("applies_to", {})
+        lines = [
+            "# Facilitator Audit Feedback", "",
+            f"- Scope: {audit_feedback.get('feedback_scope', 'unknown')}",
+            f"- Safe for global reuse: {applies_to.get('safe_for_global_reuse', False)}",
+            "",
+            "## Summary", "",
+            f"- Overall: {summary.get('overall_assessment', '')}",
+            f"- Primary failure mode: {summary.get('primary_failure_mode', '')}",
+            f"- Depth vs coverage: {summary.get('depth_vs_coverage_assessment', '')}",
+            "",
+            "## Feedback Tags", "",
+        ]
+        for item in audit_feedback.get("facilitator_feedback_tags", []):
+            lines.append(
+                f"- [{item.get('severity', 'unknown')}] {item.get('tag', '')}: {item.get('observed_pattern', '')}"
+            )
+        lines.extend(["", "## Missed High-Value Follow-Ups", ""])
+        for item in audit_feedback.get("high_value_missed_followups", []):
+            lines.append(f"- [{item.get('priority', 'unknown')}] {item.get('missed_followup_question', '')}")
+            if item.get("trigger_type"):
+                lines.append(f"  Trigger: {item.get('trigger_type')}")
+        lines.extend(["", "## Likely Misclassified Drivers", ""])
+        for item in audit_feedback.get("likely_misclassified_driver_patterns", []):
+            lines.append(
+                f"- {item.get('observed_surface_frame', '')} -> {item.get('possible_underlying_driver', '')}"
+            )
+        lines.extend(["", "## Evidence Handling Issues", ""])
+        for item in audit_feedback.get("evidence_handling_issues", []):
+            lines.append(f"- [{item.get('severity', 'unknown')}] {item.get('issue', '')}")
+        lines.extend(["", "## Prompt Adjustments", ""])
+        for item in audit_feedback.get("prompt_adjustments", []):
+            lines.append(f"- {item.get('adjustment_type', '')}: {item.get('text', '')}")
+        lines.extend(["", "## Carry-Forward Rules", ""])
+        for item in audit_feedback.get("carry_forward_rules", []):
+            lines.append(f"- {item.get('rule_id', '')}: {item.get('rule', '')}")
+        lines.extend(["", "## Blocked Feedback", ""])
+        for item in audit_feedback.get("blocked_feedback", []):
+            lines.append(f"- {item.get('blocked_item', '')} ({item.get('block_reason', '')})")
         return "\n".join(lines).rstrip() + "\n"

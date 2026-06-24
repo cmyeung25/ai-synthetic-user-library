@@ -1,0 +1,135 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept, using `exchange_1` to `exchange_3` to ground later reactions in actual behavior.",
+    "Most asked questions were short, conversational Cantonese and kept a single participant-facing focus.",
+    "Coverage sequencing was generally adaptive rather than questionnaire-like: recent behavior, workaround, concept reaction, trust boundary, follow-through, embedding, and repeat-use were all covered in 8 exchanges.",
+    "The synthesis preserves important weak-evidence caveats in several places, including the synthetic-only disclaimer and multiple evidence gaps."
+  ],
+  "findings": [
+    {
+      "category": "Question neutrality",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded and bundles several favorable premises: `免費`, inside the bank app, and unified view of `MPF、基金同現金`. That framing can inflate first-click interest rather than neutrally testing the concept.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "FACILITATOR TRACE[3]"
+      ],
+      "recommendation": "Introduce the concept more neutrally with fewer built-in benefits, then probe what the participant expects to see and why before asking willingness to open it."
+    },
+    {
+      "category": "Concept validation rigor",
+      "severity": "medium",
+      "observation": "Curiosity and repeat-use were separated, but trial and real follow-through remained hypothetical. `exchange_6` asks what she would do if the tool said cash was low or allocation was skewed, which is a stated intention, not observed behavior with the concept.",
+      "evidence_refs": [
+        "exchange_6.facilitator",
+        "exchange_6.persona",
+        "SYNTHESIS.retention_risk",
+        "SYNTHESIS.first_value_requirement"
+      ],
+      "recommendation": "Label these outputs explicitly as hypothetical concept reactions and avoid treating them as behavioral proof. In the next rerun, ask for a comparable past warning or budgeting moment and compare likely tool use against that recalled case."
+    },
+    {
+      "category": "Synthesis overreach",
+      "severity": "medium",
+      "observation": "Some synthesis claims exceed the evidence from one synthetic interview. `workflow_effect: replaces_workflow` is stronger than the transcript supports; the participant said she would use it as `快速概覽` and still self-check expenses before acting. Several assumption statuses marked `supported` are too strong for one persona and largely hypothetical concept feedback.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.assumption_validation"
+      ],
+      "recommendation": "Downgrade these to narrower claims such as `may streamline part of the current check` or `directionally supported for this persona`, and tie each claim to whether it is observed behavior or stated reaction."
+    },
+    {
+      "category": "Evidence discipline",
+      "severity": "medium",
+      "observation": "A few synthesis conclusions rely on adjacent evidence or generalized wording beyond exact transcript support. For example, `pricing_signal.free_trial_need` says free core functionality matches her expectation, but no direct pricing tradeoff or willingness-to-pay probe was asked; `service_embedding` and `next_experiment` are reasonable design hypotheses but not participant evidence.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "exchange_4.persona",
+        "SYNTHESIS.pricing_signal",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Keep design implications, pricing implications, and experiment ideas clearly separated from participant evidence. Mark unsupported fields as `not tested` rather than inferring from absence of objection."
+    },
+    {
+      "category": "Domain fit alignment",
+      "severity": "medium",
+      "observation": "The stated research goal asks which Aladdin-based analytics functions would materially help real decisions and how each should be embedded, but this interview mostly validates a lightweight cash-and-allocation overview. It does not directly test specific analytics functions or compare them against actual changed actions.",
+      "evidence_refs": [
+        "RESEARCH GOAL",
+        "exchange_4.facilitator",
+        "exchange_6.persona",
+        "SYNTHESIS.key_insights"
+      ],
+      "recommendation": "In the next rerun, compare 2-3 concrete decision-facing outputs tied to an actual recalled case, and ask which one would change what she does differently versus what merely sounds nice."
+    },
+    {
+      "category": "Coverage closure",
+      "severity": "low",
+      "observation": "Stopping at 8 exchanges was reasonable given the declared coverage status, but one useful missing layer remained: current workaround friction was described, yet no direct contrast asked what this concept would replace, what it would not replace, or what information she would still need before acting.",
+      "evidence_refs": [
+        "COVERAGE STATUS",
+        "exchange_2.persona",
+        "exchange_6.persona",
+        "FACILITATOR TRACE[8]"
+      ],
+      "recommendation": "If turn budget allows one extra question, ask what she would still check elsewhere after seeing the health check and what decision it would actually save her from doing manually."
+    }
+  ],
+  "required_improvements": [
+    "Make concept introduction more neutral by removing stacked favorable premises from the first concept question.",
+    "Separate observed behavior from hypothetical concept reactions in synthesis labels and conclusions.",
+    "Reduce support strength for assumption validation and workflow claims that come from one synthetic persona and hypothetical responses.",
+    "Add direct probes that compare concrete analytic outputs against actual decision changes, not just stated usefulness.",
+    "Treat pricing, RM handoff boundaries, and advanced analytics suitability as untested unless directly asked."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one comparable recent money-management moment and test whether a portfolio overview would have changed a concrete action or only saved time.",
+      "Compare two specific outputs in plain language, such as `cash buffer warning` versus `allocation concentration flag`, and ask which would matter more in that recalled case.",
+      "Probe what she would still need to verify outside the tool before acting, to isolate what the tool can and cannot replace.",
+      "Ask where self-serve should end and when she would want RM/help, since assisted-service boundaries were inferred rather than directly tested."
+    ],
+    "coverage_gap_actions": [
+      "Probe actual versus hypothetical follow-through: `if this had existed in that school-fees moment, what exactly would you have done differently, if anything?`",
+      "Directly test pricing instead of inferring it from positive reaction to `free` language.",
+      "Probe advanced-function fit with one concrete example each and ask whether it is useful, confusing, or overkill for this persona.",
+      "Ask whether she would use the same overview in a month without expense pressure, since repeat-use was conditioned but not contrasted against a calm month."
+    ],
+    "prompt_adjustments": [
+      "For `concept_validation`, require the first concept question to avoid stacked benefits like free, pre-integrated, and no setup unless those are the variable being tested.",
+      "Force synthesis fields to label each claim as `observed past behavior`, `stated preference`, or `hypothetical concept reaction`.",
+      "Cap assumption statuses at `partially_supported` by default for a single synthetic interview unless the evidence is directly observed and tightly matched.",
+      "Add an observer rule to challenge any synthesis claim that implies replacement, retention, pricing, or product strategy without a direct participant-facing probe."
+    ],
+    "turn_budget_guidance": "The current soft/hard policy was sufficient for baseline concept screening, but one or two extra turns would improve decision-value evidence. Widen slightly when the research goal requires comparing specific analytics outputs or separating self-serve from assisted-service boundaries."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic concept-validation interview. Any product, need, POV, HMW, pricing, or feature-prioritization implication should be treated as directional only and not as market evidence."
+}

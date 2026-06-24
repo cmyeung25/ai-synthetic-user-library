@@ -1,0 +1,442 @@
+{
+  "run_id": "concept_panel_20260623_19feece1",
+  "topic": "Aladdin Solution In Retail Banking",
+  "language": "Natural Cantonese Traditional Chinese",
+  "core_assumption_count": 8,
+  "persona_count": 5,
+  "problem_strength_counts": {
+    "medium": 2,
+    "unknown": 3
+  },
+  "average_quality_score": 3.0,
+  "driver_type_counts": {},
+  "common_likely_drivers": [],
+  "common_unspoken_constraints": [],
+  "common_value_tensions": [],
+  "facilitator_primary_failure_modes": [
+    {
+      "failure_mode": "Coverage was prioritized over depth after concept introduction, causing missed follow-ups on real past analogs, decision thresholds, and concrete next actions.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "example_assessment": "Good breadth and conversational flow; insufficient depth on the highest-signal clues once the participant revealed a concrete workaround and a credibility threshold."
+    }
+  ],
+  "common_missed_high_value_followups": [
+    {
+      "question": "Can you walk me through the last time you noticed something was off but chose not to act right away? What made it a 'note for later' instead of a follow-up then?",
+      "trigger_type": "workaround_contains_delay_or_deferral",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When a participant describes deferral, ask for a specific recent instance and the threshold that separates noticing from acting."
+    },
+    {
+      "question": "Have you ever received anything similar before, from any tool or person? What did you actually do next that time?",
+      "trigger_type": "hypothetical_action_claim",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "Convert hypothetical action claims into evidence by asking for the closest real-world analog and observed follow-through."
+    },
+    {
+      "question": "If you saw it at that moment, what would be the very next step you would take in the product or outside it?",
+      "trigger_type": "workflow_timing_preference",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "Do not stop at timing preferences; ask for the immediate action path to ground embedding recommendations."
+    },
+    {
+      "question": "What is the minimum information that would still feel too weak to act on, even if the alert looked relevant?",
+      "trigger_type": "participant_names_trust_criterion",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "After a participant states what would build trust, add a contrast probe to define the failure boundary."
+    },
+    {
+      "question": "What would happen in the first two or three uses that would make you stop checking it, even if you liked the idea at first?",
+      "trigger_type": "repeat_use_claim",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "Separate initial appeal from sustained use with an early-dropoff probe."
+    }
+  ],
+  "common_likely_misclassified_drivers": [
+    {
+      "possible_underlying_driver": "The stronger underlying driver may have been decision efficiency: reducing the work needed to judge whether follow-up is warranted.",
+      "observed_surface_frame": "The participant seemed to be expressing a feature preference for one type of signal over another.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "When a participant appears to prefer a feature, test whether the real driver is speed, confidence, coordination, or avoidance of extra work."
+    },
+    {
+      "possible_underlying_driver": "The stronger underlying driver may have been workflow protection: wanting support only when it fits an existing review routine and does not create interruption cost.",
+      "observed_surface_frame": "The participant seemed to be describing a preferred notification moment.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "Treat stated timing preferences as potential proxies for a deeper control or interruption boundary and probe that boundary directly."
+    }
+  ],
+  "assumption_matrix": [
+    {
+      "assumption_index": 1,
+      "assumption": "好多零售客仍然用碎片化、產品層級視角管理組合，而唔係真正 whole-portfolio process。",
+      "status_counts": {
+        "supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "supported",
+          "rationale": "受訪者係分開銀行 app 同券商 app 睇，再靠自己整合判斷。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "supported",
+          "rationale": "參與者明確以銀行 app 與證券 app 之間手動比對方式處理，觸發亦來自市況反覆，屬事件驅動和分散視圖。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 2,
+      "assumption": "最重要嘅 blind spot 因人而異，應由行為同情境浮現。",
+      "status_counts": {
+        "partially_supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "partially_supported",
+          "rationale": "今次個案明確指出集中度最有用，但只係一位 persona，未足以代表其他人。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "partially_supported",
+          "rationale": "此個案最在意的是集中度、波動解釋、提示不要過度驚嚇，以及操作 friction；未見其特別強調其他盲點如目標連結或 FX。單一個案只能部分支持異質性。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 3,
+      "assumption": "零售客如果用簡單語言包裝，可以指出具體 analytics 功能對實際決策有幫助。",
+      "status_counts": {
+        "supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "supported",
+          "rationale": "集中度、分布差距、具體風險解釋都被視為有用，但前提係講人話。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "supported",
+          "rationale": "參與者具體指出希望看到集中在哪類、波動程度及判斷原因，並說明這些資訊如何影響其供款或再買決定。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 4,
+      "assumption": "最高價值 use case 會綁定真實客戶時刻，而唔係為咗展示機構級分析而展示。",
+      "status_counts": {
+        "supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "supported",
+          "rationale": "受訪者想喺主動檢查組合或月尾順手睇戶口時見到，而唔係平日被動轟炸。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "supported",
+          "rationale": "參與者清楚把價值綁在睇持倉、月供、買入前等時刻，而非平常推送或抽象分析。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 5,
+      "assumption": "有啲能力適合 self-serve retail，有啲更適合 RM 或 assisted service。",
+      "status_counts": {
+        "unknown": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "unknown",
+          "rationale": "今次冇直接測 RM 或 assisted-service 邊界。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "unknown",
+          "rationale": "訪談未有直接測試 RM 介入或哪些功能應保留在 assisted service。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 6,
+      "assumption": "trust、資料邊界、解釋方式同 action threshold 會影響免費功能會唔會成為日常習慣。",
+      "status_counts": {
+        "supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "supported",
+          "rationale": "受訪者明確要求具體解釋、少推送、提醒要準，先會持續用。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "supported",
+          "rationale": "參與者多次把採納與重用條件連到資料邊界、清楚解釋、不過度驚嚇，以及自己通常不即時交易的節奏。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 7,
+      "assumption": "深層洞察需要理解表面功能偏好背後嘅行為原因。",
+      "status_counts": {
+        "supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "supported",
+          "rationale": "佢唔即時賣出，係因為要先分辨成因，再連同現金需要一齊考慮；持續使用條件亦係節省判斷時間。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "supported",
+          "rationale": "其真正工作不是『想看更多圖表』，而是想分辨異常是否來自資金流或市值波動，並避免在短期波動時亂動作。"
+        }
+      ]
+    },
+    {
+      "assumption_index": 8,
+      "assumption": "客戶可以講清楚呢類體驗應該做乜同唔應該做乜。",
+      "status_counts": {
+        "supported": 2
+      },
+      "persona_results": [
+        {
+          "persona_id": "su_2001",
+          "persona_name": "Ivy Chan",
+          "status": "supported",
+          "rationale": "受訪者清楚講出應有解釋、出現時機、通知邊界同持續使用條件。"
+        },
+        {
+          "persona_id": "su_2002",
+          "persona_name": "Maggie Lau",
+          "status": "supported",
+          "rationale": "參與者能明確說出應做的事（清楚、快、指出忽略的集中位、在對的時刻出現）及不應做的事（過多權限、亂彈、重設、嚇人）。"
+        }
+      ]
+    }
+  ],
+  "additional_persona_specific_findings": [],
+  "personas": [
+    {
+      "persona_id": "su_2001",
+      "persona_name": "Ivy Chan",
+      "interview_id": "observed_20260623_6b8bb185",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "核心功能已假設免費；由訪談睇，重點唔係試用，而係準確度同節省判斷時間。",
+        "monthly_comfort_range": "不適用；今次冇測價格。",
+        "payment_justification": [
+          "受訪者只表達會唔會持續用，條件係節省時間、提醒準、減少手動比較。"
+        ],
+        "evidence_strength": "unknown"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "真係幫到佢慳判斷時間。",
+          "每次提醒都算準。",
+          "望完之後可以好快知道要唔要跟進。",
+          "唔使自己抄返去第二度做比較。"
+        ],
+        "drop_off_reasons": [
+          "提醒太籠統。",
+          "準確度低。",
+          "推送過多。",
+          "只係叫佢郁，但冇交代原因同影響。"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {
+        "neutrality": 3,
+        "probing_quality": 4,
+        "conversation_naturalness": 4,
+        "evidence_discipline": 2,
+        "causal_rigor": 3,
+        "hypothesis_validation_rigor": 3,
+        "synthesis_fidelity": 2,
+        "overall": 3
+      },
+      "top_likely_drivers": [],
+      "top_unspoken_constraints": [],
+      "value_tensions": [],
+      "missed_follow_up_questions": [],
+      "facilitator_primary_failure_mode": "Coverage was prioritized over depth after concept introduction, causing missed follow-ups on real past analogs, decision thresholds, and concrete next actions.",
+      "facilitator_missed_followups": [
+        {
+          "trigger_type": "workaround_contains_delay_or_deferral",
+          "priority": "high",
+          "participant_signal": "The participant said they note an imbalance but often do not act immediately, and may weigh it against another consideration first (`exchange_2.persona`, `exchange_4.persona`).",
+          "missed_followup_question": "Can you walk me through the last time you noticed something was off but chose not to act right away? What made it a 'note for later' instead of a follow-up then?",
+          "generic_learning": "When a participant describes deferral, ask for a specific recent instance and the threshold that separates noticing from acting."
+        },
+        {
+          "trigger_type": "participant_names_trust_criterion",
+          "priority": "high",
+          "participant_signal": "The participant gave a concrete credibility requirement for what a useful explanation must include (`exchange_5.persona`).",
+          "missed_followup_question": "What is the minimum information that would still feel too weak to act on, even if the alert looked relevant?",
+          "generic_learning": "After a participant states what would build trust, add a contrast probe to define the failure boundary."
+        }
+      ],
+      "facilitator_likely_misclassified_drivers": [
+        {
+          "observed_surface_frame": "The participant seemed to be expressing a feature preference for one type of signal over another.",
+          "possible_underlying_driver": "The stronger underlying driver may have been decision efficiency: reducing the work needed to judge whether follow-up is warranted.",
+          "why_the_surface_frame_is_weak": "The transcript includes multiple cues about saving judgment time, avoiding manual comparison, and not being pushed into action, which point to workload management rather than only liking one content type (`exchange_4.persona`, `exchange_7.persona`).",
+          "generic_learning": "When a participant appears to prefer a feature, test whether the real driver is speed, confidence, coordination, or avoidance of extra work."
+        },
+        {
+          "observed_surface_frame": "The participant seemed to be describing a preferred notification moment.",
+          "possible_underlying_driver": "The stronger underlying driver may have been workflow protection: wanting support only when it fits an existing review routine and does not create interruption cost.",
+          "why_the_surface_frame_is_weak": "The answer combined timing with a clear aversion to unsolicited interruption, so the moment preference may be secondary to protecting attention and control (`exchange_6.persona`).",
+          "generic_learning": "Treat stated timing preferences as potential proxies for a deeper control or interruption boundary and probe that boundary directly."
+        }
+      ]
+    },
+    {
+      "persona_id": "su_2002",
+      "persona_name": "Maggie Lau",
+      "interview_id": "observed_20260623_04d4805e",
+      "problem_strength": "medium",
+      "pricing_signal": {
+        "free_trial_need": "核心功能免費已符合其使用前提；受訪者更在意先見到價值而非價格。",
+        "monthly_comfort_range": "不適用；本次概念設定為免費，訪談中亦未測試付費意願。",
+        "payment_justification": [
+          "受訪者的採納條件集中在清晰度、實用性、低設定成本和不過度索取資料，不是價格。"
+        ],
+        "evidence_strength": "unknown"
+      },
+      "retention_risk": {
+        "continuation_reasons": [
+          "每次月供前或加減持倉時都能快速幫到手。",
+          "能指出自己容易忽略的集中位。",
+          "解釋清楚，且不誇張嚇人。",
+          "不用每次重新設定，手機上可順手完成。"
+        ],
+        "drop_off_reasons": [
+          "只提供表面訊號，冇原因解釋。",
+          "提醒太頻密或太驚嚇。",
+          "要求外部資料或過多權限。",
+          "需要重複設定或操作成本高。",
+          "出現時機不對，打斷原本流程。"
+        ],
+        "workflow_effect": "replaces_workflow"
+      },
+      "quality": {},
+      "top_likely_drivers": [],
+      "top_unspoken_constraints": [],
+      "value_tensions": [],
+      "missed_follow_up_questions": [],
+      "facilitator_primary_failure_mode": "",
+      "facilitator_missed_followups": [],
+      "facilitator_likely_misclassified_drivers": []
+    },
+    {
+      "persona_id": "su_2003",
+      "persona_name": "Wong Mei Lin",
+      "interview_id": "observed_20260623_1023e693",
+      "problem_strength": "unknown",
+      "pricing_signal": {},
+      "retention_risk": {},
+      "quality": {},
+      "top_likely_drivers": [],
+      "top_unspoken_constraints": [],
+      "value_tensions": [],
+      "missed_follow_up_questions": [],
+      "facilitator_primary_failure_mode": "",
+      "facilitator_missed_followups": [],
+      "facilitator_likely_misclassified_drivers": []
+    },
+    {
+      "persona_id": "su_2004",
+      "persona_name": "Wong Mei Ling",
+      "interview_id": "observed_20260623_4d2cdcff",
+      "problem_strength": "unknown",
+      "pricing_signal": {},
+      "retention_risk": {},
+      "quality": {},
+      "top_likely_drivers": [],
+      "top_unspoken_constraints": [],
+      "value_tensions": [],
+      "missed_follow_up_questions": [],
+      "facilitator_primary_failure_mode": "",
+      "facilitator_missed_followups": [],
+      "facilitator_likely_misclassified_drivers": []
+    },
+    {
+      "persona_id": "su_2005",
+      "persona_name": "Iris Cheung",
+      "interview_id": "observed_20260623_9fcbe4ae",
+      "problem_strength": "unknown",
+      "pricing_signal": {},
+      "retention_risk": {},
+      "quality": {},
+      "top_likely_drivers": [],
+      "top_unspoken_constraints": [],
+      "value_tensions": [],
+      "missed_follow_up_questions": [],
+      "facilitator_primary_failure_mode": "",
+      "facilitator_missed_followups": [],
+      "facilitator_likely_misclassified_drivers": []
+    }
+  ],
+  "synthetic_only_disclaimer": "This panel contains synthetic AI pre-validation only. It cannot establish market demand, pricing, prevalence, or replace interviews with real people."
+}

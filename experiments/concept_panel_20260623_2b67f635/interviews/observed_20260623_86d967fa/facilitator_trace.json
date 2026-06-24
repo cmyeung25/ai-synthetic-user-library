@@ -1,0 +1,461 @@
+[
+  {
+    "interview_phase": "opening",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "開始先用中性、貼合投資情境嘅開放式 recent-event 問題，先建立真實行為同情境，再之後追問現有做法同 workaround；未到介紹概念嘅時候。",
+    "message_to_persona": "你最近一次主動睇自己投資組合係幾時，當時發生咗咩事？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次實際 portfolio 檢視行為由咩觸發",
+      "當時實際睇咗邊啲資料或畫面",
+      "而家用咩方法整理同理解整體持倉",
+      "而家做法入面有咩斷裂位或 workaround",
+      "之後幾時先適合中性介紹 Portfolio Health Check",
+      "對資料整合、alerts、RM 介入同解釋深度嘅信任邊界",
+      "見到風險訊號後實際會點做",
+      "乜嘢會令呢個免費功能變成恆常習慣"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "參與者已提供一個具體近例，但仍然偏概括；先收窄到當次入 app 嘅第一步，補足實際行為，再之後先追 current workaround 同概念。",
+    "message_to_persona": "你嗰次撳入銀行 app 之後，第一樣實際睇咗咩？",
+    "evidence_updates": [
+      {
+        "claim": "參與者平時唔會定期主動檢視正式投資組合。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "最近一次相關行為發生喺上個月，觸發因素係連續見到市況唔穩嘅新聞。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當次檢視發生喺等接小朋友放學期間，屬於碎片時間內用銀行 app 順手查看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當次查看的目的是確認跌幅未去到需要即刻處理。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當次檢視先睇邊個畫面或指標",
+      "佢實際點判斷『未去到要即刻處理』",
+      "平時依賴咩方法或工具去掌握組合",
+      "現有做法有咩缺口先會令佢只係順手望一望",
+      "之後適合先中性介紹 Portfolio Health Check",
+      "對資料整合同銀行解讀嘅信任邊界係乜",
+      "如果見到風險訊號會實際做咩",
+      "乜嘢情況會令佢持續再用呢類免費功能"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_method",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "已見到當次先睇總數，但未知道佢平時用咩方法進一步判斷同補位；下一題沿住同一事件追落去，可同時補 current workaround。",
+    "message_to_persona": "見完個總數之後，你通常會點樣再判斷使唔使處理？",
+    "evidence_updates": [
+      {
+        "claim": "參與者平時檢視投資時，第一眼主要睇整體總數有冇明顯下跌，而唔係逐隻資產查看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會用自己對上一次記憶中的大概金額，作為當次判斷的比較基準。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者目前可能依賴粗略記憶而非系統化組合檢視方式。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "見完總數後實際會再睇咩資料或畫面",
+      "佢而家用咩方法判斷跌幅是否需要處理",
+      "現有做法入面有咩靠記憶、零散資訊或其他 workaround",
+      "之後再中性介紹 Portfolio Health Check 時第一反應會點",
+      "對銀行提供整體分析同外部資產整合嘅信任邊界係咩",
+      "見到風險訊號後實際下一步會點做",
+      "乜嘢情況會令呢個免費功能變成恆常習慣",
+      "邊個服務時刻最適合出現呢類分析"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "近期實際行為同現有判斷方法已經建立到，依家可以中性介紹概念，先收第一反應，再之後先追 trust、action 同 service moment。",
+    "message_to_persona": "如果你個銀行 app 有個免費嘅 Portfolio Health Check，會幫你用簡單方式睇整體風險、集中度同持倉分布，你第一反應會係點？",
+    "evidence_updates": [
+      {
+        "claim": "參與者通常只會先看整體總數，再決定是否需要深入查看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當總數只有輕微上落時，參與者多數不會進一步處理。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "較明顯跌幅或較誇張的市場新聞，會觸發參與者再查看哪些部分跌得多。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者深入查看時，會想分辨是短期波動還是配置過度集中。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "對 Portfolio Health Check 嘅第一反應係有用、懷疑、定覺得太複雜",
+      "邊類分析最貼近佢真實決策時刻",
+      "銀行點樣呈現先唔會似推銷",
+      "如果見到風險或集中提示，佢下一步會做咩",
+      "咩情況會令佢持續再用而唔係只係睇一次",
+      "呢類分析應該喺咩服務時刻出現，例如市況波動後定期檢查定交易後"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_probe",
+    "probing_strategy": "causal_probe",
+    "decision_rationale": "參與者已表達興趣同明確疑慮，下一步應先拆開 trust boundary，了解乜嘢具體做法會令佢覺得過界，而唔好一次過混入行動或留存。",
+    "message_to_persona": "咩情況會令你覺得佢開嘅權限或者跟住嘅做法過咗界？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對免費 Portfolio Health Check 有初步興趣，因為可代替自己慢慢拆開分析。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者第一反應包含對易用性的懷疑，擔心工具未必真係簡單。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者擔心免費檢查背後可能要求過多權限，或之後帶來持續推銷。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "邊種資料權限或資料整合方式會被視為可接受",
+      "點樣呈現先會令佢覺得唔係推銷",
+      "見到風險或集中提示後實際會做咩",
+      "咩情況會令佢持續再用而唔係只試一次",
+      "呢類分析最適合喺咩服務時刻出現"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "action_probe",
+    "probing_strategy": "consequence_probe",
+    "decision_rationale": "Trust boundary is now concrete. Next highest-value gap is whether the concept would change behaviour, so ask what the participant would actually do after a specific signal rather than jump to retention or channel placement.",
+    "message_to_persona": "如果佢真係提醒你有一部分太集中，你下一步通常會點做？",
+    "evidence_updates": [
+      {
+        "claim": "參與者認為與持倉健康檢查無關的權限，例如通訊錄或定位，屬於過界。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不接受一開始被要求上傳大量自己認為不必要的資料。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對看完一次後持續被通知、被推產品或被暗示不跟建議就有問題，會產生明顯反感。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "見到集中度提示後會實際採取咩行動，定係只會再觀望",
+      "咩情況會令佢持續再用而唔係只試一次",
+      "呢類分析最適合喺咩服務時刻出現"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "feature_to_moment_mapping",
+    "decision_rationale": "行動跟進已經有，仲欠留存同服務植入。下一題用具體使用時刻去同時測試佢會唔會再次用，以及應該喺邊個客戶旅程節點出現。",
+    "message_to_persona": "咩情況下你會再開呢個 Portfolio Health Check，而唔係只係試一次？",
+    "evidence_updates": [
+      {
+        "claim": "如果收到集中度提示，參與者不會立即交易。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會先看清楚系統指出哪一部分集中，以及集中到甚麼程度。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者之後可能會回到銀行原有資料再核對一次。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者傾向把較需要思考的投資決定延後到晚上有空時再處理。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "乜嘢提醒或時刻會令佢重複使用呢個功能",
+      "呢類分析最適合喺咩服務時刻出現，例如市況波動後、月度檢查定交易後"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "service_embedding",
+    "probing_strategy": "feature_to_moment_mapping",
+    "decision_rationale": "只欠 service embedding；參與者已講到想要低摩擦、可比較嘅重複使用方式，下一題直接問最啱出現嘅時刻，可收集 journey placement 而唔重複前面內容。",
+    "message_to_persona": "你覺得呢個功能最啱喺咩時候出現畀你睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者只有在使用門檻低、不用每次重新設定的情況下，才較可能重複使用 Portfolio Health Check。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者重複使用的條件之一，是內容要真正有用。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望工具不只提示集中，還能提供清楚但不煩擾的比較，讓他隔一段時間再看時知道情況是好轉還是變差。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "呢類分析最適合喺咩服務時刻出現，例如市況波動後、定期檢查定交易後"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "closing",
+    "probing_strategy": "sufficiency_check",
+    "decision_rationale": "所需 coverage 已完成，最新一答亦補足咗 service embedding；再追問大機會只會重複已有證據，唔會明顯提升洞察。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "參與者認為 Portfolio Health Check 最適合在已經查看總數後，或見到市況波動時出現。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果功能太早彈出，參與者多數會視為廣告。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果功能太遲才出現，參與者會覺得意義不大。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "呢位參與者而家主要用事件觸發而唔係定期方式管理投資組合，因為佢只想喺波動明顯時快速確認需唔需要處理，平時唔想花力氣拆解持倉。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "投資金額或產品種類本身較少，所以未覺得需要更系統化管理",
+          "日常時間碎片化，令佢傾向最低摩擦嘅檢查方式"
+        ],
+        "validation_gap": "未有第二個實際 portfolio 檢視事件去比較佢喺其他市場情況下會否用唔同方法。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "對呢位參與者而言，Portfolio Health Check 要變成有用工具，關鍵唔係更多分析，而係低摩擦、簡單解釋同可追蹤比較，幫佢喺短時間內判斷是否需要再處理。",
+        "supporting_evidence_refs": [
+          "exchange_4.persona",
+          "exchange_6.persona",
+          "exchange_7.persona",
+          "exchange_8.persona"
+        ],
+        "alternative_explanations": [
+          "佢其實更需要人工意見而唔係 app 內分析，只係今次未明確講出",
+          "佢重視嘅可能主要係避免被推銷，而分析本身只係次要吸引點"
+        ],
+        "validation_gap": "未測試唔同輸出形式之間嘅偏好，例如 alert、report 定 RM 輔助畫面。",
+        "confidence": "medium"
+      },
+      {
+        "hypothesis": "信任邊界會直接影響使用意願；如果資料要求或後續訊息被感知為超出健康檢查所需，參與者會快速將功能歸類為推銷而拒絕使用。",
+        "supporting_evidence_refs": [
+          "exchange_4.persona",
+          "exchange_5.persona",
+          "exchange_8.persona"
+        ],
+        "alternative_explanations": [
+          "佢對所有銀行數碼功能本身已偏審慎，唔只針對呢個概念",
+          "即使有推銷感，只要分析足夠有用，長期仍可能容忍部分訊息"
+        ],
+        "validation_gap": "未有實際對比案例去測試乜嘢提示頻率或資料請求量仍屬可接受。",
+        "confidence": "medium"
+      }
+    ],
+    "open_questions": [
+      "如果用 alert、dashboard、summary report 或 RM 跟進幾種形式呈現，佢會最信任邊種",
+      "如果功能整合外部資產但只需有限授權，佢嘅接受界線喺邊",
+      "遇到明顯 market drop 同平靜市況時，佢對比較資訊嘅需求會唔會唔同"
+    ],
+    "should_end": true,
+    "end_reason": "required_coverage_complete",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef43a-d4ae-7a12-81ea-c0d043d4fb34",
+    "decision_status": "not_asked_at_close"
+  }
+]

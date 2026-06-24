@@ -1,0 +1,180 @@
+{
+  "problem_evidence": {
+    "strength": "strong",
+    "supporting_quotes": [
+      {
+        "quote": "個 framing 同初步取捨通常係我要揹得比較多。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "我初步係偏向揀細改、快驗證。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "我通常只會講呢個係目前成本同時機下最合理嘅試法。",
+        "evidence_ref": "exchange_7.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次真實決定係 onboarding flow 改動，要定是否加入新提示同精簡一步。",
+      "佢先睇 drop-off 同 support feedback，確認 friction 存在，再拉 design 同 engineering 對可行性。",
+      "接近既定 release、engineering bandwidth 緊、stakeholder 想快啲見 completion 改善，令佢偏向小改快驗證。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "先睇 funnel 同 drop-off。",
+      "翻 support ticket 同 call note，對卡位是否一致。",
+      "有 replay 或 prototype 就用嚟分辨係理解問題定 flow 太重。",
+      "如果新訊號同現有解讀唔同，會返去對 event、replay、support case 先。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "唔可以扮成真人研究替代品。",
+      "唔可以只係再加一層要自己重新驗證嘅工作。",
+      "輸出要可以同現有 analytics、support feedback 或之前訪談對得返一部分。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "以現有 product inputs 做早期 framing，例如 analytics、support feedback、replay、prototype 呢類已存在材料。",
+      "清楚講明 output 背後假設、用到邊類 input、同邊度可能會錯。"
+    ],
+    "rejected_data_access": [
+      "任何暗示可以代替真人研究嘅定位。",
+      "只有『好似幾似真』但無假設、無來源、無錯誤邊界嘅輸出。",
+      "同真實數據或團隊討論一對就企唔住嘅 generic 輸出。"
+    ],
+    "required_trust_explanation": [
+      "要分清楚邊啲係啟發，邊啲唔可以當 evidence。",
+      "要有 evidence trace，而唔只係一段似真說話。",
+      "要明確標示只適合早期假設同問題 framing。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "幫佢喺未排到真人訪談之前，快啲見到有冇明顯盲點。",
+      "提出一個值得驗證嘅新假設，而呢個假設可以再用 event、replay、support case 去交叉驗證。",
+      "幫到下一輪驗證方向調整，而唔係直接叫佢改 roadmap。"
+    ],
+    "time_to_value": "第一次使用就要喺早期 framing 階段俾到可驗證嘅新方向。",
+    "abandonment_triggers": [
+      "每次都要自己花好多時間再驗證，變成多一層工作。",
+      "輸出太 generic，對唔上真實數據或團隊討論。",
+      "產品講到好似可以取代真人研究。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "高；從訪談睇，佢未表現出未試先付費意願，較似要先見到可用輸出。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "要證明唔係純粹有趣，而係真係縮短早期 framing 同下一輪驗證方向判斷時間。",
+      "要有清楚 workflow insertion，而唔係加層。",
+      "要有可對照現有 evidence 嘅輸出透明度。"
+    ],
+    "evidence_strength": "hypothetical"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "持續幫到早期 framing。",
+      "能穩定提出可被現有 evidence 驗證的新假設。",
+      "能取代部分前期整理或初步假設生成工作。"
+    ],
+    "drop_off_reasons": [
+      "只係增加驗證成本。",
+      "輸出 generic、企唔住。",
+      "需要佢自己做太多二次判讀先有用。"
+    ],
+    "workflow_effect": "adds_layer"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "參與者有真實嘅 pre-research / concept-validation 問題值得解。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "佢經常要做 prioritization 同概念判斷，而且真有 evidence 缺口、時程壓力同跨職能對齊需要。"
+    },
+    {
+      "assumption": "現有 workaround 不足到值得加新工具。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_8.persona",
+        "exchange_12.persona"
+      ],
+      "rationale": "現有做法基本可用，但喺未排到真人訪談前有 framing 空窗；同時佢對『加層』非常敏感，所以不足感係存在但未算強烈。"
+    },
+    {
+      "assumption": "Synthetic users 只有喺幫到真實下一步時先有價值，而唔係模擬市場證明。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_9.persona",
+        "exchange_10.persona",
+        "exchange_11.persona"
+      ],
+      "rationale": "佢明確要求只作 early framing，同埋只會當成新假設來源，再用其他 evidence 驗證。"
+    },
+    {
+      "assumption": "Evidence trace、透明度同 synthetic-only framing 會明顯影響信任。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_9.persona",
+        "exchange_10.persona"
+      ],
+      "rationale": "呢個係佢最直接提出嘅 trust gate。"
+    },
+    {
+      "assumption": "產品要 fit 喺真人訪談之前，而唔係同真人訪談競爭。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_9.persona"
+      ],
+      "rationale": "佢清楚將工具定位喺未排到真人訪談之前嘅 early framing。"
+    },
+    {
+      "assumption": "如果 output 指到具體問題，就會直接改 priority。",
+      "status": "invalidated",
+      "evidence_refs": [
+        "exchange_11.persona"
+      ],
+      "rationale": "佢唔會即刻改 priority，只會當成要驗證嘅新假設。"
+    },
+    {
+      "assumption": "Retention 取決於可唔可以取代現有一步，而唔係再加層。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_12.persona"
+      ],
+      "rationale": "佢最明確嘅停用原因就係『多咗一層工作』。"
+    },
+    {
+      "assumption": "願意付費主要由有趣輸出驅動。",
+      "status": "weakened",
+      "evidence_refs": [
+        "exchange_9.persona",
+        "exchange_10.persona",
+        "exchange_12.persona"
+      ],
+      "rationale": "從證據睇，佢更在意決策槓桿、透明度同減少工作，而唔係輸出本身有趣。"
+    }
+  ],
+  "key_insights": [
+    "呢位 PM 做 roadmap / feature priority 時，核心唔係搵一個『正確答案』，而係喺證據未完備下，搵到一個公開可 defend、私下仍可保留、而且成本同時機合理嘅試法。",
+    "佢而家已經有一套輕量 triage workflow：analytics、support、call note、replay、prototype 交叉比對。新工具如果唔能夠縮短呢步，反而要佢再做一次驗證，就會被視為負擔。",
+    "AI synthetic-user platform 對佢最合理嘅位置係 early framing，不係決策終局器，更唔係真人研究替代品。",
+    "信任門檻非常具體：要講得出假設、input、可能出錯位，仲要同現有 evidence 對得返一部分。",
+    "最強 adoption signal 係『幫我產生一個值得驗證、而家未諗到嘅新假設』；最強 rejection signal 係『講得似真，但 generic，同真數據對唔上』。"
+  ],
+  "next_experiment": "用真實 onboarding case 做一個最細 workflow test：輸入現有 analytics、support feedback 同 prototype context，產出 3-5 個 synthetic objection / confusion hypotheses，每個都附假設、input basis、可能錯位。然後觀察 PM 會唔會用其中任何一個去改下一輪驗證方向，並量度佢為核實輸出額外花咗幾多時間。",
+  "evidence_gaps": [
+    "未驗到 pricing boundary，同邊個 buyer 會批 budget。",
+    "未驗到第一週 adoption 成功標準有冇團隊共識，而唔只係呢位 PM 個人觀點。",
+    "未見到一個真實 contrast case：同類問題下，佢完全唔需要 synthetic framing 亦能快速決策嘅情況。",
+    "只訪到一位 synthetic persona，未能代表其他 PM、founder 或 research lead。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅模擬訪談洞察，用於 AI pre-validation，同真人市場證據唔等同，亦唔應單獨用作產品、定價或市場結論。"
+}

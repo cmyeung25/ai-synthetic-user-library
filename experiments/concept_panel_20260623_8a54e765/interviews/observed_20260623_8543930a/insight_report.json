@@ -1,0 +1,154 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "主要係想確認下有冇跌得太多，同埋月供嗰筆有冇照常入到。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "有時我會順手同月供紀錄或者銀行戶口一齊望，唔係淨係睇升跌，主要係避免自己憑一刻情緒亂郁。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "自己以為分散咗，但原來風險都係堆埋一邊。",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次檢視係夜晚喺手機 app 快速睇一眼，見到兩隻位向下就截圖，當晚冇交易。",
+      "之後通常隔幾日再開 app，比對價格、比例，同埋當初買入理由仲成唔成立。",
+      "會連住月供紀錄同銀行戶口一齊睇，目標係避免情緒化調整。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用手機投資 app 做快速檢查。",
+      "見到異動先截圖，隔幾日再手動比較。",
+      "用月供去慢慢拉平，而唔係即時買賣。",
+      "需要時會同銀行戶口、月供紀錄一齊睇。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "唔想被迫即時交易。",
+      "唔想增加一輪額外分析工序。",
+      "唔想功能變成高頻噪音 push。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行內持倉整合分析。",
+      "結合月供紀錄同現金安排去睇協調度。",
+      "喺 app 內先 self-serve 睇結果。"
+    ],
+    "rejected_data_access": [
+      "冇基準、冇對比、淨係一句『風險偏高』嘅黑箱提示。",
+      "平時無啦啦因少少市況波動就 push。",
+      "一開始就帶去 RM 跟進、令人有被追住嘅感覺。"
+    ],
+    "required_trust_explanation": [
+      "要見到按咩分類。",
+      "要見到而家邊類資產佔幾多。",
+      "要有合理範圍或基準。",
+      "要解釋點解會判做過重。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一打開就睇到有冇某類資產過重。",
+      "可以直接睇到分散表面之下嘅實際風險有冇堆埋一邊。",
+      "最好同現金安排一齊睇到有冇唔協調。"
+    ],
+    "time_to_value": "月供前後或者月尾 check 嗰陣，兩三下內見到重點。",
+    "abandonment_triggers": [
+      "要用家自己再做一輪分析。",
+      "口徑成日變。",
+      "提醒太頻密、變噪音。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費符合受訪者使用前提；今次冇測 price sensitivity。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "未有付費意願證據；受訪者只表達免費情境下會考慮使用。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "每次都真係幫佢快啲睇清楚。",
+      "輸出口徑一致。",
+      "嵌入喺本身已經會做嘅月供前後或月尾檢查時刻。"
+    ],
+    "drop_off_reasons": [
+      "只係製造額外分析工作。",
+      "提醒冇基準、解釋太空泛。",
+      "市況少少波動就亂 push。",
+      "一開始就帶銷售或 RM 跟進感。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "呢位 persona 目前係用碎片化、事件驅動方式管理 portfolio，而唔係完整 whole-portfolio process。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "佢係夜晚順手用手機 quick check，靠截圖、隔幾日再比較，同月供/銀行戶口拼埋睇，明顯係輕量、手動、事件驅動。"
+    },
+    {
+      "assumption": "Aladdin-type analytics 若翻譯成簡單直接嘅 retail 輸出，會對實際決策有幫助。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "佢明確想睇過重、假分散、現金協調，亦講到呢啲提示會影響佢用月供慢慢拉平或考慮減持。"
+    },
+    {
+      "assumption": "最高價值要綁定真實 customer moment，而唔係平時獨立推送。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "佢只想喺睇組合或準備調整月供時出現，反感平時無端 push。"
+    },
+    {
+      "assumption": "部分能力應該 self-serve，RM 只係升級支援，而唔係預設入口。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_8.persona"
+      ],
+      "rationale": "佢想先自己喺 app 消化，睇完都唔明或涉及明顯調整先再考慮 RM。"
+    },
+    {
+      "assumption": "零售客嘅最重要 blind spot 未必係所有高階風險維度，而可能係簡單嘅集中度同現金協調。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona"
+      ],
+      "rationale": "受訪者自發提出嘅唔係複雜 analytics，而係『有冇偏咗同一類』同『同現金安排協唔協調』。"
+    }
+  ],
+  "key_insights": [
+    "受訪者而家唔係冇檢查 portfolio，而係用低頻、手動、情緒控制型流程去管理，所以最有價值嘅唔係更多數據，而係更快睇清楚重點。",
+    "最吸引佢嘅能力係揭示『表面分散但實際集中』，再加簡單清楚嘅過重解釋同基準。",
+    "功能最好嵌入月供前後、月尾 review 呢類本來就會發生嘅 moment，而唔係 market-noise push alert。",
+    "信任唔靠品牌或術語，靠可見分類、占比、合理範圍同判斷原因。",
+    "行動模式偏向 gradual adjustment：先理解，再用未來一兩次月供慢慢拉平，只有偏離好明顯先考慮減持。"
+  ],
+  "next_experiment": "用另一位同樣有月供習慣但更依賴 RM 或更常交易嘅 persona，測試同一個 Portfolio Health Check 係咪都應該以『self-serve 先、RM 升級後』為主；同時比兩種原型輸出做對照：一種係簡單過重+基準卡片，一種係較技術化 dashboard，睇邊種更快觸發理解同後續行動。",
+  "evidence_gaps": [
+    "只有一位 synthetic persona，唔代表 V5 其他 persona。",
+    "未測試外部資產整合接受度。",
+    "未驗證除集中度/現金協調外，其他功能例如情景分析、貨幣風險、壓力測試對佢係咪真有用。",
+    "未測試實際 UI 格式，例如 alert、dashboard、report card 邊種最好。",
+    "冇收集到佢對 RM 參與門檻更細緻嘅條件，例如通知方式、預約形式、是否接受被動建議。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念驗證前測，不可當成人類市場證據；所有洞察同假設都需要再用真實香港零售銀行客訪談驗證。"
+}

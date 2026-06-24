@@ -1,0 +1,279 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "panel",
+  "run_id": "concept_panel_20260623_df0fd707",
+  "topic": "Aladdin solution in retail customer",
+  "audited_persona_count": 1,
+  "persona_count": 1,
+  "ready_for_global_rule_count": 0,
+  "blocked_feedback_count": 2,
+  "top_failure_modes": [
+    {
+      "failure_mode": "Mildly leading concept framing combined with insufficient probing from generic concept reaction into specific output-to-decision mapping.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "example_assessment": "Coverage and depth goals were met efficiently, but some depth was spent on generic feature fit rather than on which exact outputs would change a real decision or non-decision."
+    }
+  ],
+  "recurring_feedback_tags": [
+    {
+      "tag": "generic_reaction_without_output_mapping",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "The interview captured trust, timing, and explanation needs, but did not sufficiently probe which specific output or explanation would change an actual decision or non-decision.",
+      "why_it_matters": "Concept-validation evidence is stronger when stated usefulness is tied to a specific decision, threshold, or deferred action rather than left at a broad reaction level."
+    },
+    {
+      "tag": "presumed_reuse",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "The reuse probe framed regular use as the default before first establishing whether the participant would reopen the feature at all.",
+      "why_it_matters": "Questions that assume repeat use can overstate retention intent and suppress signals that the feature may not deserve a second use."
+    },
+    {
+      "tag": "solution_loaded_concept_intro",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "The concept was introduced with built-in value language about helping the participant assess risk/concentration, rather than neutrally presenting a possible feature and letting usefulness emerge from the participant.",
+      "why_it_matters": "Benefit-framed concept intros can inflate positive reactions and blur whether interest is in the concept itself or in the value implied by the question."
+    },
+    {
+      "tag": "stated_vs_observed_blurring_risk",
+      "severity": "low",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "The interview itself was mostly disciplined, but several later implications rested on predicted future use, follow-through, or retention rather than observed concept use.",
+      "why_it_matters": "When hypothetical reactions are treated too similarly to observed behavior, downstream learning can overclaim confidence."
+    }
+  ],
+  "common_missed_high_value_followups": [
+    {
+      "question": "During that waiting period, what are you trying to confirm or rule out before deciding whether to act?",
+      "trigger_type": "participant described waiting before acting",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When participants delay action, probe what uncertainty they are resolving; this reveals whether the concept supports decision-making or merely adds another notification."
+    },
+    {
+      "question": "What is the minimum explanation you would need before the result feels credible enough to consider, rather than ignore?",
+      "trigger_type": "participant requested transparency into how a judgment was reached",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When a participant asks for transparency, probe for the minimum sufficient explanation standard instead of stopping at a general desire for explainability."
+    },
+    {
+      "question": "What presentation boundary would preserve trust: diagnosis only, a separate optional next-step area, or some other clear separation?",
+      "trigger_type": "participant expressed sales-motive concern",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "When trust depends on perceived motive, probe the exact boundary between diagnosis and recommendation that keeps the experience credible."
+    },
+    {
+      "question": "Which comparison would make that change feel most decision-useful: versus your prior state, your intended target, or a typical reference point?",
+      "trigger_type": "participant defined value as change-based information",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When users ask for 'new information,' pin down the comparison baseline that makes an update actionable."
+    }
+  ],
+  "common_likely_misclassified_drivers": [
+    {
+      "possible_underlying_driver": "A broader need to preserve attention and decision control under limited cognitive bandwidth",
+      "observed_surface_frame": "Desire for alerts at certain moments",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "When participants specify timing or placement, probe what the timing protects them from, such as overload, anxiety, distraction, or impulsive action."
+    },
+    {
+      "possible_underlying_driver": "Conditional evaluation based on neutrality, control, and explanation sufficiency rather than simple price or access appeal",
+      "observed_surface_frame": "Interest in a free feature",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "Do not treat initial interest as a value signal until you isolate the conditions that make the participant willing to rely on the output."
+    }
+  ],
+  "distilled_prompt_adjustments": [
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Before asking when or how a feature should recur, first ask whether the participant would use it again at all and under what conditions.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Do not treat predicted reuse, action, or trust as behavioral proof; label it explicitly as stated intention or conditional future behavior.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant asks for explanation or transparency, require one follow-up that identifies the minimum explanation needed for credibility.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant says they would wait, monitor, or think before acting, require a follow-up on what uncertainty they are trying to resolve during that delay.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept-validation mode, introduce concepts without built-in benefit claims; describe the feature neutrally before asking for reaction.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant says information must be 'new' or 'useful,' ask which comparison baseline makes it meaningfully different from last time.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "distilled_carry_forward_rules": [
+    {
+      "rule_id": "CF-002",
+      "rule": "Sequence repeat-use probing as: would reuse at all, what would trigger reuse, then how it should appear.",
+      "source_tags": [
+        "presumed_reuse"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-001",
+      "rule": "Use neutral concept introductions that avoid implying usefulness, benefit, or value before the participant reacts.",
+      "source_tags": [
+        "solution_loaded_concept_intro"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-004",
+      "rule": "When participants defer action, probe the uncertainty being resolved during the delay to uncover the real decision job.",
+      "source_tags": [
+        "generic_reaction_without_output_mapping",
+        "stated_vs_observed_blurring_risk"
+      ],
+      "confidence": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-003",
+      "rule": "When participants request transparency, probe for the minimum sufficient explanation rather than accepting explainability as a generic need.",
+      "source_tags": [
+        "generic_reaction_without_output_mapping"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "ready_for_global_candidate_rules": [],
+  "blocked_feedback_patterns": [
+    {
+      "blocked_item": "Later synthesis implied concrete product-design conclusions from one synthetic participant's hypothetical reactions.",
+      "block_reason": "The affected implications were expressed in project-shaped product terms.",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ]
+    },
+    {
+      "blocked_item": "The interview did not sufficiently test which specific analytics functions would materially help with this particular portfolio-management concept.",
+      "block_reason": "This is tied to the named concept, domain, and research goal rather than being universally reusable as-is.",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ]
+    }
+  ],
+  "synthetic_only_disclaimer": "This facilitator audit digest is synthetic offline learning evidence only. It should be reviewed before any rule is promoted into the facilitator core."
+}

@@ -1,0 +1,298 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "panel",
+  "run_id": "concept_panel_20260623_19feece1",
+  "topic": "Aladdin Solution In Retail Banking",
+  "audited_persona_count": 1,
+  "persona_count": 5,
+  "ready_for_global_rule_count": 0,
+  "blocked_feedback_count": 3,
+  "top_failure_modes": [
+    {
+      "failure_mode": "Coverage was prioritized over depth after concept introduction, causing missed follow-ups on real past analogs, decision thresholds, and concrete next actions.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "example_assessment": "Good breadth and conversational flow; insufficient depth on the highest-signal clues once the participant revealed a concrete workaround and a credibility threshold."
+    }
+  ],
+  "recurring_feedback_tags": [
+    {
+      "tag": "concept_intro_too_compound",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "The first concept question packaged a named solution plus several outputs in one turn, then immediately asked which part felt most useful (`exchange_3.facilitator`).",
+      "why_it_matters": "Bundling multiple promised benefits into the first concept turn steers the participant toward reacting to researcher-supplied dimensions instead of surfacing their own evaluation frame."
+    },
+    {
+      "tag": "coverage_over_depth",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "After the participant described noting issues without acting immediately and weighing them against cash needs, the interview moved on instead of probing one specific remembered case or threshold (`exchange_2.persona`, `exchange_4.persona`, `FACILITATOR TRACE`).",
+      "why_it_matters": "When facilitators advance through required slots too quickly, they miss the concrete follow-ups that turn surface preferences into decision-quality evidence."
+    },
+    {
+      "tag": "missed_behavioral_analog_probe",
+      "severity": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "Trust, action, timing, and repeat-use were all gathered as hypothetical reactions to the proposed feature without asking for a past comparable experience (`exchange_4` to `exchange_7`).",
+      "why_it_matters": "Concept reactions are much stronger when anchored against a real prior alert, recommendation, or workaround the participant has actually encountered."
+    },
+    {
+      "tag": "service_embedding_without_action_path",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "The facilitator asked when the participant would want to see the feature, but not what they would do immediately after seeing it inside the journey (`exchange_6.facilitator`, `exchange_7.facilitator`).",
+      "why_it_matters": "Preferred timing alone does not show how a concept fits into workflow; embedding decisions need the concrete next action the participant would take."
+    },
+    {
+      "tag": "threshold_without_contrast",
+      "severity": "medium",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "observed_pattern": "The participant specified what explanation would make a signal credible, but there was no contrast probe on the minimum insufficient explanation or a near-miss example beyond one vague-alert complaint (`exchange_3.persona`, `exchange_5.persona`).",
+      "why_it_matters": "A stated threshold is easy to overread unless the facilitator also probes what would fall below that threshold or what would make the participant ignore the signal."
+    }
+  ],
+  "common_missed_high_value_followups": [
+    {
+      "question": "Can you walk me through the last time you noticed something was off but chose not to act right away? What made it a 'note for later' instead of a follow-up then?",
+      "trigger_type": "workaround_contains_delay_or_deferral",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "When a participant describes deferral, ask for a specific recent instance and the threshold that separates noticing from acting."
+    },
+    {
+      "question": "Have you ever received anything similar before, from any tool or person? What did you actually do next that time?",
+      "trigger_type": "hypothetical_action_claim",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "Convert hypothetical action claims into evidence by asking for the closest real-world analog and observed follow-through."
+    },
+    {
+      "question": "If you saw it at that moment, what would be the very next step you would take in the product or outside it?",
+      "trigger_type": "workflow_timing_preference",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "Do not stop at timing preferences; ask for the immediate action path to ground embedding recommendations."
+    },
+    {
+      "question": "What is the minimum information that would still feel too weak to act on, even if the alert looked relevant?",
+      "trigger_type": "participant_names_trust_criterion",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "high": 1
+      },
+      "generic_learning": "After a participant states what would build trust, add a contrast probe to define the failure boundary."
+    },
+    {
+      "question": "What would happen in the first two or three uses that would make you stop checking it, even if you liked the idea at first?",
+      "trigger_type": "repeat_use_claim",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "priority_counts": {
+        "medium": 1
+      },
+      "generic_learning": "Separate initial appeal from sustained use with an early-dropoff probe."
+    }
+  ],
+  "common_likely_misclassified_drivers": [
+    {
+      "possible_underlying_driver": "The stronger underlying driver may have been decision efficiency: reducing the work needed to judge whether follow-up is warranted.",
+      "observed_surface_frame": "The participant seemed to be expressing a feature preference for one type of signal over another.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "When a participant appears to prefer a feature, test whether the real driver is speed, confidence, coordination, or avoidance of extra work."
+    },
+    {
+      "possible_underlying_driver": "The stronger underlying driver may have been workflow protection: wanting support only when it fits an existing review routine and does not create interruption cost.",
+      "observed_surface_frame": "The participant seemed to be describing a preferred notification moment.",
+      "persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "generic_learning": "Treat stated timing preferences as potential proxies for a deeper control or interruption boundary and probe that boundary directly."
+    }
+  ],
+  "distilled_prompt_adjustments": [
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "After concept introduction, if the participant gives any trust criterion, deferral rule, or repeat-use condition, ask one depth follow-up before moving to the next coverage slot.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not end solely because required coverage is complete if the latest answer contains an unresolved threshold, consequence, or workflow clue that could materially improve evidence quality in one more turn.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Do not treat hypothetical concept reactions as behavioral evidence until the facilitator asks for a concrete past analog or explicitly labels the claim as stated preference only.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Prefer probing the participant's actual last analogous behavior over advancing to the next concept dimension whenever both are available.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant states what would make a concept credible or useful, ask a paired contrast probe about what would still be insufficient or ignorable.",
+      "reuse_scope": "global",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "distilled_carry_forward_rules": [
+    {
+      "rule_id": "CF-02",
+      "rule": "After a participant names a trust or usefulness requirement, ask one contrast question to identify the minimum unacceptable version.",
+      "source_tags": [
+        "threshold_without_contrast"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-03",
+      "rule": "For concept-validation claims about ongoing use, separate initial appeal, first real use, and sustained repeat use into distinct probes.",
+      "source_tags": [
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-04",
+      "rule": "For service-embedding questions, ask not only when the participant wants to see something but also what immediate action they would take next.",
+      "source_tags": [
+        "service_embedding_without_action_path"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-01",
+      "rule": "When a participant describes noticing a problem but delaying action, ask for the last specific instance and what threshold separated noticing from acting.",
+      "source_tags": [
+        "coverage_over_depth",
+        "missed_behavioral_analog_probe"
+      ],
+      "confidence": "high",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ],
+      "candidate_strength": "weak",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "ready_for_global_candidate_rules": [],
+  "blocked_feedback_patterns": [
+    {
+      "blocked_item": "Feedback about a specific analytics feature being the most valuable signal.",
+      "block_reason": "This is a project-specific conclusion about content preference, not reusable facilitator guidance.",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ]
+    },
+    {
+      "blocked_item": "In concept validation, introduce the concept in the narrowest testable form first; avoid bundling multiple benefits or outputs into the first exposure question.",
+      "block_reason": "project_specific_content",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ]
+    },
+    {
+      "blocked_item": "The prior quality evaluation recommended adding willingness-to-pay probes.",
+      "block_reason": "That recommendation conflicts with this run's study setup and would be too project-shaped to reuse safely here.",
+      "support_persona_count": 1,
+      "personas": [
+        "Ivy Chan"
+      ]
+    }
+  ],
+  "synthetic_only_disclaimer": "This facilitator audit digest is synthetic offline learning evidence only. It should be reviewed before any rule is promoted into the facilitator core."
+}

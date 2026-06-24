@@ -1,0 +1,576 @@
+[
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "broad_recent_event",
+    "decision_rationale": "先建立一個最近而具體嘅 roadmap／feature priority 決策事件，先過 concept introduction 嘅 current-state gate；目前未有 transcript，所以先問開放式事件題，唔預設痛點或解法。",
+    "message_to_persona": "可唔可以同我講下你最近一次真係要決定 roadmap 或 feature priority 嘅情況？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近嗰次具體決策係咩情境、涉及咩產品範圍同時間點？",
+      "當時佢想回答咩問題，仲差咩證據先敢定優先次序？",
+      "有咩 stakeholder、時程或交付壓力影響嗰次決定？",
+      "佢公開可以企得穩嘅判斷，同私下仍然唔確定嘅位分別係咩？",
+      "最後實際改咗咩 scope、次序、priority 或 go/no-go？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "superseded_by_observer"
+  },
+  {
+    "interview_phase": "warm_context",
+    "probing_strategy": "background_scope",
+    "decision_rationale": "接受 observer 想先暖場同釐清角色範圍，但改寫成一條中性、簡短嘅背景題；目前未有任何事件證據，未適合直接跳去因果或 concept。下一步會先釐清最近接觸嘅決策類型，再收窄到一個真實優先次序事件。",
+    "message_to_persona": "你最近主要貼近邊幾類產品決定？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "佢本人喺 prioritization 入面實際揹幾多決定，邊啲會同 design、engineering 或 leadership 一齊定？",
+      "最近一個真實 roadmap 或 feature-priority 決定係咩？",
+      "當時仲差咩證據先夠佢落 prioritization 判斷？",
+      "當時有咩 stakeholder、時間、runway 或 delivery 壓力？",
+      "邊啲判斷佢可以公開企得穩，邊啲仍然私下唔確定？",
+      "最後實際改咗咩 scope、sequence、priority 或 go/no-go？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "role_scope",
+    "probing_strategy": "responsibility_split",
+    "decision_rationale": "Observer 想先釐清佢喺 prioritization 入面嘅實際角色分工，呢步仍然屬於暖場上下文，而且可幫之後判讀最近事件入面邊個主導決策。雖然 recent-event coverage 未開始，但依家先問一條簡短責任分工題，比直接跳事件更自然。",
+    "message_to_persona": "通常呢啲 prioritization call，你自己會揹到幾多，定係多數要同 design、engineering 或 leadership 一齊拍板？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近主要貼近優先次序、概念判斷，以及原型反應判讀相關決定。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者提到的決策範圍包括是否把功能排入下個 cycle、某個新流程是否真能解決用戶卡點，以及哪些 prototype 反應值得追。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一個真實 roadmap 或 feature-priority 決定係邊次？",
+      "當時仲差咩證據先敢定優先次序？",
+      "當時有咩 stakeholder、時間或交付壓力？",
+      "邊啲判斷佢可以公開企得穩，邊啲仍然私下唔確定？",
+      "最後實際改咗咩 scope、sequence、priority 或 go/no-go？",
+      "佢而家點樣做概念判斷同優先次序嘅 workaround？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "recent_event_narrowing",
+    "decision_rationale": "暖場同角色分工已足夠，下一步要收窄到一個最近真實優先次序事件，先開始補 concept introduction 前必需的五項 current-state 證據。參與者提到自己負責 framing 同初步取捨，所以先用最近一次具體事件承接。",
+    "message_to_persona": "最近一次由你去做呢種初步取捨嘅 feature priority 決定，實際係邊一次？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近主要貼近優先次序、概念判斷，以及原型反應判讀相關決定。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者通常不是單獨拍板，但會主要負責決策 framing 與初步取捨。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當決定會明顯影響 scope、時程或風險時，參與者會與 design、engineering 一起對齊，必要時交由 leadership 定方向。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近那次事件中，當時缺的是哪類證據？",
+      "那次決定當時有什麼 stakeholder、時間或交付壓力？",
+      "哪些判斷她當時可以公開 defend，哪些仍然私下不確定？",
+      "最後她實際改了什麼 scope、sequence、priority 或 go/no-go？",
+      "她在那次決定前後實際用了哪些工具或 workaround 來補資訊？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "missing_evidence",
+    "probing_strategy": "threshold_probe",
+    "decision_rationale": "參與者已提供一個具體事件，亦出現高訊號門檻語句「未去到要成個 flow 重做」。依家最有價值係先追問當時差咩證據先會由細改轉去大改，既補 current-state 必要項目，又完成一個 threshold probe。",
+    "message_to_persona": "當時要去到見到咩證據，你先會覺得唔係做細改，而係要重做成個 onboarding flow？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次具體的 feature-priority 決定涉及 onboarding flow 改動，要決定是否加入新提示並精簡其中一步。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當時先看了 drop-off 與 support feedback，判斷問題存在。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者初步傾向先做較小改動、快速驗證，再與 design 和 engineering 對可行性。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者可能以某個未明確的證據門檻區分『細改快驗證』與『重做整個 flow』。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當時還缺哪些證據，令她未願意支持更大改動？",
+      "那次決定面對了哪些 stakeholder、時間或交付壓力？",
+      "哪些判斷她當時可以公開 defend，哪些仍然私下不確定？",
+      "她之後實際用了哪些工具或 workaround 補證據？",
+      "最後與 design、engineering 對完後，實際怎樣改了 scope、sequence 或 priority？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "participant_cause",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "defensible_vs_uncertain",
+    "probing_strategy": "confidence_boundary_probe",
+    "decision_rationale": "Concept gate 仲差 pressure 同 defensible-vs-uncertain。上一輪已經攞到清楚嘅證據門檻，下一步問佢當時邊啲判斷可以公開 defend、邊啲仍然心入面未肯定，直接補必要 current-state 證據，而且承接佢啱啱講到證據未齊時點分辨細改同重做。",
+    "message_to_persona": "嗰陣有邊啲判斷你可以好肯定咁同人講，但邊啲其實你自己仲未夠肯定？",
+    "evidence_updates": [
+      {
+        "claim": "參與者會在多個位置下跌、且 support、session replay、用戶訪談都指向同一種迷失感時，才判斷細改不足，可能需要重做整條 onboarding flow。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者亦會把『試過一兩輪局部修補後，數字有變但核心完成率沒有明顯改善』視為結構性問題的訊號。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者以跨來源一致性和局部修補後的結果作為是否升級為結構性改動的主要判斷門檻。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當時有咩 stakeholder、時間或交付壓力，令佢偏向先做細改快驗證？",
+      "佢當時實際用咗咩工具或 workaround 去補證據？",
+      "最後同 design、engineering 對完之後，實際改咗咩 scope、sequence 或 priority？",
+      "有冇另一個相似情況，證據未去到咁強，但最後都冇做大改？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "participant_cause",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "pressure",
+    "probing_strategy": "constraint_probe",
+    "decision_rationale": "Concept introduction 仲未可做，current-state gate 只差 pressure。上一輪已釐清佢公開可 defend 與私下未確定之處，依家最應該補返當時有咩時程、交付或 stakeholder 壓力，解釋點解佢選擇先做細改快驗證。",
+    "message_to_persona": "嗰次你哋有咩時間、交付或者 stakeholder 壓力，令你傾向先做細改快驗證？",
+    "evidence_updates": [
+      {
+        "claim": "參與者可以公開肯定地說 onboarding friction 真實存在，因為 analytics 與 support feedback 指向一致。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當時未能確定問題主因是文案提示不清楚，還是步驟設計本身令人猶豫。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "由於機制未明，參與者傾向先用較小改動驗證，而不會一開始主張大改。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "在這次事件中，參與者的決策可能受時間或交付壓力影響，所以偏向低風險、可快速驗證的方案。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_5.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當時實際用了哪些工具或 workaround 去補不足的證據？",
+      "最後和 design、engineering 對完後，實際改了什麼 scope、sequence 或 priority？",
+      "有沒有相似事件，最後不是文案問題也不是大改，而是用另一種方式處理？",
+      "在這類判斷裡，哪種證據最能讓她從『先小改』轉成『值得大改』？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "defensible_vs_uncertain",
+    "probing_strategy": "clarification",
+    "decision_rationale": "雖然之前已有初步信心邊界，但 coverage 仍標示缺少 defensible_vs_uncertain，所以先補一條更明確、同一事件綁定嘅公開 vs 私下不確定題，先完成 concept gate，再進入 workaround 或 concept。",
+    "message_to_persona": "去到同 design、engineering 或 stakeholder 講嗰陣，邊部分你會直接拍心口講得實，邊部分你只係自己心入面仲有保留？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次具體決策是在既定 release 前，針對 onboarding flow 決定是否加入新提示及精簡一步。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者當時以 drop-off、support feedback 判斷 friction 存在，但未確認是文案問題還是步驟設計問題。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona",
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "接近 release、engineering bandwidth 緊，以及 stakeholder 想盡快看到 completion 改善，促使參與者偏向小改動快驗證。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "她當時實際用了哪些工具或 workaround 去補不足的證據？",
+      "最後和 design、engineering 對完後，實際改了什麼 scope、sequence 或 priority？",
+      "有沒有相似事件，最後沒有先做小改快驗證？",
+      "如果之後引入概念，哪些輸出會真正改變她的優先次序判斷？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround",
+    "probing_strategy": "workaround_function_probe",
+    "decision_rationale": "Concept gate 已完成，但 protocol 要求先補 current workaround，之後先中性介紹概念。上一輪已清楚佢係用『目前成本同時機下最合理嘅試法』去做判斷，依家最有價值係追問當時實際用咩方法補證據，同各自幫佢防咩風險。",
+    "message_to_persona": "喺嗰次決定入面，你實際用咗咩工具或者方法去補你未肯定嗰部分？",
+    "evidence_updates": [
+      {
+        "claim": "參與者能公開確定地表達 onboarding 確實存在 friction，而且值得優先處理。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不會公開保證某一個細改一定能提升 completion，也不會聲稱那已是最好的解法。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者把『目前成本同時機下最合理的試法』當作可 defend 的決策表述。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "她當時用哪些工具、資料來源或協作方式來補不足證據？",
+      "這些方法各自幫她降低什麼錯判風險？",
+      "最後與 design、engineering 對完後，實際改了什麼 scope、sequence 或 priority？",
+      "之後介紹概念時，哪種輸出才可能真正影響她的 prioritization 判斷？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_introduction",
+    "probing_strategy": "neutral_concept_intro",
+    "decision_rationale": "Current-state 同 workaround 已有足夠基礎，依家可以中性介紹概念；先收第一反應，之後再追 trust、non-use 同 output-to-decision。問題會保持 workflow 描述，避免預設價值。",
+    "message_to_persona": "如果有個 AI synthetic-user platform，俾團隊喺做真人研究前，用一批唔同背景同顧慮嘅 synthetic users 先模擬訪談同反應，你第一下會點睇？",
+    "evidence_updates": [
+      {
+        "claim": "參與者在補足不確定性時，會先看 funnel 和 drop-off。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者也會翻查 support ticket 和 call note，比對卡住的位置是否一致。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果 design 有 replay 或 prototype，參與者會用來分辨是理解問題還是 flow 本身太重。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_8.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "呢個概念入面，邊部分對佢有用，邊部分最可疑？",
+      "咩情況下佢會完全唔信呢類 synthetic output？",
+      "如果工具輸出某類具體 objection 或迷失點，會點改變佢下一步 prioritization？",
+      "呢種工具要取代佢而家邊一個步驟，先值得放入 workflow？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_boundary",
+    "probing_strategy": "trust_source_probe",
+    "decision_rationale": "參與者已給出高訊號信任邊界：可作 early framing，但非常在意生成方式、可用啟發 vs 不能當 evidence、以及不能取代真人研究。依家最有價值係先把信任門檻問實，釐清乜嘢透明度或輸出形式先令佢覺得唔係 AI theatre。",
+    "message_to_persona": "要去到見到咩講法或者輸出，你先會覺得呢類 synthetic 反應真係值得你拎嚟參考？",
+    "evidence_updates": [
+      {
+        "claim": "參與者對 AI synthetic-user platform 的第一反應是可作 early framing 工具，特別是在未能及時安排真人訪談、但又想先看是否有明顯盲點時。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會立即追問這類反應如何生成、哪些屬於有用啟發、哪些不能當作 evidence。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果產品把 synthetic output 講成可取代真人研究，參與者會明顯保留。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_9.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩情況下佢會完全唔信或者唔會用呢類 synthetic output？",
+      "如果工具指出某種具體盲點或 objection，會令佢實際延後、改 scope，定只係再去 verify？",
+      "呢種工具要取代佢而家邊一步，先值得留喺 workflow 入面反覆用？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "output_to_decision_probe",
+    "probing_strategy": "output_to_decision_probe",
+    "decision_rationale": "而家最缺係把 concept output 映射到實際決策，同時補 action_followthrough。參與者已講清楚信任門檻，所以下一步要測試一個具體輸出會令佢改 scope、延後，定只會再驗證，而唔係停留喺抽象好感。",
+    "message_to_persona": "如果呢個工具指出 onboarding 有一個明確迷失位，但同你而家睇到嘅 drop-off 解讀唔同，你會即刻改 priority，定係先做咩驗證？",
+    "evidence_updates": [
+      {
+        "claim": "參與者認為有參考價值的 synthetic output 需要說清楚反應背後的假設、基於哪類 input，以及可能出錯的位置。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_10.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "如果 synthetic output 能與現有 analytics、support feedback 或之前訪談部分對應，且明確標示只適合早期假設與問題 framing，參與者會視為有參考價值。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_10.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩情況下佢會完全唔信或者唔會用呢類 synthetic output？",
+      "呢種工具要取代佢而家邊一步，先值得反覆留喺 workflow 入面？",
+      "有冇相反情況係工具講到有迷失位，但佢最後唔會跟？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_boundary",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "仲欠一個 contrast/non-use probe，同時 coverage 只差 repeat_use_condition。上一輪已知佢唔會因 synthetic output 即時改 roadmap，所以而家最有價值係問清楚咩情況下佢試過之後都唔會再用，直接測 retention boundary，而唔係再收更多正向好感。",
+    "message_to_persona": "如果你試過一兩次之後都唔再開返呢類工具，通常會係因為咩情況？",
+    "evidence_updates": [
+      {
+        "claim": "若 synthetic output 與目前 drop-off 解讀不同，參與者不會立即改 priority，而會先把它視為需要驗證的新假設。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_11.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者會回去核對 event、replay、support case，看 synthetic output 指出的迷失位是否有其他證據支持。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_11.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "若缺乏其他證據支持，參與者最多只會調整下一輪要驗證的方向，不會直接改 roadmap。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_11.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "咩情況下呢類工具會變成可重複使用嘅 workflow 一部分？",
+      "要取代而家邊一步，先值得長期保留？",
+      "邊種輸出最容易令佢覺得只係 polished AI theatre？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "alternative_condition",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "closure",
+    "probing_strategy": "sufficiency_stop",
+    "decision_rationale": "概念前 current-state 已完整，concept reaction、trust boundary、action follow-through、repeat-use boundary 同所需深挖都已收齊；最近兩輪已補到 non-use 同 retention 邊界，再問落去大機會只會重複。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "參與者若每次都要自己花很多時間再次驗證 synthetic output，會把工具視為多了一層工作。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_12.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者若發現 synthetic output 雖然表面順暢但實際很 generic，且與真實數據或團隊討論對不上，會停止再用這類工具。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_12.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "Coverage 同 depth requirements 已完成，繼續追問預計只會得到重複的態度補充，唔會明顯改變證據圖。",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef9e5-a2f6-7762-b959-fe78dc004332",
+    "decision_status": "not_asked_at_close"
+  }
+]

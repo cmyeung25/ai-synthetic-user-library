@@ -1,0 +1,206 @@
+{
+  "artifact_version": "1.0",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "general"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "Coverage was achieved efficiently, but the facilitator moved from grounded behavior into concept-led hypothetical probing too quickly and the downstream synthesis treated stated reactions as stronger evidence than the transcript supports.",
+    "primary_failure_mode": "Coverage was prioritized over depth after concept introduction, causing missed follow-ups on real past analogs, decision thresholds, and concrete next actions.",
+    "depth_vs_coverage_assessment": "Good breadth and conversational flow; insufficient depth on the highest-signal clues once the participant revealed a concrete workaround and a credibility threshold."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "concept_intro_too_compound",
+      "severity": "medium",
+      "why_it_matters": "Bundling multiple promised benefits into the first concept turn steers the participant toward reacting to researcher-supplied dimensions instead of surfacing their own evaluation frame.",
+      "observed_pattern": "The first concept question packaged a named solution plus several outputs in one turn, then immediately asked which part felt most useful (`exchange_3.facilitator`)."
+    },
+    {
+      "tag": "coverage_over_depth",
+      "severity": "high",
+      "why_it_matters": "When facilitators advance through required slots too quickly, they miss the concrete follow-ups that turn surface preferences into decision-quality evidence.",
+      "observed_pattern": "After the participant described noting issues without acting immediately and weighing them against cash needs, the interview moved on instead of probing one specific remembered case or threshold (`exchange_2.persona`, `exchange_4.persona`, `FACILITATOR TRACE`)."
+    },
+    {
+      "tag": "missed_behavioral_analog_probe",
+      "severity": "high",
+      "why_it_matters": "Concept reactions are much stronger when anchored against a real prior alert, recommendation, or workaround the participant has actually encountered.",
+      "observed_pattern": "Trust, action, timing, and repeat-use were all gathered as hypothetical reactions to the proposed feature without asking for a past comparable experience (`exchange_4` to `exchange_7`)."
+    },
+    {
+      "tag": "threshold_without_contrast",
+      "severity": "medium",
+      "why_it_matters": "A stated threshold is easy to overread unless the facilitator also probes what would fall below that threshold or what would make the participant ignore the signal.",
+      "observed_pattern": "The participant specified what explanation would make a signal credible, but there was no contrast probe on the minimum insufficient explanation or a near-miss example beyond one vague-alert complaint (`exchange_3.persona`, `exchange_5.persona`)."
+    },
+    {
+      "tag": "service_embedding_without_action_path",
+      "severity": "medium",
+      "why_it_matters": "Preferred timing alone does not show how a concept fits into workflow; embedding decisions need the concrete next action the participant would take.",
+      "observed_pattern": "The facilitator asked when the participant would want to see the feature, but not what they would do immediately after seeing it inside the journey (`exchange_6.facilitator`, `exchange_7.facilitator`)."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "workaround_contains_delay_or_deferral",
+      "priority": "high",
+      "participant_signal": "The participant said they note an imbalance but often do not act immediately, and may weigh it against another consideration first (`exchange_2.persona`, `exchange_4.persona`).",
+      "missed_followup_question": "Can you walk me through the last time you noticed something was off but chose not to act right away? What made it a 'note for later' instead of a follow-up then?",
+      "generic_learning": "When a participant describes deferral, ask for a specific recent instance and the threshold that separates noticing from acting."
+    },
+    {
+      "trigger_type": "participant_names_trust_criterion",
+      "priority": "high",
+      "participant_signal": "The participant gave a concrete credibility requirement for what a useful explanation must include (`exchange_5.persona`).",
+      "missed_followup_question": "What is the minimum information that would still feel too weak to act on, even if the alert looked relevant?",
+      "generic_learning": "After a participant states what would build trust, add a contrast probe to define the failure boundary."
+    },
+    {
+      "trigger_type": "hypothetical_action_claim",
+      "priority": "high",
+      "participant_signal": "The participant described what they would do after a clear signal, but only hypothetically (`exchange_4.persona`).",
+      "missed_followup_question": "Have you ever received anything similar before, from any tool or person? What did you actually do next that time?",
+      "generic_learning": "Convert hypothetical action claims into evidence by asking for the closest real-world analog and observed follow-through."
+    },
+    {
+      "trigger_type": "workflow_timing_preference",
+      "priority": "medium",
+      "participant_signal": "The participant identified preferred moments to encounter the feature (`exchange_6.persona`).",
+      "missed_followup_question": "If you saw it at that moment, what would be the very next step you would take in the product or outside it?",
+      "generic_learning": "Do not stop at timing preferences; ask for the immediate action path to ground embedding recommendations."
+    },
+    {
+      "trigger_type": "repeat_use_claim",
+      "priority": "medium",
+      "participant_signal": "The participant defined conditions for ongoing use in terms of accuracy and time saved (`exchange_7.persona`).",
+      "missed_followup_question": "What would happen in the first two or three uses that would make you stop checking it, even if you liked the idea at first?",
+      "generic_learning": "Separate initial appeal from sustained use with an early-dropoff probe."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant seemed to be expressing a feature preference for one type of signal over another.",
+      "possible_underlying_driver": "The stronger underlying driver may have been decision efficiency: reducing the work needed to judge whether follow-up is warranted.",
+      "why_the_surface_frame_is_weak": "The transcript includes multiple cues about saving judgment time, avoiding manual comparison, and not being pushed into action, which point to workload management rather than only liking one content type (`exchange_4.persona`, `exchange_7.persona`).",
+      "generic_learning": "When a participant appears to prefer a feature, test whether the real driver is speed, confidence, coordination, or avoidance of extra work."
+    },
+    {
+      "observed_surface_frame": "The participant seemed to be describing a preferred notification moment.",
+      "possible_underlying_driver": "The stronger underlying driver may have been workflow protection: wanting support only when it fits an existing review routine and does not create interruption cost.",
+      "why_the_surface_frame_is_weak": "The answer combined timing with a clear aversion to unsolicited interruption, so the moment preference may be secondary to protecting attention and control (`exchange_6.persona`).",
+      "generic_learning": "Treat stated timing preferences as potential proxies for a deeper control or interruption boundary and probe that boundary directly."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical reactions were allowed to stand as the main evidence for trust, action, and retention without a past-behavior check.",
+      "severity": "high",
+      "generic_learning": "When concept validation elicits hypothetical claims, ask for the closest past analog before treating them as evidence of likely behavior."
+    },
+    {
+      "issue": "The interview closed once coverage slots were marked complete even though several high-signal statements had not been pressure-tested with examples, contrasts, or near misses.",
+      "severity": "medium",
+      "generic_learning": "Coverage completion is not sufficient reason to stop when a recent answer opens a strong depth opportunity."
+    },
+    {
+      "issue": "The synthesis blurred direct participant statements and analyst inference, making downstream conclusions sound more certain than the transcript supports.",
+      "severity": "high",
+      "generic_learning": "Label outputs distinctly as observed behavior, stated preference, or analyst inference, and keep claims at the weakest supported level."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "After concept introduction, if the participant gives any trust criterion, deferral rule, or repeat-use condition, ask one depth follow-up before moving to the next coverage slot.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Do not treat hypothetical concept reactions as behavioral evidence until the facilitator asks for a concrete past analog or explicitly labels the claim as stated preference only.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant states what would make a concept credible or useful, ask a paired contrast probe about what would still be insufficient or ignorable.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Do not end solely because required coverage is complete if the latest answer contains an unresolved threshold, consequence, or workflow clue that could materially improve evidence quality in one more turn.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "question_priority_rule",
+      "text": "Prefer probing the participant's actual last analogous behavior over advancing to the next concept dimension whenever both are available.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "CF-01",
+      "rule": "When a participant describes noticing a problem but delaying action, ask for the last specific instance and what threshold separated noticing from acting.",
+      "source_tags": [
+        "coverage_over_depth",
+        "missed_behavioral_analog_probe"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-02",
+      "rule": "After a participant names a trust or usefulness requirement, ask one contrast question to identify the minimum unacceptable version.",
+      "source_tags": [
+        "threshold_without_contrast"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-03",
+      "rule": "For concept-validation claims about ongoing use, separate initial appeal, first real use, and sustained repeat use into distinct probes.",
+      "source_tags": [
+        "coverage_over_depth"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "CF-04",
+      "rule": "For service-embedding questions, ask not only when the participant wants to see something but also what immediate action they would take next.",
+      "source_tags": [
+        "service_embedding_without_action_path"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The prior quality evaluation recommended adding willingness-to-pay probes.",
+      "block_reason": "That recommendation conflicts with this run's study setup and would be too project-shaped to reuse safely here.",
+      "rewrite_as_generic": "When a dimension is explicitly out of scope for the study, do not recommend additional probes on it; instead improve depth within the allowed evidence areas."
+    },
+    {
+      "blocked_item": "Feedback about a specific analytics feature being the most valuable signal.",
+      "block_reason": "This is a project-specific conclusion about content preference, not reusable facilitator guidance.",
+      "rewrite_as_generic": "When a participant selects one concept element as most useful, probe the job it helps them do and the consequence of lacking it before treating the selection itself as the insight."
+    },
+    {
+      "blocked_item": "In concept validation, introduce the concept in the narrowest testable form first; avoid bundling multiple benefits or outputs into the first exposure question.",
+      "block_reason": "project_specific_content",
+      "rewrite_as_generic": ""
+    }
+  ]
+}

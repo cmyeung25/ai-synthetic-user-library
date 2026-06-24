@@ -1,0 +1,122 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event before introducing the concept (`exchange_1` to `exchange_2`).",
+    "The facilitator stayed conversational and avoided analyst jargon in participant-facing questions across all asked exchanges.",
+    "Coverage was adapted efficiently rather than turned into a long questionnaire; the stop decision in `FACILITATOR TRACE.close` was reasonable given the stated coverage completion.",
+    "The persona responses stayed natural and non-framework-like; they did not self-explain the simulation or answer in numbered templates."
+  ],
+  "findings": [
+    {
+      "category": "Concept introduction neutrality",
+      "severity": "medium",
+      "observation": "The concept was introduced with built-in positive framing and a binary usefulness test instead of a more neutral reaction probe. `exchange_3.facilitator` bundles '免費', '整合持倉', and '用簡單方式解釋風險', then asks '有冇用', which nudges evaluation toward the researcher-supplied benefits.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "FACILITATOR TRACE[2]"
+      ],
+      "recommendation": "Introduce the concept more neutrally and separate first reaction from benefit claims, e.g. ask what they think it is, what they would inspect first, and what would make them ignore it."
+    },
+    {
+      "category": "Leading / solution-loaded follow-up",
+      "severity": "medium",
+      "observation": "`exchange_5.facilitator` presupposes a diagnosis ('你而家太集中') and offers the preferred comparison frame ('唔郁同分散少少個分別') before asking about next action. That tests a polished scenario, not the participant's own threshold for acting.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_4.persona",
+        "FACILITATOR TRACE[4]"
+      ],
+      "recommendation": "After the participant names desired outputs, ask an open follow-up such as what they would need to see before doing anything, then only test specific comparison views afterward."
+    },
+    {
+      "category": "Missing disconfirmation / counterexample probe",
+      "severity": "medium",
+      "observation": "The participant expressed skepticism in `exchange_3.persona` ('包裝到好似好叻，其實只係叫我自己再研究一次'), but the facilitator did not isolate a concrete case where the feature would not help or would be ignored. That leaves weak evidence on failure modes and false positives.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.facilitator",
+        "exchange_6.facilitator"
+      ],
+      "recommendation": "Add one participant-facing counterexample probe: ask for a situation where the feature would still not change what they do, even if the summary looked clear."
+    },
+    {
+      "category": "Synthesis overreach beyond transcript evidence",
+      "severity": "high",
+      "observation": "Several synthesis claims exceed what this single hypothetical concept interview established. `retention_risk.workflow_effect` says 'replaces_workflow', but the participant described supplementing the current habit, not replacing it (`exchange_5.persona`, `exchange_6.persona`). `assumption_validation[2]` claims the 'highest-value use case' is moment-based rather than institutional detail, which is broader than this one persona can support. `next_experiment` and multiple 'supported' assumption labels are useful planning outputs, but they should be framed as tentative and persona-specific, not validated conclusions.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.assumption_validation[2]",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Downgrade these to tentative hypotheses tied to one synthetic persona, remove replacement language unless observed, and keep product implications explicitly bounded to this persona's stated preferences."
+    },
+    {
+      "category": "Domain-fit inference too broad",
+      "severity": "medium",
+      "observation": "The research goal asks how analytics should be embedded into retail journeys without generic product selling, but the interview only lightly touched timing and placement. The synthesis moves toward broad embedding guidance from `exchange_7`, without testing whether the same surface would feel like selling, advice, or noise in different moments.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "In the next run, probe adjacent journey moments directly: portfolio page, salary-time reminder, RM contact, and post-market-drop check, and ask which would feel helpful versus sales-like."
+    }
+  ],
+  "required_improvements": [
+    "Rewrite concept-introduction questions to remove built-in value cues and avoid binary 'useful or not' framing.",
+    "Add at least one explicit disconfirmation probe asking when the concept would not help or would be ignored.",
+    "Separate open reaction, trust boundary, action threshold, and embedding questions so each spoken question has one conversational focus.",
+    "Tighten synthesis so every strong claim is persona-bounded and directly traceable to transcript evidence; remove unsupported claims like 'replaces_workflow'.",
+    "Expand journey-fit probing beyond placement to test when the same feature feels supportive versus promotional."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for a concrete moment when a summary card would not change anything the participant does.",
+      "Probe the minimum action threshold: what exact change, risk, or cash conflict would make them act versus defer.",
+      "Test whether the same insight is preferred on the portfolio home, in a reminder, or via a human advisor, and which feels too sales-like.",
+      "Ask what current manual step the feature would actually remove, if any, versus merely add another screen to check."
+    ],
+    "coverage_gap_actions": [
+      "Add a direct participant-facing probe on non-adoption or abandonment in a realistic recent context, not only generic repeat-use conditions.",
+      "Probe current workaround pain more concretely: what is slow, uncertain, or easy to miss in the screenshot-and-recheck flow.",
+      "Test trust boundaries on data source and explanation depth separately: internal holdings only, external holdings, plain-language summary, scenario comparison.",
+      "If pricing or retention are in scope for the report, ask them separately and label all answers as hypothetical concept reactions, not behavioural proof."
+    ],
+    "prompt_adjustments": [
+      "In concept validation mode, require the first concept question to be neutral and prohibit stacking value adjectives such as 'free', 'simple', and 'integrated' in one sentence.",
+      "Add an observer rule that any participant skepticism must trigger one counterexample or failure-case probe before closure.",
+      "Add a synthesis guardrail that product-shaping outputs must be explicitly labeled 'single synthetic persona, directional only' and that unsupported transformation claims are disallowed.",
+      "Encourage facilitator prompts that ask 'what would make you ignore this?' before 'where should this live in the app?'."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy is roughly sufficient for a short concept screen, but one or two extra turns should be reserved for disconfirmation and journey-fit contrast probes before closure."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit reviews a single synthetic concept-validation interview. Any product, retention, or journey-design implication should be treated as directional only until checked with multiple human interviews or behavioral tests."
+}

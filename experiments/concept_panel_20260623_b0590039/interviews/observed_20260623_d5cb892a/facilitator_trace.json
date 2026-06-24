@@ -1,0 +1,468 @@
+[
+  {
+    "interview_phase": "opening_recent_behaviour",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "概念驗證要先建立真實現況；目前無 transcript，所以先用一條中性問題拉出最近一次實際投資組合檢視行為，之後先跟進工具、workaround 同觸發原因。",
+    "message_to_persona": "最近一次你主動睇自己投資組合，係咩情況下發生？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次實際 portfolio review 係咩事件觸發？",
+      "當時用咗咩工具或渠道睇持倉？",
+      "現時有冇固定 workaround 去拼湊全貌？",
+      "之後對 Portfolio Health Check 嘅第一反應會係乜？",
+      "咩數據邊界同呈現方式先令佢信任？",
+      "見到風險提示後實際會點做？",
+      "咩條件會令功能變成慣常使用？",
+      "功能應該出現喺邊個銀行旅程時刻？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "workaround_probe",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "已有一個近期具體事件，可先追問當時實際點樣睇兩個 app，補 current_workaround，未到介紹概念時機。問題聚焦單一行動，承接佢提到嘅銀行 app 同 MPF app。",
+    "message_to_persona": "你嗰晚開住銀行app同MPF app，實際會點樣逐樣睇？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次主動查看投資組合發生在上個月月底晚飯後，當時同時打開銀行app和MPF app。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "觸發查看的背景與近期信用卡單和日常開支變多有關，目的是確認資金配置並讓自己心裡有數。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "當晚佢喺銀行app同MPF app入面實際睇咩畫面、用咩次序？",
+      "佢目前點樣拼湊整體資產狀況，當中有冇依賴其他工具或心法？",
+      "未介紹概念前，佢現有方法邊部分最碎片化、最唔清楚或者最費神？",
+      "之後對 Portfolio Health Check 嘅初步反應、信任界線、行動門檻同持續使用條件係咩？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "neutral_concept_reaction",
+    "decision_rationale": "已經有最近實際行為同目前做法，符合概念介紹前置條件。下一步先中性介紹概念並收集第一反應，避免同一題混入信任、行動或服務嵌入。",
+    "message_to_persona": "如果銀行app之後有個免費嘅Portfolio Health Check，幫你整體睇銀行內外部分投資持倉風險同分布，你第一下覺得對你有冇用？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最近一次主動查看投資組合發生在上個月尾，晚飯後在家中因日常開支變密而打開銀行app和MPF app查看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當次查看的主要動機是確認資金配置、讓自己心中有數，而不是主動研究市場走勢。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者目前以分開查看銀行app與MPF app的方式管理資產，先看現金、信用卡扣數、自動轉賬，再看MPF總數與供款入帳。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者平時不會深入分析，只有在看到數字『有啲唔對路』時才進一步查看哪一部分波動較大。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "受訪者對整體投資組合視圖的第一反應是有用、無用，還是有保留？",
+      "若覺得有用，最有價值的是哪一類資訊或哪個決策時刻？",
+      "受訪者對銀行整合外部資產或風險分析的信任與資料界線在哪裡？",
+      "看到風險提示後實際會做什麼，而不是只停留在理解層面？",
+      "什麼情況會令這功能變成日常習慣，而不是只試一次？",
+      "這類輸出更適合放在自助app、alert、report，還是RM互動場景？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "trust_probe",
+    "probing_strategy": "anchor_on_external_data_concern",
+    "decision_rationale": "已經有最近行為、現有做法同概念初步反應；目前最大缺口係信任與資料邊界。參與者剛提到唔想一開始交太多外部帳戶資料，所以先追問可接受的資料範圍，比直接問會唔會用或點樣提醒更貼近現有證據。",
+    "message_to_persona": "如果要你連部分外部資產，你會接受銀行先睇到邊啲資料？",
+    "evidence_updates": [
+      {
+        "claim": "最近一次主動睇投資組合係上個月尾晚飯後，因日常開支變密而想確認自己資金狀況。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "當晚先看銀行app內現金、信用卡扣數和自動轉賬，再看MPF總數和供款是否正常；只有見到數字不對路才再深入查看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "現時是分開幾個app看，再由自己在心裡整合整體狀況。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對Portfolio Health Check的初步反應偏正面，因可減少分散查看的麻煩。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對工具的接受度可能受理解速度和外部資料輸入負擔影響。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "可接受的外部資料範圍是甚麼？",
+      "甚麼呈現或證據會令輸出感覺中立而非銷售導向？",
+      "見到風險提示後實際會做甚麼？",
+      "甚麼情況下這功能會變成固定習慣而非只試一次？",
+      "這類分析應該出現在自助介面還是RM互動中的哪個時刻？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_action_probe",
+    "probing_strategy": "single-step follow-up",
+    "decision_rationale": "已覆蓋近期行為、現有做法、概念第一反應同資料界線；而家優先補概念後嘅實際跟進行為，先知道提醒會唔會改變決定，再決定之後問留存或出現時機。問題用假設情境，因為受訪者未實際用過概念。",
+    "message_to_persona": "如果佢真係彈一個風險提醒畀你，你下一步通常會做咩？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最近一次主動查看投資組合，觸發點係月尾見到日常開支變密，想確認資金分布。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者目前主要以銀行app加MPF app分開查看，先看現金、扣數同自動轉賬，再看MPF總數與供款是否正常，只在數字不對路時才再深入。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者對Portfolio Health Check有初步興趣，因為現時需要自行把多個app資訊拼湊起來，但前提是輸出要快而易明。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者對外部資料連接有明確界線，只接受基本持倉與變動範圍，不接受交易明細、家人資料或可轉賬權限。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者較可能把這類工具視為快速掌握全局的低負擔檢查，而不是深入分析工具。",
+        "evidence_type": "facilitator_hypothesis",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_3.persona"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "root_cause_hypotheses": [
+      {
+        "hypothesis": "佢而家用分散式、淺層查看方式，主要係想快速確認資金安全感同現金節奏，而唔係主動做深入投資判斷。",
+        "supporting_evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "alternative_explanations": [
+          "投資持倉本身簡單，所以無需要深入看",
+          "當晚只是時間有限，不代表平時都係咁"
+        ],
+        "validation_gap": "未問到如果見到明確風險提醒時，佢會唔會真係採取行動或深入查證。",
+        "confidence": "low"
+      },
+      {
+        "hypothesis": "概念要被持續使用，關鍵可能唔係分析深度，而係輸出是否夠快、夠清楚，同埋唔需要交出太多資料。",
+        "supporting_evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona"
+        ],
+        "alternative_explanations": [
+          "佢只係對初始設定有戒心，用落後未必在意",
+          "真正影響使用的可能是提醒是否貼合佢關心的現金壓力"
+        ],
+        "validation_gap": "未問到收到提醒後會做乜，亦未問到喺咩時刻出現先有用。",
+        "confidence": "low"
+      }
+    ],
+    "open_questions": [
+      "見到風險提醒後，受訪者實際第一步會做咩？",
+      "乜嘢情況會令佢之後持續用，而唔係試一次就算？",
+      "呢類分析最適合喺邊個時刻或服務接觸點出現？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "service_embedding",
+    "probing_strategy": "moment_mapping",
+    "decision_rationale": "已覆蓋現況、workaround、概念初步反應、資料邊界同見到提醒後會點做；而家優先補問呢個功能應該喺咩客戶時刻出現，避免直接跳去留存條件而欠缺使用場景。",
+    "message_to_persona": "如果呢個功能要真係幫到你，你最想佢喺咩時候出現？",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最近一次主動睇投資組合，係上個月尾晚飯後，因為見到信用卡單同日常開支變密，想確認資金分布。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者而家主要分開用銀行 app 同 MPF app 檢查現金、自動扣數、供款入帳同總數有冇明顯變動，通常只在見到數字唔對路時先再深入看。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者對 Portfolio Health Check 有初步興趣，因為現時需要自己把多個 app 的資訊在心中拼合，但前提是要很快看得明白，且不想一開始交太多外部帳戶資料。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者可接受銀行先取得基本外部資產資料，例如戶口類型、產品類別、金額範圍及一段時間的大概變動；不接受交易明細、家人資料或可直接轉賬的權限。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "面對風險提醒時，受訪者傾向先看清提醒內容，再對照其他 app 驗證是否誤判，確認後才會慢慢調整，不會即時大幅交易。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "這個功能應該嵌入哪個具體時刻或介面才最貼合其日常流程？",
+      "什麼條件會令受訪者把這個免費功能變成固定習慣，而不是只看一次？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "retention_probe",
+    "probing_strategy": "routine_anchor",
+    "decision_rationale": "已覆蓋近況行為、workaround、概念反應、信任界線、跟進行動同出現時機；目前最大缺口係重用條件，所以順住佢月尾對數同怕太密提示，問咩情況會令功能留低成為習慣用。",
+    "message_to_persona": "咩情況先會令你月尾對數時都會固定開呢個功能，而唔係試一次就算？",
+    "evidence_updates": [
+      {
+        "claim": "參與者最近一次主動檢視資產是在上個月尾、晚飯後替兒子做功課期間，主要是因日常開支變密而想對自己資金狀況有數。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者目前以分開查看銀行 app 與 MPF app 的方式管理，先看現金、信用卡扣數和自動轉賬，再看 MPF 總數和供款是否正常。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者對整合式 Portfolio Health Check 的初步價值感來自減少跨 app 拼湊資訊，但前提是計算方式容易明白且不需一開始提交太多外部帳戶資料。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者可接受外部資產分析只讀取基本持倉類型、產品、金額範圍和大概變動，不接受交易明細、家人資料或可直接轉賬權限。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "收到風險提醒後，參與者通常先看提醒內容，再對照其他 app 驗證是否誤判，確認後才會慢慢調整，不會即時大幅交易。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者希望功能在月尾或出糧後對數時，以及出現明顯變化時才提示；過密提醒會被視為雜訊。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "乜嘢具體條件會令呢個功能由『有啲用』變成固定月尾會開的習慣？",
+      "提示頻率、內容清晰度、準確度定整合完整度，邊個最影響佢會否持續使用？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "close",
+    "probing_strategy": "stop_rule",
+    "decision_rationale": "已覆蓋近期行為、現有做法、概念反應、資料邊界、提醒後行動、重複使用條件同出現時機；再追問大多只會細化偏好，未必實質改變證據判斷，所以結束。",
+    "message_to_persona": "",
+    "evidence_updates": [
+      {
+        "claim": "受訪者最近一次查看資產屬月尾對數情境，主要由家庭開支變密觸發，目的是先確認整體金錢分布而非研究市場。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "受訪者目前以分散 app、快速掃描現金、扣數、MPF 總額與供款入帳為主，只在數字『唔對路』時才再深入。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "對 Portfolio Health Check 的初步價值在於減少跨 app 拼湊資訊，但前提是能快速看懂且不需一開始交出太多外部資料。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "可接受的外部資料邊界偏向只讀、摘要式資訊，例如戶口類型、產品、金額範圍與大概變動；不接受交易明細、家人資料或可直接轉賬權限。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_4.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "面對風險提醒時，受訪者傾向先閱讀解釋並交叉核對其他 app，而非立即交易；只有確認『真係唔對路』才會小幅調整。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_5.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "功能最適合嵌入在月尾或出糧後的例行對數時刻，以及出現明顯集中或跌幅異常時的低頻提醒。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_6.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "能否成為固定習慣，關鍵在於是否節省時間、一步見到重點、可順手對照其他戶口分布，且不需反覆重連或追加權限。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_7.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": true,
+    "end_reason": "Coverage complete and further probing is unlikely to materially change the evidence map.",
+    "question_evidence_basis": "clarification",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "not_asked_at_close"
+  }
+]

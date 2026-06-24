@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 import io
+import json
 from contextlib import redirect_stderr
 from pathlib import Path
 import sys
@@ -12,8 +13,12 @@ if str(SRC) not in sys.path:
 
 from ai_validation_swarm.cli.main import _build_parser
 from ai_validation_swarm.conversation.providers import ChatResult
+from ai_validation_swarm.facilitator.learning import (
+    disable_facilitator_learning_rules,
+    promote_facilitator_learning_rules,
+)
 from ai_validation_swarm.facilitator.models import FacilitatorDecision
-from ai_validation_swarm.facilitator.models import InterviewSession
+from ai_validation_swarm.facilitator.models import InterviewExchange, InterviewSession
 from ai_validation_swarm.facilitator.providers import OpenAIFacilitatorProvider, validate_hypothesis_assessment
 from ai_validation_swarm.facilitator.runtime import FacilitatedInterviewRuntime
 from ai_validation_swarm.personas.generator import generate_personas
@@ -253,6 +258,19 @@ class RecordedLLMPersona:
         })()
 
 
+class ConceptGateFacilitator:
+    provider_name = "concept-gate"
+    model_name = "concept-gate/v1"
+
+    def __init__(self, revised_decision: FacilitatorDecision):
+        self.calls = []
+        self.revised_decision = revised_decision
+
+    def next_turn(self, **kwargs):
+        self.calls.append(kwargs)
+        return self.revised_decision
+
+
 class FacilitatorRuntimeTest(unittest.TestCase):
     def test_facilitator_skill_and_versioned_prompts_are_complete(self):
         skill = (ROOT / "skills" / "design-research-facilitator" / "SKILL.md").read_text(encoding="utf-8")
@@ -272,6 +290,8 @@ class FacilitatorRuntimeTest(unittest.TestCase):
         self.assertIn("test the supplied mechanism before strengthening a competing cause", interview_rules)
         self.assertIn("Preserve participant heterogeneity", interview_rules)
         self.assertIn("Do not make overlap, concentration, stress testing, or any other named capability become mandatory pain points", interview_rules)
+        self.assertIn("ties a named analytic output to a concrete decision or non-decision", interview_rules)
+        self.assertIn("output_to_decision_probe", interview_rules)
         self.assertIn("leave `root_cause_hypotheses`, `needs`, `pov_statements`, and `how_might_we_questions` empty", synthesis_rules)
         self.assertIn("provisionally_supported", synthesis_rules)
         self.assertIn("Absence of supporting evidence is not contradicting evidence", synthesis_rules)
@@ -335,6 +355,7 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertIn("exchange_1.persona", all_facilitator_inputs)
             self.assertIn("INTERVIEW MODE", all_facilitator_inputs)
             self.assertIn("COVERAGE STATUS", all_facilitator_inputs)
+            self.assertIn("DEPTH-FIRST STOP RULE", all_facilitator_inputs)
 
     def test_hypothesis_validation_requires_and_propagates_hypothesis(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -408,9 +429,598 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertEqual(report["problem_evidence"]["strength"], "medium")
             self.assertTrue(any(call[0] == "synthesize_concept" for call in provider.calls))
             first_turn_prompt = provider.calls[0][1]["system_prompt"]
+            first_turn_user_prompt = provider.calls[0][1]["user_prompt"]
             self.assertIn("Test Go Out La Protocol", first_turn_prompt)
+            self.assertIn("Depth-First Interviewing", first_turn_prompt)
+            self.assertIn("ties a named analytic output to a concrete decision or non-decision", first_turn_prompt)
+            self.assertIn("named-output-to-concrete-decision mapping probe", first_turn_user_prompt)
             self.assertIn("Assumption Validation", (output / "insights.md").read_text(encoding="utf-8"))
             self.assertIn("# Go Out La! Interview:", (output / "insights.md").read_text(encoding="utf-8"))
+
+    def test_concept_coverage_status_tracks_depth_probes_separately_from_topic_coverage(self):
+        session = InterviewSession.from_dict({
+            "interview_id": "concept-depth",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Validate a concept.",
+            "product_context": "A free health-check concept.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "concept-synthesis/v1",
+            "interview_mode": "concept_validation",
+            "soft_turn_limit": 4,
+            "hard_turn_limit": 10,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last time you checked your portfolio.",
+                    "persona_response": "I checked after a big expense was coming up.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "recent_event",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "How do you piece it together now?",
+                    "persona_response": "I use the bank app and a few notes.",
+                    "facilitator_phase": "current_workaround",
+                    "probing_strategy": "workflow_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 3,
+                    "facilitator_question": "If the bank added a portfolio health check, what is your first reaction?",
+                    "persona_response": "Sounds useful if it is easy.",
+                    "facilitator_phase": "concept_reaction",
+                    "probing_strategy": "concept_intro",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 4,
+                    "facilitator_question": "What data would you be okay sharing?",
+                    "persona_response": "Only what is needed for the portfolio.",
+                    "facilitator_phase": "trust_boundary",
+                    "probing_strategy": "trust_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 5,
+                    "facilitator_question": "What would you do after seeing a warning?",
+                    "persona_response": "I would check it first before doing anything.",
+                    "facilitator_phase": "action_followthrough",
+                    "probing_strategy": "action_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "consequence",
+                },
+                {
+                    "exchange_id": 6,
+                    "facilitator_question": "What would make you come back to it again?",
+                    "persona_response": "If it stayed relevant.",
+                    "facilitator_phase": "repeat_use_condition",
+                    "probing_strategy": "retention_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 7,
+                    "facilitator_question": "Where should this show up in the banking journey?",
+                    "persona_response": "Probably in the app when I am already reviewing things.",
+                    "facilitator_phase": "service_embedding",
+                    "probing_strategy": "journey_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertTrue(session.coverage_status["coverage_complete"])
+        self.assertFalse(session.coverage_status["depth_complete"])
+        self.assertEqual(
+            session.coverage_status["depth_missing"],
+            ["contrast_probe", "driver_deepening_probe", "output_to_decision_probe"],
+        )
+
+        session.exchanges.extend([
+            InterviewExchange(
+                exchange_id=8,
+                facilitator_question="What exact explanation would be enough for you to trust the warning on first use?",
+                persona_response="Show me why it changed and by how much.",
+                facilitator_phase="trust_threshold",
+                probing_strategy="threshold_probe",
+                question_evidence_basis="hypothetical",
+                question_evidence_target="context",
+            ),
+            InterviewExchange(
+                exchange_id=9,
+                facilitator_question="If it only showed your in-bank holdings, when would it still be useful and when would it not be worth using?",
+                persona_response="Useful for a quick check, but not for a full review.",
+                facilitator_phase="non_use_contrast",
+                probing_strategy="contrast_probe",
+                question_evidence_basis="hypothetical",
+                question_evidence_target="alternative_condition",
+            ),
+            InterviewExchange(
+                exchange_id=10,
+                facilitator_question="What does each of your current tools help you avoid missing?",
+                persona_response="The notes remind me why I bought something and the app shows the balance.",
+                facilitator_phase="workaround_function",
+                probing_strategy="workaround_function_probe",
+                question_evidence_basis="current_event",
+                question_evidence_target="participant_cause",
+            ),
+            InterviewExchange(
+                exchange_id=11,
+                facilitator_question="If a concentration alert showed 42% of your portfolio was in one sector, what would you actually do at that point, or would you still leave it unchanged?",
+                persona_response="I would compare it with my original plan first, and if it drifted too far I would trim it.",
+                facilitator_phase="output_decision_mapping",
+                probing_strategy="output_to_decision_probe",
+                question_evidence_basis="hypothetical",
+                question_evidence_target="consequence",
+            ),
+        ])
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertTrue(session.coverage_status["depth_complete"])
+        self.assertEqual(session.coverage_status["depth_missing"], [])
+
+    def test_concept_validation_does_not_finalize_at_soft_limit_until_depth_is_complete(self):
+        session = InterviewSession.from_dict({
+            "interview_id": "concept-stop-gate",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Validate a concept.",
+            "product_context": "A free health-check concept.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "concept-synthesis/v1",
+            "interview_mode": "concept_validation",
+            "soft_turn_limit": 4,
+            "hard_turn_limit": 12,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last time you checked your portfolio.",
+                    "persona_response": "I checked before some bills were due.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "recent_event",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "How do you piece it together now?",
+                    "persona_response": "I use the app and notes.",
+                    "facilitator_phase": "current_workaround",
+                    "probing_strategy": "workflow_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 3,
+                    "facilitator_question": "If the bank added a portfolio health check, what is your first reaction?",
+                    "persona_response": "Could be useful.",
+                    "facilitator_phase": "concept_reaction",
+                    "probing_strategy": "concept_intro",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 4,
+                    "facilitator_question": "What data would you be okay sharing?",
+                    "persona_response": "Only portfolio-related data.",
+                    "facilitator_phase": "trust_boundary",
+                    "probing_strategy": "trust_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 5,
+                    "facilitator_question": "What would you do after seeing a warning?",
+                    "persona_response": "I would verify it first.",
+                    "facilitator_phase": "action_followthrough",
+                    "probing_strategy": "action_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "consequence",
+                },
+                {
+                    "exchange_id": 6,
+                    "facilitator_question": "What would make you come back to it again?",
+                    "persona_response": "If it stayed useful.",
+                    "facilitator_phase": "repeat_use_condition",
+                    "probing_strategy": "retention_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 7,
+                    "facilitator_question": "Where should this show up in the banking journey?",
+                    "persona_response": "Inside the app when I am already checking.",
+                    "facilitator_phase": "service_embedding",
+                    "probing_strategy": "journey_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+
+        self.assertFalse(FacilitatedInterviewRuntime._should_finalize_after_exchange(session))
+        self.assertTrue(session.coverage_status["coverage_complete"])
+        self.assertFalse(session.coverage_status["depth_complete"])
+        self.assertEqual(session.stop_reason, "")
+        self.assertEqual(
+            session.coverage_status["depth_missing"],
+            ["contrast_probe", "driver_deepening_probe", "output_to_decision_probe"],
+        )
+
+        session.exchanges.extend([
+            InterviewExchange(
+                exchange_id=8,
+                facilitator_question="What exact explanation would be enough for you to trust the warning on first use?",
+                persona_response="A simple reason and a number.",
+                facilitator_phase="trust_threshold",
+                probing_strategy="threshold_probe",
+                question_evidence_basis="hypothetical",
+                question_evidence_target="context",
+            ),
+            InterviewExchange(
+                exchange_id=9,
+                facilitator_question="If it only showed part of your holdings, when would it still be useful and when would it not?",
+                persona_response="Only for a quick check.",
+                facilitator_phase="non_use_contrast",
+                probing_strategy="contrast_probe",
+                question_evidence_basis="hypothetical",
+                question_evidence_target="alternative_condition",
+            ),
+            InterviewExchange(
+                exchange_id=10,
+                facilitator_question="What does each of your current tools help you avoid missing?",
+                persona_response="Each one covers a different blind spot.",
+                facilitator_phase="workaround_function",
+                probing_strategy="workaround_function_probe",
+                question_evidence_basis="current_event",
+                question_evidence_target="participant_cause",
+            ),
+            InterviewExchange(
+                exchange_id=11,
+                facilitator_question="If a risk-profile mismatch alert said this portfolio now looks more aggressive than what you intended, what would you actually do next, or would you still keep it as it is?",
+                persona_response="I would review the biggest positions first, and if it was only market noise I would leave it alone.",
+                facilitator_phase="output_decision_mapping",
+                probing_strategy="output_to_decision_probe",
+                question_evidence_basis="hypothetical",
+                question_evidence_target="consequence",
+            ),
+        ])
+
+        self.assertTrue(FacilitatedInterviewRuntime._should_finalize_after_exchange(session))
+        self.assertTrue(session.coverage_status["depth_complete"])
+        self.assertEqual(session.stop_reason, "soft_turn_limit_with_required_coverage_met")
+
+    def test_concept_validation_tracks_concept_intro_prerequisites(self):
+        session = InterviewSession.from_dict({
+            "interview_id": "concept-prereqs",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Validate a concept.",
+            "product_context": "A workflow concept.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "concept-synthesis/v1",
+            "interview_mode": "concept_validation",
+            "soft_turn_limit": 6,
+            "hard_turn_limit": 10,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last time you had to reprioritize onboarding.",
+                    "persona_response": "We changed it after a rough trial.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "recent_event",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "How do you piece that decision together now?",
+                    "persona_response": "I use notes and analytics.",
+                    "facilitator_phase": "current_workaround",
+                    "probing_strategy": "workflow_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertFalse(session.coverage_status["concept_intro_allowed"])
+        self.assertEqual(
+            session.coverage_status["concept_intro_prerequisites"]["missing"],
+            ["missing_evidence", "pressure", "defensible_vs_uncertain", "decision_change"],
+        )
+
+        session.exchanges.extend([
+            InterviewExchange(
+                exchange_id=3,
+                facilitator_question="What evidence was still missing when you made that call?",
+                persona_response="We still lacked a few direct user examples.",
+                facilitator_phase="missing_evidence_probe",
+                probing_strategy="missing_evidence_probe",
+                question_evidence_basis="current_event",
+                question_evidence_target="context",
+            ),
+            InterviewExchange(
+                exchange_id=4,
+                facilitator_question="What stakeholder or time pressure made waiting costly there?",
+                persona_response="Sales wanted a decision that week.",
+                facilitator_phase="pressure_probe",
+                probing_strategy="pressure_probe",
+                question_evidence_basis="current_event",
+                question_evidence_target="context",
+            ),
+            InterviewExchange(
+                exchange_id=5,
+                facilitator_question="What could you defend publicly in that decision, and what still felt shaky privately?",
+                persona_response="I could defend the change, but I was still unsure about the exact reason.",
+                facilitator_phase="defensibility_probe",
+                probing_strategy="defensibility_probe",
+                question_evidence_basis="current_event",
+                question_evidence_target="participant_cause",
+            ),
+            InterviewExchange(
+                exchange_id=6,
+                facilitator_question="What did you actually change in scope or priority at the end?",
+                persona_response="We delayed profile questions and shipped the simpler path first.",
+                facilitator_phase="decision_outcome_probe",
+                probing_strategy="decision_outcome_probe",
+                question_evidence_basis="current_event",
+                question_evidence_target="consequence",
+            ),
+        ])
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertTrue(session.coverage_status["concept_intro_allowed"])
+        self.assertEqual(session.coverage_status["concept_intro_prerequisites"]["missing"], [])
+
+    def test_concept_validation_rejects_concept_intro_before_prerequisites_are_met(self):
+        revised_decision = FacilitatorDecision(
+            interview_phase="missing_evidence_probe",
+            probing_strategy="missing_evidence_probe",
+            decision_rationale="Need the missing current-state evidence before concept exposure.",
+            message_to_persona="What evidence was still missing when you made that call?",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=False,
+            end_reason="",
+        )
+        provider = ConceptGateFacilitator(revised_decision)
+        runtime = FacilitatedInterviewRuntime(
+            data_dir=ROOT / "data" / "personas",
+            session_dir=ROOT / "interviews",
+            facilitator_provider=provider,
+            persona_provider=RecordedLLMPersona(),
+        )
+        session = InterviewSession.from_dict({
+            "interview_id": "concept-gate-session",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Validate a concept.",
+            "product_context": "A workflow concept.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "concept-synthesis/v1",
+            "interview_mode": "concept_validation",
+            "soft_turn_limit": 6,
+            "hard_turn_limit": 10,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last time you reprioritized onboarding.",
+                    "persona_response": "We changed it after a rough trial.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "recent_event",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "How do you piece that decision together now?",
+                    "persona_response": "I use notes and analytics.",
+                    "facilitator_phase": "current_workaround",
+                    "probing_strategy": "workflow_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+        decision = FacilitatorDecision(
+            interview_phase="concept_reaction",
+            probing_strategy="concept_intro",
+            decision_rationale="Move to concept reaction.",
+            message_to_persona="If there were an AI synthetic-user platform for this, what would your first reaction be?",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=False,
+            end_reason="",
+            question_evidence_basis="hypothetical",
+            question_evidence_target="context",
+        )
+
+        revised = runtime._revise_non_episodic_validation_question(session, decision, "SYSTEM")
+
+        self.assertIs(revised, revised_decision)
+        self.assertEqual(len(provider.calls), 1)
+        self.assertIn("CONCEPT TIMING GATE", provider.calls[0]["user_prompt"])
+        self.assertIn("missing_evidence", provider.calls[0]["user_prompt"])
+        self.assertIn("pressure", provider.calls[0]["user_prompt"])
+        self.assertIn("defensible_vs_uncertain", provider.calls[0]["user_prompt"])
+        self.assertIn("decision_change", provider.calls[0]["user_prompt"])
+        self.assertEqual(
+            session.facilitator_decisions[-1]["decision_status"],
+            "rejected_by_concept_timing_gate",
+        )
+
+    def test_human_approved_learning_rules_are_recorded_and_injected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=74)[0]
+            save_persona(persona, root / "personas")
+            registry_path = root / "facilitator_rules.json"
+            registry_path.write_text(
+                json.dumps({
+                    "artifact_version": "v1",
+                    "approved_rules": [{
+                        "rule_id": "linger_on_manual_verification",
+                        "rule": "When a participant describes manual verification, ask what concrete mistake or avoided failure that behavior is protecting against.",
+                        "status": "approved",
+                    }],
+                }),
+                encoding="utf-8",
+            )
+            provider = RecordedLLMFacilitator()
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=provider,
+                persona_provider=RecordedLLMPersona(),
+                approved_learning_rules_path=registry_path,
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand root causes of trip replanning friction.",
+                max_turns=2,
+            )
+            session = read_json(output / "interview.json")
+            self.assertEqual(session["approved_learning_rule_ids"], ["linger_on_manual_verification"])
+            self.assertEqual(session["approved_learning_rules_source"], str(registry_path))
+            first_turn_prompt = provider.calls[0][1]["system_prompt"]
+            self.assertIn("HUMAN-APPROVED FACILITATOR LEARNING RULES", first_turn_prompt)
+            self.assertIn("Treat them as generic interviewing heuristics", first_turn_prompt)
+            self.assertIn("linger_on_manual_verification", first_turn_prompt)
+
+    def test_promote_facilitator_learning_rules_writes_registry(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            report_path = root / "facilitator_audit_learning_report.json"
+            report_path.write_text(
+                json.dumps({
+                    "label": "Facilitator Audit Learning Report",
+                    "human_review_candidates": [{
+                        "rule_id": "linger_on_manual_verification",
+                        "rule": "When a participant describes manual verification, ask what concrete mistake or avoided failure that behavior is protecting against.",
+                        "source_tags": ["missed_high_signal_clue"],
+                        "confidence": "medium",
+                        "support_run_count": 2,
+                        "support_persona_count": 6,
+                        "candidate_strength": "strong",
+                        "ready_for_human_review": True,
+                    }],
+                }),
+                encoding="utf-8",
+            )
+            registry_path = root / "approved_facilitator_learning_rules.json"
+            registry = promote_facilitator_learning_rules(
+                report_path=report_path,
+                registry_path=registry_path,
+                rule_ids=["linger_on_manual_verification"],
+                approved_by="test-reviewer",
+                approval_note="Safe generic rule.",
+            )
+            self.assertEqual(registry["approved_rules"][0]["rule_id"], "linger_on_manual_verification")
+            self.assertEqual(registry["approved_rules"][0]["approved_by"], "test-reviewer")
+            self.assertTrue(registry_path.exists())
+            self.assertTrue(registry_path.with_suffix(".md").exists())
+
+    def test_disabled_learning_rules_are_not_injected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            registry_path = root / "facilitator_rules.json"
+            registry_path.write_text(
+                json.dumps({
+                    "artifact_version": "v1",
+                    "approved_rules": [{
+                        "rule_id": "linger_on_manual_verification",
+                        "rule": "When a participant describes manual verification, ask what concrete mistake or avoided failure that behavior is protecting against.",
+                        "status": "disabled",
+                    }],
+                }),
+                encoding="utf-8",
+            )
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=RecordedLLMFacilitator(),
+                persona_provider=RecordedLLMPersona(),
+                approved_learning_rules_path=registry_path,
+            )
+            session = InterviewSession(
+                interview_id="test",
+                persona_id="su_0001",
+                persona_name="Test Persona",
+                research_goal="Test",
+                product_context="",
+                output_language="Traditional Chinese",
+                facilitator_provider="x",
+                facilitator_model="y",
+                persona_provider="x",
+                persona_model="y",
+                facilitator_prompt_version="facilitator-interview/v2",
+                synthesis_prompt_version="facilitator-synthesis/v2",
+            )
+            runtime._annotate_approved_learning_rules(session)
+            prompt = runtime._facilitator_system_prompt(session)
+            self.assertEqual(session.approved_learning_rule_ids, [])
+            self.assertNotIn("HUMAN-APPROVED FACILITATOR LEARNING RULES", prompt)
+
+    def test_disable_facilitator_learning_rules_updates_registry(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            registry_path = root / "approved_facilitator_learning_rules.json"
+            registry_path.write_text(
+                json.dumps({
+                    "artifact_version": "v1",
+                    "approved_rules": [{
+                        "rule_id": "linger_on_manual_verification",
+                        "rule": "When a participant describes manual verification, ask what concrete mistake or avoided failure that behavior is protecting against.",
+                        "status": "approved",
+                    }],
+                }),
+                encoding="utf-8",
+            )
+            registry = disable_facilitator_learning_rules(
+                registry_path=registry_path,
+                rule_ids=["linger_on_manual_verification"],
+                disabled_by="test-reviewer",
+                disable_note="Rule overfit in latest run.",
+            )
+            self.assertEqual(registry["approved_rules"][0]["status"], "disabled")
+            self.assertEqual(registry["approved_rules"][0]["disabled_by"], "test-reviewer")
+            self.assertTrue(registry_path.with_suffix(".md").exists())
 
     def test_facilitator_provider_rejects_blank_non_terminal_question(self):
         class StubClient:
@@ -616,12 +1226,49 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "--research-goal", "Validate a concept",
             "--product-context", "Neutral concept context",
             "--topic-label", "Test Topic",
+            "--backend", "codex-sdk",
+            "--approved-learning-rules-path", "rules.json",
             "--debug-progress",
         ])
         self.assertIsNone(parsed.max_turns)
         self.assertIsNone(parsed.soft_turn_limit)
         self.assertIsNone(parsed.hard_turn_limit)
+        self.assertEqual(parsed.reasoning_effort, "medium")
+        self.assertEqual(parsed.backend, "codex-sdk")
+        self.assertEqual(parsed.approved_learning_rules_path, Path("rules.json"))
         self.assertTrue(parsed.debug_progress)
+
+        parsed = parser.parse_args([
+            "aggregate-facilitator-audit-runs",
+            "--run-dir", "run_a",
+            "--run-dir", "run_b",
+            "--output-dir", "learning",
+        ])
+        self.assertEqual(parsed.run_dirs, [Path("run_a"), Path("run_b")])
+
+        parsed = parser.parse_args([
+            "promote-facilitator-learning-rules",
+            "--report-path", "report.json",
+            "--registry-path", "registry.json",
+            "--rule-id", "linger_on_manual_verification",
+        ])
+        self.assertEqual(parsed.rule_ids, ["linger_on_manual_verification"])
+
+        parsed = parser.parse_args([
+            "disable-facilitator-learning-rules",
+            "--registry-path", "registry.json",
+            "--rule-id", "linger_on_manual_verification",
+        ])
+        self.assertEqual(parsed.rule_ids, ["linger_on_manual_verification"])
+
+        parsed = parser.parse_args([
+            "compare-facilitator-learning-effects",
+            "--baseline-run-dir", "baseline_run",
+            "--candidate-run-dir", "candidate_run",
+            "--output-dir", "effect_report",
+        ])
+        self.assertEqual(parsed.baseline_run_dirs, [Path("baseline_run")])
+        self.assertEqual(parsed.candidate_run_dirs, [Path("candidate_run")])
 
 
 if __name__ == "__main__":

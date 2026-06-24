@@ -1,0 +1,287 @@
+{
+  "synthetic_only_disclaimer": "This trace is based on a synthetic persona artifact and interview transcript for AI pre-validation only. It does not replace human research evidence.",
+  "surface_read": {
+    "what_the_persona_explicitly_said": [
+      "She last reviewed her portfolio seriously at the end of last month because school fees were due and market volatility news made her want to check whether her allocation had drifted. (`exchange_1.persona`)",
+      "She currently pieces together the full picture from the bank app, fund account, Notes with buy prices and intended role of holdings, and sometimes WhatsApp or email statements; having to assemble this across places feels annoying and leads to delay. (`exchange_2.persona`)",
+      "A free Portfolio Health Check sounds somewhat useful if it can show diversification and risk in one place, but she immediately wants to know whether it includes other accounts, how risk is calculated, and whether 'free' is really free or a pretext for product pushing. (`exchange_3.persona`)",
+      "She would allow access to holdings, product type, cost basis, approximate market value, and trade dates for portfolio analysis, but does not want unrelated banking data like spending, salary, or other irrelevant transactions; she wants itemized consent, retention clarity, and disclosure about marketing use. (`exchange_4.persona`)",
+      "If the tool says her allocation is off, she would not make a big move immediately; she first wants to distinguish short-term volatility from a real overweight and then consider small practical actions. Vague explanations reduce the chance she will follow the guidance. (`exchange_5.persona`)",
+      "She prefers the feature to appear when she is already in the investment overview or after a statement is issued, especially when there has been a meaningful change; she does not want random push notifications. (`exchange_6.persona`)",
+      "For regular use, it must remove the need to manually piece together data, explain why a prompt is appearing, use plain-language risk explanations, and let her quickly adjust or ignore. (`exchange_7.persona`)",
+      "If an asset class is overweight, she wants quantified context, comparison to target or usual level, and a few concrete next-step options without immediate product pushing. She also wants to understand the risk of doing nothing. (`exchange_8.persona`)"
+    ],
+    "what_they_seemed_to_optimize_for": "Practical control with low-friction visibility: enough consolidated insight to prevent careless mistakes, without surrendering judgment, privacy, or attention to a sales-driven workflow.",
+    "what_stayed_implicit": [
+      "Whether her current portfolio is mostly simple or spread across many institutions/products.",
+      "How often she would realistically review a health check in calm markets versus stress periods.",
+      "What level of explanation would feel 'plain enough' before she trusts the risk model.",
+      "Whether past negative experiences with sales-led banking advice are shaping her skepticism, though the transcript strongly suggests some learned caution."
+    ]
+  },
+  "likely_drivers": [
+    {
+      "driver": "She uses review moments as preventive checks when ordinary-life cash obligations make downside feel concrete.",
+      "driver_type": "daily_constraint",
+      "why_it_matters_here": "Her trigger was not abstract interest in investing; it was a budget-relevant moment where school fees and volatile news made allocation mistakes feel costly. That helps explain why she frames the feature around avoiding unpleasant surprises rather than maximizing returns.",
+      "evidence_refs": [
+        "exchange_1.persona"
+      ],
+      "profile_source_refs": [
+        "values.core_values",
+        "values.fears",
+        "pricing_logic.what_makes_price_feel_fair",
+        "discovery_path.trial_trigger"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She is highly sensitive to fragmentation because her attention is already split across many short mobile sessions.",
+      "driver_type": "daily_constraint",
+      "why_it_matters_here": "Her strongest positive reaction is about not having to piece data together across apps, notes, WhatsApp, and statements. This fits a life where even useful tasks get delayed when they require stitching context across sources.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "current_context",
+        "discovery_path.phone_use_pattern",
+        "human_difference_axes.fragmentation_reality",
+        "life_story.current_daily_routine"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She follows a trust-by-proof pattern: immediate utility does not remove the need for method, scope, and motive transparency.",
+      "driver_type": "trust_pattern",
+      "why_it_matters_here": "Even when she says the feature sounds useful, her next questions are how risk is calculated, whether other accounts are included, whether it is truly free, and whether it is really a sales funnel. That is consistent with operational trust rather than brand-level trust.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "values.trust_requirements",
+        "personality_belief.trust_orientation",
+        "human_difference_axes.trust_style",
+        "product_reaction_rules.first_checks"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mostly_observed"
+    },
+    {
+      "driver": "She wants bounded data sharing: relevant portfolio data is acceptable, unrelated behavioral or banking data is not.",
+      "driver_type": "core_value",
+      "why_it_matters_here": "Her permission boundary is precise rather than absolute. She accepts data needed for the stated job, but rejects broader collection and wants granular consent, retention clarity, and limits on downstream use. That precision is a stable privacy logic, not a one-off objection.",
+      "evidence_refs": [
+        "exchange_4.persona"
+      ],
+      "profile_source_refs": [
+        "technology_attitude.privacy_concern",
+        "contradiction_map",
+        "human_difference_axes.control_preference",
+        "product_reaction_rules.questions_they_would_ask"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She resists automation that jumps from diagnosis to action; she prefers guided judgment with low-pressure options.",
+      "driver_type": "decision_style",
+      "why_it_matters_here": "When told a category is overweight, she does not want an automatic strong recommendation or product pitch. She wants quantified explanation, option framing, and space to choose smaller actions or wait. That reflects a sequential, judgment-preserving decision style.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.decision_style",
+        "technology_attitude.automation_openness",
+        "human_difference_axes.control_preference",
+        "contradictions"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She is especially alert to hidden commercial intent because 'free' loses value if it creates pressure or cleanup work.",
+      "driver_type": "emotional_protection",
+      "why_it_matters_here": "Her skepticism about whether free is really free and whether data will be used for marketing suggests a defensive filter against workflows that begin as service and end as sales pressure. That likely protects both time and dignity.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "values.fears",
+        "behavior_profile.decision_blockers",
+        "childhood_environment.ordinary_childhood_scenes",
+        "deep_research_notes.trust_pattern"
+      ],
+      "confidence": "medium",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She needs prompts to be situationally justified, not constantly present, because interruption cost is part of product value.",
+      "driver_type": "daily_constraint",
+      "why_it_matters_here": "She does not reject reminders outright; she rejects reminders without a clear reason. That matches a life where many systems already demand attention, so notification discipline becomes part of trust.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "life_story.frustrations",
+        "human_difference_axes.life_load",
+        "discovery_path.phone_use_pattern",
+        "product_reaction_rules.positive_signals"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    }
+  ],
+  "unspoken_constraints": [
+    {
+      "constraint": "The feature likely has to work in a very short mobile session, possibly during commute or between tasks.",
+      "why_likely": "She explicitly describes checking on the MTR and repeatedly emphasizes quick visibility, short prompts, and reduced assembly work.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "current_context",
+        "discovery_path.phone_use_pattern",
+        "deep_research_notes.attention_pattern"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "She may not trust outputs that cannot distinguish temporary market moves from structural allocation drift.",
+      "why_likely": "Her next-step logic depends on whether the issue is short-term fluctuation versus real overweight, so a coarse alert would fail her decision process.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.risk_tolerance",
+        "human_difference_axes.need_for_explanation"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "A useful experience probably needs to respect existing mental categories such as 'long hold' versus 'cash-adjacent' money.",
+      "why_likely": "She already tracks holdings partly by intended role, not just product label. If the health check ignores that framing, it may feel mismatched to how she actually thinks about the portfolio.",
+      "evidence_refs": [
+        "exchange_2.persona"
+      ],
+      "profile_source_refs": [
+        "human_difference_axes.guidance_preference",
+        "human_difference_axes.reflection_style"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "constraint": "She may delay adoption if account-linking looks like a one-time admin burden with uncertain payoff.",
+      "why_likely": "She likes one narrow use case first and is sensitive to setup friction, especially when value is not immediate.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "profile_source_refs": [
+        "values.adoption_style",
+        "behavior_profile.decision_blockers",
+        "product_reaction_rules.first_checks"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "value_tensions": [
+    {
+      "tension": "Convenience versus suspicion of convenience-led selling",
+      "side_a": "She wants one place to see portfolio concentration and risk without manual stitching.",
+      "side_b": "She immediately questions whether the free tool is really a lead-in to product pushing.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "contradictions",
+        "values.trust_requirements"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Control versus low-maintenance usage",
+      "side_a": "She wants granular permissions, quantified explanations, editable responses, and the option to ignore.",
+      "side_b": "She does not want to keep babysitting the system or tune it constantly; it should already be useful when opened.",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "contradictions",
+        "human_difference_axes.control_preference",
+        "pricing_logic.pricing_objection"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Caution versus desire to avoid preventable mistakes",
+      "side_a": "She will not react impulsively to a risk flag and wants to verify whether the issue is real.",
+      "side_b": "She still seeks tools that help her catch drift before needing money or discovering a problem too late.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_5.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.risk_tolerance",
+        "values.fears",
+        "values.aspirations"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Privacy protection versus willingness to share for clear utility",
+      "side_a": "She rejects unrelated banking-data access and wants clear limits on retention and marketing use.",
+      "side_b": "She is willing to share specific holdings and transaction-related portfolio data when the purpose is obvious.",
+      "evidence_refs": [
+        "exchange_4.persona"
+      ],
+      "profile_source_refs": [
+        "technology_attitude.privacy_concern",
+        "contradiction_map"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "missed_follow_up_questions": [
+    {
+      "question": "When you say a risk explanation needs to be '白話', what is the minimum version that would feel clear enough for you to act on?",
+      "why_this_would_clarify": "This would distinguish whether she needs simple category-level summaries, scenario examples, benchmark comparisons, or explicit recommended thresholds.",
+      "priority": "high"
+    },
+    {
+      "question": "Have you had a past experience where a 'free' banking tool or advisor flow turned into product pressure, or is this more a general concern?",
+      "why_this_would_clarify": "It would separate a stable trust pattern from a specific learned scar, which changes how deeply embedded the skepticism is.",
+      "priority": "high"
+    },
+    {
+      "question": "If the health check showed all your holdings but could not include assets at another bank immediately, would that still be useful enough to revisit, or would it feel incomplete?",
+      "why_this_would_clarify": "This would clarify the threshold for partial utility versus the need for full aggregation before habit formation.",
+      "priority": "medium"
+    },
+    {
+      "question": "How do you currently decide what counts as 'too偏' in your allocation if you do not have a formal target?",
+      "why_this_would_clarify": "Her answer would reveal whether she relies on rough intuition, prior advice, product roles, or informal rules of thumb, which strongly affects interpretation needs.",
+      "priority": "high"
+    },
+    {
+      "question": "What kind of reminder wording would feel helpful rather than pushy when there is a meaningful change?",
+      "why_this_would_clarify": "She clearly cares about timing and rationale of prompts; this would make the trigger and message standard more concrete.",
+      "priority": "medium"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 4
+  },
+  "checks": {
+    "leading_question_risk": "pass",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and current workaround before introducing the concept (`exchange_1`-`exchange_2`).",
+    "Most spoken questions have one conversational focus and avoid facilitator jargon; the Cantonese phrasing is natural and participant-facing throughout.",
+    "Concept coverage was adapted efficiently rather than read as a long checklist: reaction, trust boundary, likely next step, timing, and repeat-use condition were each probed once.",
+    "The stop decision was reasonable because all required concept-validation coverage areas were participant-facing and marked covered by `exchange_7`."
+  ],
+  "findings": [
+    {
+      "category": "Evidence discipline",
+      "severity": "medium",
+      "observation": "Several synthesis outputs turn hypothetical concept reactions into stronger product implications than the transcript supports. `service_embedding` and `retention` are explored only through imagined future use, but `key_insights` and `next_experiment` sometimes read as if behavior is established rather than conjectural.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.key_insights",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Label these claims explicitly as hypothetical concept feedback from one synthetic persona, and separate observed current behavior from predicted future adoption conditions."
+    },
+    {
+      "category": "Synthesis fidelity",
+      "severity": "medium",
+      "observation": "`retention_risk.workflow_effect` is stated as `adds_layer`, but the participant never said the feature would add a layer rather than replace manual stitching. The closer evidence is that they want quicker synthesis and fewer steps, and would still cross-check alerts before acting.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_5.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.retention_risk.workflow_effect"
+      ],
+      "recommendation": "Replace that field with a narrower statement tied to the transcript, such as 'may initially coexist with manual cross-checking' or remove it if the schema implies stronger certainty."
+    },
+    {
+      "category": "Domain fit",
+      "severity": "medium",
+      "observation": "The research goal asks which Aladdin-based analytics functions would materially help in real decisions and how they should embed into retail journeys without generic product selling. The interview validated a generic `Portfolio Health Check`, but did not isolate which specific analytics outputs matter beyond broad risk/distribution/change summaries, nor what concrete journey handoff would feel useful versus salesy.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "RESEARCH GOAL"
+      ],
+      "recommendation": "In the next rerun, probe specific candidate outputs one at a time and ask how each would change an actual review or adjustment decision, plus what presentation would feel advisory versus promotional."
+    },
+    {
+      "category": "Concept validation rigor",
+      "severity": "low",
+      "observation": "Curiosity, trial, and repeat-use were mostly kept distinct, but payment was handled only in synthesis rather than participant-facing probing. That is acceptable because the concept was framed as free, yet the report should be careful not to imply any willingness-to-pay learning occurred.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "SYNTHESIS.pricing_signal"
+      ],
+      "recommendation": "Keep `pricing_signal` clearly marked as untested and avoid folding it into broader value conclusions."
+    },
+    {
+      "category": "Reference quality",
+      "severity": "low",
+      "observation": "Most references are valid, but some synthesis bullets compress multiple claims into paraphrases without preserving which part is observed versus inferred. For example, the first `key_insights` bullet blends observed timing with an inferred usage trigger threshold.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.key_insights"
+      ],
+      "recommendation": "Split each insight into `stated evidence` and `inference` so downstream readers can audit what the persona actually said."
+    }
+  ],
+  "required_improvements": [
+    "Tighten synthesis so hypothetical concept reactions are not presented as behaviorally established product truths.",
+    "Probe specific analytics outputs and anti-sales embedding conditions more directly; the current interview validates a broad concept, not which Aladdin functions materially help.",
+    "Constrain report fields like `workflow_effect`, design implications, and experiment framing to what one synthetic persona actually evidenced."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask which one specific summary would be most useful on a real month-end check: concentration, unusual drawdown, asset allocation drift, or cash-flow impact.",
+      "Ask for one concrete example of what would feel helpful versus what would feel like the bank trying to sell a product.",
+      "Ask what evidence or explanation would make an alert trustworthy enough to save them a manual cross-check.",
+      "Test whether incomplete coverage of outside assets still has value, or makes the summary unusable."
+    ],
+    "coverage_gap_actions": [
+      "Add a participant-facing probe on which exact analytics output changes a real decision, not just whether a generic health check sounds useful.",
+      "Add a participant-facing probe on journey embedding: in-app dashboard, statement moment, push alert, RM follow-up, or self-serve drill-down, and why.",
+      "Add a participant-facing disconfirming probe: when would this feature still not help even if it were clear and low-permission?",
+      "If product-selling avoidance is central, ask directly what wording or CTA would make the experience feel promotional rather than advisory."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, require the synthesis to tag each conclusion as `observed current behavior`, `stated preference`, or `hypothetical future reaction`.",
+      "Add an observer rule that blocks broad product-shaping implications unless they cite a direct participant statement about that specific function or journey moment.",
+      "Encourage one short disconfirming probe after positive concept reaction to test non-use conditions beyond permissions and noise.",
+      "For domain-specific goals, require at least one question that compares candidate functional outputs rather than validating only a generic umbrella concept."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for baseline concept coverage, but it is too tight for function-level prioritization and anti-sales embedding detail. Widen the soft budget by 2-3 exchanges in reruns so one or two specific analytics outputs can be tested individually and one disconfirming probe can be added."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates a single synthetic interview and its artifacts. Findings assess method and evidence discipline within the simulation only, not real-user truth or market validity."
+}

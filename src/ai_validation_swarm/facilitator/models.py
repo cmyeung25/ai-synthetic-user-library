@@ -61,10 +61,15 @@ class InterviewSession:
     facilitator_provider_session_id: str = ""
     persona_provider_session_id: str = ""
     persona_conversation_session_id: str = ""
+    persona_friction_mode: str = "off"
     quality_provider: str = ""
     quality_model: str = ""
     quality_prompt_version: str = ""
     quality_provider_session_id: str = ""
+    approved_learning_rules_source: str = ""
+    approved_learning_rule_ids: list[str] = field(default_factory=list)
+    facilitator_audit_feedback_prompt_version: str = ""
+    facilitator_audit_feedback_provider_session_id: str = ""
     hypothesis_evidence_judge_prompt_version: str = ""
     hypothesis_evidence_judge_provider_session_id: str = ""
     persona_driver_trace_prompt_version: str = ""
@@ -86,6 +91,7 @@ class InterviewSession:
     failed_payload: dict[str, Any] = field(default_factory=dict)
     insight_report: dict[str, Any] = field(default_factory=dict)
     quality_evaluation: dict[str, Any] = field(default_factory=dict)
+    facilitator_audit_feedback: dict[str, Any] = field(default_factory=dict)
     hypothesis_evidence_judgment: dict[str, Any] = field(default_factory=dict)
     persona_driver_trace: dict[str, Any] = field(default_factory=dict)
     coverage_status: dict[str, Any] = field(default_factory=dict)

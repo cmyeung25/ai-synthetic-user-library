@@ -1,0 +1,132 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "warn",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "pass",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview establishes a recent concrete event before introducing the concept, with clear behavioural sequencing in `exchange_1` to `exchange_3`.",
+    "Participant-facing language stays natural and non-jargony; the facilitator does not speak analytical labels to the participant.",
+    "Coverage was adapted efficiently rather than run as a long questionnaire, and stopping after `exchange_8` was reasonable given the stated concept-validation coverage.",
+    "The synthesis preserves several important weak-evidence caveats, especially the single-synthetic-persona limitation and untested RM/self-serve boundary."
+  ],
+  "findings": [
+    {
+      "category": "synthesis_overreach",
+      "severity": "high",
+      "observation": "Several synthesis claims go beyond the evidence by converting one persona's hypothetical concept reactions into product-shaping conclusions. `workflow_effect` is stated as `replaces_workflow`, but the participant never said they would replace their current method; in `exchange_6.persona` they explicitly say they would still re-check bank information and delay action. Likewise, key-insight phrasing such as `真正缺口` and `最有潛力嘅輸出` overstates certainty from one synthetic interview.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.retention_risk.workflow_effect",
+        "SYNTHESIS.key_insights"
+      ],
+      "recommendation": "Downgrade these to bounded, persona-specific hypotheses, e.g. 'may add a lightweight explanation layer' rather than 'replaces workflow', and mark output-format implications as provisional concept signals rather than validated design direction."
+    },
+    {
+      "category": "concept_intro",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded. In `exchange_4.facilitator`, the feature is framed as `免費`, `簡單方式`, and explicitly names benefits and dimensions (`整體風險、集中度同持倉分布`) before the participant states what kind of help would matter most. That risks steering toward acceptance of the supplied frame.",
+      "evidence_refs": [
+        "exchange_4.facilitator"
+      ],
+      "recommendation": "Introduce the concept more neutrally and with less built-in value language, then branch into reactions to different output types or problem framings."
+    },
+    {
+      "category": "domain_fit",
+      "severity": "medium",
+      "observation": "The session gathers strong signals about checking behaviour and trust boundaries, but not actual changed investment actions. The research goal asks which analytics functions would materially help in real decisions and how to embed them in journeys. Here, action impact remains hypothetical: in `exchange_6.persona` the participant says they would not trade immediately and would first verify or postpone. Claims about materially helping decisions should therefore stay limited to 'decision orientation' or 'triage support,' not decision change.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_6.persona",
+        "SYNTHESIS.first_value_requirement",
+        "SYNTHESIS.key_insights"
+      ],
+      "recommendation": "Probe one recalled case where the participant actually adjusted, held, or deferred a portfolio decision after seeing something concerning, then test whether the concept would have changed that specific action."
+    },
+    {
+      "category": "evidence_discipline",
+      "severity": "medium",
+      "observation": "Some supporting evidence mixes observed behaviour with hypothetical concept reaction without clearly separating them. For example, `problem_evidence.supporting_quotes` includes `exchange_4.persona`, which is a reaction to a proposed concept rather than evidence of the existing problem in real behaviour.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "SYNTHESIS.problem_evidence.supporting_quotes"
+      ],
+      "recommendation": "Keep existing-problem evidence restricted to observed or recalled current behaviour, and place concept-derived reactions in separate concept-evaluation evidence buckets."
+    },
+    {
+      "category": "retention_evidence",
+      "severity": "medium",
+      "observation": "Repeat-use conclusions are based on a single hypothetical prompt rather than behavioural evidence. `exchange_7` is useful for stated conditions, but it does not validate retention, month-two use, or continued habit formation.",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "SYNTHESIS.retention_risk",
+        "SYNTHESIS.next_experiment"
+      ],
+      "recommendation": "Label retention outputs explicitly as stated conditions for reuse, not behavioural proof, and test repeat-open behaviour with scenario comparison or follow-up event recall."
+    },
+    {
+      "category": "planning_quality",
+      "severity": "low",
+      "observation": "The trace classifies some questions imprecisely. `exchange_5` is tagged toward `hypothesis_condition` although no hypothesis is under test, and `exchange_6`/`exchange_7` are hypothetical action and reuse questions rather than evidence of observed consequences. This did not contaminate participant evidence, but it weakens planning clarity.",
+      "evidence_refs": [
+        "FACILITATOR TRACE exchange_5",
+        "FACILITATOR TRACE exchange_6",
+        "FACILITATOR TRACE exchange_7"
+      ],
+      "recommendation": "Use concept-validation-specific evidence targets such as `stated_trust_boundary`, `stated_action_intent`, and `stated_repeat_use_condition` to avoid implying stronger evidence than the transcript supports."
+    }
+  ],
+  "required_improvements": [
+    "Separate observed current behaviour evidence from hypothetical concept reaction in both trace labels and synthesis claims.",
+    "Reduce solution-loading in the concept introduction; remove built-in value cues like `免費` and `簡單` unless those attributes are the explicit test variable.",
+    "Do not infer workflow replacement, strongest-value output format, or material decision impact from one hypothetical synthetic interview without a recalled action-comparison case.",
+    "Add one participant-facing probe on a real prior decision or non-decision to anchor whether the concept would change action rather than just improve understanding."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask for one recalled instance where the participant actually changed, delayed, or chose not to change holdings after noticing something concerning.",
+      "After the recalled case is established, ask how a health-check style summary would or would not have changed that exact step.",
+      "Test alternative output formats separately: summary card, alert, report, RM-assisted view, without presuming one is best.",
+      "Probe what the participant currently does when markets are calm, not only during volatility, to see whether the concept has any non-event-driven role."
+    ],
+    "coverage_gap_actions": [
+      "Directly probe a real decision-followthrough case instead of only hypothetical next-step intent.",
+      "Probe whether the participant uses any non-bank sources or people before acting, so journey embedding is based on the full current path.",
+      "If pricing or payment matters to the concept, ask it explicitly; otherwise omit pricing sections from the report rather than implying relevance.",
+      "Distinguish stated reuse conditions from evidence of likely month-two retention and keep both labeled separately."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, require the facilitator to mark each answer as observed behaviour, recalled event, or hypothetical reaction, and prevent synthesis from merging them.",
+      "Tighten synthesis rules so product implications must be phrased as persona-bounded hypotheses unless supported by an observed action-comparison case.",
+      "Revise the concept-intro prompt to avoid value-laden descriptors and to allow variant testing after an initial neutral reaction.",
+      "Add a report check that blocks terms like `replace`, `highest value`, `real decision impact`, or `must` unless backed by transcript evidence type rules."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for baseline coverage, but one or two additional turns should be reserved in reruns for a recalled decision-followthrough case and a format-comparison probe. No major expansion is needed beyond that."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit evaluates methodological quality on a single synthetic concept-validation interview. Any findings about product direction or customer behaviour should be treated as method feedback, not market evidence."
+}

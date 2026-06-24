@@ -1,0 +1,125 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 4,
+    "probing_quality": 3,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 2,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 2,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "pass",
+    "repetition_risk": "warn",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "fail",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The facilitator delayed concept introduction until a concrete recent decision, missing evidence, pressure, and confidence boundary were covered in the transcript (`exchange_3` to `exchange_8`).",
+    "Participant-facing questions were mostly short, natural, and single-focus, with no obvious analytical jargon spoken to the participant.",
+    "The concept was positioned as a pre-research workflow aid rather than pushed as a replacement, and the participant clearly articulated trust boundaries and non-use conditions (`exchange_9` to `exchange_12`).",
+    "The stop decision was reasonable: by `exchange_12`, concept reaction, trust boundary, action follow-through, and repeat-use boundary had all been probed without obvious need for more attitude loops."
+  ],
+  "findings": [
+    {
+      "category": "evidence_gap",
+      "severity": "high",
+      "observation": "The interview never cleanly established the actual changed action in scope, sequence, priority, or go/no-go for the recent onboarding decision. In `exchange_3.persona`, the participant says she was 'initially inclined' toward a small change and fast validation, but there is no direct follow-up confirming what was actually decided or changed. This weakens domain-fit claims that rely on real changed actions rather than only the disruption source or decision framing.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "coverage_status"
+      ],
+      "recommendation": "Add a direct participant-facing probe before concept exposure: ask what was actually changed, deferred, deprioritized, or approved in that case, and who accepted that decision."
+    },
+    {
+      "category": "repetition",
+      "severity": "medium",
+      "observation": "The facilitator asked two very similar defensible-vs-uncertain questions. `exchange_5.facilitator` and `exchange_7.facilitator` both ask what she could state confidently versus what she still held in reserve. The second question produced some clarification, but the duplication suggests the prompt or coverage tracker is allowing redundant probes.",
+      "evidence_refs": [
+        "exchange_5.facilitator",
+        "exchange_7.facilitator",
+        "facilitator_trace"
+      ],
+      "recommendation": "Deduplicate confidence-boundary probing in the policy. If the first answer already separates public certainty from private uncertainty, only follow up when a specific unresolved point needs tightening."
+    },
+    {
+      "category": "synthesis_overreach",
+      "severity": "high",
+      "observation": "The synthesis makes several claims that outrun the transcript. Examples: `pricing_signal.free_trial_need` and payment logic are inferred without any pricing or budget question in the transcript; `trust_boundary.accepted_data_access` reframes evidence alignment as accepted product data access, which the participant did not actually endorse; and `retention_risk.continuation_reasons` includes stable replacement-like value claims not directly asked in participant-facing form.",
+      "evidence_refs": [
+        "exchange_9.persona",
+        "exchange_10.persona",
+        "exchange_11.persona",
+        "exchange_12.persona",
+        "synthesis"
+      ],
+      "recommendation": "Restrict the report to claims directly supported by transcript exchanges. Move pricing, buyer, and specific data-access assumptions into explicit evidence gaps or future-test hypotheses unless directly asked."
+    },
+    {
+      "category": "coverage_quality",
+      "severity": "medium",
+      "observation": "`service_embedding` is marked covered, but the participant was not directly asked where this tool would sit in her team workflow, who would trigger it, or what artifact it would replace or augment. Current evidence shows trust and validation behavior, not a concrete embedding pattern.",
+      "evidence_refs": [
+        "coverage_status",
+        "exchange_9.persona",
+        "exchange_11.persona",
+        "exchange_12.persona"
+      ],
+      "recommendation": "Probe workflow insertion directly: ask when in the decision process she would open it, what input she would provide, and what existing step it would replace, speed up, or leave untouched."
+    },
+    {
+      "category": "concept_validation_method",
+      "severity": "medium",
+      "observation": "The concept report preserves weak evidence in some places, but it still drifts into product-shaping outputs from a single synthetic interview, especially in `next_experiment`, pricing implications, and broad adoption framing. The transcript supports an early-framing use case for this persona, not broader product direction confidence.",
+      "evidence_refs": [
+        "synthesis",
+        "exchange_9.persona",
+        "exchange_10.persona",
+        "exchange_11.persona",
+        "exchange_12.persona"
+      ],
+      "recommendation": "Keep product implications explicitly bounded to this one synthetic PM persona. Frame experiments as persona-specific follow-ups, not as generalized market-shaping guidance."
+    }
+  ],
+  "required_improvements": [
+    "Add an explicit pre-concept question that confirms the actual scope, sequence, priority, or go/no-go change made in the recalled case.",
+    "Tighten synthesis rules so unsupported pricing, buyer, data-access, and retention claims are labeled as open hypotheses or removed.",
+    "Require a direct workflow-embedding probe before marking `service_embedding` covered.",
+    "Reduce redundant defensible-vs-uncertain questioning by improving coverage-state memory and follow-up selection."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask what she actually changed in that onboarding case: what got approved, deferred, cut, or sequenced differently.",
+      "Ask where this tool would slot into her real workflow: before analytics review, before stakeholder alignment, before research scheduling, or somewhere else.",
+      "Ask what concrete artifact or meeting output would become easier: PRD framing, research brief, stakeholder rationale, experiment plan, or none.",
+      "Ask for a contrast case where she could make a fast priority call without needing synthetic framing, to test domain fit against adjacent-only pain."
+    ],
+    "coverage_gap_actions": [
+      "Probe `recent_behaviour` to completion by isolating the final decision outcome, not just the initial lean.",
+      "Probe `service_embedding` with participant-facing questions about trigger moment, owner, inputs, and replacement vs added layer.",
+      "If pricing or buyer matters, ask directly; do not infer willingness to pay from general usefulness or trust comments.",
+      "If the report wants retention claims, ask what would make month-two reuse habitual versus occasional curiosity."
+    ],
+    "prompt_adjustments": [
+      "Update the facilitation prompt so `recent_real_decision` is not considered complete until the actual changed action is explicitly stated.",
+      "Add a synthesis guardrail: no pricing, buyer, accepted data access, or workflow replacement claims without direct participant-facing evidence refs.",
+      "Add a dedupe rule so once public-vs-private certainty is clearly answered, the next probe must target a different missing variable.",
+      "Require coverage logic to distinguish trust boundary evidence from workflow embedding evidence."
+    ],
+    "turn_budget_guidance": "The current soft/hard turn policy is sufficient for this mode. The issue is not budget shortage but probe ordering and synthesis discipline; keep the turn budget roughly the same and spend one of the early turns on the actual decision change and one later turn on workflow embedding."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit reviews a single synthetic interview and its artifacts for methodological quality. It does not convert the interview into human market evidence, and any product implications should remain bounded to simulated evidence until calibrated against real participant data."
+}

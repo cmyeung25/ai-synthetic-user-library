@@ -1,0 +1,137 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 3,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 4,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 3,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "pass",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a concrete recent event and current workaround before introducing the concept (`exchange_1`-`exchange_2`).",
+    "Coverage was adapted in a short, conversational sequence rather than a long questionnaire; each asked turn mostly had one participant-facing focus.",
+    "The facilitator avoided overt analytical jargon in spoken questions and did not expose internal hypotheses to the participant.",
+    "The synthesis preserves some important weakening evidence, especially around non-immediate action (`exchange_5.persona`) and anti-sales concern (`exchange_3.persona`, `exchange_8.persona`).",
+    "Stopping was reasonable once all concept-validation coverage areas were participant-facing covered and incremental yield was likely low (`FACILITATOR TRACE close`)."
+  ],
+  "findings": [
+    {
+      "category": "Question neutrality",
+      "severity": "medium",
+      "observation": "The concept introduction is somewhat solution-loaded and benefit-prefilled. It names a specific branded-sounding feature, states it is `免費`, and frames the value as `幫你一次過睇返成個組合同風險分佈`, which packages the intended benefit before eliciting reaction.",
+      "evidence_refs": [
+        "exchange_3.facilitator",
+        "FACILITATOR TRACE[concept_intro]"
+      ],
+      "recommendation": "Introduce the concept more neutrally: describe the capability without pre-asserting usefulness, and separate `what it is` from `what, if anything, would help`."
+    },
+    {
+      "category": "Evidence discipline",
+      "severity": "high",
+      "observation": "The synthesis turns hypothetical concept reactions into stronger product-shaping implications than the evidence supports. Claims such as `the product should 把信任說明與非銷售式承接做成核心體驗` and `先服務事件觸發式檢視` are plausible, but they are inferred from one synthetic interview with only one real behavior case and the rest hypothetical responses.",
+      "evidence_refs": [
+        "SYNTHESIS.key_insights[0]",
+        "SYNTHESIS.key_insights[2]",
+        "SYNTHESIS.next_experiment",
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Downgrade these to tentative design hypotheses for follow-up testing, explicitly separating observed behavior from hypothetical preferences and avoiding broader product direction language from a single synthetic case."
+    },
+    {
+      "category": "Domain fit alignment",
+      "severity": "medium",
+      "observation": "The research goal asks which Aladdin-based analytics functions would materially help in real decisions and how each should be embedded into journeys. The interview validates a generic `Portfolio Health Check` pattern, but does not isolate which analytics functions matter most in changed actions versus generic aggregation, explanation clarity, and anti-sales framing.",
+      "evidence_refs": [
+        "RESEARCH GOAL",
+        "exchange_3.facilitator",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Probe function-specific value in decision terms: e.g. concentration alert, drift vs target, scenario/risk explanation, or cross-account aggregation, and ask which one would change what the participant actually does."
+    },
+    {
+      "category": "Concept validation rigor",
+      "severity": "medium",
+      "observation": "Curiosity, trial, and repeat-use were partly separated, but payment and month-two retention remain effectively untested by interview evidence. The synthesis correctly marks pricing as not applicable, yet the report still leans into retention implications from stated conditions rather than observed repeat behavior.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.pricing_signal",
+        "SYNTHESIS.retention_risk"
+      ],
+      "recommendation": "Keep first-use appeal, action follow-through, repeat-use conditions, and pricing/retention evidence explicitly partitioned. Treat `exchange_7` as stated repeat-use criteria, not proof of retention."
+    },
+    {
+      "category": "Synthesis fidelity",
+      "severity": "medium",
+      "observation": "Some assumption statuses are too strong for purely hypothetical evidence. For example, `invalidated` for `銀行可用此服務自然承接到產品銷售` overstates what one participant's aversion shows; it is better read as strong resistance for this persona, not a general invalidation of the service assumption.",
+      "evidence_refs": [
+        "SYNTHESIS.assumption_validation[6]",
+        "exchange_3.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Use narrower labels such as `strongly weakened for this persona` when evidence comes from one synthetic participant's stated preference rather than repeated behavior or comparative cases."
+    },
+    {
+      "category": "Transcript reference quality",
+      "severity": "low",
+      "observation": "Most refs are valid, but some synthesis claims aggregate multiple ideas under broad refs without tying each subclaim to an exact utterance. Example: `required_trust_explanation` includes `要講清楚點樣計風險` and `要講清楚係咪真係免費`, both trace back to `exchange_3.persona`, while the rest come from `exchange_4.persona`; the structuring is acceptable but slightly blurred.",
+      "evidence_refs": [
+        "SYNTHESIS.trust_boundary.required_trust_explanation",
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "recommendation": "Anchor each distinct requirement to its exact exchange ref, especially when turning participant quotes into structured requirement lists."
+    }
+  ],
+  "required_improvements": [
+    "Rewrite concept introduction prompts to remove embedded value claims and sales/price framing unless those are the variables being tested.",
+    "Constrain synthesis language so hypothetical concept responses are labeled as tentative and persona-specific, not as validated product direction.",
+    "Add function-level probes tied to actual decision change to meet the stated research goal, rather than validating only a generic health-check container.",
+    "Separate observed behavior evidence from stated future-use conditions in the report, especially for retention and service-embedding conclusions."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask which single analytic output would have been most useful in the last real portfolio-check event, and what decision it would have changed.",
+      "Ask what happens when only in-bank holdings are visible versus a full cross-account view, to isolate aggregation value from analytics value.",
+      "Ask for a concrete example of a reminder they would open versus ignore, and why.",
+      "Ask them to react to two or three distinct next-step designs: explanation only, self-directed rebalance guidance, or product handoff, and observe which crosses the trust boundary."
+    ],
+    "coverage_gap_actions": [
+      "Probe function-specific materiality with participant-facing comparisons tied to a recent decision, not generic usefulness.",
+      "Probe minimum acceptable explanation format for `風險解釋要夠白話` with examples or artifacts.",
+      "Probe partial-coverage tolerance: whether bank-only data is still useful and in what situations.",
+      "Probe repeat-use with a concrete month-later scenario rather than only asking stated conditions for routine use."
+    ],
+    "prompt_adjustments": [
+      "In concept-validation mode, require the first concept question to avoid preloaded benefits like `幫你一次過` or `免費` unless price is the test variable.",
+      "Add a guardrail that any design implication in synthesis must be marked `stated`, `observed`, or `untested`.",
+      "Add observer steering to force at least one function-prioritization question when the research goal asks which analytics functions matter.",
+      "Add reporting guidance that `invalidated` should be reserved for clearly contradicted assumptions within the persona scope, not broad product truths from a single interview."
+    ],
+    "turn_budget_guidance": "Current turn budget was sufficient for broad coverage, but one or two extra turns would be justified in reruns to isolate function-level value and partial-coverage tradeoffs before closure."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This audit assesses methodological quality on a synthetic interview artifact only. Findings judge participant-facing rigor, trace discipline, and synthesis fidelity within this simulation, not real-world user truth or market validity."
+}

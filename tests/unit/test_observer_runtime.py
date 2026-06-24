@@ -10,7 +10,12 @@ if str(SRC) not in sys.path:
 
 from ai_validation_swarm.conversation.providers import ChatResult
 from ai_validation_swarm.facilitator.models import FacilitatorDecision
-from ai_validation_swarm.facilitator.providers import normalize_quality_evaluation, validate_quality_evaluation
+from ai_validation_swarm.facilitator.providers import (
+    normalize_facilitator_audit_feedback,
+    normalize_quality_evaluation,
+    validate_facilitator_audit_feedback,
+    validate_quality_evaluation,
+)
 from ai_validation_swarm.observer.runtime import ObserverControlledInterviewRuntime
 from ai_validation_swarm.personas.generator import generate_personas
 from ai_validation_swarm.storage.files import read_json, save_persona
@@ -114,6 +119,61 @@ def quality_payload():
         },
         "human_review_needed": True,
         "synthetic_only_disclaimer": "Synthetic interview quality review only.",
+    }
+
+
+def facilitator_audit_feedback_payload():
+    return {
+        "artifact_version": "v1",
+        "feedback_scope": "interview",
+        "applies_to": {
+            "interview_mode": ["explore_root_cause"],
+            "domains": ["generic"],
+            "safe_for_global_reuse": True,
+        },
+        "summary": {
+            "overall_assessment": "The facilitator covered the interview adequately but left depth on the table.",
+            "primary_failure_mode": "coverage_over_depth",
+            "depth_vs_coverage_assessment": "Coverage was acceptable, but one high-signal clue was not pursued.",
+        },
+        "facilitator_feedback_tags": [{
+            "tag": "missed_high_signal_clue",
+            "severity": "medium",
+            "why_it_matters": "A concrete workaround clue was not converted into a deeper causal probe.",
+            "observed_pattern": "The participant described rechecking behavior and the facilitator moved on.",
+        }],
+        "high_value_missed_followups": [{
+            "trigger_type": "manual_reconciliation",
+            "priority": "high",
+            "participant_signal": "The participant said they checked every booking again.",
+            "missed_followup_question": "What mistake were you trying to avoid by checking everything again?",
+            "generic_learning": "When a participant manually reconciles information, ask what failure that behavior is protecting against.",
+        }],
+        "likely_misclassified_driver_patterns": [{
+            "observed_surface_frame": "needs better trip planning tools",
+            "possible_underlying_driver": "needs confidence restoration after a coordination change",
+            "why_the_surface_frame_is_weak": "The transcript centered on verification, not on planning breadth.",
+            "generic_learning": "Do not treat a requested tool improvement as the root driver until the avoided error is explicit.",
+        }],
+        "evidence_handling_issues": [{
+            "issue": "The facilitator accepted an intention statement without probing its consequence threshold.",
+            "severity": "medium",
+            "generic_learning": "When a participant states what they would do next time, ask what would trigger that action in a real event.",
+        }],
+        "prompt_adjustments": [{
+            "adjustment_type": "followup_trigger_rule",
+            "text": "If a participant mentions a manual verification step, ask one follow-up about what failure it protects against before moving on.",
+            "reuse_scope": "global",
+            "safe_for_global_reuse": True,
+        }],
+        "carry_forward_rules": [{
+            "rule_id": "linger_on_manual_verification",
+            "rule": "When a participant describes manual verification, ask what concrete mistake, confusion, or avoided failure that behavior is protecting against.",
+            "source_tags": ["missed_high_signal_clue"],
+            "confidence": "medium",
+            "safe_for_global_reuse": True,
+        }],
+        "blocked_feedback": [],
     }
 
 
@@ -243,6 +303,23 @@ class ObserverQualityFixture:
     def evaluate_quality(self, **kwargs):
         self.calls.append(kwargs)
         return quality_payload(), "quality-thread"
+
+    def generate_audit_feedback(self, **kwargs):
+        self.calls.append(kwargs)
+        return facilitator_audit_feedback_payload(), "audit-thread"
+
+
+class FailingTracePersonaFixture(ObserverPersonaFixture):
+    def __init__(self):
+        super().__init__()
+        self.responses = [
+            "The disruption started when the booking time changed and we both assumed the other person had handled it.",
+            "I thought the cause was that nobody wanted to take clear ownership of the updates.",
+            "The consequence was that I checked every booking again and still felt unsure.",
+        ]
+
+    def generate_persona_driver_trace(self, **kwargs):
+        raise RuntimeError("persona trace timeout")
 
 
 class FailOnceFacilitator(ObserverFacilitatorFixture):
@@ -446,7 +523,12 @@ class ObserverRuntimeTest(unittest.TestCase):
             session = runtime.finalize(session.interview_id, stop_reason="observer_stop")
             self.assertEqual(session.status, "completed")
             self.assertEqual(session.quality_provider_session_id, "quality-thread")
+            self.assertEqual(session.facilitator_audit_feedback_provider_session_id, "audit-thread")
             self.assertEqual(session.quality_evaluation["overall_verdict"], "warn")
+            self.assertEqual(
+                session.facilitator_audit_feedback["summary"]["primary_failure_mode"],
+                "coverage_over_depth",
+            )
             self.assertNotEqual(session.facilitator_provider_session_id, session.persona_provider_session_id)
             decision_statuses = [item["decision_status"] for item in session.facilitator_decisions]
             self.assertIn("superseded_by_observer", decision_statuses)
@@ -456,6 +538,7 @@ class ObserverRuntimeTest(unittest.TestCase):
                 "observer_events.json", "insight_report.json", "insights.md",
                 "persona_driver_trace.json", "persona_driver_trace.md",
                 "quality_evaluation.json", "quality_evaluation.md",
+                "facilitator_audit_feedback.json", "facilitator_audit_feedback.md",
             ):
                 self.assertTrue((folder / name).exists(), name)
             trace = read_json(folder / "persona_driver_trace.json")
@@ -470,21 +553,27 @@ class ObserverRuntimeTest(unittest.TestCase):
             self.assertIn("COVERAGE STATUS", quality.calls[0]["user_prompt"])
             self.assertNotIn('"evidence_updates"', quality.calls[0]["user_prompt"])
             self.assertIn('"question_evidence_basis"', quality.calls[0]["user_prompt"])
+            self.assertIn("QUALITY EVALUATION", quality.calls[1]["user_prompt"])
+            self.assertIn("PERSONA DRIVER TRACE", quality.calls[1]["user_prompt"])
             self.assertIn("Natural Synthetic Participant Interview Mode", persona_provider.calls[0]["system_prompt"])
             self.assertIn("Do not exhaustively account for the decision", persona_provider.calls[0]["system_prompt"])
             quality_md = (folder / "quality_evaluation.md").read_text(encoding="utf-8")
+            audit_md = (folder / "facilitator_audit_feedback.md").read_text(encoding="utf-8")
             self.assertIn("Improvement Hints", quality_md)
             self.assertIn("Turn budget:", quality_md)
+            self.assertIn("Missed High-Value Follow-Ups", audit_md)
             self.assertTrue(any("start_observed" in item for item in progress))
             self.assertTrue(any("requesting_facilitator" in item for item in progress))
             self.assertTrue(any("asking_persona" in item for item in progress))
             self.assertTrue(any("evaluating_quality" in item for item in progress))
+            self.assertTrue(any("auditing_facilitator" in item for item in progress))
             self.assertTrue(any("completed_observed" in item for item in progress))
 
             session = runtime.reevaluate_quality(session.interview_id)
             self.assertEqual(session.status, "completed")
-            self.assertEqual(len(quality.calls), 2)
+            self.assertEqual(len(quality.calls), 4)
             self.assertTrue((folder / "quality_evaluation.previous.json").exists())
+            self.assertTrue((folder / "facilitator_audit_feedback.previous.json").exists())
 
             session = runtime.resynthesize(session.interview_id)
             self.assertEqual(session.status, "completed")
@@ -497,7 +586,7 @@ class ObserverRuntimeTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             persona = self._library(root)
-            facilitator = ObserverFacilitatorFixture()
+            facilitator = CoverageAwareFacilitator()
             persona_provider = ObserverPersonaFixture()
             runtime = ObserverControlledInterviewRuntime(
                 data_dir=root / "personas",
@@ -517,6 +606,42 @@ class ObserverRuntimeTest(unittest.TestCase):
             self.assertNotEqual(session.pending_facilitator_decision["message_to_persona"], suggested)
             self.assertIn("OBSERVER SUGGESTED QUESTION", facilitator.calls[-1]["user_prompt"])
             self.assertEqual(len(persona_provider.calls), 0)
+
+    def test_observer_continues_when_persona_driver_trace_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = CoverageAwareFacilitator()
+            quality = ObserverQualityFixture()
+            persona_provider = FailingTracePersonaFixture()
+            progress = []
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=persona_provider,
+                quality_provider=quality,
+                progress_writer=progress.append,
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand trip replanning friction.",
+                max_turns=6,
+            )
+
+            while session.status not in {"completed", "failed"}:
+                session = runtime.continue_interview(session.interview_id)
+
+            folder, session = runtime.load(session.interview_id)
+            self.assertEqual(session.status, "completed")
+            self.assertEqual(session.persona_driver_trace, {})
+            self.assertTrue((folder / "persona_driver_trace.error.txt").exists())
+            self.assertFalse((folder / "persona_driver_trace.json").exists())
+            self.assertFalse((folder / "persona_driver_trace.md").exists())
+            self.assertTrue((folder / "quality_evaluation.json").exists())
+            self.assertTrue((folder / "facilitator_audit_feedback.json").exists())
+            self.assertEqual(session.last_error, "")
+            self.assertTrue(any("persona_driver_trace_skipped" in item for item in progress))
 
     def test_observed_hypothesis_mode_reaches_facilitator_and_quality_context(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -731,6 +856,19 @@ class ObserverRuntimeTest(unittest.TestCase):
         self.assertEqual(normalized["overall_verdict"], "warn")
         self.assertEqual(normalized["scores"]["overall"], 3)
         validate_quality_evaluation(normalized)
+
+    def test_audit_feedback_normalizer_blocks_project_specific_rules(self):
+        payload = facilitator_audit_feedback_payload()
+        payload["prompt_adjustments"][0]["text"] = "If a Hong Kong retail bank customer mentions MPF overlap, ask about Aladdin report confusion."
+        payload["carry_forward_rules"][0]["rule"] = "When reviewing an Aladdin portfolio health check, ask what RM explanation was missing."
+
+        normalized = normalize_facilitator_audit_feedback(payload)
+
+        self.assertFalse(normalized["applies_to"]["safe_for_global_reuse"])
+        self.assertEqual(normalized["prompt_adjustments"], [])
+        self.assertEqual(normalized["carry_forward_rules"], [])
+        self.assertEqual(len(normalized["blocked_feedback"]), 2)
+        validate_facilitator_audit_feedback(normalized)
 
 
 if __name__ == "__main__":

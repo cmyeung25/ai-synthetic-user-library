@@ -10,9 +10,15 @@ Understand how the participant currently does early concept shaping, design thin
 
 After current-reality and current-workaround evidence has been collected, introduce this neutrally:
 
-> Imagine a platform for AI pre-validation. A founder, product team, designer, or research lead describes an idea, draft landing page, pricing direction, feature scope, or prototype. The system then lets them interview a library of synthetic users with distinct backgrounds, motivations, objections, and trust boundaries. It does not claim to replace real user research. The intended use is to sharpen assumptions, identify weak messaging, stress-test pricing logic, detect sensitive-topic risks, and narrow what should be validated with real people next.
+> Imagine a platform for AI pre-validation. A founder, product team, designer, or research lead describes an idea, draft landing page, pricing direction, feature scope, or prototype. The system then lets them interview a library of synthetic users with distinct backgrounds, motivations, objections, and trust boundaries. It does not claim to replace real user research. The intended workflow is to generate simulated reactions that a team can compare with its other early evidence before deciding what to validate with real people next.
 
 Do not introduce the concept before at least one recent concept-shaping, stakeholder-alignment, or user-research-planning event is understood.
+Do not introduce the concept before participant-facing coverage also includes:
+
+1. what evidence was still missing in that real decision,
+2. what stakeholder or time pressure existed,
+3. what the participant could defend publicly versus what still felt privately uncertain,
+4. and what actually changed in scope, sequence, priority, or go/no-go.
 
 ## Adaptive Coverage
 

@@ -1,0 +1,206 @@
+{
+  "artifact_version": "v1",
+  "feedback_scope": "interview",
+  "applies_to": {
+    "interview_mode": [
+      "concept_validation"
+    ],
+    "domains": [
+      "general"
+    ],
+    "safe_for_global_reuse": false
+  },
+  "summary": {
+    "overall_assessment": "The facilitator handled sequence and conversational tone reasonably well, but traded too much depth for coverage once the concept was introduced. The main reusable weakness was accepting participant-stated value and skepticism without enough contrast, threshold, or failure-case probing, then allowing synthesis to treat hypothetical reactions as stronger evidence than the transcript supports.",
+    "primary_failure_mode": "Coverage completion outran evidence depth after concept introduction, especially around non-adoption, action threshold, and what the proposed feature would actually replace versus merely add.",
+    "depth_vs_coverage_assessment": "Coverage was completed efficiently in seven exchanges, but several high-signal clues should have triggered one more follow-up before closure. The interview was broad enough for a light concept screen, but not deep enough to support strong downstream claims."
+  },
+  "facilitator_feedback_tags": [
+    {
+      "tag": "solution_loaded_concept_intro",
+      "severity": "medium",
+      "why_it_matters": "When the concept is introduced with bundled benefits, participant reactions are partly responses to the facilitator's framing rather than to the concept itself.",
+      "observed_pattern": "The first concept question packaged multiple positive attributes together and then asked whether the feature would be useful."
+    },
+    {
+      "tag": "missed_failure_case_probe",
+      "severity": "high",
+      "why_it_matters": "Without asking when the concept would fail, be ignored, or add no value, the interview over-collects positive conditions and under-tests false positives.",
+      "observed_pattern": "The participant volunteered skepticism about a feature that sounds impressive but still requires extra work, and the facilitator moved to preferred presentation rather than isolating a non-helpful case."
+    },
+    {
+      "tag": "threshold_probe_missing",
+      "severity": "medium",
+      "why_it_matters": "Participants often say they might act later; without probing the threshold, the facilitator cannot distinguish polite interest from decision-relevant value.",
+      "observed_pattern": "After the participant said they would first judge whether the difference was large enough and whether it conflicted with other constraints, the interview did not ask what size or type of difference would actually change behavior."
+    },
+    {
+      "tag": "adjacent_hypothetical_treated_as_behavior",
+      "severity": "high",
+      "why_it_matters": "Concept-validation interviews often produce hypothetical statements; treating them as behavioral proof weakens synthesis quality and can contaminate platform learning.",
+      "observed_pattern": "Participant statements about what they would do if shown a feature were later summarized in ways that implied stronger workflow change than was directly evidenced."
+    },
+    {
+      "tag": "single_focus_question_drift",
+      "severity": "medium",
+      "why_it_matters": "Questions with more than one embedded assumption make it harder to tell which part the participant is responding to and reduce interpretability.",
+      "observed_pattern": "A later follow-up combined a diagnosis, a comparison view, and a next-step question in one turn."
+    }
+  ],
+  "high_value_missed_followups": [
+    {
+      "trigger_type": "participant skepticism",
+      "priority": "high",
+      "participant_signal": "The participant said the feature might only be packaging that still forces them to do the work themselves.",
+      "missed_followup_question": "Can you think of a situation where a summary like that still would not help you or would not change anything you do?",
+      "generic_learning": "When a participant volunteers distrust or skepticism, ask for a concrete failure case before moving on to ideal presentation or placement."
+    },
+    {
+      "trigger_type": "decision threshold cue",
+      "priority": "high",
+      "participant_signal": "The participant said they would first judge whether the difference was large enough and whether it conflicted with other constraints.",
+      "missed_followup_question": "What would make the difference big enough for you to act rather than wait?",
+      "generic_learning": "When a participant references a threshold, convert it into a concrete probe about the minimum condition that changes behavior."
+    },
+    {
+      "trigger_type": "workaround clue",
+      "priority": "medium",
+      "participant_signal": "The participant described saving information and checking again later instead of acting immediately.",
+      "missed_followup_question": "What problem does that extra step protect you from, and what is frustrating about doing it that way?",
+      "generic_learning": "If a participant describes a workaround, probe both the protection it provides and the cost it imposes before introducing a replacement concept."
+    },
+    {
+      "trigger_type": "replacement ambiguity",
+      "priority": "medium",
+      "participant_signal": "The participant said they might save the recommendation and return later, which suggests supplementation rather than replacement.",
+      "missed_followup_question": "If you used this, what current step would it actually remove for you, if any?",
+      "generic_learning": "Ask explicitly whether the concept replaces an existing step or just adds another check, rather than inferring workflow substitution."
+    },
+    {
+      "trigger_type": "journey-fit ambiguity",
+      "priority": "medium",
+      "participant_signal": "The participant named preferred moments and surfaces for seeing the feature.",
+      "missed_followup_question": "In which of those moments would this feel helpful, and in which would it feel interruptive or promotional?",
+      "generic_learning": "When participants suggest placement, contrast helpful moments against annoying or sales-like moments instead of recording only preferred placement."
+    }
+  ],
+  "likely_misclassified_driver_patterns": [
+    {
+      "observed_surface_frame": "The participant appeared to want clearer presentation.",
+      "possible_underlying_driver": "The stronger driver may be actionability under constraint rather than clarity alone.",
+      "why_the_surface_frame_is_weak": "The transcript includes references to deferring action, checking again later, and weighing conflicts with other constraints. That pattern suggests the issue is not only comprehension but whether the output is consequential enough to justify action.",
+      "generic_learning": "Do not collapse requests for simpler presentation into a pure UX-clarity driver until you test whether the real barrier is action threshold, risk tolerance, or competing constraints."
+    },
+    {
+      "observed_surface_frame": "The participant appeared to want reminders and easier access.",
+      "possible_underlying_driver": "The stronger driver may be low-friction fit with an existing review rhythm rather than standalone demand for alerts or surface placement.",
+      "why_the_surface_frame_is_weak": "The participant tied repeat use to a pre-existing cadence and low burden, which is different from saying reminders themselves create value.",
+      "generic_learning": "When a participant asks for reminders or easier access, test whether they want proactive prompting or merely less friction inside an existing habit."
+    }
+  ],
+  "evidence_handling_issues": [
+    {
+      "issue": "Hypothetical concept reactions were allowed to support stronger downstream claims than the participant-facing evidence justified.",
+      "severity": "high",
+      "generic_learning": "In concept validation, keep hypothetical reactions labeled as stated intent unless the transcript includes recalled behavior or a clearly bounded conditional threshold."
+    },
+    {
+      "issue": "The interview closed after requirement coverage was complete even though at least one high-signal skepticism cue had not been resolved with a counterexample probe.",
+      "severity": "medium",
+      "generic_learning": "Coverage completion should not by itself trigger closure when an unresolved skepticism, threshold, or failure-case signal remains active in the transcript."
+    },
+    {
+      "issue": "Workflow replacement was inferred without a direct participant-facing question establishing whether an existing step would disappear.",
+      "severity": "high",
+      "generic_learning": "Do not infer substitution effects from general enthusiasm or convenience statements; ask what concrete step would stop happening."
+    }
+  ],
+  "prompt_adjustments": [
+    {
+      "adjustment_type": "decision_rule",
+      "text": "In concept validation, the first concept-introduction question must be neutral and may not bundle multiple positive attributes before asking for evaluation.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant volunteers skepticism, distrust, or a risk that the concept adds work, require one failure-case or ignore-case follow-up before moving to ideal feature design or placement.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "followup_trigger_rule",
+      "text": "If a participant says they would act only when a difference is big enough, clear enough, or worth it, require a threshold probe that asks what exact condition changes behavior.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "evidence_rule",
+      "text": "Do not allow synthesis to convert hypothetical next-step statements into replacement, retention, or behavioral-impact claims unless the participant was asked what current step would be removed or what repeated use was observed in reality.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "stop_rule",
+      "text": "Coverage-complete is not sufficient to close the interview if there is an unresolved high-signal clue about non-adoption, threshold, contrast, or failure mode that has not yet received a participant-facing probe.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    },
+    {
+      "adjustment_type": "contrast_rule",
+      "text": "When a participant names a preferred placement or timing, add one contrast probe asking where the same concept would feel unhelpful, interruptive, or promotional.",
+      "reuse_scope": "global",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "carry_forward_rules": [
+    {
+      "rule_id": "cf_001",
+      "rule": "After concept introduction, treat volunteered skepticism as a mandatory follow-up trigger rather than a note to capture and move past.",
+      "source_tags": [
+        "missed_failure_case_probe"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_002",
+      "rule": "When a participant states a conditional action threshold, ask what would make the condition sufficient to change behavior before concluding the concept is actionable.",
+      "source_tags": [
+        "threshold_probe_missing"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_003",
+      "rule": "Ask whether the proposed concept removes an existing step, shortens one, or simply adds another task before inferring workflow improvement.",
+      "source_tags": [
+        "adjacent_hypothetical_treated_as_behavior"
+      ],
+      "confidence": "high",
+      "safe_for_global_reuse": true
+    },
+    {
+      "rule_id": "cf_004",
+      "rule": "Prefer one conversational focus per question; avoid combining diagnosis, comparison setup, and action prediction in the same turn.",
+      "source_tags": [
+        "single_focus_question_drift"
+      ],
+      "confidence": "medium",
+      "safe_for_global_reuse": true
+    }
+  ],
+  "blocked_feedback": [
+    {
+      "blocked_item": "The facilitator should test whether this specific banking feature feels like selling in portfolio, reminder, or advisor moments.",
+      "block_reason": "This is tied to the project's product surface and service context rather than a domain-agnostic facilitation rule.",
+      "rewrite_as_generic": "When a participant suggests where a concept should appear, probe one contrasting moment where the same concept would feel unwelcome or agenda-driven."
+    },
+    {
+      "blocked_item": "The facilitator should probe trust in integrated holdings and advisor involvement for this wealth-management concept.",
+      "block_reason": "This is shaped by the local product and market context.",
+      "rewrite_as_generic": "Separate trust probes by source of input, level of explanation, and whether a human handoff is present, rather than treating trust as one undifferentiated construct."
+    }
+  ]
+}

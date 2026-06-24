@@ -1,0 +1,187 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "主要係見到市況有少少波動，想確認下啲基金同股票比例有冇偏得太離譜",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "如果係某一兩隻升得太多，成個比重突出咗，我就會記低，但未必即刻郁",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "第一下我會睇集中度，因為嗰樣最容易平時一路放住就偏咗但自己未必即刻察覺",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "風險提醒如果太空泛，例如只係講『波動較高』，我會當佢冇講",
+        "evidence_ref": "exchange_3.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次檢查發生喺上個星期日晚，係市況波動後主動打開銀行 app 同券商 app。",
+      "佢先睇資產分布，再掃持倉升跌，靠肉眼判斷有冇一兩隻持倉比重升得太突出。",
+      "發現異常後通常只會記低，未必即時調整，之後再連同現金需要一齊諗。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "分開打開銀行 app 同券商 app 睇。",
+      "先睇資產分布頁判斷股票、基金、現金比例有冇偏離原本想像。",
+      "再逐隻掃持倉升跌，見到比重突出就自己記低。",
+      "之後再自己比較原因，同現金需要一齊考慮要唔要分幾次減持。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "medium",
+    "what_must_not_change": [
+      "要快，一眼見到重點。",
+      "唔可以逼佢即刻交易。",
+      "唔可以變成好多無關痛癢嘅推送。",
+      "唔可以仲要佢抄去第二度自己比較。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行內持倉整合後做整體分布、集中度同風險提醒。",
+      "用持倉層級資料指出邊一兩隻拉高比重。",
+      "顯示而家比重同原本分布差幾遠。",
+      "用簡單語言解釋如果暫時唔郁，風險可能係咩。"
+    ],
+    "rejected_data_access": [
+      "只有紅色感嘆號或者籠統『波動較高』呢類冇內容提醒。",
+      "平日無啦啦推太多通知。",
+      "成日亂咁叫佢郁倉嘅低準確度提醒。"
+    ],
+    "required_trust_explanation": [
+      "要講清楚係邊一兩隻持倉造成問題。",
+      "要講到目前比重大概去到幾多。",
+      "要講到同原本預期分布差幾遠。",
+      "要講人話，而唔係抽象風險字眼。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一頁內見到整體持倉分布同集中度。",
+      "即刻知道問題來自邊隻或邊兩隻持倉。",
+      "快速判斷要唔要跟進，而唔使再自己抄去第二度比較。"
+    ],
+    "time_to_value": "首次打開就要即刻畀到可判斷嘅答案，最好係一次檢查流程內完成。",
+    "abandonment_triggers": [
+      "提醒太空泛。",
+      "提醒唔準，成日叫人郁。",
+      "要另外手動整理或跨 app 對比先睇得明。",
+      "通知太多，變成騷擾。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能已假設免費；由訪談睇，重點唔係試用，而係準確度同節省判斷時間。",
+    "monthly_comfort_range": "不適用；今次冇測價格。",
+    "payment_justification": [
+      "受訪者只表達會唔會持續用，條件係節省時間、提醒準、減少手動比較。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "真係幫到佢慳判斷時間。",
+      "每次提醒都算準。",
+      "望完之後可以好快知道要唔要跟進。",
+      "唔使自己抄返去第二度做比較。"
+    ],
+    "drop_off_reasons": [
+      "提醒太籠統。",
+      "準確度低。",
+      "推送過多。",
+      "只係叫佢郁，但冇交代原因同影響。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "好多零售客仍然用碎片化、產品層級視角管理組合，而唔係真正 whole-portfolio process。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "受訪者係分開銀行 app 同券商 app 睇，再靠自己整合判斷。"
+    },
+    {
+      "assumption": "最重要嘅 blind spot 因人而異，應由行為同情境浮現。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona"
+      ],
+      "rationale": "今次個案明確指出集中度最有用，但只係一位 persona，未足以代表其他人。"
+    },
+    {
+      "assumption": "零售客如果用簡單語言包裝，可以指出具體 analytics 功能對實際決策有幫助。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "集中度、分布差距、具體風險解釋都被視為有用，但前提係講人話。"
+    },
+    {
+      "assumption": "最高價值 use case 會綁定真實客戶時刻，而唔係為咗展示機構級分析而展示。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona"
+      ],
+      "rationale": "受訪者想喺主動檢查組合或月尾順手睇戶口時見到，而唔係平日被動轟炸。"
+    },
+    {
+      "assumption": "有啲能力適合 self-serve retail，有啲更適合 RM 或 assisted service。",
+      "status": "unknown",
+      "evidence_refs": [],
+      "rationale": "今次冇直接測 RM 或 assisted-service 邊界。"
+    },
+    {
+      "assumption": "trust、資料邊界、解釋方式同 action threshold 會影響免費功能會唔會成為日常習慣。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者明確要求具體解釋、少推送、提醒要準，先會持續用。"
+    },
+    {
+      "assumption": "深層洞察需要理解表面功能偏好背後嘅行為原因。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "佢唔即時賣出，係因為要先分辨成因，再連同現金需要一齊考慮；持續使用條件亦係節省判斷時間。"
+    },
+    {
+      "assumption": "客戶可以講清楚呢類體驗應該做乜同唔應該做乜。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者清楚講出應有解釋、出現時機、通知邊界同持續使用條件。"
+    }
+  ],
+  "key_insights": [
+    "呢位受訪者而家做緊嘅唔係正式再平衡流程，而係事件觸發式健康檢查：見市況波動就打開幾個 app，快速確認比例有冇偏離。",
+    "最有價值嘅唔係抽象 risk score，而係『集中度由邊隻持倉拉高、而家去到幾多、同原本差幾遠』呢類可直接判斷嘅資訊。",
+    "功能如果只提供 generic 風險提醒，會被視為噪音；要建立信任，必須把訊號翻譯成具體持倉、差距同不處理的後果。",
+    "呢個 persona 唔想被系統催促交易；佢要嘅係更快完成『要唔要跟進』判斷，而唔係自動化決策。",
+    "最佳嵌入位係主動檢查投資組合時，或者月尾本來會睇戶口的 routine moment；過多 push 會直接損害接受度。"
+  ],
+  "next_experiment": "用下一位 persona 測試對比場景：一版只顯示 generic 風險提醒，另一版顯示『持倉名稱 + 目前比重 + 與目標差距 + 不處理後果』，觀察邊種更能令受訪者描述出明確下一步，並再加入 RM/assisted-service 邊界問題。",
+  "evidence_gaps": [
+    "只訪問咗一位 synthetic persona，未能代表其他 V5 persona。",
+    "未測試外部資產整合的接受程度。",
+    "未測試 RM 參與、report 形式、dashboard 形式同 alert 形式之間嘅偏好差異。",
+    "未驗證除集中度之外，重疊、地區/行業集中、貨幣風險、情景分析等功能嘅相對價值。",
+    "未測試當市場唔波動時，佢會唔會主動用同點樣用。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 的概念預驗證，不可當成人類用戶證據；所有洞察、需求同假設都需要再用真實香港零售銀行客戶訪談驗證。"
+}

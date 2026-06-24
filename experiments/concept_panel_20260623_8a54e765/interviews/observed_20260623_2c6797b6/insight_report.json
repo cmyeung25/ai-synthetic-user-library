@@ -1,0 +1,198 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "主要係想確認冇乜太離譜，唔係真係打算即刻郁佢。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "多數都係用個大概感覺判斷係普通波動，定真係跌得比較明顯。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "如果太似 sales，我會即刻關。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "我多數唔會即刻轉。",
+        "evidence_ref": "exchange_5.persona"
+      },
+      {
+        "quote": "無啦啦一登入就彈，我多數當廣告，會直接掃走。",
+        "evidence_ref": "exchange_6.persona"
+      },
+      {
+        "quote": "要佢每次睇完都真係有少少新嘢。",
+        "evidence_ref": "exchange_7.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月尾，參加者在處理完家庭支出後，順手打開銀行 app 檢查基金和 MPF。",
+      "他先看持倉總覽的總值及短期變動，只在走勢特別差時才點進單一產品。",
+      "他用『大概感覺』做初步判斷，目的是排除異常，不是即時交易。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 的持倉總覽看總值與近一日或近一月變動。",
+      "只有個別基金走勢特別差時，才再點進去看明細。",
+      "靠自己的持有目的判斷，先分辨是短期波動還是真的值得再看。",
+      "若風險提示看來明顯，隔一兩日再看一次才決定。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "不要一打開就推產品。",
+      "不要直接指一兩隻基金說『最適合你』。",
+      "結果要先解釋目前組合出了甚麼問題及怎樣算出來。",
+      "要保留自己先停下來看的空間，不要逼即時行動。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "基於他現有持倉做分析。",
+      "展示集中風險與資產分布等中性分析。",
+      "用簡單方式解釋風險是怎樣算出來。"
+    ],
+    "rejected_data_access": [
+      "任何一打開就直推產品的呈現。",
+      "把分析直接包裝成特定基金推薦。",
+      "脫離當下任務時機的主動彈窗。"
+    ],
+    "required_trust_explanation": [
+      "先講清楚現在組合有甚麼集中風險。",
+      "解釋風險訊號的計算邏輯。",
+      "先提供中性觀察與一般做法，再決定是否需要下一步。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一打開就能對應他目前持倉，而不是泛泛而談。",
+      "能指出哪些持倉佔得太重，幫他做一次二次檢查。",
+      "語言夠簡單，不用他重新研究一輪。"
+    ],
+    "time_to_value": "即場，最好在他已經打開持倉頁或剛見到跌幅時立即可用。",
+    "abandonment_triggers": [
+      "看起來像 sales。",
+      "登入即彈出，像廣告。",
+      "每次都只重複『風險偏高』，沒有新資訊。",
+      "解釋太複雜，令他要重新花力氣理解。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "概念已設定為免費；免費降低了初次查看門檻，但不等於信任。",
+    "monthly_comfort_range": "不適用；此訪談未測試付費意願。",
+    "payment_justification": [
+      "即使免費，仍需先證明它真的是根據現有持倉做中立分析。"
+    ],
+    "evidence_strength": "stated"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "只有在組合變化明顯或集中度真的升高時才提醒。",
+      "每次都帶來少量新資訊。",
+      "用簡單講法，節省他重新判斷的時間。",
+      "嵌入他本來已在看的持倉頁面或跌幅情境。"
+    ],
+    "drop_off_reasons": [
+      "提示像促銷。",
+      "時機不對，例如登入即彈。",
+      "輸出重複、籠統、沒有新內容。",
+      "要他自己再花很多力氣消化。"
+    ],
+    "workflow_effect": "adds_layer"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "許多零售客戶仍以碎片化、產品層級或事件驅動方式管理投資組合。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "這位參加者主要看持倉總覽與單一基金走勢，並未描述完整的 whole-portfolio 管理流程。"
+    },
+    {
+      "assumption": "最重要的盲點會因人而異，不應預設。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "此個案最在意的是集中風險、非銷售感與簡單解釋，但單一個案不足以代表其他 persona。"
+    },
+    {
+      "assumption": "零售客戶能指出哪些 Aladdin 類能力在實際決策中有幫助，只要翻譯成簡單、實用的形式。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "他明確接受集中風險、資產分布、哪些項目佔得太重，以及在組合變化明顯時的提醒。"
+    },
+    {
+      "assumption": "最高價值的 use case 要綁定真實客戶時刻與工作流，而不是單純暴露機構級細節。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_6.persona"
+      ],
+      "rationale": "他只接受在持倉頁或剛見到跌幅時出現，不接受無脈絡的登入彈窗。"
+    },
+    {
+      "assumption": "有些能力適合自助零售渠道，有些更適合 RM 輔助。",
+      "status": "unknown",
+      "evidence_refs": [],
+      "rationale": "這次未直接測試 RM 輔助場景與自助場景的取捨。"
+    },
+    {
+      "assumption": "信任、資料舒適度、解釋方式與行動門檻會影響免費功能是否進入日常行為。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "他清楚把是否像 sales、是否有簡單解釋、以及是否真的有新資訊，連到採納與留存。"
+    },
+    {
+      "assumption": "深層洞察需要理解表面偏好背後的行為根因。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_5.persona"
+      ],
+      "rationale": "表面上他只是『想睇下』，但行為上其實是以低投入方式做異常排查，且傾向延後決策。"
+    },
+    {
+      "assumption": "客戶能描述這類體驗應該做甚麼和不應該做甚麼的邊界。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "他對推銷感、彈出時機、解釋方式與提醒條件都有清楚邊界。"
+    }
+  ],
+  "key_insights": [
+    "這位參加者不是主動型組合管理者，而是用低成本方式定期確認『有沒有太離譜』。",
+    "Portfolio Health Check 對他最合理的角色，不是交易建議器，而是嵌在現有檢查流程中的中立二次檢查。",
+    "最有感的能力不是複雜 analytics 名詞，而是很實際地指出哪些持倉過重、集中風險怎樣算、是否較之前明顯惡化。",
+    "信任的核心不是『免費』，而是先分析、後停手，不要一開始就把分析導向換產品。",
+    "最佳嵌入時機是他已在看持倉，或剛見到跌幅時；錯誤時機會直接被當廣告。','留存條件是事件驅動而非高頻固定使用：只有在組合真的變了、提醒內容有新東西、而且表達夠簡單時，他才會再回來。"
+  ],
+  "next_experiment": "用下一位 persona 測試同一概念的兩種呈現：1) 持倉頁內嵌的『組合變化摘要 + 集中風險解釋』；2) 登入後主動彈出的健康檢查卡。觀察對信任、查看意願與後續行動描述是否明顯分化，並補測 RM 輔助版本是否比純自助版本更合適。",
+  "evidence_gaps": [
+    "未測試外部資產整合或資料授權邊界。",
+    "未測試 RM 參與、review report 或 assisted-service 場景。",
+    "未有對比案例顯示在更高風險或更大金額情境下，他會否由輕量檢查轉為深入分析。",
+    "未拆解『新資訊』最重要的是持倉變化、風險解釋，還是可執行下一步。",
+    "只訪談一位 synthetic persona，不能代表其他香港零售銀行客群。"
+  ],
+  "synthetic_only_disclaimer": "以上只屬單一 synthetic persona 的概念預驗證，不可視為真人市場證據或因果定論；所有根因與設計方向仍需由真人訪談進一步驗證。"
+}

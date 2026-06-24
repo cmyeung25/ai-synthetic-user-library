@@ -1,0 +1,148 @@
+{
+  "overall_verdict": "warn",
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 4,
+    "conversation_naturalness": 4,
+    "evidence_discipline": 3,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 4,
+    "synthesis_fidelity": 3,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "pass",
+    "premature_root_cause_risk": "warn",
+    "mechanical_five_whys_risk": "pass",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "pass",
+    "persona_over_structuring_risk": "pass",
+    "interviewer_jargon_risk": "pass",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "pass",
+    "hypothesis_judge_alignment": "pass"
+  },
+  "strengths": [
+    "The interview established a recent concrete event before introducing the concept, with usable behavioral detail in `exchange_1` to `exchange_3`.",
+    "Coverage sequencing was mostly sound for `concept_validation`: current behavior and workaround came before concept reaction, then trust boundary, follow-through, embedding, and repeat-use conditions.",
+    "Participant-facing language stayed conversational and avoided analytical jargon; the Cantonese phrasing is generally natural and compact.",
+    "The facilitator stopped at a reasonable point because all required coverage areas were participant-facing and the next likely questions would have produced more hypotheticals than new evidence."
+  ],
+  "findings": [
+    {
+      "category": "Leading / solution-loaded question",
+      "severity": "medium",
+      "observation": "The concept introduction bundled multiple positive premises: `免費功能`, `一眼睇晒 MPF 同其他持有`, and `用簡單字提醒風險`. This makes the concept easier to like and mixes feature scope, pricing, and explanation style in one ask rather than isolating reaction to the core idea.",
+      "evidence_refs": [
+        "exchange_4.facilitator"
+      ],
+      "recommendation": "Introduce the concept more neutrally and split variables. Ask for reaction to the core capability first, then separately probe wording, trust, and pricing/value assumptions."
+    },
+    {
+      "category": "Compound question / mixed focus",
+      "severity": "medium",
+      "observation": "`exchange_4.facilitator` contains several concept attributes at once, so the spoken question does not maintain one natural conversational focus. The answer therefore mixes convenience, trust, and permission concerns, reducing diagnostic clarity.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "exchange_4.persona"
+      ],
+      "recommendation": "Keep each spoken question to one focus, for example: first reaction to consolidated view; then separately ask what would make it feel credible; then what data access would stop them."
+    },
+    {
+      "category": "Premature causal closure in planning",
+      "severity": "medium",
+      "observation": "The trace begins forming explanatory hypotheses about why the participant manages this way before enough behavioral comparison evidence exists, and later the synthesis upgrades one of those explanations to `supported`. The transcript shows what the participant currently checks and why in that moment, but not enough comparative evidence to establish the broader `because cash-flow/short-term spend rather than allocation optimization` claim as a settled mechanism.",
+      "evidence_refs": [
+        "facilitator_trace[5].root_cause_hypotheses[0]",
+        "SYNTHESIS.assumption_validation[1]",
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "recommendation": "Keep these as provisional interpretations unless the interview elicits contrast cases or direct comparison to alternative motives such as low holdings, low interest, sufficient current tools, or low confidence in investing."
+    },
+    {
+      "category": "Weak evidence discipline in synthesis",
+      "severity": "high",
+      "observation": "Several synthesis outputs translate hypothetical concept reactions into stronger product conclusions than the evidence authorizes. For example, `This means the product should 先服務『短期安排安全感』場景` and the embedding/design implications are grounded in one synthetic persona and mostly hypothetical responses after concept exposure, not demonstrated adoption or behavior change.",
+      "evidence_refs": [
+        "SYNTHESIS.key_insights[0]",
+        "SYNTHESIS.key_insights[1]",
+        "SYNTHESIS.key_insights[4]",
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "recommendation": "Label design implications explicitly as tentative for this one persona, and distinguish observed behavior evidence from hypothetical product reaction evidence in every conclusion."
+    },
+    {
+      "category": "Unsupported assumption status",
+      "severity": "medium",
+      "observation": "The assumption `參與者目前較少做正式投資組合管理，因為實際決策框架更偏向現金流與短期支出確認，而非投資配置優化` is marked `supported`, but the evidence more safely supports `observed current focus includes cash-flow and short-term spending`. It does not rule out alternatives like small holdings or low portfolio complexity.",
+      "evidence_refs": [
+        "SYNTHESIS.assumption_validation[1]",
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_3.persona"
+      ],
+      "recommendation": "Downgrade this to `partially_supported` or rewrite it as a narrower observed-pattern statement rather than a causal explanation."
+    },
+    {
+      "category": "Domain-fit overreach",
+      "severity": "medium",
+      "observation": "The research goal asks which `Aladdin-based analytics functions` would materially help and how to embed them, but the participant evidence only clearly supports lightweight consolidated checking and simple risk reminders around spending moments. The interview did not probe changed actions from richer analytics functions versus simpler reminders, so deeper domain-fit conclusions remain under-tested.",
+      "evidence_refs": [
+        "RESEARCH_GOAL",
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_7.persona",
+        "SYNTHESIS.evidence_gaps[3]"
+      ],
+      "recommendation": "Next rerun should compare at least two concrete function levels: simple reminder/explanation versus deeper portfolio analytics, and ask which would change a real decision and which would be ignored."
+    },
+    {
+      "category": "Concept-validation completeness gap on pricing",
+      "severity": "low",
+      "observation": "The prompt asks to keep curiosity, trial, payment, and month-two retention distinct. Trial and retention were probed, but payment was not participant-facing because the concept was introduced as `免費功能`. The synthesis correctly avoids inferring pricing willingness, but the interview itself cannot assess that assumption.",
+      "evidence_refs": [
+        "exchange_4.facilitator",
+        "exchange_8.persona",
+        "SYNTHESIS.pricing_signal"
+      ],
+      "recommendation": "If pricing is a real product question, test it in a separate rerun with a neutral concept setup that does not pre-fix the offering as free."
+    }
+  ],
+  "required_improvements": [
+    "Rewrite concept introduction to remove stacked positive premises and keep one question focus.",
+    "Separate observed behavior evidence from hypothetical concept-response evidence throughout synthesis and assumption scoring.",
+    "Avoid marking causal or motivational explanations as fully supported without probing alternatives or comparison cases.",
+    "Test domain fit by comparing simple reminders against richer analytics functions in participant-facing questions tied to real decisions.",
+    "Keep product implications bounded to one synthetic persona and explicitly tentative."
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Ask which specific decision, if any, would change from a simple risk reminder versus from a deeper portfolio analysis view.",
+      "Probe one concrete recent case where a spending or timing issue was missed, and whether a consolidated reminder would have changed the action.",
+      "Ask what, if anything, they currently do when they want more than a balance/risk sanity check, to test whether deeper analytics has any natural pull.",
+      "If relevant, ask for the lightest acceptable proof of accuracy before they would rely on the feature again."
+    ],
+    "coverage_gap_actions": [
+      "Probe alternatives for the current low-management pattern: small holdings, low interest, low confidence, current tools already sufficient, or time scarcity.",
+      "Elicit a participant-facing comparison between lightweight in-app summaries and deeper analytics outputs.",
+      "If pricing matters, run a separate participant-facing probe for willingness to pay or expected value; current interview cannot answer it.",
+      "Get one behavioral analogue for repeat use or abandonment from a similar existing alert/reminder tool, not only hypothetical future statements."
+    ],
+    "prompt_adjustments": [
+      "For `concept_validation`, prohibit concept intro questions that bundle price, convenience, breadth, and explanation style in one sentence.",
+      "Require the synthesis to tag each claim as `observed`, `stated preference`, or `hypothetical reaction`.",
+      "Add an observer rule that flags any assumption marked `supported` when transcript refs do not address plausible alternatives.",
+      "Add a prompt constraint that product implications for one synthetic interview must be phrased as tentative and persona-bounded."
+    ],
+    "turn_budget_guidance": "The current turn budget was sufficient for baseline concept-validation coverage, but one or two extra turns would be useful in reruns to test alternatives and compare simple versus deeper analytics without overextending the interview."
+  },
+  "human_review_needed": false,
+  "synthetic_only_disclaimer": "This evaluation audits only the provided synthetic transcript, trace, coverage, and synthesis. It is a methodological quality review of simulated material, not evidence about real users."
+}

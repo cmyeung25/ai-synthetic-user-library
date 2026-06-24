@@ -1,0 +1,248 @@
+{
+  "synthetic_only_disclaimer": "This analysis is based on a synthetic persona artifact and interview transcript for AI pre-validation only. It does not replace human research evidence.",
+  "surface_read": {
+    "what_the_persona_explicitly_said": [
+      "She checks her portfolio in ordinary household moments, specifically after dinner while supervising her son's homework, mainly to confirm where money stands rather than study markets (`exchange_1.persona`).",
+      "Her review flow is sequential and shallow-first: cash balance, upcoming card deductions and transfers, then MPF total and contribution status, with deeper inspection only if something looks off (`exchange_2.persona`).",
+      "A free portfolio health check feels somewhat useful because her holdings are split across apps, but only if she can quickly understand how it calculates and does not require too much external account data up front (`exchange_3.persona`).",
+      "She would initially allow only limited external-data access such as account type, products held, rough value range, and broad changes over time; she would not initially allow transaction details, family-related data, or transfer-capable permissions (`exchange_4.persona`).",
+      "If a risk alert appears, she would not trade immediately; she would first inspect the explanation, compare against her other apps, and only adjust gradually if it still seems valid (`exchange_5.persona`).",
+      "She wants the feature to appear at monthly review moments or after salary, and only lightly alert on meaningful changes; frequent prompts would become noise (`exchange_6.persona`).",
+      "She would reuse the feature if it saves time by surfacing key changes and risk shifts immediately, preserves rough cross-account distribution visibility, and avoids repeated reconnection or many steps; vague alerts or repeated permission expansion would stop usage (`exchange_7.persona`)."
+    ],
+    "what_they_seemed_to_optimize_for": "Low-friction oversight with preserved control: fast situational clarity, reversible interpretation before action, and tight limits on data access and notification volume.",
+    "what_stayed_implicit": [
+      "How much of her hesitation is about privacy versus simple setup burden.",
+      "Whether her current investing confidence is low, moderate, or merely low-attention.",
+      "How much she trusts the bank brand specifically versus trusting only transparent workflows.",
+      "Whether she would want human follow-up after an alert or prefers self-serve only.",
+      "What level of explanation would feel 'quickly understandable' in practice."
+    ]
+  },
+  "likely_drivers": [
+    {
+      "driver": "Financial steadiness matters more to her than optimization upside, so she checks investments as part of broader cash-flow reassurance rather than as a separate investing activity.",
+      "driver_type": "core_value",
+      "why_it_matters_here": "This explains why her portfolio review starts from bills, cash, and upcoming deductions before risk analysis. The health check is attractive only insofar as it helps her maintain an overall sense of stability.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "profile_source_refs": [
+        "values.core_values",
+        "problem_context.jobs_to_be_done",
+        "human_difference_axes.relationship_to_money"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She has a strong review-before-action habit and wants automation to inform, not decide.",
+      "driver_type": "decision_style",
+      "why_it_matters_here": "Her response to alerts is to inspect, cross-check, and adjust slowly. A tool that jumps from analysis to recommendation or transaction would likely trigger resistance.",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "technology_attitude.automation_openness",
+        "human_difference_axes.control_preference",
+        "personality_belief.decision_style"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Trust is earned through transparent boundaries, especially around permissions and what the system can or cannot touch.",
+      "driver_type": "trust_pattern",
+      "why_it_matters_here": "Her detailed distinction between analysis-only access and transfer-capable access suggests she is not reacting to 'data sharing' in the abstract; she is evaluating concrete exposure and controllability.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "values.fears",
+        "technology_attitude.privacy_concern",
+        "adoption_style.trust_requirements",
+        "human_difference_axes.trust_style"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "Her daily life is fragmented but disciplined, so usefulness is judged by whether the next step is obvious inside a short attention window.",
+      "driver_type": "daily_constraint",
+      "why_it_matters_here": "She describes checking during homework supervision and wants immediate key points, light prompts, and no repeated reconnection. That fits a phone-based, interruption-heavy routine rather than a dedicated portfolio-management session.",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "current_context",
+        "discovery_path_&_daily_friction.attention_shape",
+        "human_difference_axes.fragmentation_realit y",
+        "life_story.current_daily_routine"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She is willing to tolerate complexity only when it remains legible and under her control.",
+      "driver_type": "other",
+      "why_it_matters_here": "She already manually reconstructs a cross-app picture in her head, which is cumbersome, yet still preferable to opaque automation. The feature becomes valuable only if it reduces effort without hiding the logic.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "contradiction_map",
+        "interests_that_affect_buying.how_it_shapes_purchase_behaviour",
+        "human_difference_axes.complexity_tolerance"
+      ],
+      "confidence": "medium",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "She filters for signal quality quickly and drops tools that create background admin or alert fatigue.",
+      "driver_type": "decision_style",
+      "why_it_matters_here": "Her threshold for repeated use is not novelty; it is whether the feature consistently highlights meaningful change and stays quiet otherwise.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "values.fears",
+        "deep_research_notes.dropoff_model",
+        "product_reaction_rules.negative_signals"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    }
+  ],
+  "unspoken_constraints": [
+    {
+      "constraint": "She likely has limited patience for any onboarding that feels like a second financial admin task.",
+      "why_likely": "She repeatedly anchors value to time saved, few steps, and not having to reconnect each time.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "values.fears",
+        "problem_context.active_pain_points",
+        "deep_research_notes.adoption_model"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "She likely wants the feature to coexist with, not replace, her existing app-checking routine.",
+      "why_likely": "She describes verifying against other apps even after receiving a risk alert, suggesting continued parallel checking rather than full delegation.",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_5.persona"
+      ],
+      "profile_source_refs": [
+        "adoption_style",
+        "human_difference_axes.control_preference"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "constraint": "She may be especially sensitive to anything that could expose household-linked information, not just her own holdings.",
+      "why_likely": "She explicitly excludes family-related data and the persona profile flags accidental family-information exposure as a fear.",
+      "evidence_refs": [
+        "exchange_4.persona"
+      ],
+      "profile_source_refs": [
+        "values.fears",
+        "technology_attitude.privacy_concern"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "She probably needs explanation in plain operational terms, not market jargon.",
+      "why_likely": "She asks to quickly understand how the calculation works and focuses on practical questions like concentration and unusual movement rather than investment theory.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_5.persona"
+      ],
+      "profile_source_refs": [
+        "human_difference_axes.guidance_preference",
+        "human_difference_axes.need_for_explanation"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "value_tensions": [
+    {
+      "tension": "Convenience versus control",
+      "side_a": "She wants one place that saves time across fragmented accounts.",
+      "side_b": "She resists broad permissions, opaque calculation, and direct action without review.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "contradiction_map",
+        "human_difference_axes.control_preference",
+        "technology_attitude.automation_openness"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Monitoring for reassurance versus avoiding noise",
+      "side_a": "She wants timely prompts around monthly review and material change.",
+      "side_b": "She does not want frequent alerts that become clutter or pressure.",
+      "evidence_refs": [
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "discovery_path_&_daily_friction.attention_shape",
+        "deep_research_notes.dropoff_model"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "Accepting useful institutional tools versus demanding higher privacy justification from new data flows",
+      "side_a": "A bank-integrated view could reduce manual reconstruction across apps.",
+      "side_b": "External linking and sensitive permissions face a higher trust bar, especially if they touch family or transfer capability.",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona"
+      ],
+      "profile_source_refs": [
+        "contradiction_map",
+        "adoption_style.trust_requirements",
+        "technology_attitude.privacy_concern"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "missed_follow_up_questions": [
+    {
+      "question": "When you say you need to 'quickly understand how it calculates,' what exact explanation would be enough for you to trust the result on first use?",
+      "why_this_would_clarify": "This would separate explanation needs from general privacy hesitation and make her trust threshold more concrete.",
+      "priority": "high"
+    },
+    {
+      "question": "If the health check showed a concentration risk, what comparison or proof would make you believe it was not a false alarm?",
+      "why_this_would_clarify": "Her transcript shows a verification habit, but not the actual evidence standard she would use.",
+      "priority": "high"
+    },
+    {
+      "question": "Which is the bigger reason you might stop using it after one try: too many permission requests, too many steps, or alerts that feel generic?",
+      "why_this_would_clarify": "This would identify the main drop-off driver instead of treating several frictions as equal.",
+      "priority": "medium"
+    },
+    {
+      "question": "Would you want this to stay fully self-serve, or would there be any point where you would want a banker to explain the result?",
+      "why_this_would_clarify": "This would clarify service-embedding boundaries without assuming she wants sales follow-up.",
+      "priority": "medium"
+    }
+  ]
+}

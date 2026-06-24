@@ -1,0 +1,192 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "我喺車度用手機逐個戶口望返，睇下邊啲要保守啲。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "先開銀行 app 睇活期同信用卡未過數，心入面有個數先。之後再睇 MPF 同基金嗰啲頁面。",
+        "evidence_ref": "exchange_2.persona"
+      },
+      {
+        "quote": "當時個感覺唔係想追回報，係想冇咁易一撞到開支就亂。",
+        "evidence_ref": "exchange_3.persona"
+      },
+      {
+        "quote": "我只係會當快速概覽。",
+        "evidence_ref": "exchange_4.persona"
+      },
+      {
+        "quote": "如果個畫面好花，講啲好空泛嘅健康分數...我會覺得佢只係想推產品。",
+        "evidence_ref": "exchange_5.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "最近一次整體檢視發生喺交完學校雜費後，屬於真實近期事件。",
+      "她而家係分開睇活期、信用卡、MPF 同基金頁面，再自己拼返全貌。",
+      "檢視後有實際行動，但係偏向加強流動性，同時暫停新投入，而唔係交易或調倉。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 先睇活期同信用卡未過數，估現金壓力。",
+      "再分開睇 MPF 同基金頁面，靠自己判斷分布有冇太偏。",
+      "遇到壓力時將更多錢留喺容易拎到嘅地方。",
+      "必要時停一停新投入，等睇清楚先。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "唔好要求重新連接本身銀行已有嘅資料。",
+      "唔好一開始就導向預約顧問、留電話或做額外設定。",
+      "結果要快睇完，十幾秒內見到重點。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行 app 內直接用已有銀行資料做整合。",
+      "用清楚、貼近當下決策嘅訊息，例如現金夠唔夠、分布偏唔偏。"
+    ],
+    "rejected_data_access": [
+      "為咗用功能而再授權一堆銀行本身已有嘅資料。",
+      "未睇到內容前就要留電話、預約顧問、做風險評估。"
+    ],
+    "required_trust_explanation": [
+      "要先俾到實際內容，再談下一步。",
+      "唔可以只俾空泛健康分數，必須講到具體情況。",
+      "畫面唔可以太花，否則會被理解成推產品。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一開即見整體概覽，唔使逐個戶口自己拼。",
+      "即時指出現金是否偏緊或配置是否過偏。",
+      "唔使重新設定，流程短。"
+    ],
+    "time_to_value": "十幾秒內睇完重點",
+    "abandonment_triggers": [
+      "先做設定先有內容",
+      "先做銷售導流",
+      "只有抽象分數，冇具體判斷",
+      "畫面太複雜"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "核心功能免費已符合佢期望；訪談中冇出現額外付費動機。",
+    "monthly_comfort_range": "未知",
+    "payment_justification": [
+      "佢關注點係是否有用、夠快、夠中立，而唔係價錢。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "連續幾次都講中當下情況。",
+      "提醒之後回望證明真係有用。",
+      "打開快、唔使重新設定。",
+      "喺本來已經睇戶口嘅流程中順手見到。"
+    ],
+    "drop_off_reasons": [
+      "需要重複授權或設定。",
+      "一開就有 RM / 產品銷售感。",
+      "內容太花、太抽象、唔夠貼地。",
+      "要主動走去深層頁面先睇到。"
+    ],
+    "workflow_effect": "replaces_workflow"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "好多零售客其實係用碎片化、事件觸發式方式管理資產，而唔係真正 whole-portfolio 流程。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "rationale": "呢位受訪者明確係分開睇戶口、MPF、基金，再自己心入面拼返全貌，而且通常係被開支壓力觸發。"
+    },
+    {
+      "assumption": "最重要嘅 blind spot 會因人而異，唔應預設一定係集中度或重疊。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "對呢位受訪者，首要問題係現金是否偏緊、邊部分唔想郁住，同分布有冇太偏；唔係追求高階分析本身。"
+    },
+    {
+      "assumption": "零售客如果用簡單語言包裝，會認出某啲 Aladdin 類能力對實際決定有幫助。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "她對『一眼睇返 MPF、基金同現金』有興趣，但只接受能直接支持現金與分布判斷嘅輸出。"
+    },
+    {
+      "assumption": "最高價值用例係綁定真實 customer moment，而唔係單純展示 institutional analytics。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "她只喺大額開支前、月尾、或已經開 app 睇戶口時覺得最有用。"
+    },
+    {
+      "assumption": "有啲能力適合直接面向客戶，有啲應該留喺 RM / assisted service。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "有支持簡單自助概覽，但未直接測到哪些複雜分析應只留俾 RM。"
+    },
+    {
+      "assumption": "信任、資料分享舒適度、解釋方式、行動門檻會影響留存。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "她清楚講到哪些設定與推銷感會令佢唔再開，亦講到要連續幾次講中先會每月打開。"
+    },
+    {
+      "assumption": "深層 insight 要靠理解行為背後 root cause，而唔只係功能喜好。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_3.persona",
+        "exchange_6.persona"
+      ],
+      "rationale": "她嘅核心動機係避免一撞到開支就亂，反映需求係秩序感與流動性緩衝，不係單純偏好某功能卡片。"
+    },
+    {
+      "assumption": "客戶可以講清楚呢類體驗應該做乜同唔應該做乜。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_5.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "她對資料、畫面、入口、速度、銷售感都有明確邊界。"
+    }
+  ],
+  "key_insights": [
+    "呢位 persona 唔係用正式投資組合思維管理資產，而係喺現金流壓力出現時，臨時將銀行存款、信用卡、MPF、基金放埋一齊睇。",
+    "Portfolio Health Check 對佢嘅價值唔係『更專業分析』，而係取代手動逐頁查看，快速回答兩個問題：現金夠唔夠，同分布有冇過偏。",
+    "最有用嘅 customer moment 係大額開支前、月尾估下個月會唔會緊，或者本身已開銀行 app 睇戶口時順手見到。",
+    "第一屏必須先交付內容。任何先設定、先授權、先銷售導流都會破壞信任。",
+    "抽象健康分數對佢冇價值；要留低佢，功能要連續幾次準確反映當下情況，而且十幾秒內睇完。"
+  ],
+  "next_experiment": "喺下一輪真人訪談或原型測試，用兩種首屏版本做對比：A 版係『現金緩衝 + 分布偏離』簡潔摘要，B 版係抽象健康分數 + 多指標 dashboard，觀察受訪者第一眼理解、信任同下一步行動是否明顯分化。",
+  "evidence_gaps": [
+    "未測到佢喺冇短期開支壓力時，會唔會仍然想用同一功能。",
+    "未測到更高階分析如壓力測試、情景分析、貨幣風險對佢係過量定有用。",
+    "未直接測到哪些內容她願意自助看，哪些寧願由 RM 解釋。",
+    "只係單一 synthetic persona，唔代表其他 V5 persona。"
+  ],
+  "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念驗證前測，屬方向性假設生成，唔可以當作真人市場證據或需求規模證明。"
+}

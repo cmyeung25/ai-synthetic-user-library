@@ -1,0 +1,1046 @@
+{
+  "interview_id": "observed_20260623_8543930a",
+  "persona_id": "su_2001",
+  "persona_name": "Ivy Chan",
+  "research_goal": "Understand how five V5 Hong Kong retail-banking personas currently manage investment portfolios, which Aladdin-based analytics functions would materially help them in real decisions, why those functions matter, and how each should be embedded into retail customer journeys without turning the experience into generic product selling.",
+  "product_context": "The bank has already decided to launch a free Portfolio Health Check for retail customers using Aladdin-type analytics. This study is about practical usage design, feature usefulness, explanation boundaries, trust boundaries, and service embedding into retail banking workflows.",
+  "output_language": "Natural Cantonese Traditional Chinese",
+  "facilitator_provider": "codex",
+  "facilitator_model": "gpt-5.4",
+  "persona_provider": "codex",
+  "persona_model": "gpt-5.4",
+  "facilitator_prompt_version": "facilitator-interview/v2",
+  "synthesis_prompt_version": "concept-synthesis/v1",
+  "concept_protocol_version": "src/ai_validation_swarm/prompts/concept-interview/hk-bank-portfolio-health-check-v3.md",
+  "concept_label": "Portfolio Health Check",
+  "interview_mode": "concept_validation",
+  "hypothesis": "",
+  "facilitator_provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+  "persona_provider_session_id": "019ef352-7626-7680-a01e-c1bdb47eca72",
+  "persona_conversation_session_id": "chat_20260623_e0b43e9f",
+  "quality_provider": "codex",
+  "quality_model": "gpt-5.4",
+  "quality_prompt_version": "facilitator-quality-evaluator/v2",
+  "quality_provider_session_id": "019ef358-a1bd-7bd1-8b66-bc4d432441f5",
+  "approved_learning_rules_source": "",
+  "approved_learning_rule_ids": [],
+  "facilitator_audit_feedback_prompt_version": "facilitator-audit-feedback/v1",
+  "facilitator_audit_feedback_provider_session_id": "019ef358-a1bd-7bd1-8b66-bc4d432441f5",
+  "hypothesis_evidence_judge_prompt_version": "hypothesis-evidence-judge/v1",
+  "hypothesis_evidence_judge_provider_session_id": "",
+  "persona_driver_trace_prompt_version": "persona-driver-trace/v1",
+  "persona_driver_trace_provider_session_id": "",
+  "max_turns": 22,
+  "soft_turn_limit": 16,
+  "hard_turn_limit": 22,
+  "created_at": "2026-06-23T07:11:27+00:00",
+  "updated_at": "2026-06-23T07:20:27+00:00",
+  "status": "completed",
+  "stop_reason": "required coverage complete and further probing would likely be repetitive",
+  "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+  "facilitator_decisions": [
+    {
+      "interview_phase": "opening_recent_event",
+      "probing_strategy": "recent_event",
+      "decision_rationale": "先用中性嘅最近事件問題建立真實投資組合管理行為，避免過早引入概念或假設痛點；未有 transcript，可先收集一個具體 portfolio review 事件。",
+      "message_to_persona": "可唔可以講下你最近一次睇自己投資組合，當時發生咗咩事？",
+      "evidence_updates": [],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "最近一次 portfolio review 係咩情境觸發",
+        "當時實際睇咗咩資料同用咗咩工具",
+        "而家嘅 workaround 係點",
+        "之後先引入 concept reaction、trust boundary、action follow-through、repeat-use condition 同 service embedding"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "reconstruct_workaround",
+      "probing_strategy": "workaround_probe",
+      "decision_rationale": "參與者已提供最近一次具體檢視事件，並提到會截圖留待之後比較；下一步先釐清佢實際用咩方法延續呢個比較，補足 current workaround，再決定幾時引入概念。",
+      "message_to_persona": "你通常截咗圖之後，會點樣再比較返啲持倉？",
+      "evidence_updates": [
+        {
+          "claim": "參與者最近一次檢視投資組合係夜晚等女兒睡著後，在手機投資 app 快速查看。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "當次查看的目的主要是確認跌幅是否過大，以及月供是否有正常執行。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者見到兩個持倉下跌後有截圖，打算之後再比較，當晚沒有進一步行動。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_1.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "截圖之後實際用咩方法比較持倉",
+        "而家 portfolio 管理流程有幾多依賴手機 app 以外工具",
+        "之後先引入 Portfolio Health Check 測試第一反應同使用場景",
+        "咩資料分享或呈現方式會影響信任同後續行動"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "general_pattern",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "concept_intro",
+      "probing_strategy": "first_reaction",
+      "decision_rationale": "已建立最近行為同現有 workaround，可以中性引入概念；先問最想用佢睇咩，較容易攞到貼近實際 workflow 嘅初步價值反應，再追 trust 同嵌入時機。",
+      "message_to_persona": "如果你銀行 app 有個免費嘅 Portfolio Health Check，會用簡單方法幫你睇返成個組合，你第一下最想用佢睇咩？",
+      "evidence_updates": [
+        {
+          "claim": "參與者通常隔幾日再打開投資 app，比對價格和持倉比例是否偏離更多。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者會把當前持倉與自己當初買入的理由對照，確認原本判斷是否仍然成立。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者有時會連同月供紀錄和銀行戶口一起看，避免因一時情緒而調整持倉。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_2.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者目前的管理方式偏向隔幾日再檢查的手動比較，而不是即時作出交易動作。",
+          "evidence_type": "facilitator_hypothesis",
+          "transcript_refs": [
+            "exchange_1.persona",
+            "exchange_2.persona"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "對 Portfolio Health Check 嘅第一反應同最有價值嘅輸出係咩",
+        "咩呈現或資料來源會影響佢信唔信",
+        "見到風險訊號後實際會做咩",
+        "點樣先會變成佢日常會再用嘅功能",
+        "呢個功能應該喺咩銀行旅程時刻出現"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "post_concept_action",
+      "probing_strategy": "action_followthrough",
+      "decision_rationale": "參與者已講到想睇集中度同現金安排是否失衡，下一步應測試見到呢類訊號後會否採取實際行動，以及行動形態是自助還是再確認，先補 action_followthrough。",
+      "message_to_persona": "如果佢真係提醒你有一部分過重，你下一步通常會點做？",
+      "evidence_updates": [
+        {
+          "claim": "參與者對 Portfolio Health Check 的第一反應，是想知道自己是否不知不覺過度偏向同一類資產。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者擔心表面上看似分散，但實際風險可能集中在同一邊。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果工具能直接指出哪部分持倉過重，以及是否與現金安排不協調，參與者會看。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_3.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "對參與者而言，有價值的輸出是簡單直接的組合偏重提示，而不是只看價格升跌。",
+          "evidence_type": "facilitator_hypothesis",
+          "transcript_refs": [
+            "exchange_2.persona",
+            "exchange_3.persona"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "見到過重提示後會實際做咩行動",
+        "咩資料來源或表達方式先令佢信",
+        "功能應該喺咩時刻出現先最有用",
+        "咩情況下會持續用而唔係試一次就算"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "trust_probe",
+      "probing_strategy": "trust_boundary",
+      "decision_rationale": "參與者已講到見到提示後會先核對判斷依據，顯示信任門檻在於解釋方式；下一步直接測試咩資訊會令佢信呢個輸出，補 trust boundary。",
+      "message_to_persona": "要去到咩解釋程度，你先會信佢個過重提示？",
+      "evidence_updates": [
+        {
+          "claim": "如果 Portfolio Health Check 提醒某部分過重，參與者不會立即調整持倉。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者會先查看系統如何判斷為過重，以及那是短期波動還是真正比例偏離。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者較可能用未來一兩次月供逐步拉平組合，而不是立即交易。",
+          "evidence_type": "behavioural_example",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "只有在偏離相當明顯時，參與者才會考慮減持部分倉位。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_4.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "邊種解釋或數據來源會令佢信任過重提示",
+        "功能應該喺咩時刻或流程出現先最有用",
+        "咩情況下會令佢持續用而唔係只試一次"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "hypothesis_condition",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "service_moment",
+      "probing_strategy": "service_embedding",
+      "decision_rationale": "信任邊界已清楚，尚未知道功能應嵌入喺邊個實際銀行旅程時刻；先問最合適出現時機，可同佢而家夜晚檢查同月供節奏連結，之後再收 repeat-use condition。",
+      "message_to_persona": "呢個提醒如果要對你真係有用，你會想佢喺咩時候出現？",
+      "evidence_updates": [
+        {
+          "claim": "參與者對過重提示的信任前提，是能看到分類依據、各類資產占比、合理範圍基準，以及被判為過重的原因。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "如果只有一句抽象的高風險提示，沒有基準和對比，參與者不會太相信。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者偏好簡單但有依據的解釋，而不是學術式說明。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_5.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "功能應該喺咩實際時刻出現先最有用",
+        "咩情況下會令佢持續使用而唔係試一次就算"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "retention_probe",
+      "probing_strategy": "repeat_use_condition",
+      "decision_rationale": "參與者已指出合適觸發時機同反感無端 push，下一步要釐清咩條件會令呢個功能由一次性提醒變成固定習慣，補足 repeat-use condition。",
+      "message_to_persona": "咩情況下你會真係養成定期開呢個功能睇嘅習慣？",
+      "evidence_updates": [
+        {
+          "claim": "參與者希望 Portfolio Health Check 在自己本來已經查看組合或準備調整月供時出現。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者不希望功能平時無端推送提醒，尤其不想因市場輕微波動而頻繁彈出。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "對參與者而言，過於頻繁的市場波動提醒容易變成噪音。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_6.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "咩條件會令佢持續使用而唔係只試一次"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "consequence",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "service_embedding",
+      "probing_strategy": "channel_placement",
+      "decision_rationale": "雖然已知道理想出現時機，但仲未分清楚佢想呢個功能以純 self-serve 定連埋 RM/報告形式出現；問嵌入渠道可補足 service embedding。",
+      "message_to_persona": "你會想呢個功能淨係放喺 app 入面自己睇，定係有需要時連埋客戶經理一齊跟進？",
+      "evidence_updates": [
+        {
+          "claim": "參與者只有在 Portfolio Health Check 每次都能幫他更快看清重點，而不是增加額外分析工作時，才會養成使用習慣。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者偏好在月供前後或月尾檢查時，能以幾下操作就看到重點。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者要求功能口徑保持一致，這會影響是否成為固定會開的工具。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_7.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [
+        "功能應以純 self-serve、RM 輔助，或兩者結合方式嵌入銀行旅程"
+      ],
+      "should_end": false,
+      "end_reason": "",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "asked"
+    },
+    {
+      "interview_phase": "close",
+      "probing_strategy": "sufficient_evidence",
+      "decision_rationale": "所需 coverage 已完成，最新回覆亦補足咗 service embedding：先 self-serve，再按需要升級到 RM。再追問大概率只會重覆已知偏好。",
+      "message_to_persona": "",
+      "evidence_updates": [
+        {
+          "claim": "參與者偏好先在 app 內自己查看和消化 Portfolio Health Check 的內容。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_8.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "只有在看完仍不明白，或涉及相當明顯的調整時，參與者才會考慮找客戶經理跟進。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_8.persona"
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "參與者不希望功能一開始就帶出被客戶經理主動追蹤的感受。",
+          "evidence_type": "participant_statement",
+          "transcript_refs": [
+            "exchange_8.persona"
+          ],
+          "confidence": "high"
+        }
+      ],
+      "root_cause_hypotheses": [],
+      "open_questions": [],
+      "should_end": true,
+      "end_reason": "required coverage complete and further probing would likely be repetitive",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "provider_session_id": "019ef351-d740-7ea0-88b4-983702461a2a",
+      "decision_status": "not_asked_at_close"
+    }
+  ],
+  "exchanges": [
+    {
+      "exchange_id": 1,
+      "facilitator_question": "可唔可以講下你最近一次睇自己投資組合，當時發生咗咩事？",
+      "persona_response": "最近一次係夜晚等阿女瞓咗之後，我喺手機度順手開咗個投資 app 睇一眼，主要係想確認下有冇跌得太多，同埋月供嗰筆有冇照常入到。其實我冇睇好耐，見到有兩隻位又向下，就截咗圖諗住之後先再比較，嗰晚冇再做咩動作。",
+      "facilitator_phase": "opening_recent_event",
+      "probing_strategy": "recent_event",
+      "question_evidence_basis": "current_event",
+      "question_evidence_target": "target_behaviour",
+      "created_at": "2026-06-23T07:12:21+00:00"
+    },
+    {
+      "exchange_id": 2,
+      "facilitator_question": "你通常截咗圖之後，會點樣再比較返啲持倉？",
+      "persona_response": "通常我係隔幾日先再開返嚟，比對下而家個價、個比例有冇再偏得多，同埋自己當時點解買嗰隻仲講唔講得通。有時我會順手同月供紀錄或者銀行戶口一齊望，唔係淨係睇升跌，主要係避免自己憑一刻情緒亂郁。",
+      "facilitator_phase": "reconstruct_workaround",
+      "probing_strategy": "workaround_probe",
+      "question_evidence_basis": "general_pattern",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T07:12:51+00:00"
+    },
+    {
+      "exchange_id": 3,
+      "facilitator_question": "如果你銀行 app 有個免費嘅 Portfolio Health Check，會用簡單方法幫你睇返成個組合，你第一下最想用佢睇咩？",
+      "persona_response": "我第一下會想睇其實我係咪不知不覺偏咗太多去同一類嘢，尤其係自己以為分散咗，但原來風險都係堆埋一邊。如果佢可以好直接咁話畀我知，邊部分過重、同而家現金安排有冇唔協調，我會睇。",
+      "facilitator_phase": "concept_intro",
+      "probing_strategy": "first_reaction",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T07:13:23+00:00"
+    },
+    {
+      "exchange_id": 4,
+      "facilitator_question": "如果佢真係提醒你有一部分過重，你下一步通常會點做？",
+      "persona_response": "我唔會即刻郁住，通常會先睇清楚佢點樣判斷做過重，係短期波動定真係比例走樣。之後我多數會用下一兩次月供慢慢拉返平，除非個情況真係偏得幾明顯，先會考慮減一啲。",
+      "facilitator_phase": "post_concept_action",
+      "probing_strategy": "action_followthrough",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-23T07:13:52+00:00"
+    },
+    {
+      "exchange_id": 5,
+      "facilitator_question": "要去到咩解釋程度，你先會信佢個過重提示？",
+      "persona_response": "唔使講到好學術，但起碼要畀我見到佢係按咩分，譬如而家邊一類佔咗幾多、佢心目中合理範圍大概係咩，點解會被判做過重。如果淨係彈一句話你風險偏高，冇基準、冇對比，我唔會太信。",
+      "facilitator_phase": "trust_probe",
+      "probing_strategy": "trust_boundary",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "hypothesis_condition",
+      "created_at": "2026-06-23T07:14:22+00:00"
+    },
+    {
+      "exchange_id": 6,
+      "facilitator_question": "呢個提醒如果要對你真係有用，你會想佢喺咩時候出現？",
+      "persona_response": "最好係我本身已經喺睇組合或者準備做月供調整嗰陣先出，咁我會順手消化到。唔想佢平時無啦啦 push 出嚟嚇人，尤其係市況郁少少就彈，嗰種好易變成噪音。",
+      "facilitator_phase": "service_moment",
+      "probing_strategy": "service_embedding",
+      "question_evidence_basis": "hypothetical",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T07:14:52+00:00"
+    },
+    {
+      "exchange_id": 7,
+      "facilitator_question": "咩情況下你會真係養成定期開呢個功能睇嘅習慣？",
+      "persona_response": "如果佢每次都真係幫我快啲睇清楚，而唔係叫我再做一輪分析，我先會養成習慣。最好係我月供前後或者月尾想 check 一次嗰陣，兩三下就見到重點，仲要唔好成日變口徑，咁我先會當佢係固定會開嘅嘢。",
+      "facilitator_phase": "retention_probe",
+      "probing_strategy": "repeat_use_condition",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "consequence",
+      "created_at": "2026-06-23T07:15:17+00:00"
+    },
+    {
+      "exchange_id": 8,
+      "facilitator_question": "你會想呢個功能淨係放喺 app 入面自己睇，定係有需要時連埋客戶經理一齊跟進？",
+      "persona_response": "我會想先喺 app 入面自己睇，自己消化咗先算。真係去到我睇完都唔明，或者牽涉到幾明顯嘅調整，我先會接受再揀要唔要搵客戶經理跟進，唔想一開始就變成有人追住我。",
+      "facilitator_phase": "service_embedding",
+      "probing_strategy": "channel_placement",
+      "question_evidence_basis": "clarification",
+      "question_evidence_target": "context",
+      "created_at": "2026-06-23T07:15:46+00:00"
+    }
+  ],
+  "pending_facilitator_decision": {},
+  "observer_interventions": [],
+  "last_error": "",
+  "failed_operation": "",
+  "failed_payload": {},
+  "insight_report": {
+    "problem_evidence": {
+      "strength": "medium",
+      "supporting_quotes": [
+        {
+          "quote": "主要係想確認下有冇跌得太多，同埋月供嗰筆有冇照常入到。",
+          "evidence_ref": "exchange_1.persona"
+        },
+        {
+          "quote": "有時我會順手同月供紀錄或者銀行戶口一齊望，唔係淨係睇升跌，主要係避免自己憑一刻情緒亂郁。",
+          "evidence_ref": "exchange_2.persona"
+        },
+        {
+          "quote": "自己以為分散咗，但原來風險都係堆埋一邊。",
+          "evidence_ref": "exchange_3.persona"
+        }
+      ],
+      "recent_behavior_evidence": [
+        "最近一次檢視係夜晚喺手機 app 快速睇一眼，見到兩隻位向下就截圖，當晚冇交易。",
+        "之後通常隔幾日再開 app，比對價格、比例，同埋當初買入理由仲成唔成立。",
+        "會連住月供紀錄同銀行戶口一齊睇，目標係避免情緒化調整。"
+      ]
+    },
+    "current_workaround": {
+      "existing_workaround": [
+        "用手機投資 app 做快速檢查。",
+        "見到異動先截圖，隔幾日再手動比較。",
+        "用月供去慢慢拉平，而唔係即時買賣。",
+        "需要時會同銀行戶口、月供紀錄一齊睇。"
+      ],
+      "pain_level": "medium",
+      "switching_difficulty": "low",
+      "what_must_not_change": [
+        "唔想被迫即時交易。",
+        "唔想增加一輪額外分析工序。",
+        "唔想功能變成高頻噪音 push。"
+      ]
+    },
+    "trust_boundary": {
+      "accepted_data_access": [
+        "銀行內持倉整合分析。",
+        "結合月供紀錄同現金安排去睇協調度。",
+        "喺 app 內先 self-serve 睇結果。"
+      ],
+      "rejected_data_access": [
+        "冇基準、冇對比、淨係一句『風險偏高』嘅黑箱提示。",
+        "平時無啦啦因少少市況波動就 push。",
+        "一開始就帶去 RM 跟進、令人有被追住嘅感覺。"
+      ],
+      "required_trust_explanation": [
+        "要見到按咩分類。",
+        "要見到而家邊類資產佔幾多。",
+        "要有合理範圍或基準。",
+        "要解釋點解會判做過重。"
+      ]
+    },
+    "first_value_requirement": {
+      "first_use_success": [
+        "一打開就睇到有冇某類資產過重。",
+        "可以直接睇到分散表面之下嘅實際風險有冇堆埋一邊。",
+        "最好同現金安排一齊睇到有冇唔協調。"
+      ],
+      "time_to_value": "月供前後或者月尾 check 嗰陣，兩三下內見到重點。",
+      "abandonment_triggers": [
+        "要用家自己再做一輪分析。",
+        "口徑成日變。",
+        "提醒太頻密、變噪音。"
+      ]
+    },
+    "pricing_signal": {
+      "free_trial_need": "核心功能免費符合受訪者使用前提；今次冇測 price sensitivity。",
+      "monthly_comfort_range": "未知",
+      "payment_justification": [
+        "未有付費意願證據；受訪者只表達免費情境下會考慮使用。"
+      ],
+      "evidence_strength": "unknown"
+    },
+    "retention_risk": {
+      "continuation_reasons": [
+        "每次都真係幫佢快啲睇清楚。",
+        "輸出口徑一致。",
+        "嵌入喺本身已經會做嘅月供前後或月尾檢查時刻。"
+      ],
+      "drop_off_reasons": [
+        "只係製造額外分析工作。",
+        "提醒冇基準、解釋太空泛。",
+        "市況少少波動就亂 push。",
+        "一開始就帶銷售或 RM 跟進感。"
+      ],
+      "workflow_effect": "replaces_workflow"
+    },
+    "assumption_validation": [
+      {
+        "assumption": "呢位 persona 目前係用碎片化、事件驅動方式管理 portfolio，而唔係完整 whole-portfolio process。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona"
+        ],
+        "rationale": "佢係夜晚順手用手機 quick check，靠截圖、隔幾日再比較，同月供/銀行戶口拼埋睇，明顯係輕量、手動、事件驅動。"
+      },
+      {
+        "assumption": "Aladdin-type analytics 若翻譯成簡單直接嘅 retail 輸出，會對實際決策有幫助。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_4.persona",
+          "exchange_5.persona"
+        ],
+        "rationale": "佢明確想睇過重、假分散、現金協調，亦講到呢啲提示會影響佢用月供慢慢拉平或考慮減持。"
+      },
+      {
+        "assumption": "最高價值要綁定真實 customer moment，而唔係平時獨立推送。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_6.persona",
+          "exchange_7.persona"
+        ],
+        "rationale": "佢只想喺睇組合或準備調整月供時出現，反感平時無端 push。"
+      },
+      {
+        "assumption": "部分能力應該 self-serve，RM 只係升級支援，而唔係預設入口。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_8.persona"
+        ],
+        "rationale": "佢想先自己喺 app 消化，睇完都唔明或涉及明顯調整先再考慮 RM。"
+      },
+      {
+        "assumption": "零售客嘅最重要 blind spot 未必係所有高階風險維度，而可能係簡單嘅集中度同現金協調。",
+        "status": "supported",
+        "evidence_refs": [
+          "exchange_3.persona"
+        ],
+        "rationale": "受訪者自發提出嘅唔係複雜 analytics，而係『有冇偏咗同一類』同『同現金安排協唔協調』。"
+      }
+    ],
+    "key_insights": [
+      "受訪者而家唔係冇檢查 portfolio，而係用低頻、手動、情緒控制型流程去管理，所以最有價值嘅唔係更多數據，而係更快睇清楚重點。",
+      "最吸引佢嘅能力係揭示『表面分散但實際集中』，再加簡單清楚嘅過重解釋同基準。",
+      "功能最好嵌入月供前後、月尾 review 呢類本來就會發生嘅 moment，而唔係 market-noise push alert。",
+      "信任唔靠品牌或術語，靠可見分類、占比、合理範圍同判斷原因。",
+      "行動模式偏向 gradual adjustment：先理解，再用未來一兩次月供慢慢拉平，只有偏離好明顯先考慮減持。"
+    ],
+    "next_experiment": "用另一位同樣有月供習慣但更依賴 RM 或更常交易嘅 persona，測試同一個 Portfolio Health Check 係咪都應該以『self-serve 先、RM 升級後』為主；同時比兩種原型輸出做對照：一種係簡單過重+基準卡片，一種係較技術化 dashboard，睇邊種更快觸發理解同後續行動。",
+    "evidence_gaps": [
+      "只有一位 synthetic persona，唔代表 V5 其他 persona。",
+      "未測試外部資產整合接受度。",
+      "未驗證除集中度/現金協調外，其他功能例如情景分析、貨幣風險、壓力測試對佢係咪真有用。",
+      "未測試實際 UI 格式，例如 alert、dashboard、report card 邊種最好。",
+      "冇收集到佢對 RM 參與門檻更細緻嘅條件，例如通知方式、預約形式、是否接受被動建議。"
+    ],
+    "synthetic_only_disclaimer": "以上只係單一 synthetic persona 嘅概念驗證前測，不可當成人類市場證據；所有洞察同假設都需要再用真實香港零售銀行客訪談驗證。"
+  },
+  "quality_evaluation": {
+    "overall_verdict": "warn",
+    "scores": {
+      "neutrality": 3,
+      "probing_quality": 4,
+      "conversation_naturalness": 4,
+      "evidence_discipline": 2,
+      "causal_rigor": 3,
+      "hypothesis_validation_rigor": 4,
+      "synthesis_fidelity": 2,
+      "overall": 3
+    },
+    "checks": {
+      "leading_question_risk": "warn",
+      "repetition_risk": "pass",
+      "premature_root_cause_risk": "pass",
+      "mechanical_five_whys_risk": "pass",
+      "evidence_reference_quality": "warn",
+      "synthesis_overreach_risk": "fail",
+      "conversation_naturalness": "pass",
+      "persona_over_structuring_risk": "pass",
+      "interviewer_jargon_risk": "pass",
+      "domain_fit_alignment": "warn",
+      "hypothesis_confirmation_bias_risk": "pass",
+      "hypothesis_judge_alignment": "pass"
+    },
+    "strengths": [
+      "The interview establishes a concrete recent event before concept introduction in `exchange_1` and follows with the current workaround in `exchange_2`.",
+      "The facilitator stayed broadly conversational and avoided analytical jargon in participant-facing questions.",
+      "Coverage for concept timing, trust boundary, repeat-use conditions, and service embedding was directly probed through participant-facing exchanges `exchange_5` to `exchange_8`.",
+      "The stop point was reasonable because all required concept-validation coverage fields were already covered and the close decision in the trace did not cut off an obvious missing area."
+    ],
+    "findings": [
+      {
+        "category": "synthesis_overreach",
+        "severity": "high",
+        "observation": "The synthesis promotes product-shaping conclusions beyond what one synthetic concept interview can support. Claims such as a likely default journey pattern and prioritized retail blind spots are treated as supported, even though they come from a single persona reacting to a hypothetical concept.",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "exchange_8.persona",
+          "SYNTHESIS.assumption_validation[3]",
+          "SYNTHESIS.assumption_validation[4]",
+          "SYNTHESIS.next_experiment"
+        ],
+        "recommendation": "Downgrade these to tentative persona-specific signals. Avoid marking cross-journey design assumptions as `supported`; label them as hypotheses to test across more personas and real participants."
+      },
+      {
+        "category": "evidence_discipline",
+        "severity": "medium",
+        "observation": "Several synthesis claims are not tightly grounded in the cited transcript. `replaces_workflow` in `retention_risk.workflow_effect` is stronger than the evidence, which only shows a faster aid layered into an existing review habit. The quote `自己以為分散咗，但原來風險都係堆埋一邊` is a hypothetical first-use desire, not direct problem evidence from observed current behavior.",
+        "evidence_refs": [
+          "exchange_1.persona",
+          "exchange_2.persona",
+          "exchange_3.persona",
+          "SYNTHESIS.problem_evidence.supporting_quotes[2]",
+          "SYNTHESIS.retention_risk.workflow_effect"
+        ],
+        "recommendation": "Separate observed current behavior from hypothetical concept reactions. Use current-state evidence only from `exchange_1.persona` and `exchange_2.persona`, and rephrase workflow impact as `may streamline existing review` unless observed otherwise."
+      },
+      {
+        "category": "leading_question_risk",
+        "severity": "medium",
+        "observation": "The final channel-placement question is partially forced choice. `exchange_8.facilitator` asks the participant to choose between app self-serve and RM follow-up, which can suppress other embedding options or mixed workflows.",
+        "evidence_refs": [
+          "exchange_8.facilitator"
+        ],
+        "recommendation": "Ask an open version first, such as where this should live and who, if anyone, should be involved after the participant sees it."
+      },
+      {
+        "category": "concept_validation_method",
+        "severity": "medium",
+        "observation": "The concept is introduced fairly neutrally, but the framing still presupposes usefulness by naming a `Portfolio Health Check` that `會用簡單方法幫你睇返成個組合`. That subtly packages the concept as helpful rather than letting value emerge entirely from the participant.",
+        "evidence_refs": [
+          "exchange_3.facilitator"
+        ],
+        "recommendation": "Use a more stripped-back intro that describes the capability without benefit language, then probe reaction and relevance."
+      },
+      {
+        "category": "assumption_coverage",
+        "severity": "medium",
+        "observation": "The report includes pricing implications even though pricing was not behaviorally explored. It correctly notes `unknown`, but the presence of a pricing section risks overstating what this interview can say about willingness to pay.",
+        "evidence_refs": [
+          "SYNTHESIS.pricing_signal"
+        ],
+        "recommendation": "Keep pricing explicitly out of the main findings unless you probe it. If retained, isolate it under `not assessed in this interview` rather than as a substantive result area."
+      },
+      {
+        "category": "domain_fit_alignment",
+        "severity": "medium",
+        "observation": "The research goal asks which Aladdin-based analytics functions would materially help real decisions and how each should be embedded. This interview mostly validates one narrow use case: concentration and cash-coordination checks. It does not yet test other candidate functions, so the synthesis should not imply broader domain-fit for `Aladdin-type analytics` generally.",
+        "evidence_refs": [
+          "exchange_3.persona",
+          "SYNTHESIS.assumption_validation[1]",
+          "SYNTHESIS.evidence_gaps[2]"
+        ],
+        "recommendation": "State that this run only supports interest in one simplified analytic output for this persona, not the broader analytics suite."
+      }
+    ],
+    "required_improvements": [
+      "Tighten synthesis discipline: distinguish observed current behavior from hypothetical concept reaction, and remove or downgrade claims that imply broader product direction from one synthetic interview.",
+      "Replace forced-choice embedding probes with open-first questions before narrowing to channels or support models.",
+      "Limit assumption verdicts to persona-specific signals; do not mark cross-persona journey or feature-priority assumptions as `supported` without comparative evidence.",
+      "Keep non-assessed areas such as pricing and wider analytics scope clearly labeled as untested rather than partially validated."
+    ],
+    "improvement_hints": {
+      "next_interview_focus": [
+        "Ask the participant to compare this concept against their current screenshot-and-revisit method in a specific recent case.",
+        "Probe one concrete moment when a concentration signal would have changed what they actually did, not just what they think they would do.",
+        "Test at least one alternative analytic output beyond concentration/cash coordination to learn relative value, not just absolute concept appeal.",
+        "Ask what would make them ignore the feature even if it appeared at the right moment."
+      ],
+      "coverage_gap_actions": [
+        "Get a participant-facing probe on whether they would trust analysis that includes external assets or only bank-held assets.",
+        "Probe what exact output format they can act on fastest: alert, summary card, or dashboard.",
+        "Ask what specific follow-up they would expect after seeing a warning and what would feel too sales-led.",
+        "If pricing is needed, ask separately about payment behavior and tradeoffs rather than inferring from the word `free` in the concept intro."
+      ],
+      "prompt_adjustments": [
+        "In concept-validation mode, instruct the facilitator to keep concept descriptions benefit-neutral and avoid labels that imply health, optimization, or smartness.",
+        "Add a synthesis guardrail: hypothetical reactions cannot be used as current problem evidence or workflow-replacement evidence.",
+        "Require open-first service-embedding questions before any either-or channel prompt.",
+        "Add a report rule that broad design outputs, feature priority, POV, or HMW statements must be explicitly bounded to `single synthetic persona` and not marked validated."
+      ],
+      "turn_budget_guidance": "The current turn budget was sufficient for this interview. Keep the soft/hard limits as-is, but spend one extra turn only if needed for open-format/channel probing or comparative concept testing; the bigger issue is prompt discipline, not interview length."
+    },
+    "human_review_needed": false,
+    "synthetic_only_disclaimer": "This audit evaluates a single synthetic concept-validation interview. Any apparent support is limited to participant-facing quality and evidence handling within this simulated case, not real-market truth or cross-persona product direction."
+  },
+  "facilitator_audit_feedback": {
+    "artifact_version": "v1",
+    "feedback_scope": "interview",
+    "applies_to": {
+      "interview_mode": [
+        "concept_validation"
+      ],
+      "domains": [
+        "general"
+      ],
+      "safe_for_global_reuse": false
+    },
+    "summary": {
+      "overall_assessment": "Coverage was completed cleanly and the conversation stayed natural, but the facilitator often traded depth for checklist completion and the synthesis converted hypothetical concept reactions into stronger evidence than the interview earned.",
+      "primary_failure_mode": "The main failure mode was accepting first-pass hypothetical reactions without enough contrast, threshold, or current-workflow comparison probing, then treating those reactions as stronger proof than the transcript supports.",
+      "depth_vs_coverage_assessment": "Coverage was prioritized over depth. Required areas were touched, but several high-signal participant clues were not unpacked before moving to the next coverage item."
+    },
+    "facilitator_feedback_tags": [
+      {
+        "tag": "coverage_over_depth",
+        "severity": "medium",
+        "why_it_matters": "When facilitators move on immediately after a coverage box is checked, they miss the mechanism that makes the answer usable for later synthesis.",
+        "observed_pattern": "After the participant mentioned screenshotting, delayed comparison, and avoiding emotional moves in `exchange_1.persona` and `exchange_2.persona`, the facilitator moved into concept introduction instead of deepening what the workaround protects against and where it breaks."
+      },
+      {
+        "tag": "open_signal_not_exploited",
+        "severity": "medium",
+        "why_it_matters": "Volunteered specifics are often the highest-yield path to non-generic evidence; skipping them produces flatter insight and weaker design implications.",
+        "observed_pattern": "The participant volunteered signals about emotional self-control, delayed review, and explanation thresholds in `exchange_2.persona`, `exchange_4.persona`, and `exchange_5.persona`, but those were not followed with consequence, near-miss, or threshold probes."
+      },
+      {
+        "tag": "forced_choice_narrowing",
+        "severity": "medium",
+        "why_it_matters": "Early forced-choice framing can suppress participant-led alternatives and create false confidence in the options the facilitator supplied.",
+        "observed_pattern": "`exchange_8.facilitator` narrowed service embedding to self-serve versus follow-up support instead of first asking open-endedly where the feature should live and what, if any, human involvement should exist."
+      },
+      {
+        "tag": "hypothetical_as_behavioral_evidence",
+        "severity": "high",
+        "why_it_matters": "Concept-validation interviews often contain stated intent. Treating that as observed behavior inflates confidence and leads to over-strong synthesis outputs.",
+        "observed_pattern": "The synthesis uses hypothetical statements from `exchange_3.persona` and `exchange_4.persona` as support for broader behavioral and workflow claims, including stronger interpretations such as replacement effects and validated design direction."
+      },
+      {
+        "tag": "benefit_presupposition_in_concept_intro",
+        "severity": "low",
+        "why_it_matters": "Even mild benefit framing can pull participants toward helpfulness judgments rather than letting relevance emerge on its own.",
+        "observed_pattern": "`exchange_3.facilitator` introduced the concept with a label and a helpfulness frame, describing it as a free check that would simply help review the portfolio."
+      }
+    ],
+    "high_value_missed_followups": [
+      {
+        "trigger_type": "volunteered_workaround_protection",
+        "priority": "high",
+        "participant_signal": "In `exchange_2.persona`, the participant said they compare later and check other records to avoid acting on emotion.",
+        "missed_followup_question": "What does that delayed comparison protect you from, and can you recall a time when that pause changed what you would have done?",
+        "generic_learning": "When a participant describes a workaround cadence, probe what risk the workaround protects against and whether it has ever changed an action."
+      },
+      {
+        "trigger_type": "threshold_signal",
+        "priority": "high",
+        "participant_signal": "In `exchange_4.persona`, the participant said they would only consider a stronger action if the situation were obviously far off.",
+        "missed_followup_question": "What would count as far enough off that you would move from waiting to acting, and can you anchor that to a recent real case?",
+        "generic_learning": "Whenever a participant uses threshold language such as 'only if it is obvious' or 'too much,' ask for the decision threshold and anchor it to a specific case."
+      },
+      {
+        "trigger_type": "trust_condition_signal",
+        "priority": "high",
+        "participant_signal": "In `exchange_5.persona`, the participant listed what explanation they would need before trusting the output.",
+        "missed_followup_question": "Can you think of a time a tool or report failed that explanation standard, and what did you do instead?",
+        "generic_learning": "Trust requirements become more actionable when contrasted with a failure example, not just a stated preference list."
+      },
+      {
+        "trigger_type": "timing_preference_signal",
+        "priority": "medium",
+        "participant_signal": "In `exchange_6.persona`, the participant said the feature should appear when they are already reviewing or adjusting, not as standalone noise.",
+        "missed_followup_question": "What happens if the same signal arrives outside that moment, and how would you handle it differently?",
+        "generic_learning": "When a participant states a preferred moment, use a contrast probe to learn why other moments fail and what behavior changes across contexts."
+      },
+      {
+        "trigger_type": "repeat_use_claim",
+        "priority": "medium",
+        "participant_signal": "In `exchange_7.persona`, the participant said repeat use depends on seeing key points quickly and not doing extra analysis.",
+        "missed_followup_question": "What would make you stop opening it after the first few uses even if it seemed useful at first?",
+        "generic_learning": "Retention claims should be tested with drop-off and disappointment probes, not only success-condition probes."
+      }
+    ],
+    "likely_misclassified_driver_patterns": [
+      {
+        "observed_surface_frame": "The participant's current behavior was treated mainly as a lightweight review habit.",
+        "possible_underlying_driver": "The stronger driver may be self-protection against impulsive action under uncertainty, not just preference for convenience.",
+        "why_the_surface_frame_is_weak": "`exchange_2.persona` explicitly ties the workaround to avoiding emotionally driven changes. That is a behavioral control mechanism, which is richer than a simple convenience frame.",
+        "generic_learning": "When a participant describes a repeated manual ritual, check whether it protects against a cognitive or emotional failure mode before classifying it as mere friction or habit."
+      },
+      {
+        "observed_surface_frame": "The participant's request for explanations was treated mainly as a feature trust requirement.",
+        "possible_underlying_driver": "The deeper driver may be preserving decision autonomy and resisting opaque external steering.",
+        "why_the_surface_frame_is_weak": "Across `exchange_5.persona` and `exchange_8.persona`, the participant wants understandable reasoning before acting and wants human follow-up only after self-interpretation. That pattern points to autonomy preservation, not only information completeness.",
+        "generic_learning": "When participants ask for explanation and defer human involvement, consider whether the real driver is decision control rather than simple clarity."
+      }
+    ],
+    "evidence_handling_issues": [
+      {
+        "issue": "Hypothetical concept reactions were used as if they were direct evidence of current problem structure and downstream behavior.",
+        "severity": "high",
+        "generic_learning": "In concept validation, keep separate lanes for observed current behavior, stated concept interest, predicted usage, and actual past actions. Do not merge them in synthesis."
+      },
+      {
+        "issue": "The report inferred stronger workflow impact than the transcript warranted.",
+        "severity": "medium",
+        "generic_learning": "If the participant says a feature would help them review faster, code that as acceleration or support unless they explicitly say it would replace an existing step."
+      },
+      {
+        "issue": "Broad assumption statuses were marked supported from one participant-facing reaction set without enough comparative or disconfirming evidence.",
+        "severity": "medium",
+        "generic_learning": "Mark persona-specific signals as tentative unless the interview includes contrast cases or multiple evidence anchors strong enough to support broader claims."
+      }
+    ],
+    "prompt_adjustments": [
+      {
+        "adjustment_type": "followup_trigger_rule",
+        "text": "When a participant volunteers a workaround that appears to manage risk, emotion, or uncertainty, require one follow-up on what that workaround protects against before introducing the concept.",
+        "reuse_scope": "global",
+        "safe_for_global_reuse": true
+      },
+      {
+        "adjustment_type": "contrast_rule",
+        "text": "When a participant states a preferred moment, format, or channel, require one contrast probe about the non-preferred alternative before closing that topic.",
+        "reuse_scope": "global",
+        "safe_for_global_reuse": true
+      },
+      {
+        "adjustment_type": "decision_rule",
+        "text": "In concept-validation mode, concept reactions may satisfy coverage but do not count as behavioral proof unless anchored to a recalled past event or explicit comparison to an actual recent workflow.",
+        "reuse_scope": "global",
+        "safe_for_global_reuse": true
+      },
+      {
+        "adjustment_type": "question_priority_rule",
+        "text": "Before moving from current behavior into concept introduction, prioritize one depth probe on consequence, threshold, or failure mode if the participant has already revealed a concrete self-protective behavior.",
+        "reuse_scope": "global",
+        "safe_for_global_reuse": true
+      },
+      {
+        "adjustment_type": "evidence_rule",
+        "text": "Keep synthesis fields for observed behavior and hypothetical concept response separate, and block stronger labels such as replacement, validation, or support when the transcript only contains stated intent.",
+        "reuse_scope": "global",
+        "safe_for_global_reuse": true
+      },
+      {
+        "adjustment_type": "followup_trigger_rule",
+        "text": "Use open-first channel or embedding questions. Only offer either-or options after the participant has described their own preferred setup.",
+        "reuse_scope": "global",
+        "safe_for_global_reuse": true
+      }
+    ],
+    "carry_forward_rules": [
+      {
+        "rule_id": "cf_open_signal_depth_01",
+        "rule": "If a participant volunteers a concrete ritual or safeguard in their current workflow, ask one follow-up about the failure it prevents before advancing to the next coverage area.",
+        "source_tags": [
+          "coverage_over_depth",
+          "open_signal_not_exploited"
+        ],
+        "confidence": "high",
+        "safe_for_global_reuse": true
+      },
+      {
+        "rule_id": "cf_threshold_probe_01",
+        "rule": "When a participant uses vague threshold language such as 'too much,' 'obvious,' or 'enough,' ask what that threshold looks like in a specific remembered case.",
+        "source_tags": [
+          "open_signal_not_exploited"
+        ],
+        "confidence": "high",
+        "safe_for_global_reuse": true
+      },
+      {
+        "rule_id": "cf_hypothetical_discipline_01",
+        "rule": "Do not treat stated future use, stated trust, or stated willingness as equivalent to observed behavior; label and synthesize them separately.",
+        "source_tags": [
+          "hypothetical_as_behavioral_evidence"
+        ],
+        "confidence": "high",
+        "safe_for_global_reuse": true
+      },
+      {
+        "rule_id": "cf_open_first_embedding_01",
+        "rule": "For placement or service-model questions, ask open-endedly first and narrow with options only after the participant has offered their own frame.",
+        "source_tags": [
+          "forced_choice_narrowing"
+        ],
+        "confidence": "high",
+        "safe_for_global_reuse": true
+      }
+    ],
+    "blocked_feedback": [
+      {
+        "blocked_item": "The interview should have tested whether this specific analytics feature should remain self-serve first and only escalate to relationship-manager involvement later.",
+        "block_reason": "This is a project-specific product-routing conclusion rather than a generic facilitation lesson.",
+        "rewrite_as_generic": "When a participant reacts to support-channel options, avoid converting a single preference into a default service model; treat it as one option that needs comparison across participants."
+      },
+      {
+        "blocked_item": "The facilitator should probe whether concentration analysis matters more than other analytics functions in this banking context.",
+        "block_reason": "This is tied to the project's particular feature set and domain scope.",
+        "rewrite_as_generic": "When a concept contains multiple possible value dimensions, include at least one comparative probe to learn relative importance rather than assuming the first volunteered benefit is the top priority."
+      },
+      {
+        "blocked_item": "The synthesis should not generalize this retail-banking participant's dislike of proactive outreach into a broader channel strategy.",
+        "block_reason": "This is too tied to the study context and participant segment.",
+        "rewrite_as_generic": "Do not generalize one participant's reaction to outreach or support into a broad channel rule without comparative evidence."
+      }
+    ]
+  },
+  "hypothesis_evidence_judgment": {},
+  "persona_driver_trace": {},
+  "coverage_status": {
+    "requirements": [
+      "recent_behaviour",
+      "current_workaround",
+      "concept_reaction",
+      "trust_boundary",
+      "action_followthrough",
+      "repeat_use_condition",
+      "service_embedding"
+    ],
+    "covered": {
+      "recent_behaviour": true,
+      "current_workaround": true,
+      "concept_reaction": true,
+      "trust_boundary": true,
+      "action_followthrough": true,
+      "repeat_use_condition": true,
+      "service_embedding": true
+    },
+    "missing": [],
+    "coverage_complete": true,
+    "soft_limit_reached": false,
+    "hard_limit_reached": false,
+    "exchange_count": 8
+  },
+  "exchange_count": 8,
+  "facilitator_decision_count": 9
+}

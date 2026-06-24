@@ -1,0 +1,257 @@
+{
+  "synthetic_only_disclaimer": "呢份分析只係基於合成 persona 同訪談逐字稿做嘅推斷，用於 AI 預驗證，唔係真人市場證據，亦唔可以代替真人研究。",
+  "surface_read": {
+    "what_the_persona_explicitly_said": [
+      "佢唔會當自己有一個好正式嘅投資組合，最近一次主要係交完學校同屋企開支後，喺手機銀行順手睇 MPF 同戶口餘額，確認冇大波動就算。",
+      "佢睇嘅重點係 MPF 大概結餘、有冇明顯跌、同埋戶口仲有幾多現金可以頂之後幾筆支出。",
+      "除咗銀行 app，佢會對手機 notes、WhatsApp 同月曆提醒，確認學校、屋企、客戶相關支出時間。",
+      "如果銀行 app 有免費功能可以一眼睇晒 MPF 同其他持有，再用簡單字提醒風險，佢第一下會覺得方便，同時會先觀察準唔準、有冇誇張。",
+      "如果一開始就要連其他銀行或證券戶口、通訊錄、定位，佢會停一停，因為覺得拎多過完成任務所需嘅資料。",
+      "如果收到風險升高提醒，佢第一步係睇清楚邊部分高咗、原因係乜，再對返原本數字同近期要用嘅錢，判斷有冇即時影響。",
+      "佢最想喺睇完戶口結餘或 MPF 後順手見到功能，或者喺學費、保險、屋企大額支出前後收到簡單提示。",
+      "要持續用，條件係快、提醒到佢本身會漏咗嘅事、唔好太空泛、唔好太多通知、唔好之後愈加愈多資料要求。"
+    ],
+    "what_they_seemed_to_optimize_for": "唔係追求投資分析深度，而係用最少時間同最少額外風險，確認自己短期現金安排同大額支出唔會出錯。",
+    "what_stayed_implicit": [
+      "佢其實係用『家庭現金流穩定』做主框架去理解投資風險，而唔係用投資回報最大化。",
+      "佢對提醒功能有興趣，但信任門檻高，會先驗證語氣、準確度同資料邊界。",
+      "佢講『方便』唔代表會長期用；真正門檻係第二、第三次喺忙亂日子入面仲有冇幫到手。"
+    ]
+  },
+  "likely_drivers": [
+    {
+      "driver": "先避下行，再睇上行：錢相關決定先保護短期穩定",
+      "driver_type": "core_value",
+      "why_it_matters_here": "所以佢睇 portfolio 唔係由資產配置出發，而係先睇 MPF 有冇明顯跌、戶口現金夠唔夠頂近期支出。收到風險提示後，第一反應都係核對會唔會影響手頭安排。",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona",
+        "exchange_6.persona"
+      ],
+      "profile_source_refs": [
+        "values.core_values",
+        "personality_belief.risk_tolerance",
+        "human_difference_axes.risk_orientation"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "高碎片生活令佢偏好『順手完成』而唔係額外流程",
+      "driver_type": "daily_constraint",
+      "why_it_matters_here": "佢要喺手機、碎片時間入面處理學校、家庭、客戶幾條線，所以最重視功能能否喺原本查看結餘之後即刻見到，而唔係再開一個新流程。",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "life_story.current_daily_routine",
+        "problem_context.active_pain_points",
+        "human_difference_axes.life_load",
+        "human_difference_axes.fragmentation_reality"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "信任建立靠 plain language 同可核對，不靠權威語氣",
+      "driver_type": "trust_pattern",
+      "why_it_matters_here": "佢願意撳入去睇，但唔會即信；要先睇講得準唔準、會唔會誇張。即係提醒本身唔足夠，仲要可以俾佢用原本數字交叉驗證。",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.trust_orientation",
+        "values.fears",
+        "adoption_style",
+        "trust_requirements"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "資料最小化心態：只肯為明確任務交出必要資料",
+      "driver_type": "emotional_protection",
+      "why_it_matters_here": "佢唔係抽象講 privacy，而係用『做呢件事需唔需要』去判斷。功能未證明有用前，就要求連其他戶口、通訊錄、定位，會被佢視為越界。",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "technology_attitude.privacy_concern",
+        "values.fears",
+        "trust_requirements",
+        "behavior_profile.decision_blockers"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mostly_observed"
+    },
+    {
+      "driver": "佢接受提醒，但前提係提醒要幫佢避漏，而唔係製造額外清理工作",
+      "driver_type": "past_experience",
+      "why_it_matters_here": "佢持續使用嘅標準係提醒到本身會漏咗嘅事，例如時間差或大額支出前後，而唔係重複講空泛風險。呢個反映佢對『提醒疲勞』同錯誤警報有明顯防備。",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "problem_context.jobs_to_be_done",
+        "contradiction_map",
+        "childhood_environment.adult_decision_links"
+      ],
+      "confidence": "medium",
+      "observed_vs_inferred": "mixed"
+    },
+    {
+      "driver": "決策節奏係快篩選、慢承諾",
+      "driver_type": "decision_style",
+      "why_it_matters_here": "第一下佢會話『幾方便』，亦願意按入去，但之後即刻加上驗證條件、權限邊界、通知控制。即係理解同初步好奇可以好快，但持續採用門檻高。",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "personality_belief.decision_style",
+        "adoption_style",
+        "product_reaction_rules.difference_between_curiosity_and_purchase"
+      ],
+      "confidence": "high",
+      "observed_vs_inferred": "mixed"
+    }
+  ],
+  "unspoken_constraints": [
+    {
+      "constraint": "佢未必會主動管理一個『正式 portfolio』，所以任何分析都要容納低參與度用法。",
+      "why_likely": "佢直接講自己冇咩正式投資組合，查看行為亦偏向事件觸發而唔係定期檢視。",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_2.persona"
+      ],
+      "profile_source_refs": [
+        "technology_attitude.tech_savviness",
+        "reflection_style"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "功能要可以同現有 notes、WhatsApp、月曆並存，而唔係預設一次過取代。",
+      "why_likely": "佢而家已經靠幾套平行工具建立『心入面有個底』，新功能如果要求完整遷移，會撞牆。",
+      "evidence_refs": [
+        "exchange_3.persona"
+      ],
+      "profile_source_refs": [
+        "contradiction_map",
+        "phone_use_pattern",
+        "list_behavior"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "提醒必須同即將發生嘅現金需求有關，否則佢會視為噪音。",
+      "why_likely": "佢 repeatedly 把學費、保險、屋企集中支出放喺判斷中心。",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_6.persona",
+        "exchange_7.persona"
+      ],
+      "profile_source_refs": [
+        "values.aspirations",
+        "relationship_to_money",
+        "current_daily_routine"
+      ],
+      "confidence": "high"
+    },
+    {
+      "constraint": "手機端閱讀成本要非常低，因為佢通常係短時間、被打斷嘅情境下查看。",
+      "why_likely": "佢多次提到『順手』『快』『用手機都易明』。",
+      "evidence_refs": [
+        "exchange_1.persona",
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "current_daily_routine",
+        "phone_use_pattern",
+        "trust_requirements"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "value_tensions": [
+    {
+      "tension": "想要更集中、更方便的總覽 vs 不想交出過多資料或被鎖入更大系統",
+      "side_a": "想一眼睇晒 MPF 同其他持有，減少自己拼返埋",
+      "side_b": "一開始就連其他戶口、通訊錄、定位會令佢停一停",
+      "evidence_refs": [
+        "exchange_4.persona",
+        "exchange_5.persona"
+      ],
+      "profile_source_refs": [
+        "contradiction_map",
+        "trust_requirements",
+        "values.fears"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "接受風險提醒帶來安心感 vs 抗拒誇張語氣、通知過量同 false alarm",
+      "side_a": "如果大額支出前後有簡單提示，佢真係會望一望",
+      "side_b": "如果成日太誇張、太多通知，佢會睇幾次就唔理",
+      "evidence_refs": [
+        "exchange_7.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "automation_openness",
+        "rejection_triggers",
+        "proof_requirements"
+      ],
+      "confidence": "high"
+    },
+    {
+      "tension": "可以處理一定複雜度 vs 只接受同熟悉任務直接對應嘅複雜度",
+      "side_a": "佢會返去對數、對支出時間、判斷即時影響",
+      "side_b": "佢唔會主動睇得好細，亦唔想被抽象風險字眼轟炸",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_6.persona",
+        "exchange_8.persona"
+      ],
+      "profile_source_refs": [
+        "contradiction_map",
+        "complexity_tolerance",
+        "guidance_preference"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "missed_follow_up_questions": [
+    {
+      "question": "你話要先睇『準唔準』，咩情況會令你覺得呢個風險提醒算準，咩情況會覺得佢只係寫得嚇人？",
+      "why_this_would_clarify": "可以分清楚佢要嘅其實係解釋邏輯、數字門檻，定係語氣控制，呢個係信任建立核心。",
+      "priority": "high"
+    },
+    {
+      "question": "如果個提醒話風險高咗，但你近期冇大額支出，你仲會唔會理？會點判斷值唔值得花時間睇？",
+      "why_this_would_clarify": "可以確認佢係只關心短期現金安排，定其實對較長期投資風險都有最低關注門檻。",
+      "priority": "high"
+    },
+    {
+      "question": "你而家用 notes、WhatsApp、月曆各自係補邊一種漏位？如果銀行功能只補到其中一種，邊種最值？",
+      "why_this_would_clarify": "可以直接看出新功能應該嵌入邊個實際 workflow，而唔係籠統話『整合資訊』。",
+      "priority": "medium"
+    },
+    {
+      "question": "有冇試過銀行 app 或其他理財提醒令你覺得太多、太遲，或者搞到你要再花時間核對？",
+      "why_this_would_clarify": "可以追出佢對通知疲勞同 error-cleanup 嘅具體來源，將推論變成明確行為證據。",
+      "priority": "medium"
+    }
+  ]
+}

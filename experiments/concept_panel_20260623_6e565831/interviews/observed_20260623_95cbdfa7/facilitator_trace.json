@@ -1,0 +1,129 @@
+[
+  {
+    "interview_phase": "opening_recent_behaviour",
+    "probing_strategy": "recent_event",
+    "decision_rationale": "概念驗證模式先要建立真實現況，暫時未有 transcript，所以先用中性開場取得最近一次實際 portfolio review 事件，再跟進流程同 workaround。",
+    "message_to_persona": "可唔可以講下你最近一次主動睇自己投資組合係咩情況？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次實際 portfolio review／monitoring 事件係乜",
+      "觸發佢去睇組合嘅原因係乜",
+      "當時用咗咩工具或方法"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef342-e264-7f01-843d-9125357c8017",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "domain_fit_check",
+    "probing_strategy": "behaviour_check",
+    "decision_rationale": "參與者剛才講的是預算和戶口檢查，不是明確的投資組合管理行為；先做一次貼住佢答案的範圍澄清，確認有無最近的投資相關實際事件，再決定是否繼續概念訪談。",
+    "message_to_persona": "咁如果淨係計股票、基金或者其他投資，你最近一次特登開 app 去睇係幾時？",
+    "evidence_updates": [
+      {
+        "claim": "參與者表示自己沒有一個正式、經常主動查看的投資組合習慣。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者最近一次主動查看較接近夜晚核對戶口和固定支出是否超預算，而不是坐下來研究投資表現。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_1.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次投資相關的實際查看事件是否存在",
+      "如果有，當時觸發原因是甚麼",
+      "參與者現時是否主要用理財預算框架而非投資組合框架管理資產"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "019ef342-e264-7f01-843d-9125357c8017",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_workaround",
+    "probing_strategy": "sequence_probe",
+    "decision_rationale": "而家已經見到佢係被新聞或市場討論觸發先入 app，但仲未知道實際入去睇乜、點樣判斷，所以先重建最近一次查看時的畫面和做法，補 current workaround。",
+    "message_to_persona": "最近嗰次你撳入 app 嘅時候，通常第一眼會睇咩？",
+    "evidence_updates": [
+      {
+        "claim": "參與者表示投資相關查看相隔幾個月，並非定期主動進行。",
+        "evidence_type": "participant_statement",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者通常在有人提起市場或看到誇張新聞時，才會順手打開 app 看兩眼。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_2.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "最近一次被新聞或市場討論觸發查看投資時，實際先看哪些資訊",
+      "參與者目前用 app 還是其他方法理解持倉和風險",
+      "這種被動查看之後有沒有帶來任何行動或維持不動作"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "general_pattern",
+    "question_evidence_target": "context",
+    "provider_session_id": "019ef342-e264-7f01-843d-9125357c8017",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_intro",
+    "probing_strategy": "concept_reaction",
+    "decision_rationale": "已經有最近一次投資查看行為同現時做法，可以開始中性引入概念；先測第一反應，再按回答追 trust 同 repeat-use，避免未有概念就直接問邊界。",
+    "message_to_persona": "如果銀行 app 有個免費嘅 `Portfolio Health Check` 幫你用簡單方式睇成個投資組合同風險，你第一下覺得有冇用？",
+    "evidence_updates": [
+      {
+        "claim": "參與者目前查看投資時，先看總數是否明顯下跌，或哪些位置特別紅或特別綠。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      },
+      {
+        "claim": "參與者不會一開始逐項查看持倉，而是先確認有沒有需要立即留意的變化。",
+        "evidence_type": "behavioural_example",
+        "transcript_refs": [
+          "exchange_3.persona"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "參與者對整體投資組合風險視圖的第一反應",
+      "甚麼輸出會令這個概念感到有用或無用",
+      "對銀行提供這類分析的信任和資料邊界在哪裡"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "hypothesis_condition",
+    "provider_session_id": "019ef342-e264-7f01-843d-9125357c8017",
+    "decision_status": "proposed"
+  }
+]

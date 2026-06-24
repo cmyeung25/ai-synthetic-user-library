@@ -1,0 +1,129 @@
+{
+  "problem_evidence": {
+    "strength": "medium",
+    "supporting_quotes": [
+      {
+        "quote": "主要係想確認自己啲錢擺位有冇太偏，同埋有冇啲基金跌得比我想像中多。",
+        "evidence_ref": "exchange_1.persona"
+      },
+      {
+        "quote": "通常一邊對住月結單同戶口數，一邊好快咁掃下有冇啲位怪怪哋。",
+        "evidence_ref": "exchange_2.persona"
+      }
+    ],
+    "recent_behavior_evidence": [
+      "上個月尾，因為要交學校費同幾張帳單，對戶口時順手主動查看投資組合。",
+      "當時先用銀行 app 睇總覽，再按入逐隻基金或股票持倉頁快速掃視。",
+      "受訪者描述的是快速檢查偏倚與明顯下跌，不是完整風險分析流程。"
+    ]
+  },
+  "current_workaround": {
+    "existing_workaround": [
+      "用銀行 app 總覽頁先睇大概有幾多、邊幾樣跌得明顯。",
+      "再按入逐隻基金或者股票個持倉頁睇。",
+      "同時對住月結單同戶口數，快速掃視有冇異常。",
+      "唔會『整套分析』咁睇。"
+    ],
+    "pain_level": "medium",
+    "switching_difficulty": "low",
+    "what_must_not_change": [
+      "唔好另外再彈一層打斷原本睇投資總覽嘅流程。",
+      "輸出唔可以得出籠統結論，必須有實際內容。",
+      "唔好一開始就變成被 sales 跟進。"
+    ]
+  },
+  "trust_boundary": {
+    "accepted_data_access": [
+      "銀行 app 內基於現有持倉做總覽風險同分散分析。",
+      "顯示各類資產比例、集中喺邊個市場或行業、以及波動來源。",
+      "提供同『一般分散做法』嘅對比作為解釋基準。"
+    ],
+    "rejected_data_access": [
+      "只用『好嚴重』或『好安全』等無內容標籤作判斷。",
+      "一句叫小心但唔講判斷機制。",
+      "一開始就由人主動跟進、令體驗似 sales 追住。"
+    ],
+    "required_trust_explanation": [
+      "講清楚『係邊個位高風險』。",
+      "指出係太集中喺某個市場、某個行業，定係波動本身大。",
+      "畀到而家各類資產比例同對比基準。",
+      "用普通講法講清楚發生咩事、影響邊度、係唔係真係要處理。"
+    ]
+  },
+  "first_value_requirement": {
+    "first_use_success": [
+      "一眼睇到整體風險同分散情況，節省自己拆解時間。",
+      "結果要可追問判斷依據，而唔係純標籤。",
+      "若提示高風險，能立即指出集中來源與比例。",
+      "初次使用應留喺 app 內自助理解，不需即時人手介入。"
+    ],
+    "time_to_value": "按入投資總覽頁當下",
+    "abandonment_triggers": [
+      "只有籠統風險提示，冇實際內容。",
+      "冇講清楚點樣判斷。",
+      "每月提醒重覆同一段說話，冇新變化。",
+      "互動方式太似 sales 跟進。"
+    ]
+  },
+  "pricing_signal": {
+    "free_trial_need": "不適用；研究設定已指明免費服務。",
+    "monthly_comfort_range": "不適用",
+    "payment_justification": [
+      "冇可用證據；訪談無測試付費，亦冇相關類比消費行為。"
+    ],
+    "evidence_strength": "unknown"
+  },
+  "retention_risk": {
+    "continuation_reasons": [
+      "月尾對戶口或帳單時，若有細提醒指出持倉分散『有變化』，較可能順手撳入去。",
+      "每次最少要畀到具體新變化，例如邊部分比上個月偏咗、集中咗，或者波動大咗幾多。",
+      "要再加一句點解『而家要睇』。"
+    ],
+    "drop_off_reasons": [
+      "如果每月都係同一段『有風險』廢話，會降低再看意願。",
+      "如果需要額外彈層或打斷原流程，配合度會下降。",
+      "若複雜情況一開始就轉成人工跟進，可能引發抗拒。"
+    ],
+    "workflow_effect": "adds_layer"
+  },
+  "assumption_validation": [
+    {
+      "assumption": "此 persona 會把 Portfolio Health Check 當作節省理解時間的輔助總覽，而唔係自動觸發交易決定的工具。",
+      "status": "supported",
+      "evidence_refs": [
+        "exchange_2.persona",
+        "exchange_3.persona",
+        "exchange_5.persona",
+        "exchange_8.persona"
+      ],
+      "rationale": "有直接近期行為證據顯示佢而家只做快速掃視，唔做完整分析；概念後亦明言『見到有個總覽會省時間』，而且『第一步唔會即刻買賣』，先自行睇明。"
+    },
+    {
+      "assumption": "此 persona 是否持續使用，主要取決於輸出有冇具體解釋同可對比基準，而唔係單有風險標籤。",
+      "status": "partially_supported",
+      "evidence_refs": [
+        "exchange_3.persona",
+        "exchange_4.persona",
+        "exchange_7.persona"
+      ],
+      "rationale": "受訪者明確要求判斷機制、具體內容、對比基準與每月新變化；但這些主要來自概念後偏好陳述，而非已觀察到的類比留存行為，所以最多只能算部分支持。"
+    }
+  ],
+  "key_insights": [
+    "Because 月尾對戶口同帳單時只會『好快咁掃』持倉、而且平時『唔會整套分析咁睇』, this persona would likely ignore a deep standalone analytics flow, unless it appears directly inside the existing投資總覽 moment. This means the product should embed the check as an in-context summary on the overview page, not as a separate analysis journey.",
+    "Because 佢對風險提示嘅核心疑慮係『想知佢點樣判斷』同『冇實際內容』, this persona would likely distrust generic health labels, unless each alert explains the concentrated market/industry or volatility source with current allocation percentages and a comparison baseline. This means the product should make explanation mechanics visible before any recommendation language.",
+    "Because 見到高風險後『第一步唔會即刻買賣』而係先核對集中來源、再對返原本買入理由, this persona would likely use the feature as a diagnostic checkpoint, unless the issue is clear enough and serious enough to justify later adjustment. This means the product should support inspection and reflection first, not push direct transaction CTAs.",
+    "Because 佢只願意每月再撳入去睇有『好具體嘅變化』同『點解我要而家睇』, this persona would likely stop reopening repetitive monthly reminders, unless the notification highlights what changed since last month. This means the product should trigger only on materially new changes and show delta-based summaries rather than static risk copy.",
+    "Because 佢話想先喺 app 自己睇明，亦明講『唔想一開始就好似被 sales 追住咁』, this persona would likely resist human follow-up at first contact, unless the case is genuinely複雜 and the app has already explained the issue in plain language. This means the product should default to self-serve explanation and gate human outreach behind clear complexity thresholds or explicit user choice."
+  ],
+  "next_experiment": "喺現有銀行 app 投資總覽頁做一個最小可測試原型，只顯示 1 個『組合健康摘要卡』加 1 個月尾變化提醒文案；用同類 persona 做 5 次任務式測試，觀察佢哋會唔會在原本月尾對戶口情境中主動打開、能否講返系統點解判斷集中/波動、以及會否覺得似 sales。",
+  "evidence_gaps": [
+    "只有一個 persona，不能外推到其他零售客戶。",
+    "未有反例事件：未問到最近一次冇睇投資組合或覺得唔需要睇係咩情況。",
+    "未驗證『一般分散做法』用咩基準先不會被視為說教。",
+    "未測試複雜風險解釋在 app 內的可理解上限。",
+    "冇真實後續行為數據，重用條件全部屬概念後假設反應。",
+    "定價、付費、月二留存都不應解讀，因研究設定本身是免費服務。"
+  ],
+  "synthetic_only_disclaimer": "以上只係根據提供嘅 synthetic interview transcript 整理嘅概念驗證報告，屬模擬性 pre-validation evidence，唔可以當成人類市場證據。"
+}

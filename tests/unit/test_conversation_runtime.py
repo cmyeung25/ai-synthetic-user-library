@@ -34,10 +34,11 @@ class RecordingConversationProvider:
     def respond(self, **kwargs):
         self.calls.append(kwargs)
         return ChatResult(
-            "I understand it, but that is not payment intent.",
-            "understands",
-            "high",
-            "thread-fixture-1",
+            reply="I understand it, but that is not payment intent.",
+            intent_level="understands",
+            confidence="high",
+            provider_session_id="thread-fixture-1",
+            behavior_signals=["hesitation"],
         )
 
 
@@ -53,18 +54,26 @@ class ConversationRuntimeTest(unittest.TestCase):
             persona_id = self._persona_library(root)
             provider = RecordingConversationProvider()
             runtime = ConversationRuntime(data_dir=root / "personas", session_dir=root / "conversations", provider=provider)
-            session, persona, folder = runtime.start(persona_id)
+            session, persona, folder = runtime.start(persona_id, friction_mode="natural")
             reply = runtime.send(session, persona, folder, "Would you pay HKD 80 each month?")
             self.assertIn("not payment intent", reply)
             payload = read_json(root / "conversations" / session.session_id / "session.json")
             self.assertEqual(payload["turn_count"], 2)
             self.assertEqual(payload["prompt_version"], "persona-conversation/v1")
             self.assertEqual(payload["turns"][1]["intent_level"], "understands")
+            self.assertEqual(payload["turns"][1]["behavior_signals"], ["hesitation"])
             self.assertEqual(payload["provider_session_id"], "thread-fixture-1")
+            self.assertEqual(payload["friction_mode"], "natural")
+            self.assertGreaterEqual(payload["conversation_realism_score"], 0)
             transcript = (root / "conversations" / session.session_id / "transcript.md").read_text(encoding="utf-8")
             self.assertIn("not human market evidence", transcript)
             self.assertIn("Would you pay", transcript)
+            self.assertIn("Friction mode: `natural`", transcript)
             self.assertIn("PERSONA RUNTIME ARTIFACT", provider.calls[0]["system_prompt"])
+            self.assertIn("FRICTION MODE: natural", provider.calls[0]["system_prompt"])
+            realism = read_json(root / "conversations" / session.session_id / "conversation_realism_report.json")
+            self.assertIn("hesitation_frequency", realism["metrics"])
+            self.assertEqual(realism["friction_mode"], "natural")
 
             runtime.send(session, persona, folder, "What would change your mind?")
             self.assertEqual(provider.calls[1]["provider_session_id"], "thread-fixture-1")
@@ -103,6 +112,14 @@ class ConversationRuntimeTest(unittest.TestCase):
             (base / "v5").mkdir()
             (base / "v5" / "profile.json").write_text("{}", encoding="utf-8")
             self.assertEqual(resolve_persona_folder(base.parent, "su_0001"), base / "v5")
+
+    def test_invalid_friction_mode_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona_id = self._persona_library(root)
+            runtime = ConversationRuntime(data_dir=root / "personas", session_dir=root / "conversations", provider=MockConversationProvider())
+            with self.assertRaisesRegex(ValueError, "Unknown friction mode"):
+                runtime.start(persona_id, friction_mode="chaotic")
 
     def test_live_provider_removes_object_replacement_format_character(self):
         class StubClient:
