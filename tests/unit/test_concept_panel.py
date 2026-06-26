@@ -518,7 +518,7 @@ class ConceptPanelSummaryTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            persona_dir = root / "data" / "personas" / "su_9999" / "v5"
+            persona_dir = root / "data" / "personas" / "su_9999" / "v5_1"
             persona_dir.mkdir(parents=True, exist_ok=True)
             (persona_dir / "profile.json").write_text("{}", encoding="utf-8")
             output_dir = root / "experiments"

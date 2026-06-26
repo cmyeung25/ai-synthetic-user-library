@@ -50,7 +50,7 @@ class FlakyProvider(BaseProvider):
 
 class ValidationRunTest(unittest.TestCase):
     def test_run_validation_writes_report_and_audit(self) -> None:
-        personas = generate_personas(count=16, random_seed=31)
+        personas = generate_personas(count=20, random_seed=31)
         provider = build_provider("mock")
         brief_path = Path("data/briefs/sample_brief.json")
 

@@ -83,11 +83,23 @@ def _merge_profile_dict(target: dict[str, Any], patch: dict[str, Any], *, protec
 def _llm_provider_name(config: OpenAIProviderConfig) -> str:
     if config.transport in {"codex_cli", "codex_sdk_node"}:
         return "codex"
-    return "openai"
+    return config.provider_name
+
+
+def _persona_enrichment_prompt_version(config: OpenAIProviderConfig) -> str:
+    if _llm_provider_name(config) == "agnes":
+        return "persona-enrichment/v2"
+    return "persona-enrichment/v1"
+
+
+def _persona_enrichment_prompt_path(config: OpenAIProviderConfig) -> list[str]:
+    _, version = _persona_enrichment_prompt_version(config).split("/", 1)
+    return ["persona-enrichment", f"{version}.md"]
 
 
 def _persona_generation_method(config: OpenAIProviderConfig) -> str:
-    return f"deterministic_seed_plus_{_llm_provider_name(config)}_enrichment_v1"
+    version = _persona_enrichment_prompt_version(config).rsplit("/", 1)[-1]
+    return f"deterministic_seed_plus_{_llm_provider_name(config)}_enrichment_{version}"
 
 
 def _stringify_audit_value(value: Any) -> str:
@@ -251,7 +263,8 @@ class OpenAIPersonaEnricher:
     def __init__(self, client: OpenAIResponsesClient, config: OpenAIProviderConfig) -> None:
         self.client = client
         self.config = config
-        self.system_prompt = _load_prompt(["persona-enrichment", "v1.md"])
+        self.prompt_version = _persona_enrichment_prompt_version(config)
+        self.system_prompt = _load_prompt(_persona_enrichment_prompt_path(config))
 
     def enrich(self, persona: PersonaSkill) -> PersonaSkill:
         payload = _build_enrichment_payload(persona)

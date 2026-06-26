@@ -22,7 +22,7 @@ from ai_validation_swarm.facilitator.models import InterviewExchange, InterviewS
 from ai_validation_swarm.facilitator.providers import OpenAIFacilitatorProvider, validate_hypothesis_assessment
 from ai_validation_swarm.facilitator.runtime import FacilitatedInterviewRuntime
 from ai_validation_swarm.personas.generator import generate_personas
-from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig
+from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig, OpenAIProviderError
 from ai_validation_swarm.storage.files import read_json, save_persona
 
 
@@ -258,6 +258,525 @@ class RecordedLLMPersona:
         })()
 
 
+class PainPointDiscoveryFacilitator:
+    provider_name = "pain-point"
+    model_name = "pain-point/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="recent_event",
+                probing_strategy="critical_incident",
+                decision_rationale="Anchor discovery in one recent concrete event.",
+                message_to_persona="Tell me about the last time this finance task became annoying enough to notice.",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What exactly happened in that moment?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="pain-point-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="problem_reality",
+                probing_strategy="problem_reality_probe",
+                decision_rationale="Confirm whether the problem was materially real in the event.",
+                message_to_persona="What made that moment a real problem instead of a small inconvenience?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What consequence made it matter?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="pain-point-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="frequency_probe",
+                probing_strategy="frequency_probe",
+                decision_rationale="Establish recurrence before deeper why-analysis.",
+                message_to_persona="How often does that kind of finance mess happen for you now?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Is this occasional or recurring?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="pain-point-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="consequence_probe",
+                probing_strategy="consequence_probe",
+                decision_rationale="Get the actual cost or avoided failure.",
+                message_to_persona="What consequence does it create when that happens?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What does it cost in time, money, or confidence?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="pain-point-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="current_workaround",
+                probing_strategy="workaround_probe",
+                decision_rationale="Capture the existing workaround before synthesis.",
+                message_to_persona="What do you do today to work around it when it shows up?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What are they already doing to cope?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="pain-point-thread-1",
+            ),
+        ]
+
+    def next_turn(self, **kwargs):
+        self.calls.append(("next_turn", kwargs))
+        return self.decisions.pop(0)
+
+    def synthesize(self, **kwargs):
+        self.calls.append(("synthesize", kwargs))
+        return ({
+            "executive_summary": "The finance problem is recurring enough to create manual tracking overhead.",
+            "insights": [{
+                "insight": "The participant tolerates the task until it threatens monthly reconciliation confidence.",
+                "evidence_refs": ["exchange_2.persona", "exchange_4.persona", "exchange_5.persona"],
+                "confidence": "medium",
+                "implication": "Problem discovery should focus on reconciliation confidence, not only speed.",
+            }],
+            "needs": ["Keep monthly money tracking accurate without rebuilding the record from scratch."],
+            "root_cause_hypotheses": [],
+            "contradictions": [],
+            "pov_statements": [
+                "A busy participant tracking household spending needs a lighter way to keep the record accurate because month-end reconstruction creates confidence drag."
+            ],
+            "how_might_we_questions": ["How might we reduce month-end reconstruction without weakening trust in the numbers?"],
+            "hypothesis_assessment": {
+                "hypothesis": "",
+                "verdict": "not_tested",
+                "supporting_evidence_refs": [],
+                "contradicting_evidence_refs": [],
+                "mechanism_test_basis": "not_tested",
+                "condition_present_case_refs": [],
+                "condition_absent_case_refs": [],
+                "alternative_explanations": [],
+                "alternative_tests": [],
+                "evidence_gaps": ["No explicit hypothesis was supplied."],
+                "confidence": "low",
+            },
+            "evidence_gaps": ["Human interviews are still needed to validate prevalence."],
+            "recommended_human_validation": ["Interview people right after a real monthly reconciliation cycle."],
+            "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+        }, "pain-point-thread-1")
+
+
+class PainPointDiscoveryPersona:
+    provider_name = "pain-point"
+    model_name = "pain-point-persona/v1"
+
+    def __init__(self):
+        self.responses = [
+            "At month end I had to rebuild my spending notes because two transfers were missing from my rough record.",
+            "It stopped being a small thing because I could not tell whether the budget number I was using was still safe.",
+            "A lighter version happens most weeks, but the bad version shows up at least once most months.",
+            "It usually costs me half an hour and makes me delay other decisions until I trust the number again.",
+            "I keep notes in my phone and mark anything uncertain so I can double-check it later.",
+        ]
+
+    def respond(self, **kwargs):
+        return ChatResult(
+            reply=self.responses.pop(0),
+            intent_level="unclear",
+            confidence="high",
+            provider_session_id="pain-point-persona-thread-1",
+        )
+
+    def generate_persona_driver_trace(self, **kwargs):
+        return type("TraceResult", (), {
+            "payload": {
+                "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+                "surface_read": {
+                    "what_the_persona_explicitly_said": [
+                        "They rebuild the spending record when uncertain transfers appear.",
+                    ],
+                    "what_they_seemed_to_optimize_for": "Confidence in the final monthly number.",
+                    "what_stayed_implicit": [
+                        "Whether the current workaround fails more often under higher life-load conditions.",
+                    ],
+                },
+                "likely_drivers": [{
+                    "driver": "Protect decision confidence before acting on the number",
+                    "driver_type": "decision_style",
+                    "why_it_matters_here": "The participant accepts extra effort when confidence in the total is at risk.",
+                    "evidence_refs": ["exchange_2.persona", "exchange_4.persona"],
+                    "profile_source_refs": ["values.core_values"],
+                    "confidence": "medium",
+                    "observed_vs_inferred": "mixed",
+                }],
+                "unspoken_constraints": [],
+                "value_tensions": [],
+                "missed_follow_up_questions": [],
+            },
+            "provider_session_id": "pain-point-trace-thread-1",
+        })()
+
+
+class DecisionReconstructionFacilitator:
+    provider_name = "decision-reconstruction"
+    model_name = "decision-reconstruction/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="recent_event",
+                probing_strategy="decision_event_probe",
+                decision_rationale="Anchor the interview in one real recent decision.",
+                message_to_persona="Tell me about the last real decision where you had to change course on this.",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Which exact decision event should we reconstruct?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="decision-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="missing_evidence_probe",
+                probing_strategy="missing_evidence_probe",
+                decision_rationale="Reconstruct what was still unknown at decision time.",
+                message_to_persona="What evidence was still missing when you had to make that call?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What still felt unknown?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="decision-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="pressure_probe",
+                probing_strategy="pressure_probe",
+                decision_rationale="Capture the practical pressure around the decision.",
+                message_to_persona="What stakeholder or time pressure made waiting costly there?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Why couldn't they just wait?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="decision-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="defensibility_probe",
+                probing_strategy="defensibility_probe",
+                decision_rationale="Separate what felt publicly defensible from private uncertainty.",
+                message_to_persona="What could you defend publicly in that decision, and what still felt shaky privately?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What was publicly defensible versus privately uncertain?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="decision-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="decision_outcome_probe",
+                probing_strategy="decision_outcome_probe",
+                decision_rationale="Close the reconstruction with the actual change made.",
+                message_to_persona="What did you actually change in scope, sequence, priority, or go-no-go at the end?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What really changed at the end?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="decision-thread-1",
+            ),
+        ]
+
+    def next_turn(self, **kwargs):
+        self.calls.append(("next_turn", kwargs))
+        return self.decisions.pop(0)
+
+    def synthesize(self, **kwargs):
+        self.calls.append(("synthesize", kwargs))
+        return ({
+            "executive_summary": "The decision changed under delivery pressure before the evidence picture felt complete.",
+            "insights": [{
+                "insight": "The participant made a narrower launch decision because time pressure beat evidential comfort.",
+                "evidence_refs": ["exchange_2.persona", "exchange_3.persona", "exchange_5.persona"],
+                "confidence": "medium",
+                "implication": "Decision reconstruction should stay focused on the pressure-evidence tradeoff, not only the final outcome.",
+            }],
+            "needs": ["Make scope decisions with less hidden uncertainty when time pressure is high."],
+            "root_cause_hypotheses": [],
+            "contradictions": [],
+            "pov_statements": [
+                "A pressured decision-maker needs enough evidence to narrow scope confidently because delivery pressure often forces action before certainty arrives."
+            ],
+            "how_might_we_questions": ["How might we make scope-narrowing decisions easier when evidence is incomplete but waiting is costly?"],
+            "hypothesis_assessment": {
+                "hypothesis": "",
+                "verdict": "not_tested",
+                "supporting_evidence_refs": [],
+                "contradicting_evidence_refs": [],
+                "mechanism_test_basis": "not_tested",
+                "condition_present_case_refs": [],
+                "condition_absent_case_refs": [],
+                "alternative_explanations": [],
+                "alternative_tests": [],
+                "evidence_gaps": ["No explicit hypothesis was supplied."],
+                "confidence": "low",
+            },
+            "evidence_gaps": ["Human interviews are still needed to validate how common this pressure-evidence tradeoff is."],
+            "recommended_human_validation": ["Interview teams immediately after a real scope or go/no-go decision."],
+            "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+        }, "decision-thread-1")
+
+
+class DecisionReconstructionPersona:
+    provider_name = "decision-reconstruction"
+    model_name = "decision-reconstruction-persona/v1"
+
+    def __init__(self):
+        self.responses = [
+            "Last week we had to decide whether to cut a reporting step from the first release because onboarding was slipping.",
+            "We still lacked enough examples to know whether people were confused by the current step or just slow that day.",
+            "Product wanted a decision before the Friday review because engineering had already blocked the next sprint around it.",
+            "I could defend simplifying the first release, but privately I was not sure whether we were cutting the right thing.",
+            "We delayed the reporting step and shipped the simpler onboarding path first.",
+        ]
+
+    def respond(self, **kwargs):
+        return ChatResult(
+            reply=self.responses.pop(0),
+            intent_level="unclear",
+            confidence="high",
+            provider_session_id="decision-persona-thread-1",
+        )
+
+    def generate_persona_driver_trace(self, **kwargs):
+        return type("TraceResult", (), {
+            "payload": {
+                "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+                "surface_read": {
+                    "what_the_persona_explicitly_said": [
+                        "They narrowed the first release because evidence stayed incomplete under time pressure.",
+                    ],
+                    "what_they_seemed_to_optimize_for": "A defensible shipping decision under delivery pressure.",
+                    "what_stayed_implicit": [
+                        "How often the same evidence-pressure tradeoff appears across similar launches.",
+                    ],
+                },
+                "likely_drivers": [{
+                    "driver": "Preserve decision defensibility when certainty is unavailable",
+                    "driver_type": "decision_style",
+                    "why_it_matters_here": "The participant accepted narrower scope to keep the release decision publicly defensible.",
+                    "evidence_refs": ["exchange_3.persona", "exchange_4.persona", "exchange_5.persona"],
+                    "profile_source_refs": ["values.core_values"],
+                    "confidence": "medium",
+                    "observed_vs_inferred": "mixed",
+                }],
+                "unspoken_constraints": [],
+                "value_tensions": [],
+                "missed_follow_up_questions": [],
+            },
+            "provider_session_id": "decision-trace-thread-1",
+        })()
+
+
+class AdoptionBarrierValidationFacilitator:
+    provider_name = "adoption-barrier"
+    model_name = "adoption-barrier/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="recent_event",
+                probing_strategy="critical_incident",
+                decision_rationale="Start from one recent real behavior before testing adoption barriers.",
+                message_to_persona="Tell me about the last time you seriously considered changing how you handle this job.",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What made this a live consideration?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="current_workaround",
+                probing_strategy="current_workaround_probe",
+                decision_rationale="Capture the status-quo path before asking why adoption still fails.",
+                message_to_persona="What do you do today instead when you need to handle it?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What is the workaround already protecting?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="setup_burden",
+                probing_strategy="setup_burden_probe",
+                decision_rationale="Test the setup threshold for real use.",
+                message_to_persona="What setup or onboarding would already feel like too much before you would really use it?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Where does activation effort become too heavy?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="permission_boundary",
+                probing_strategy="permission_boundary_probe",
+                decision_rationale="Surface access and approval friction.",
+                message_to_persona="What access, approval, or coordination would make trying it difficult?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What has to be unlocked before trial?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="trust_boundary",
+                probing_strategy="trust_boundary_probe",
+                decision_rationale="Adoption needs a trust threshold, not just curiosity.",
+                message_to_persona="What would you need to trust before letting it influence a real decision?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What proof would make reliance feel safe?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="pricing_condition",
+                probing_strategy="pricing_condition_probe",
+                decision_rationale="Identify the budget condition for adoption.",
+                message_to_persona="What would have to be true on price or budget for it to feel worth adopting?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["When does the value feel defensible enough to pay for?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="reversibility_probe",
+                probing_strategy="reversibility_probe",
+                decision_rationale="Probe how easy it must be to back out.",
+                message_to_persona="How reversible would it need to feel if it turned out not to work?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What kind of exit path would still feel safe enough?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="workflow_burden",
+                probing_strategy="workflow_burden_probe",
+                decision_rationale="Separate usefulness from routine burden.",
+                message_to_persona="What extra step or routine burden would still make you drop it even if the value sounds good?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What would stop it from becoming a habit?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="adoption-barrier-thread-1",
+            ),
+        ]
+
+    def next_turn(self, **kwargs):
+        self.calls.append(("next_turn", kwargs))
+        return self.decisions.pop(0)
+
+    def synthesize(self, **kwargs):
+        self.calls.append(("synthesize", kwargs))
+        return ({
+            "executive_summary": "The concept sounds useful, but adoption depends on low setup, clear permissions, and easy reversal.",
+            "insights": [{
+                "insight": "The participant will tolerate evaluation work, but not a new routine that adds coordination or lock-in risk.",
+                "evidence_refs": ["exchange_3.persona", "exchange_4.persona", "exchange_7.persona", "exchange_8.persona"],
+                "confidence": "medium",
+                "implication": "Adoption testing should focus on activation, trust, and reversibility before pricing optimization.",
+            }],
+            "needs": ["A useful tool still needs low-friction setup and a safe exit before it can enter routine use."],
+            "root_cause_hypotheses": [],
+            "contradictions": [],
+            "pov_statements": [
+                "A cautious operator considering a new workflow tool needs lightweight setup and a reversible trial path because added routine burden feels riskier than missing one more insight."
+            ],
+            "how_might_we_questions": ["How might we make first use and exit feel light enough that a useful tool can actually become routine?"],
+            "hypothesis_assessment": {
+                "hypothesis": "",
+                "verdict": "not_tested",
+                "supporting_evidence_refs": [],
+                "contradicting_evidence_refs": [],
+                "mechanism_test_basis": "not_tested",
+                "condition_present_case_refs": [],
+                "condition_absent_case_refs": [],
+                "alternative_explanations": [],
+                "alternative_tests": [],
+                "evidence_gaps": ["No explicit hypothesis was supplied."],
+                "confidence": "low",
+            },
+            "evidence_gaps": ["Human interviews are still needed to validate which barriers dominate across real segments."],
+            "recommended_human_validation": ["Run adoption-friction interviews with people immediately after they trial a comparable workflow tool."],
+            "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+        }, "adoption-barrier-thread-1")
+
+
+class AdoptionBarrierValidationPersona:
+    provider_name = "adoption-barrier"
+    model_name = "adoption-barrier-persona/v1"
+
+    def __init__(self):
+        self.responses = [
+            "Last month I looked at a new research workflow tool because our manual notes were getting messy across decisions.",
+            "Right now I keep a spreadsheet and chat notes because I can inspect everything myself and back out quickly.",
+            "If setup takes more than one serious session or needs too much cleanup before first value, I already know I will delay it.",
+            "I would need permission to connect client material, and I would hesitate if another teammate had to keep approving every step.",
+            "Before trusting it, I would need to see where its claims came from and what it still could not know.",
+            "Paying only makes sense if it clearly replaces a real review step, not if it just adds another dashboard.",
+            "I would want to turn it off cleanly and keep my existing notes if it started giving shaky output.",
+            "If I still have to re-enter context or double-check everything every week, it will never become part of my routine.",
+        ]
+
+    def respond(self, **kwargs):
+        return ChatResult(
+            reply=self.responses.pop(0),
+            intent_level="unclear",
+            confidence="high",
+            provider_session_id="adoption-barrier-persona-thread-1",
+        )
+
+    def generate_persona_driver_trace(self, **kwargs):
+        return type("TraceResult", (), {
+            "payload": {
+                "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+                "surface_read": {
+                    "what_the_persona_explicitly_said": [
+                        "They stay with spreadsheet and chat notes because the current path is inspectable and easy to reverse.",
+                    ],
+                    "what_they_seemed_to_optimize_for": "Low-lock-in workflow control.",
+                    "what_stayed_implicit": [
+                        "How much prior tool disappointment increased their demand for reversibility.",
+                    ],
+                },
+                "likely_drivers": [{
+                    "driver": "Preserve workflow control while lowering review effort",
+                    "driver_type": "trust_pattern",
+                    "why_it_matters_here": "The participant wants value, but only if trust and reversibility stay under their control.",
+                    "evidence_refs": ["exchange_2.persona", "exchange_5.persona", "exchange_7.persona", "exchange_8.persona"],
+                    "profile_source_refs": ["values.core_values"],
+                    "confidence": "medium",
+                    "observed_vs_inferred": "mixed",
+                }],
+                "unspoken_constraints": [],
+                "value_tensions": [],
+                "missed_follow_up_questions": [],
+            },
+            "provider_session_id": "adoption-barrier-trace-thread-1",
+        })()
+
+
 class ConceptGateFacilitator:
     provider_name = "concept-gate"
     model_name = "concept-gate/v1"
@@ -395,6 +914,130 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             synthesis_call = next(call for call in provider.calls if call[0] == "synthesize")
             self.assertIn("INDEPENDENT HYPOTHESIS EVIDENCE JUDGMENT", synthesis_call[1]["user_prompt"])
 
+    def test_pain_point_discovery_is_first_class_runtime_mode(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=74)[0]
+            save_persona(persona, root / "personas")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=PainPointDiscoveryFacilitator(),
+                persona_provider=PainPointDiscoveryPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Discover whether monthly finance tracking is a real problem.",
+                interview_mode="pain_point_discovery",
+                soft_turn_limit=5,
+                hard_turn_limit=6,
+            )
+
+            session = read_json(output / "interview.json")
+            self.assertEqual(session["interview_mode"], "pain_point_discovery")
+            self.assertTrue(session["coverage_status"]["coverage_complete"])
+            self.assertEqual(session["coverage_status"]["missing"], [])
+            self.assertEqual(
+                session["coverage_status"]["requirements"],
+                ["recent_behaviour", "problem_reality", "frequency", "consequence", "current_workaround"],
+            )
+            self.assertEqual(session["stop_reason"], "soft_turn_limit_with_required_coverage_met")
+            self.assertEqual(
+                [item["facilitator_phase"] for item in session["exchanges"]],
+                ["recent_event", "problem_reality", "frequency_probe", "consequence_probe", "current_workaround"],
+            )
+            self.assertIn("Interview mode: pain_point_discovery", (output / "transcript.md").read_text(encoding="utf-8"))
+            self.assertTrue((output / "insight_report.json").exists())
+
+    def test_decision_reconstruction_is_first_class_runtime_mode(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=75)[0]
+            save_persona(persona, root / "personas")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=DecisionReconstructionFacilitator(),
+                persona_provider=DecisionReconstructionPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Reconstruct the last real scope decision.",
+                interview_mode="decision_reconstruction",
+                soft_turn_limit=5,
+                hard_turn_limit=6,
+            )
+
+            session = read_json(output / "interview.json")
+            self.assertEqual(session["interview_mode"], "decision_reconstruction")
+            self.assertTrue(session["coverage_status"]["coverage_complete"])
+            self.assertEqual(session["coverage_status"]["missing"], [])
+            self.assertEqual(
+                session["coverage_status"]["requirements"],
+                ["recent_real_decision", "missing_evidence", "pressure", "defensible_vs_uncertain", "decision_change"],
+            )
+            self.assertEqual(session["stop_reason"], "soft_turn_limit_with_required_coverage_met")
+            self.assertEqual(
+                [item["facilitator_phase"] for item in session["exchanges"]],
+                ["recent_event", "missing_evidence_probe", "pressure_probe", "defensibility_probe", "decision_outcome_probe"],
+            )
+            self.assertIn("Interview mode: decision_reconstruction", (output / "transcript.md").read_text(encoding="utf-8"))
+            self.assertTrue((output / "insight_report.json").exists())
+
+    def test_adoption_barrier_validation_is_first_class_runtime_mode(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=76)[0]
+            save_persona(persona, root / "personas")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=AdoptionBarrierValidationFacilitator(),
+                persona_provider=AdoptionBarrierValidationPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand why a useful workflow tool still might not be adopted.",
+                interview_mode="adoption_barrier_validation",
+                soft_turn_limit=8,
+                hard_turn_limit=9,
+            )
+
+            session = read_json(output / "interview.json")
+            self.assertEqual(session["interview_mode"], "adoption_barrier_validation")
+            self.assertTrue(session["coverage_status"]["coverage_complete"])
+            self.assertEqual(session["coverage_status"]["missing"], [])
+            self.assertEqual(
+                session["coverage_status"]["requirements"],
+                [
+                    "recent_behaviour",
+                    "current_workaround",
+                    "setup_burden",
+                    "permission_boundary",
+                    "trust_boundary",
+                    "pricing_condition",
+                    "reversibility",
+                    "workflow_burden",
+                ],
+            )
+            self.assertTrue(session["coverage_status"]["adoption_intro_allowed"])
+            self.assertEqual(session["stop_reason"], "soft_turn_limit_with_required_coverage_met")
+            self.assertEqual(
+                [item["facilitator_phase"] for item in session["exchanges"]],
+                [
+                    "recent_event",
+                    "current_workaround",
+                    "setup_burden",
+                    "permission_boundary",
+                    "trust_boundary",
+                    "pricing_condition",
+                    "reversibility_probe",
+                    "workflow_burden",
+                ],
+            )
+            self.assertIn("Interview mode: adoption_barrier_validation", (output / "transcript.md").read_text(encoding="utf-8"))
+            self.assertTrue((output / "insight_report.json").exists())
+
     def test_concept_validation_uses_concept_synthesis_contract(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -436,6 +1079,259 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertIn("named-output-to-concrete-decision mapping probe", first_turn_user_prompt)
             self.assertIn("Assumption Validation", (output / "insights.md").read_text(encoding="utf-8"))
             self.assertIn("# Go Out La! Interview:", (output / "insights.md").read_text(encoding="utf-8"))
+
+    def test_pain_point_discovery_coverage_tracks_problem_reality_and_frequency(self):
+        session = InterviewSession.from_dict({
+            "interview_id": "pain-coverage",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Discover the problem.",
+            "product_context": "",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "facilitator-synthesis/v2",
+            "interview_mode": "pain_point_discovery",
+            "soft_turn_limit": 5,
+            "hard_turn_limit": 7,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last time this became annoying enough to notice.",
+                    "persona_response": "Month end was messy again.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "critical_incident",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "What made it a real problem instead of a small inconvenience?",
+                    "persona_response": "I no longer trusted the number.",
+                    "facilitator_phase": "problem_reality",
+                    "probing_strategy": "problem_reality_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "consequence",
+                },
+                {
+                    "exchange_id": 3,
+                    "facilitator_question": "How often does that kind of mess happen now?",
+                    "persona_response": "A small version most weeks, a bad one most months.",
+                    "facilitator_phase": "frequency_probe",
+                    "probing_strategy": "frequency_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 4,
+                    "facilitator_question": "What consequence does it create when that happens?",
+                    "persona_response": "I delay decisions until I trust the number.",
+                    "facilitator_phase": "consequence_probe",
+                    "probing_strategy": "consequence_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "consequence",
+                },
+                {
+                    "exchange_id": 5,
+                    "facilitator_question": "What do you do today to work around it?",
+                    "persona_response": "I keep notes and mark anything uncertain.",
+                    "facilitator_phase": "current_workaround",
+                    "probing_strategy": "workaround_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertTrue(session.coverage_status["coverage_complete"])
+        self.assertEqual(session.coverage_status["missing"], [])
+        self.assertEqual(session.coverage_status["depth_requirements"], [])
+        self.assertTrue(FacilitatedInterviewRuntime._should_finalize_after_exchange(session))
+        self.assertEqual(session.stop_reason, "soft_turn_limit_with_required_coverage_met")
+
+    def test_decision_reconstruction_coverage_tracks_decision_specific_fields(self):
+        session = InterviewSession.from_dict({
+            "interview_id": "decision-coverage",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Reconstruct the decision.",
+            "product_context": "",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "facilitator-synthesis/v2",
+            "interview_mode": "decision_reconstruction",
+            "soft_turn_limit": 5,
+            "hard_turn_limit": 7,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last real decision where you changed course.",
+                    "persona_response": "We delayed a release step.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "decision_event_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "What evidence was still missing when you had to make that call?",
+                    "persona_response": "We still lacked direct user examples.",
+                    "facilitator_phase": "missing_evidence_probe",
+                    "probing_strategy": "missing_evidence_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 3,
+                    "facilitator_question": "What stakeholder or time pressure made waiting costly there?",
+                    "persona_response": "Engineering needed the answer before sprint planning.",
+                    "facilitator_phase": "pressure_probe",
+                    "probing_strategy": "pressure_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 4,
+                    "facilitator_question": "What could you defend publicly in that decision, and what still felt shaky privately?",
+                    "persona_response": "I could defend simplifying the release, but I still doubted whether we cut the right thing.",
+                    "facilitator_phase": "defensibility_probe",
+                    "probing_strategy": "defensibility_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "participant_cause",
+                },
+                {
+                    "exchange_id": 5,
+                    "facilitator_question": "What did you actually change in scope or priority at the end?",
+                    "persona_response": "We delayed the reporting step and launched the simpler path first.",
+                    "facilitator_phase": "decision_outcome_probe",
+                    "probing_strategy": "decision_outcome_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "consequence",
+                },
+            ],
+        })
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertTrue(session.coverage_status["coverage_complete"])
+        self.assertEqual(session.coverage_status["missing"], [])
+        self.assertTrue(FacilitatedInterviewRuntime._should_finalize_after_exchange(session))
+        self.assertEqual(session.stop_reason, "soft_turn_limit_with_required_coverage_met")
+
+    def test_adoption_barrier_validation_coverage_tracks_barrier_specific_fields(self):
+        session = InterviewSession.from_dict({
+            "interview_id": "adoption-coverage",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Understand adoption friction.",
+            "product_context": "",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "facilitator-synthesis/v2",
+            "interview_mode": "adoption_barrier_validation",
+            "soft_turn_limit": 8,
+            "hard_turn_limit": 10,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last time you seriously considered changing how you handle this job.",
+                    "persona_response": "Our manual notes were getting messy.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "critical_incident",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "What do you do today instead when you need to handle it?",
+                    "persona_response": "I keep a spreadsheet and chat notes.",
+                    "facilitator_phase": "current_workaround",
+                    "probing_strategy": "current_workaround_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 3,
+                    "facilitator_question": "What setup or onboarding would already feel like too much before you would really use it?",
+                    "persona_response": "Anything beyond one serious session is already too much.",
+                    "facilitator_phase": "setup_burden",
+                    "probing_strategy": "setup_burden_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 4,
+                    "facilitator_question": "What access, approval, or coordination would make trying it difficult?",
+                    "persona_response": "Connecting client material would need permission.",
+                    "facilitator_phase": "permission_boundary",
+                    "probing_strategy": "permission_boundary_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 5,
+                    "facilitator_question": "What would you need to trust before letting it influence a real decision?",
+                    "persona_response": "I would need to see where its claims came from.",
+                    "facilitator_phase": "trust_boundary",
+                    "probing_strategy": "trust_boundary_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 6,
+                    "facilitator_question": "What would have to be true on price or budget for it to feel worth adopting?",
+                    "persona_response": "It has to replace a real review step.",
+                    "facilitator_phase": "pricing_condition",
+                    "probing_strategy": "pricing_condition_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 7,
+                    "facilitator_question": "How reversible would it need to feel if it turned out not to work?",
+                    "persona_response": "I want to turn it off cleanly and keep my notes.",
+                    "facilitator_phase": "reversibility_probe",
+                    "probing_strategy": "reversibility_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 8,
+                    "facilitator_question": "What extra step or routine burden would still make you drop it even if the value sounds good?",
+                    "persona_response": "If I still have to re-enter context every week, it will never stick.",
+                    "facilitator_phase": "workflow_burden",
+                    "probing_strategy": "workflow_burden_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertTrue(session.coverage_status["coverage_complete"])
+        self.assertEqual(session.coverage_status["missing"], [])
+        self.assertEqual(
+            session.coverage_status["adoption_intro_prerequisites"]["required"],
+            ["recent_behaviour", "current_workaround"],
+        )
+        self.assertTrue(session.coverage_status["adoption_intro_allowed"])
+        self.assertEqual(session.coverage_status["depth_requirements"], [])
+        self.assertTrue(FacilitatedInterviewRuntime._should_finalize_after_exchange(session))
+        self.assertEqual(session.stop_reason, "soft_turn_limit_with_required_coverage_met")
 
     def test_concept_coverage_status_tracks_depth_probes_separately_from_topic_coverage(self):
         session = InterviewSession.from_dict({
@@ -885,6 +1781,251 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "rejected_by_concept_timing_gate",
         )
 
+    def test_decision_reconstruction_rejects_premature_closure_before_required_fields_are_met(self):
+        revised_decision = FacilitatorDecision(
+            interview_phase="missing_evidence_probe",
+            probing_strategy="missing_evidence_probe",
+            decision_rationale="Need the missing decision-state evidence before closing.",
+            message_to_persona="What evidence was still missing when you made that call?",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=False,
+            end_reason="",
+        )
+        provider = ConceptGateFacilitator(revised_decision)
+        runtime = FacilitatedInterviewRuntime(
+            data_dir=ROOT / "data" / "personas",
+            session_dir=ROOT / "interviews",
+            facilitator_provider=provider,
+            persona_provider=RecordedLLMPersona(),
+        )
+        session = InterviewSession.from_dict({
+            "interview_id": "decision-gate-session",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Reconstruct the last real decision.",
+            "product_context": "",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "facilitator-synthesis/v2",
+            "interview_mode": "decision_reconstruction",
+            "soft_turn_limit": 6,
+            "hard_turn_limit": 10,
+            "exchanges": [{
+                "exchange_id": 1,
+                "facilitator_question": "Tell me about the last real decision where you changed course.",
+                "persona_response": "We delayed one release step.",
+                "facilitator_phase": "recent_event",
+                "probing_strategy": "decision_event_probe",
+                "question_evidence_basis": "current_event",
+                "question_evidence_target": "context",
+            }],
+        })
+        decision = FacilitatorDecision(
+            interview_phase="closure",
+            probing_strategy="evidence_sufficiency",
+            decision_rationale="End after one recalled decision.",
+            message_to_persona="",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=True,
+            end_reason="Enough detail collected.",
+            question_evidence_basis="current_event",
+            question_evidence_target="context",
+        )
+
+        revised = runtime._revise_non_episodic_validation_question(session, decision, "SYSTEM")
+
+        self.assertIs(revised, revised_decision)
+        self.assertEqual(len(provider.calls), 1)
+        self.assertIn("DECISION RECONSTRUCTION GATE", provider.calls[0]["user_prompt"])
+        self.assertIn("missing_evidence", provider.calls[0]["user_prompt"])
+        self.assertIn("pressure", provider.calls[0]["user_prompt"])
+        self.assertIn("defensible_vs_uncertain", provider.calls[0]["user_prompt"])
+        self.assertIn("decision_change", provider.calls[0]["user_prompt"])
+        self.assertEqual(
+            session.facilitator_decisions[-1]["decision_status"],
+            "rejected_by_decision_reconstruction_gate",
+        )
+
+    def test_adoption_barrier_validation_rejects_barrier_questions_before_current_state_gate(self):
+        revised_decision = FacilitatorDecision(
+            interview_phase="current_workaround",
+            probing_strategy="current_workaround_probe",
+            decision_rationale="Need the current workaround before adoption-friction testing.",
+            message_to_persona="What do you do today instead when you need to handle it?",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=False,
+            end_reason="",
+        )
+        provider = ConceptGateFacilitator(revised_decision)
+        runtime = FacilitatedInterviewRuntime(
+            data_dir=ROOT / "data" / "personas",
+            session_dir=ROOT / "interviews",
+            facilitator_provider=provider,
+            persona_provider=RecordedLLMPersona(),
+        )
+        session = InterviewSession.from_dict({
+            "interview_id": "adoption-timing-gate-session",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Understand adoption friction.",
+            "product_context": "A workflow concept.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "facilitator-synthesis/v2",
+            "interview_mode": "adoption_barrier_validation",
+            "soft_turn_limit": 8,
+            "hard_turn_limit": 10,
+            "exchanges": [{
+                "exchange_id": 1,
+                "facilitator_question": "Tell me about the last time you seriously considered changing how you handle this job.",
+                "persona_response": "Our manual notes were getting messy.",
+                "facilitator_phase": "recent_event",
+                "probing_strategy": "critical_incident",
+                "question_evidence_basis": "current_event",
+                "question_evidence_target": "context",
+            }],
+        })
+        decision = FacilitatorDecision(
+            interview_phase="setup_burden",
+            probing_strategy="setup_burden_probe",
+            decision_rationale="Move directly to adoption friction.",
+            message_to_persona="What setup would already feel like too much before you would really use it?",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=False,
+            end_reason="",
+            question_evidence_basis="hypothetical",
+            question_evidence_target="context",
+        )
+
+        revised = runtime._revise_non_episodic_validation_question(session, decision, "SYSTEM")
+
+        self.assertIs(revised, revised_decision)
+        self.assertEqual(len(provider.calls), 1)
+        self.assertIn("ADOPTION BARRIER TIMING GATE", provider.calls[0]["user_prompt"])
+        self.assertIn("current_workaround", provider.calls[0]["user_prompt"])
+        self.assertEqual(
+            session.facilitator_decisions[-1]["decision_status"],
+            "rejected_by_adoption_timing_gate",
+        )
+
+    def test_adoption_barrier_validation_rejects_premature_closure_before_required_fields_are_met(self):
+        revised_decision = FacilitatorDecision(
+            interview_phase="trust_boundary",
+            probing_strategy="trust_boundary_probe",
+            decision_rationale="Need trust evidence before closing.",
+            message_to_persona="What would you need to trust before letting it influence a real decision?",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=False,
+            end_reason="",
+        )
+        provider = ConceptGateFacilitator(revised_decision)
+        runtime = FacilitatedInterviewRuntime(
+            data_dir=ROOT / "data" / "personas",
+            session_dir=ROOT / "interviews",
+            facilitator_provider=provider,
+            persona_provider=RecordedLLMPersona(),
+        )
+        session = InterviewSession.from_dict({
+            "interview_id": "adoption-gate-session",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Understand adoption friction.",
+            "product_context": "A workflow concept.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "facilitator-synthesis/v2",
+            "interview_mode": "adoption_barrier_validation",
+            "soft_turn_limit": 8,
+            "hard_turn_limit": 10,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Tell me about the last time you seriously considered changing how you handle this job.",
+                    "persona_response": "Our manual notes were getting messy.",
+                    "facilitator_phase": "recent_event",
+                    "probing_strategy": "critical_incident",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "What do you do today instead when you need to handle it?",
+                    "persona_response": "I keep a spreadsheet and chat notes.",
+                    "facilitator_phase": "current_workaround",
+                    "probing_strategy": "current_workaround_probe",
+                    "question_evidence_basis": "current_event",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 3,
+                    "facilitator_question": "What setup or onboarding would already feel like too much before you would really use it?",
+                    "persona_response": "Anything beyond one serious session is already too much.",
+                    "facilitator_phase": "setup_burden",
+                    "probing_strategy": "setup_burden_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 4,
+                    "facilitator_question": "What access, approval, or coordination would make trying it difficult?",
+                    "persona_response": "Connecting client material would need permission.",
+                    "facilitator_phase": "permission_boundary",
+                    "probing_strategy": "permission_boundary_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+        decision = FacilitatorDecision(
+            interview_phase="closure",
+            probing_strategy="evidence_sufficiency",
+            decision_rationale="End after the main adoption blockers.",
+            message_to_persona="",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=True,
+            end_reason="Enough detail collected.",
+            question_evidence_basis="clarification",
+            question_evidence_target="context",
+        )
+
+        revised = runtime._revise_non_episodic_validation_question(session, decision, "SYSTEM")
+
+        self.assertIs(revised, revised_decision)
+        self.assertEqual(len(provider.calls), 1)
+        self.assertIn("ADOPTION BARRIER GATE", provider.calls[0]["user_prompt"])
+        self.assertIn("trust_boundary", provider.calls[0]["user_prompt"])
+        self.assertIn("pricing_condition", provider.calls[0]["user_prompt"])
+        self.assertIn("reversibility", provider.calls[0]["user_prompt"])
+        self.assertIn("workflow_burden", provider.calls[0]["user_prompt"])
+        self.assertEqual(
+            session.facilitator_decisions[-1]["decision_status"],
+            "rejected_by_adoption_barrier_gate",
+        )
+
     def test_human_approved_learning_rules_are_recorded_and_injected(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -1042,6 +2183,219 @@ class FacilitatorRuntimeTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "must ask a question"):
             OpenAIFacilitatorProvider(StubClient()).next_turn(system_prompt="skill", user_prompt="start")
+
+    def test_facilitator_provider_coerces_singleton_list_fields_for_agnes_style_payloads(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="powershell_webrequest",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                return {
+                    "interview_phase": ["opening"],
+                    "probing_strategy": ["recent_event_probe"],
+                    "decision_rationale": ["Start from one concrete finance event."],
+                    "message_to_persona": ["你最近一次因為錢而要特登處理一件事，係咩情況？"],
+                    "evidence_updates": {
+                        "claim": "Participant has not yet described a concrete finance event.",
+                        "evidence_type": "facilitator_hypothesis",
+                        "transcript_refs": [],
+                        "confidence": "low",
+                    },
+                    "root_cause_hypotheses": {
+                        "hypothesis": "Pain may involve coordination or timing rather than pure budgeting.",
+                        "supporting_evidence_refs": [],
+                        "alternative_explanations": [],
+                        "validation_gap": "Need one recent real incident.",
+                        "confidence": "low",
+                    },
+                    "open_questions": "What recent event best exposes the participant's real finance friction?",
+                    "should_end": False,
+                    "end_reason": [""],
+                    "question_evidence_basis": ["clarification"],
+                    "question_evidence_target": ["context"],
+                }
+
+        decision = OpenAIFacilitatorProvider(StubClient()).next_turn(system_prompt="skill", user_prompt="start")
+
+        self.assertEqual(decision.interview_phase, "opening")
+        self.assertEqual(decision.probing_strategy, "recent_event_probe")
+        self.assertEqual(decision.decision_rationale, "Start from one concrete finance event.")
+        self.assertEqual(decision.message_to_persona, "你最近一次因為錢而要特登處理一件事，係咩情況？")
+        self.assertEqual(len(decision.evidence_updates), 1)
+        self.assertEqual(len(decision.root_cause_hypotheses), 1)
+        self.assertEqual(
+            decision.open_questions,
+            ["What recent event best exposes the participant's real finance friction?"],
+        )
+        self.assertEqual(decision.end_reason, "")
+        self.assertEqual(decision.question_evidence_basis, "clarification")
+        self.assertEqual(decision.question_evidence_target, "context")
+
+    def test_facilitator_provider_falls_back_to_tagged_text_for_agnes(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="node_https",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                raise OpenAIProviderError("Model did not return a valid JSON object.")
+
+            def create_text_response(self, **kwargs):
+                return "\n".join(
+                    [
+                        "PHASE: current_workaround",
+                        "STRATEGY: concrete_follow_up",
+                        "RATIONALE: Stay anchored in the participant's current bookkeeping behavior.",
+                        "QUESTION: 你而家通常幾時先會發現有啲數未記低？發現咗之後你會點補救？",
+                        "SHOULD_END: no",
+                        "END_REASON:",
+                        "BASIS: clarification",
+                        "TARGET: context",
+                        "OPEN_QUESTION: 佢幾時先浮面",
+                    ]
+                )
+
+        decision = OpenAIFacilitatorProvider(StubClient()).next_turn(system_prompt="skill", user_prompt="start")
+
+        self.assertEqual(decision.interview_phase, "current_workaround")
+        self.assertEqual(decision.probing_strategy, "concrete_follow_up")
+        self.assertIn("補救", decision.message_to_persona)
+        self.assertFalse(decision.should_end)
+        self.assertEqual(decision.question_evidence_basis, "clarification")
+        self.assertEqual(decision.question_evidence_target, "context")
+        self.assertEqual(decision.open_questions, ["佢幾時先浮面"])
+
+    def test_concept_synthesis_normalizes_partial_agnes_payload(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="node_https",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                return {
+                    "key_insights": ["Manual screenshots are acting as a trust-preserving workaround."],
+                    "next_experiment": "Probe trust and repeat-use conditions with one more synthetic follow-up.",
+                }
+
+        payload, _ = OpenAIFacilitatorProvider(StubClient()).synthesize_concept(
+            system_prompt="skill",
+            user_prompt="report",
+        )
+
+        self.assertIn("problem_evidence", payload)
+        self.assertIn("trust_boundary", payload)
+        self.assertEqual(payload["retention_risk"]["workflow_effect"], "unclear")
+        self.assertGreaterEqual(len(payload["key_insights"]), 3)
+        self.assertTrue(payload["synthetic_only_disclaimer"])
+
+    def test_concept_synthesis_maps_agnes_text_report_shape(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="node_https",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                raise OpenAIProviderError("Model did not return a valid JSON object.")
+
+            def create_text_response(self, **kwargs):
+                return json.dumps(
+                    {
+                        "evidence_synthesis": {
+                            "recent_behavior": {
+                                "summary": "Participant uses screenshots and a handwritten book.",
+                                "details": "They log dates and amounts manually.",
+                                "quote": "exchange_1.persona: I take a screenshot and write it down.",
+                            },
+                            "current_workaround": {
+                                "summary": "Screenshots + handwritten ledger",
+                                "quote": "exchange_2.persona: Messages get buried.",
+                            },
+                            "pain_intensity_and_threshold": {
+                                "severity": "Moderate to High",
+                                "quote": "exchange_5.persona: If it costs me more than half an hour, it is too much.",
+                            },
+                        },
+                        "assumption_validation": {
+                            "assumption_1": {
+                                "status": "weakened",
+                                "rationale": "Manual tracking is treated as a temporary fix.",
+                                "evidence": "exchange_7.persona",
+                            }
+                        },
+                        "key_insights": [
+                            {"text": "The workaround preserves trust more than convenience."},
+                            {"text": "Setup friction is a major adoption barrier."},
+                        ],
+                        "recommended_experiment": {
+                            "description": "Run a concierge trial."
+                        },
+                    },
+                    ensure_ascii=False,
+                )
+
+        payload, _ = OpenAIFacilitatorProvider(StubClient()).synthesize_concept(
+            system_prompt="skill",
+            user_prompt="report",
+        )
+
+        self.assertEqual(payload["problem_evidence"]["strength"], "strong")
+        self.assertEqual(payload["current_workaround"]["existing_workaround"], ["Screenshots + handwritten ledger"])
+        self.assertEqual(payload["next_experiment"], "Run a concierge trial.")
+        self.assertGreaterEqual(len(payload["key_insights"]), 3)
+
+    def test_quality_evaluation_normalizes_partial_agnes_payload(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="node_https",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                return {
+                    "findings": [
+                        {
+                            "category": "coverage_gap",
+                            "severity": "medium",
+                            "observation": "Trust boundary evidence stayed thin.",
+                            "evidence_refs": ["exchange_6.persona"],
+                            "recommendation": "Probe what data or automation the participant would reject.",
+                        }
+                    ],
+                    "required_improvements": [
+                        "Add one explicit trust-boundary follow-up before closing."
+                    ],
+                }
+
+        payload, _ = OpenAIFacilitatorProvider(StubClient()).evaluate_quality(
+            system_prompt="skill",
+            user_prompt="report",
+        )
+
+        self.assertEqual(payload["overall_verdict"], "warn")
+        self.assertEqual(payload["scores"]["overall"], 3)
+        self.assertEqual(payload["checks"]["evidence_reference_quality"], "warn")
+        self.assertTrue(payload["improvement_hints"]["next_interview_focus"])
+        self.assertTrue(payload["synthetic_only_disclaimer"])
 
     def test_hypothesis_assessment_rejects_high_confidence_and_unsupported_without_evidence(self):
         assessment = {
@@ -1208,6 +2562,30 @@ class FacilitatorRuntimeTest(unittest.TestCase):
         ])
         self.assertEqual(parsed.interview_mode, "validate_hypothesis")
         self.assertTrue(parsed.debug_progress)
+
+        parsed = parser.parse_args([
+            "run-facilitated-interview",
+            "--persona-id", "su_0001",
+            "--research-goal", "Discover a problem",
+            "--interview-mode", "pain_point_discovery",
+        ])
+        self.assertEqual(parsed.interview_mode, "pain_point_discovery")
+
+        parsed = parser.parse_args([
+            "run-facilitated-interview",
+            "--persona-id", "su_0001",
+            "--research-goal", "Understand adoption friction",
+            "--interview-mode", "adoption_barrier_validation",
+        ])
+        self.assertEqual(parsed.interview_mode, "adoption_barrier_validation")
+
+        parsed = parser.parse_args([
+            "run-facilitated-interview",
+            "--persona-id", "su_0001",
+            "--research-goal", "Reconstruct a decision",
+            "--interview-mode", "decision_reconstruction",
+        ])
+        self.assertEqual(parsed.interview_mode, "decision_reconstruction")
 
         parsed = parser.parse_args([
             "observe-facilitated-interview",

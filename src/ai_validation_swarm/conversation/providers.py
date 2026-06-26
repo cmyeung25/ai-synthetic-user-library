@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 from ai_validation_swarm.conversation.realism import BEHAVIOR_SIGNALS
 from ai_validation_swarm.domain.models import PersonaSkill
-from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
+from ai_validation_swarm.providers.openai_client import OpenAIProviderError, OpenAIResponsesClient
 
 
 INTENT_LEVELS = {
@@ -198,30 +199,47 @@ class OpenAIConversationProvider:
         provider_session_id: str = "",
     ) -> ChatResult:
         is_codex = self.client.config.transport == "codex_cli"
-        payload = self.client.create_json_response(
-            system_prompt=(
-                "Continue the existing synthetic persona conversation. Preserve its established identity, voice, boundaries, and intent distinctions."
-                if is_codex and provider_session_id else system_prompt
-            ),
-            user_prompt=user_prompt,
-            output_schema=RESPONSE_SCHEMA,
-            codex_session_id=provider_session_id or None,
-            persist_codex_session=is_codex,
+        active_system_prompt = (
+            "Continue the existing synthetic persona conversation. Preserve its established identity, voice, boundaries, and intent distinctions."
+            if is_codex and provider_session_id else system_prompt
         )
-        reply = str(payload.get("reply", "")).replace("\ufffc", "").strip()
-        intent = str(payload.get("intent_level", "unclear")).strip()
-        confidence = str(payload.get("confidence", "low")).strip()
-        behavior_signals = [
-            str(item).strip()
-            for item in payload.get("behavior_signals", [])
-            if str(item).strip() in BEHAVIOR_SIGNALS
-        ]
-        if not reply:
-            raise ValueError("Conversation provider returned an empty reply.")
-        if intent not in INTENT_LEVELS:
+        try:
+            payload = self.client.create_json_response(
+                system_prompt=active_system_prompt,
+                user_prompt=user_prompt,
+                output_schema=RESPONSE_SCHEMA,
+                codex_session_id=provider_session_id or None,
+                persist_codex_session=is_codex,
+            )
+            reply = str(payload.get("reply", "")).replace("\ufffc", "").strip()
+            intent = str(payload.get("intent_level", "unclear")).strip()
+            confidence = str(payload.get("confidence", "low")).strip()
+            behavior_signals = [
+                str(item).strip()
+                for item in payload.get("behavior_signals", [])
+                if str(item).strip() in BEHAVIOR_SIGNALS
+            ]
+            if not reply:
+                raise ValueError("Conversation provider returned an empty reply.")
+            if intent not in INTENT_LEVELS:
+                intent = "unclear"
+            if confidence not in {"low", "medium", "high"}:
+                confidence = "low"
+        except (OpenAIProviderError, ValueError):
+            if not self._supports_text_fallback():
+                raise
+            reply = self.client.create_text_response(
+                system_prompt=active_system_prompt,
+                user_prompt=user_prompt,
+                codex_session_id=provider_session_id or None,
+                persist_codex_session=is_codex,
+            ).replace("\ufffc", "").strip()
+            reply = _extract_reply_from_text_fallback(reply)
+            if not reply:
+                raise ValueError("Conversation provider returned an empty reply.")
             intent = "unclear"
-        if confidence not in {"low", "medium", "high"}:
             confidence = "low"
+            behavior_signals = []
         metadata = getattr(self.client, "last_transport_metadata", {})
         transport_session_id = str(metadata.get("codex_session_id", ""))
         return ChatResult(
@@ -230,6 +248,13 @@ class OpenAIConversationProvider:
             confidence=confidence,
             provider_session_id=transport_session_id or provider_session_id,
             behavior_signals=behavior_signals,
+        )
+
+    def _supports_text_fallback(self) -> bool:
+        return (
+            self.client.config.provider_name == "agnes"
+            and self.client.config.transport not in {"codex_cli", "codex_sdk_node"}
+            and hasattr(self.client, "create_text_response")
         )
 
     def generate_persona_driver_trace(
@@ -244,6 +269,20 @@ class OpenAIConversationProvider:
         metadata = getattr(self.client, "last_transport_metadata", {})
         transport_session_id = str(metadata.get("codex_session_id", ""))
         return PersonaDriverTraceResult(payload=payload, provider_session_id=transport_session_id)
+
+
+def _extract_reply_from_text_fallback(reply: str) -> str:
+    candidate = reply.strip()
+    if not candidate.startswith("{"):
+        return candidate
+    try:
+        payload = json.loads(candidate)
+    except json.JSONDecodeError:
+        return candidate
+    extracted = payload.get("reply")
+    if isinstance(extracted, str) and extracted.strip():
+        return extracted.strip()
+    return candidate
 
 
 class MockConversationProvider:

@@ -1,0 +1,100 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "45-54",
+    "location_type": "urban_core",
+    "household_structure": "living with partner",
+    "occupation_band": "client_service",
+    "income_band": "middle",
+    "education_band": "postgraduate",
+    "language": [
+      "Mandarin",
+      "English"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "mixed",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "high",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_trial",
+    "switching_cost_level": "high",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "taiwan_knowledge_work",
+    "occupation_title": "account manager",
+    "life_stage": "senior_operator",
+    "purchase_authority_type": "manager_approval_needed",
+    "employment_stability": "stable",
+    "workflow_maturity": "tool_heavy",
+    "decision_speed": "committee_slow",
+    "proof_threshold": "peer_reference_required",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding",
+      "explicit statement on how data is used for AI training (must opt-out)",
+      "ability to run a 'sandbox' test with dummy data first"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "another tool that adds one more dashboard without replacing existing work",
+      "requiring me to retrain my entire team immediately"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "buy-in material that can be shared with other decision-makers",
+      "evidence that the workflow can survive internal review and comparison",
+      "case study showing ROI within 30 days"
+    ]
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "tone": "professional, cautious, pragmatic. Uses short sentences. Prefers bullet points over paragraphs. Asks clarifying questions about data privacy and integration costs before expressing interest."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v2",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v2",
+      "generated_at": "2026-06-25T14:18:33+00:00",
+      "rationale": "This persona reflects the 'senior operator' archetype common in urban knowledge work hubs like Taipei. The tension lies between high digital literacy (comfortable with multiple apps) and high cognitive load (fragmented context). The refusal to adopt new tech without peer proof is grounded in the fear of professional embarrassment if a tool fails during a critical client moment. The bilingual requirement and local privacy concerns (PIPD/GDPR alignment) are specific to the Taiwan/Knowledge Work locale. The 'manager approval needed' constraint forces the persona to act as a gatekeeper, requiring materials that justify the spend internally."
+    }
+  }
+}

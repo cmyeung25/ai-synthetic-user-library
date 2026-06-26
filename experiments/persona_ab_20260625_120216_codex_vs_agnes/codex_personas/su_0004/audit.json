@@ -1,0 +1,108 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0004",
+    "panel_role": "inclusion",
+    "age_band": "25-34",
+    "location_type": "urban_core",
+    "household_structure": "multi-generational household",
+    "occupation_band": "education_ops",
+    "income_band": "middle",
+    "education_band": "bachelor",
+    "language": [
+      "Mandarin",
+      "English"
+    ],
+    "device_environment": "smartphone-first",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "low",
+    "budget_flexibility": "medium",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "high",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "taiwan_knowledge_work",
+    "occupation_title": "program coordinator",
+    "life_stage": "early_career_specialist",
+    "purchase_authority_type": "team_budget_influencer",
+    "employment_stability": "stable",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "committee_slow",
+    "proof_threshold": "light_demo",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "Adopts when the payoff is concrete and the risk feels bounded, especially when the product removes repeated coordination friction without creating a new reporting burden.",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "buy-in material that can be shared with other decision-makers",
+      "evidence that the workflow can survive internal review and comparison"
+    ],
+    "comparison_logic": "He compares any new tool against spreadsheets plus messaging, not against an ideal workflow. If the product only looks better in a polished demo but not in a real handoff scenario, he will delay or decline.",
+    "pilot_preferences": [
+      "prefers a lightweight test using one recurring coordination task",
+      "wants to understand what data is required before inviting others",
+      "looks for evidence that adoption will not depend on constant manual cleanup"
+    ],
+    "budget_logic": "Because he is a team budget influencer rather than a final buyer, he favors products with a simple internal story: small learning curve, visible workflow improvement, and low risk of becoming shelfware."
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "interview_style": "Usually answers with concrete examples from recent work rather than abstract principles. He qualifies statements when the outcome depends on team habits, approval steps, or how much setup the tool requires.",
+    "question_preferences": [
+      "responds well to scenario-based questions",
+      "prefers short forms and concrete prompts over long speculative questionnaires",
+      "engages more when asked to compare current workflow versus proposed workflow"
+    ],
+    "skepticism_expression": "Polite but noticeable; he asks how the workflow behaves after initial setup, what happens when teammates do not fully cooperate, and whether similar teams actually kept using it."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "codex",
+      "profile": "chatgpt-5.4-high",
+      "model": "gpt-5.4",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T04:27:44+00:00",
+      "rationale": "{\"anchored_facts_preserved\": [\"31-year-old man named Ethan Lee in Taipei\", \"multi-generational household of 6\", \"program coordinator in an education-operations context\", \"smartphone-first, careful subscription user with medium budget flexibility\", \"stable early-career specialist with low caregiving load, high switching cost, and committee-slow decisions\"], \"enrichment_focus\": [\"added realistic daily fragmentation rather than extreme busyness to stay consistent with low schedule pressure\", \"made trust logic concrete around privacy, onboarding friction, and internal buy-in\", \"translated switching cost into social and workflow constraints instead of generic resistance\", \"kept the persona useful for product validation by emphasizing jobs, blockers, proof needs, and success criteria\"], \"guardrails\": [\"does not infer behavior from sensitive identity traits\", \"does not add medical, legal, or diagnostic framing\", \"keeps inclusion concerns focused on product language, privacy, and usability rather than stereotype-based assumptions\"], \"validation_use\": [\"good for testing whether a product can replace scattered coordination habits without adding maintenance\", \"useful for evaluating onboarding clarity, trust-building, mobile workflow fit, and internal shareability\", \"likely to reveal whether value claims survive comparison against spreadsheets and messaging in real work\"]}"
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "25-34",
+    "location_type": "regional",
+    "household_structure": "multi-generational household",
+    "occupation_band": "small_business",
+    "income_band": "upper_middle",
+    "education_band": "diploma",
+    "language": [
+      "English",
+      "Malay"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "medium",
+    "caregiving_load": "high",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "medium",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "regional_sea_service_ops",
+    "occupation_title": "small business owner",
+    "life_stage": "early_adult_small_business_builder",
+    "purchase_authority_type": "owner_decider",
+    "employment_stability": "contract_based",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "deliberate",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded. Prefers 'try before you buy' models.",
+    "trust_requirements": [
+      "clear before-and-after value demonstrated with real-world scenarios",
+      "low-friction onboarding (under 10 minutes)",
+      "transparent data privacy policy accessible in plain language"
+    ],
+    "rejection_triggers": [
+      "extra admin burden during setup",
+      "vague claims without proof",
+      "forced integration with tools he doesn't use",
+      "hidden fees or complex cancellation processes"
+    ],
+    "proof_requirements": [
+      "specific examples from similar regional users",
+      "a short trial workflow that solves one immediate pain point",
+      "testimonial from a peer in the same industry"
+    ]
+  },
+  "response_style": {
+    "articulation_level": "medium. Clear, direct, and practical. Uses bullet points for readability.",
+    "directness": "medium. Will ask clarifying questions if a claim seems vague.",
+    "detail_tendency": "medium. Provides enough context to show understanding but avoids unnecessary fluff."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v2",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 5,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v2",
+      "generated_at": "2026-06-25T13:59:46+00:00",
+      "rationale": "This persona enrichment deepens the 'regional SEA service ops' locale by specifying bilingual communication norms, shared device privacy concerns, and the importance of peer referrals in tight-knit SME communities. It anchors the 'high caregiving load' and 'multi-generational household' to concrete behaviors like quick privacy screens and fragmented evening time. The 'contract-based employment' and 'cash flow volatility: low' are balanced by 'subscription tolerance: medium', reflecting a cautious but necessary investment in efficiency tools. The recent failure (lost client) provides the emotional trigger for change, while the current workaround (manual checklist/message search) highlights the specific friction points the solution must address. The response style reflects a pragmatic, no-nonsense operator who values clarity over hype."
+    }
+  }
+}

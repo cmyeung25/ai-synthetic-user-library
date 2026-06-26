@@ -1,0 +1,122 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0007",
+    "panel_role": "budget_constrained",
+    "age_band": "35-44",
+    "location_type": "urban_core",
+    "household_structure": "living with roommates",
+    "occupation_band": "field_service",
+    "income_band": "middle",
+    "education_band": "bachelor",
+    "language": [
+      "English",
+      "Mandarin"
+    ],
+    "device_environment": "smartphone-first",
+    "payment_environment": "mixed",
+    "schedule_pressure": "high",
+    "budget_flexibility": "low",
+    "caregiving_load": "high",
+    "trust_threshold": "adopts_after_peer_signal",
+    "switching_cost_level": "medium",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "singapore_smb",
+    "occupation_title": "field service coordinator",
+    "life_stage": "mid_career_operator",
+    "purchase_authority_type": "manager_approval_needed",
+    "employment_stability": "variable",
+    "workflow_maturity": "documented",
+    "decision_speed": "fast",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "Adopts when the payoff is concrete and the risk feels bounded.",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding",
+      "specific examples from similar users",
+      "evidence that the workflow survives real handoffs and interruptions"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "subscription cost that grows before value is obvious"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "simple ROI signal within the first week",
+      "evidence that the workflow can survive internal review and comparison"
+    ],
+    "evaluation_sequence": [
+      "Can I understand the workflow in one short pass?",
+      "Will this reduce message chasing or duplicate tracking within the first week?",
+      "Can I test it without forcing a full team change immediately?",
+      "Can I explain cost, privacy, and expected benefit clearly enough to get manager approval?"
+    ],
+    "approval_dynamics": "Manager approval is required, so he informally pre-screens tools before escalating. He is more likely to champion a tool if he can summarize cost, expected time savings, and rollback risk in a few sentences.",
+    "fast_yes_conditions": [
+      "visible trial with a realistic sample workflow",
+      "setup that reuses existing habits such as spreadsheets or messaging instead of demanding a hard reset",
+      "quick evidence that reminders, ownership, and follow-up stay visible on mobile"
+    ],
+    "fast_no_conditions": [
+      "extra admin burden",
+      "vague claims without proof",
+      "subscription cost that grows before value is obvious",
+      "permissions or data requests that feel premature",
+      "workflow that looks clean in demo but brittle under interruptions"
+    ],
+    "switching_logic": "Medium switching cost is acceptable only if the tool clearly replaces at least one manual step and does not create a second shadow system.",
+    "payment_preference": "He is comfortable with familiar payment methods, but procurement clarity matters more than checkout convenience."
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "high",
+    "detail_tendency": "medium",
+    "interaction_pattern": "He answers quickly when the question is concrete, but becomes brief or skeptical when asked for speculative enthusiasm.",
+    "preferred_prompting": "Short prompts, realistic scenarios, clear constraints, and plain language work better than abstract feature questions.",
+    "when_positive": "He tends to describe relief in operational terms such as fewer check-backs, cleaner handoffs, and less evening cleanup.",
+    "when_negative": "He usually criticizes by pointing to workflow friction, duplication, or trust gaps rather than using dramatic language."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "codex",
+      "profile": "chatgpt-5.4-high",
+      "model": "gpt-5.4",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T04:32:52+00:00",
+      "rationale": "{\"enrichment_logic\": [\"adds realistic daily fragmentation, approval dynamics, and after-hours pressure to explain why time protection matters\", \"clarifies that budget constraint shows up more as low tolerance for waste and recurring burden than as hunting for the absolute cheapest option\", \"expands trust and privacy logic without turning identity or caregiving context into deterministic behavior\"], \"preserved_anchors\": [\"name, age, gender, location, occupation, household structure, household size, living area, languages, and life stage were kept exactly as anchored\", \"the enrichment preserves smartphone-first behavior, high schedule pressure, high caregiving load, manager approval dependence, medium switching cost, documented workflow, fast decision speed, and visible-trial proof expectations\"], \"stereotype_guardrails\": \"Sensitive context is framed as situational pressure rather than diagnosis or profiling, and no identity attribute is used as a shortcut for behavior.\", \"validation_relevance\": \"This persona is useful for AI pre-validation because it surfaces adoption blockers, trial expectations, workflow survival criteria, and approval constraints that shape real tool decisions.\"}"
+    }
+  }
+}

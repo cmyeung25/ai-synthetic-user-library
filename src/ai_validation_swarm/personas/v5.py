@@ -13,6 +13,13 @@ from typing import Any, Callable, Protocol
 
 from ai_validation_swarm.domain.models import PersonaSeed, PersonaSkill, SyntheticUser
 from ai_validation_swarm.personas.v2 import prompt_path
+from ai_validation_swarm.personas.schema_v5_1 import (
+    PERSONA_SCHEMA_VERSION,
+    V5_1_OPTIONAL_LIST_FIELDS,
+    V5_1_OPTIONAL_PROFILE_FIELDS,
+    canonicalize_v5_1_profile_payload,
+    schema_v5_1_definition,
+)
 from ai_validation_swarm.personas.v3_1 import build_diversity_report_v3_1
 from ai_validation_swarm.personas.v3_1_2 import RAW_ENUM_TOKENS
 from ai_validation_swarm.personas.validator import ensure_valid_persona_artifact
@@ -20,7 +27,7 @@ from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig, Op
 from ai_validation_swarm.storage.files import ensure_dir, load_persona, read_json, write_json
 
 
-GENERATOR_VERSION = "persona-generator/v5"
+GENERATOR_VERSION = "persona-generator/v5.1"
 PROMPT_VERSION = "persona-synthesis/v5.md"
 AUDIT_PROMPT_VERSION = "quality-auditor/v5.md"
 SYNTHETIC_DISCLAIMER = (
@@ -40,10 +47,19 @@ BASE_PROFILE_SECTIONS = tuple(
         "extensions",
         "consistency_exceptions",
         "human_difference_axes",
+        "relational_defense_model",
+        "communication_behavior_model",
+        "behavior_generation_rules",
+        "persona_schema_meta",
         "banking_context",
     }
 )
-OPTIONAL_GUIDED_PROFILE_SECTIONS = ("human_difference_axes", "banking_context")
+OPTIONAL_GUIDED_PROFILE_SECTIONS = (
+    "human_difference_axes",
+    "banking_context",
+    "relational_defense_model",
+    "communication_behavior_model",
+)
 
 LLM_PROFILE_FIELDS = BASE_PROFILE_SECTIONS
 
@@ -98,6 +114,7 @@ OPTIONAL_GUIDED_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
         "past_bad_investment_experience",
         "suitability_sensitivity",
     ),
+    **V5_1_OPTIONAL_PROFILE_FIELDS,
 }
 
 DEEP_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
@@ -180,13 +197,20 @@ def _contract_profile_sections(guide: dict[str, Any]) -> tuple[str, ...]:
         for section in requested
         if section in OPTIONAL_GUIDED_PROFILE_SECTIONS
     ]
-    return tuple(dict.fromkeys((*BASE_PROFILE_SECTIONS, *extras)))
+    return tuple(dict.fromkeys((
+        *BASE_PROFILE_SECTIONS,
+        "relational_defense_model",
+        "communication_behavior_model",
+        *extras,
+    )))
 
 
 def _contract_required_profile_fields(guide: dict[str, Any]) -> dict[str, tuple[str, ...]]:
     required = dict(PROFILE_REQUIRED_FIELDS)
     for section in _contract_profile_sections(guide):
-        if section in OPTIONAL_GUIDED_REQUIRED_FIELDS:
+        if section in V5_1_OPTIONAL_PROFILE_FIELDS:
+            required[section] = V5_1_OPTIONAL_PROFILE_FIELDS[section]
+        elif section in OPTIONAL_GUIDED_REQUIRED_FIELDS:
             required[section] = OPTIONAL_GUIDED_REQUIRED_FIELDS[section]
     return required
 
@@ -487,6 +511,14 @@ def normalize_v5_result_structure(result: V5SynthesisResult) -> list[str]:
             if isinstance(value, str) and value.strip():
                 scenarios[key] = {"reaction": value.strip()}
                 changes.append(f"wrapped_string_as_object:sensitive_scenario_reactions.{key}")
+    scalar_paths = (
+        (result.profile.get("behavior_profile", {}), "buying_behavior", "behavior_profile.buying_behavior"),
+    )
+    for container, key, path in scalar_paths:
+        value = container.get(key) if isinstance(container, dict) else None
+        if isinstance(value, (dict, list)) and _as_text(value):
+            container[key] = _as_text(value)
+            changes.append(f"flattened_container_as_text:{path}")
     return changes
 
 
@@ -618,7 +650,7 @@ def _build_seed(persona_id: str, profile: dict[str, Any]) -> PersonaSeed:
     panel = profile.get("panel_role_profile", {})
     age = int(identity["age"])
     return PersonaSeed(
-        seed_id=f"v5-{persona_id}",
+        seed_id=f"v5_1-{persona_id}",
         panel_role=str(panel.get("panel_role") or "general_research_participant"),
         age_band=_age_band(age),
         location_type=str(identity.get("living_area") or "urban_or_regional"),
@@ -654,9 +686,15 @@ def result_to_persona(result: V5SynthesisResult, persona_id: str) -> PersonaSkil
     identity["synthetic_user_id"] = persona_id
     profile_payload.setdefault("human_difference_axes", {})
     profile_payload.setdefault("banking_context", {})
+    profile_payload, canonicalizations = canonicalize_v5_1_profile_payload(
+        profile_payload,
+        source_version=PERSONA_SCHEMA_VERSION,
+        force_meta=True,
+    )
     profile_payload["audit_evidence_layer"] = {
-        "persona_generation_method": "single_pass_llm_v5_synthesis",
-        "persona_version": "v5",
+        "persona_generation_method": "single_pass_llm_v5_1_synthesis",
+        "persona_version": PERSONA_SCHEMA_VERSION,
+        "persona_schema_version": PERSONA_SCHEMA_VERSION,
         "generator_version": GENERATOR_VERSION,
         "evidence_grade": "synthetic_prevalidation_only",
         "synthetic_only_disclaimer": SYNTHETIC_DISCLAIMER,
@@ -675,14 +713,18 @@ def result_to_persona(result: V5SynthesisResult, persona_id: str) -> PersonaSkil
     unknown = sorted(set(profile_payload) - allowed)
     if unknown:
         raise ValueError(f"V5 profile returned unknown sections: {', '.join(unknown)}")
-    missing = sorted(allowed - set(profile_payload))
+    missing = sorted(
+        field_name
+        for field_name in (allowed - set(profile_payload))
+        if field_name not in {"relational_defense_model", "communication_behavior_model", "behavior_generation_rules", "persona_schema_meta"}
+    )
     if missing:
         raise ValueError(f"V5 profile missing sections: {', '.join(missing)}")
     profile = SyntheticUser(**profile_payload)
     seed = _build_seed(persona_id, profile_payload)
     audit_evidence = copy.deepcopy(profile.audit_evidence_layer)
     persona = PersonaSkill(
-        skill_version="v5",
+        skill_version=PERSONA_SCHEMA_VERSION,
         seed=seed,
         profile=profile,
         decision_policy=copy.deepcopy(result.decision_policy),
@@ -690,6 +732,14 @@ def result_to_persona(result: V5SynthesisResult, persona_id: str) -> PersonaSkil
         narrative=result.narrative,
         audit={**audit_evidence},
     )
+    persona.audit["persona_schema_v5_1"] = {
+        "schema_version": PERSONA_SCHEMA_VERSION,
+        "optional_fields": {
+            **{key: list(value) for key, value in V5_1_OPTIONAL_PROFILE_FIELDS.items()},
+            **{key: list(value) for key, value in V5_1_OPTIONAL_LIST_FIELDS.items()},
+        },
+        "canonicalizations_applied": canonicalizations,
+    }
     ensure_valid_persona_artifact(persona)
     return persona
 
@@ -776,6 +826,9 @@ def _render_v5_artifacts(persona: PersonaSkill) -> dict[str, str]:
     childhood = profile.childhood_environment
     voice = profile.persona_voiceprint
     human_difference_axes = profile.human_difference_axes
+    relational_defense_model = profile.relational_defense_model
+    communication_behavior_model = profile.communication_behavior_model
+    behavior_generation_rules = profile.behavior_generation_rules
     banking_context = profile.banking_context
     disclaimer = f"> {SYNTHETIC_DISCLAIMER}"
 
@@ -788,6 +841,10 @@ def _render_v5_artifacts(persona: PersonaSkill) -> dict[str, str]:
     ])
     if human_difference_axes:
         persona_md += "\n".join(["**Human Difference Axes:**", _as_text(human_difference_axes), "", ""])
+    if relational_defense_model:
+        persona_md += "\n".join(["**Relational Defense Model:**", _as_text(relational_defense_model), "", ""])
+    if communication_behavior_model:
+        persona_md += "\n".join(["**Communication Behavior Model:**", _as_text(communication_behavior_model), "", ""])
     if banking_context:
         persona_md += "\n".join(["**Banking Context:**", _as_text(banking_context), "", ""])
 
@@ -837,8 +894,14 @@ def _render_v5_artifacts(persona: PersonaSkill) -> dict[str, str]:
     ]
     if human_difference_axes:
         kernel_lines.extend(["## Human Difference Axes", "", _as_text(human_difference_axes), ""])
+    if relational_defense_model:
+        kernel_lines.extend(["## Relational Defense Model", "", _as_text(relational_defense_model), ""])
+    if communication_behavior_model:
+        kernel_lines.extend(["## Communication Behavior Model", "", _as_text(communication_behavior_model), ""])
     if banking_context:
         kernel_lines.extend(["## Banking Context", "", _as_text(banking_context), ""])
+    if behavior_generation_rules:
+        kernel_lines.extend(["## Behavior Generation Rules", "", _as_text(behavior_generation_rules), ""])
     kernel_lines.extend(["## Contradictions", ""])
     kernel_lines.extend(_bullet_lines(profile.contradiction_map))
     kernel_lines.extend(["", "## Objection Language", "", _as_text(profile.objection_language_style), "", "## Founder Misread Risk", "", _as_text(profile.deep_research_notes.get("what_a_founder_might_misread_about_them")), "", "## Response Rule", "", "Do not flatter the founder. Separate curiosity, trial, payment, and durable adoption.", ""])
@@ -859,8 +922,14 @@ def _render_v5_artifacts(persona: PersonaSkill) -> dict[str, str]:
     ]
     if human_difference_axes:
         skill_lines.extend(["## Human Difference Axes", "", _as_text(human_difference_axes), ""])
+    if relational_defense_model:
+        skill_lines.extend(["## Relational Defense Model", "", _as_text(relational_defense_model), ""])
+    if communication_behavior_model:
+        skill_lines.extend(["## Communication Behavior Model", "", _as_text(communication_behavior_model), ""])
     if banking_context:
         skill_lines.extend(["## Banking Context", "", _as_text(banking_context), ""])
+    if behavior_generation_rules:
+        skill_lines.extend(["## Behavior Generation Rules", "", _as_text(behavior_generation_rules), ""])
     skill_lines.extend(["## Hidden Contradictions", ""])
     skill_lines.extend(_bullet_lines(profile.contradiction_map))
     skill_lines.extend([
@@ -895,7 +964,7 @@ def _load_comparison_personas(output_dir: Path, persona_id: str) -> list[Persona
     if not output_dir.exists():
         return personas
     for folder in sorted(output_dir.iterdir()):
-        candidate = folder / "v5"
+        candidate = folder / "v5_1"
         if folder.name == persona_id or not (candidate / "profile.json").exists():
             continue
         try:
@@ -918,7 +987,7 @@ def generate_v5_persona(
 ) -> Path:
     if not persona_id.startswith("su_") or not persona_id[3:].isdigit():
         raise ValueError(f"Invalid synthetic user ID: {persona_id}")
-    target_dir = output_dir / persona_id / "v5"
+    target_dir = output_dir / persona_id / "v5_1"
     work_dir = output_dir / ".v5_generation" / persona_id
     seed = random_seed
     if seed is None and resume_response:
@@ -1027,6 +1096,7 @@ def generate_v5_persona(
         "synthetic_user_id": persona_id,
         "seed_id": persona.seed.seed_id,
         "generator_version": GENERATOR_VERSION,
+        "persona_schema_version": PERSONA_SCHEMA_VERSION,
         "generation_mode": "single_pass_llm_synthesis",
         "guide_mode": normalized_guide["mode"],
         "provider": result.provider,
@@ -1051,6 +1121,7 @@ def generate_v5_persona(
     write_json(target_dir / "contract_report.json", {"status": "pass", "findings": []})
     write_json(target_dir / "quality_report.json", quality_report)
     write_json(target_dir / "duplicate_report.json", duplicate_report)
+    write_json(target_dir / "persona_schema_v5_1.json", schema_v5_1_definition())
     if result.concept_outputs:
         write_json(target_dir / "concept_outputs.json", result.concept_outputs)
     for filename, content in rendered.items():
@@ -1077,8 +1148,10 @@ def validate_v5_persona_folder(folder: Path) -> dict[str, Any]:
     if not missing:
         try:
             persona = load_persona(folder)
-            if persona.skill_version != "v5":
-                warnings.append("skill_version is not v5")
+            if persona.skill_version != PERSONA_SCHEMA_VERSION:
+                warnings.append("skill_version is not v5.1")
+            if not (folder / "persona_schema_v5_1.json").exists():
+                warnings.append("persona_schema_v5_1.json is missing for v5.1 artifact")
             notes = json.loads((folder / "generation_notes.json").read_text(encoding="utf-8"))
             if notes.get("generator_version") != GENERATOR_VERSION:
                 warnings.append("generation_notes generator_version mismatch")

@@ -1,0 +1,102 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "35-44",
+    "location_type": "suburban",
+    "household_structure": "single parent with one child",
+    "occupation_band": "program_management",
+    "income_band": "middle",
+    "education_band": "diploma",
+    "language": [
+      "Cantonese",
+      "English"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "mixed",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "medium",
+    "caregiving_load": "high",
+    "trust_threshold": "needs_trial",
+    "switching_cost_level": "low",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "high",
+    "locale_pack": "hong_kong_smb",
+    "occupation_title": "program manager",
+    "life_stage": "mid_career_operator",
+    "purchase_authority_type": "shared_household_decider",
+    "employment_stability": "variable",
+    "workflow_maturity": "tool_heavy",
+    "decision_speed": "committee_slow",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "medium"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding",
+      "data sovereignty assurance",
+      "responsive customer support in English/Cantonese"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "another tool that adds one more dashboard without replacing existing work",
+      "complex pricing models",
+      "poor mobile experience"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "buy-in material that can be shared with other decision-makers",
+      "pricing and effort that can be explained clearly in household terms",
+      "case study showing time saved on follow-ups"
+    ],
+    "trial_protocol": "Will test with non-critical projects first. If the tool fails to integrate smoothly with existing calendars or email within the first 3 days, he will discontinue use."
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "tone": "Pragmatic, slightly weary of hype, focused on utility. Uses concrete examples from his daily routine to illustrate points."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v2",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v2",
+      "generated_at": "2026-06-25T14:38:16+00:00",
+      "rationale": "This enrichment preserves all fixed anchors (age, location, role, family status) while adding specific, realistic behaviors driven by his 'high caregiving load' and 'tool-heavy' workflow. The 'recent failure memory' provides a concrete trigger for his current caution and willingness to change. The 'locale-specific behaviors' reflect the Hong Kong SMB context (WhatsApp reliance, bilingual needs, data residency concerns). The 'workaround' section details actual actions he takes, making the persona actionable for product validation. The 'decision policy' explicitly links his trust threshold to tangible proof points like trials and case studies, avoiding abstract SaaS jargon."
+    }
+  }
+}

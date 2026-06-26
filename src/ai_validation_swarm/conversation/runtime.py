@@ -11,16 +11,19 @@ from ai_validation_swarm.conversation.realism import (
     analyze_conversation_realism,
     build_axis_behavior_prompt,
     build_friction_mode_prompt,
+    build_persona_behavior_prompt,
     render_conversation_realism_markdown,
     validate_friction_mode,
 )
 from ai_validation_swarm.domain.models import PersonaSkill, utc_now_iso
+from ai_validation_swarm.personas.schema_v5_1 import canonicalize_v5_1_profile_payload
 from ai_validation_swarm.storage.files import (
     ensure_dir,
     load_persona,
     read_json,
     resolve_current_persona_version_folder,
     write_json,
+    write_markdown,
 )
 
 
@@ -49,8 +52,22 @@ def _identity_name(persona: PersonaSkill) -> str:
     return str(persona.profile.basic_identity.get("name", persona.profile.synthetic_user_id))
 
 
+def _canonical_behavior_context(persona: PersonaSkill) -> dict[str, Any]:
+    profile_payload, _ = canonicalize_v5_1_profile_payload(
+        persona.profile.to_dict(),
+        source_version=str(getattr(persona, "skill_version", "") or "unknown"),
+    )
+    return {
+        "relational_defense_model": profile_payload.get("relational_defense_model", {}),
+        "communication_behavior_model": profile_payload.get("communication_behavior_model", {}),
+        "behavior_generation_rules": profile_payload.get("behavior_generation_rules", []),
+        "persona_schema_meta": profile_payload.get("persona_schema_meta", {}),
+    }
+
+
 def _relevant_profile_context(persona: PersonaSkill, message: str) -> dict[str, Any]:
     profile = persona.profile
+    behavior_context = _canonical_behavior_context(persona)
     sections: dict[str, Any] = {
         "basic_identity": profile.basic_identity,
         "values": profile.values,
@@ -61,6 +78,10 @@ def _relevant_profile_context(persona: PersonaSkill, message: str) -> dict[str, 
         "contradiction_map": profile.contradiction_map,
         "deep_research_notes": profile.deep_research_notes,
         "human_difference_axes": getattr(profile, "human_difference_axes", {}),
+        "relational_defense_model": behavior_context["relational_defense_model"],
+        "communication_behavior_model": behavior_context["communication_behavior_model"],
+        "behavior_generation_rules": behavior_context["behavior_generation_rules"],
+        "persona_schema_meta": behavior_context["persona_schema_meta"],
     }
     lowered = message.lower()
     if any(term in lowered for term in ("privacy", "identity", "gender", "family", "health", "politic", "data", "私隱", "身份", "家庭", "健康")):
@@ -99,6 +120,7 @@ def _friction_axes(persona: PersonaSkill) -> dict[str, Any]:
 
 def _driver_trace_profile_context(persona: PersonaSkill) -> dict[str, Any]:
     profile = persona.profile
+    behavior_context = _canonical_behavior_context(persona)
     sections: dict[str, Any] = {
         "basic_identity": profile.basic_identity,
         "personality_belief": getattr(profile, "personality_belief", {}),
@@ -109,6 +131,10 @@ def _driver_trace_profile_context(persona: PersonaSkill) -> dict[str, Any]:
         "product_reaction_rules": profile.product_reaction_rules,
         "contradiction_map": profile.contradiction_map,
         "deep_research_notes": profile.deep_research_notes,
+        "human_difference_axes": getattr(profile, "human_difference_axes", {}),
+        "relational_defense_model": behavior_context["relational_defense_model"],
+        "communication_behavior_model": behavior_context["communication_behavior_model"],
+        "behavior_generation_rules": behavior_context["behavior_generation_rules"],
     }
     for optional_key in (
         "childhood_environment",
@@ -270,11 +296,11 @@ class ConversationRuntime:
             },
         }
         write_json(folder / "session.json", session.to_dict())
-        (folder / "transcript.md").write_text(self.render_transcript(session), encoding="utf-8")
+        write_markdown(folder / "transcript.md", self.render_transcript(session))
         write_json(folder / "conversation_realism_report.json", realism_report)
-        (folder / "conversation_realism_report.md").write_text(
+        write_markdown(
+            folder / "conversation_realism_report.md",
             render_conversation_realism_markdown(realism_report),
-            encoding="utf-8",
         )
         return folder
 
@@ -377,10 +403,17 @@ class ConversationRuntime:
         artifact_label = "PERSONA RESEARCH KERNEL" if kernel else "PERSONA RUNTIME ARTIFACT"
         friction_instruction = build_friction_mode_prompt(session.friction_mode)
         axis_instruction = build_axis_behavior_prompt(session.friction_axes)
+        behavior_context = _canonical_behavior_context(persona)
+        persona_behavior_instruction = build_persona_behavior_prompt(
+            relational_defense_model=behavior_context["relational_defense_model"],
+            communication_behavior_model=behavior_context["communication_behavior_model"],
+            behavior_generation_rules=behavior_context["behavior_generation_rules"],
+        )
         mode_instruction = f"\n\nRUNTIME MODE:\n{runtime_instruction.strip()}" if runtime_instruction.strip() else ""
         axis_block = f"\n\n{axis_instruction}" if axis_instruction else ""
+        persona_behavior_block = f"\n\n{persona_behavior_instruction}" if persona_behavior_instruction else ""
         context = (
-            f"{runtime_rules}\n\n{friction_instruction}{axis_block}{mode_instruction}\n\n"
+            f"{runtime_rules}\n\n{friction_instruction}{axis_block}{persona_behavior_block}{mode_instruction}\n\n"
             f"{artifact_label}:\n{runtime_artifact}"
         )
         return context[:MAX_SYSTEM_CONTEXT_CHARS]

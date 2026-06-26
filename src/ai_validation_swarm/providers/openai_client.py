@@ -4,6 +4,8 @@ import json
 import os
 import subprocess
 import base64
+import http.client
+import re
 import shutil
 import tempfile
 import threading
@@ -13,6 +15,7 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
+from urllib.parse import urlparse
 
 
 class OpenAIProviderError(RuntimeError):
@@ -24,6 +27,7 @@ class OpenAIProviderConfig:
     api_key: str
     model: str = "gpt-5.4"
     profile: str = "chatgpt-5.4-high"
+    provider_name: str = "openai"
     model_reasoning_effort: str = "high"
     api_base: str = "https://api.openai.com/v1"
     timeout_seconds: int = 120
@@ -40,6 +44,9 @@ class OpenAIProviderConfig:
     codex_cli_retries: int = 0
     codex_cli_retry_backoff_seconds: int = 5
     codex_cli_output_mode: str = "auto"
+    agnes_enable_thinking: bool = False
+    agnes_transport_retries: int = 0
+    agnes_transport_retry_backoff_seconds: int = 2
 
 
 def _default_codex_home_path(auth_path: Path | None = None) -> Path:
@@ -76,6 +83,38 @@ def _env_choice(name: str, default: str, allowed: set[str]) -> str:
         return default
     normalized = raw.strip().lower()
     return normalized if normalized in allowed else default
+
+
+def _first_env_value(*names: str) -> tuple[str, str]:
+    for name in names:
+        if not name:
+            continue
+        value = os.getenv(name, "").strip()
+        if value:
+            return value, name
+    return "", ""
+
+
+def _env_value(default: str, *names: str) -> str:
+    value, _ = _first_env_value(*names)
+    return value or default
+
+
+def _normalize_provider_name(value: str) -> str:
+    normalized = re.sub(r"[^a-z0-9]+", "-", value.strip().lower()).strip("-")
+    return normalized or "openai"
+
+
+def _derive_provider_name_from_api_base(api_base: str) -> str:
+    hostname = urlparse(api_base).hostname or ""
+    normalized_host = hostname.strip().lower()
+    if not normalized_host:
+        return "openai"
+    if normalized_host == "api.openai.com":
+        return "openai"
+    if "agnes" in normalized_host:
+        return "agnes"
+    return "openai-compatible"
 
 
 def load_codex_access_token(auth_path: Path | None = None) -> str:
@@ -116,6 +155,7 @@ def inspect_openai_auth(config: OpenAIProviderConfig) -> dict[str, Any]:
     scopes = claims.get("scp", [])
     normalized_scopes = [scope for scope in scopes if isinstance(scope, str)] if isinstance(scopes, list) else []
     return {
+        "provider_name": getattr(config, "provider_name", "openai"),
         "auth_source": config.auth_source,
         "transport": config.transport,
         "model": config.model,
@@ -129,6 +169,9 @@ def inspect_openai_auth(config: OpenAIProviderConfig) -> dict[str, Any]:
         "codex_cli_retries": config.codex_cli_retries,
         "codex_cli_retry_backoff_seconds": config.codex_cli_retry_backoff_seconds,
         "codex_cli_output_mode": getattr(config, "codex_cli_output_mode", "auto"),
+        "agnes_enable_thinking": getattr(config, "agnes_enable_thinking", False),
+        "agnes_transport_retries": getattr(config, "agnes_transport_retries", 0),
+        "agnes_transport_retry_backoff_seconds": getattr(config, "agnes_transport_retry_backoff_seconds", 2),
         "has_token": bool(config.api_key),
         "token_claim_keys": sorted(claims.keys()),
         "scopes": normalized_scopes,
@@ -144,12 +187,37 @@ def load_openai_provider_config(
     prefer_codex_auth: bool = False,
     force_transport: str | None = None,
     timeout_default: int | None = None,
+    force_provider_name: str | None = None,
+    force_api_key_env: str | None = None,
+    default_model: str | None = None,
+    default_profile: str | None = None,
+    default_api_base: str | None = None,
 ) -> OpenAIProviderConfig:
     auth_source = ""
     codex_auth_file = ""
     api_key = ""
     auth_path_raw = os.getenv("AI_VALIDATION_CODEX_AUTH_FILE", "").strip()
     auth_path = Path(auth_path_raw) if auth_path_raw else None
+    configured_provider_name = _env_value("", "AI_VALIDATION_LLM_PROVIDER", "AI_VALIDATION_OPENAI_PROVIDER")
+    configured_api_base = _env_value(
+        default_api_base or "https://api.openai.com/v1",
+        "AI_VALIDATION_LLM_BASE_URL",
+        "AI_VALIDATION_OPENAI_BASE_URL",
+    )
+    provider_name = _normalize_provider_name(force_provider_name or configured_provider_name or _derive_provider_name_from_api_base(configured_api_base))
+    primary_api_key_env = force_api_key_env or ""
+    primary_api_key_label = primary_api_key_env or "OPENAI_API_KEY"
+    api_key_env_names = tuple(
+        name
+        for name in (
+            primary_api_key_env,
+            "AI_VALIDATION_LLM_API_KEY",
+            "AI_VALIDATION_OPENAI_API_KEY",
+            "OPENAI_API_KEY",
+            "CODEX_API_KEY",
+        )
+        if name
+    )
 
     if prefer_codex_auth:
         api_key = load_codex_access_token(auth_path)
@@ -158,33 +226,35 @@ def load_openai_provider_config(
             codex_auth_file = str(codex_auth_path)
             auth_source = f"codex_auth_file:{codex_auth_path}"
         else:
-            api_key = os.getenv("OPENAI_API_KEY", "").strip() or os.getenv("CODEX_API_KEY", "").strip()
+            api_key, api_key_env_name = _first_env_value(*api_key_env_names)
             if api_key:
-                auth_source = "fallback_api_key_env"
+                auth_source = f"fallback_api_key_env:{api_key_env_name}"
     else:
-        api_key = os.getenv("OPENAI_API_KEY", "").strip()
+        api_key, api_key_env_name = _first_env_value(*api_key_env_names)
         if api_key:
-            auth_source = "openai_api_key_env"
-        else:
-            api_key = os.getenv("CODEX_API_KEY", "").strip()
+            auth_source = f"api_key_env:{api_key_env_name}"
+        elif "CODEX_API_KEY" not in api_key_env_names:
+            api_key, api_key_env_name = _first_env_value("CODEX_API_KEY")
             if api_key:
-                auth_source = "codex_api_key_env"
-            else:
-                api_key = load_codex_access_token(auth_path)
-                if api_key:
-                    codex_auth_path = auth_path or _default_codex_auth_path()
-                    codex_auth_file = str(codex_auth_path)
-                    auth_source = f"codex_auth_file:{codex_auth_path}"
+                auth_source = f"api_key_env:{api_key_env_name}"
+        if not api_key:
+            api_key = load_codex_access_token(auth_path)
+            if api_key:
+                codex_auth_path = auth_path or _default_codex_auth_path()
+                codex_auth_file = str(codex_auth_path)
+                auth_source = f"codex_auth_file:{codex_auth_path}"
 
     if not api_key:
         raise OpenAIProviderError(
-            "OpenAI credentials are missing. Set OPENAI_API_KEY, or provide a compatible CODEX_API_KEY, or sign in through Codex so C:\\Users\\user\\.codex\\auth.json exposes a ChatGPT access token."
+            f"LLM credentials are missing for provider '{provider_name}'. "
+            f"Set {primary_api_key_label}, AI_VALIDATION_LLM_API_KEY, OPENAI_API_KEY, or CODEX_API_KEY, "
+            "or sign in through Codex so C:\\Users\\user\\.codex\\auth.json exposes a ChatGPT access token."
         )
 
     default_transport = "node_https" if os.name == "nt" else "python_urllib"
     if auth_source.startswith("codex_auth_file:"):
         default_transport = "codex_cli"
-    resolved_transport = force_transport or os.getenv("AI_VALIDATION_OPENAI_TRANSPORT", default_transport)
+    resolved_transport = force_transport or _env_value(default_transport, "AI_VALIDATION_LLM_TRANSPORT", "AI_VALIDATION_OPENAI_TRANSPORT")
     codex_home_mode_default = "global" if resolved_transport == "codex_cli" else "local"
     codex_home_mode = os.getenv("AI_VALIDATION_CODEX_HOME_MODE", codex_home_mode_default).strip().lower() or codex_home_mode_default
     if codex_home_mode not in {"global", "local"}:
@@ -195,11 +265,12 @@ def load_openai_provider_config(
         resolved_timeout_default = 240 if resolved_transport == "codex_cli" else 120
     return OpenAIProviderConfig(
         api_key=api_key,
-        model=os.getenv("AI_VALIDATION_OPENAI_MODEL", "gpt-5.4"),
-        profile=os.getenv("AI_VALIDATION_OPENAI_PROFILE", "chatgpt-5.4-high"),
-        model_reasoning_effort=os.getenv("AI_VALIDATION_OPENAI_REASONING_EFFORT", "high"),
-        api_base=os.getenv("AI_VALIDATION_OPENAI_BASE_URL", "https://api.openai.com/v1"),
-        timeout_seconds=int(os.getenv("AI_VALIDATION_OPENAI_TIMEOUT_SECONDS", str(resolved_timeout_default))),
+        model=_env_value(default_model or "gpt-5.4", "AI_VALIDATION_LLM_MODEL", "AI_VALIDATION_OPENAI_MODEL"),
+        profile=_env_value(default_profile or "chatgpt-5.4-high", "AI_VALIDATION_LLM_PROFILE", "AI_VALIDATION_OPENAI_PROFILE"),
+        provider_name=provider_name,
+        model_reasoning_effort=_env_value("high", "AI_VALIDATION_LLM_REASONING_EFFORT", "AI_VALIDATION_OPENAI_REASONING_EFFORT"),
+        api_base=configured_api_base,
+        timeout_seconds=int(_env_value(str(resolved_timeout_default), "AI_VALIDATION_LLM_TIMEOUT_SECONDS", "AI_VALIDATION_OPENAI_TIMEOUT_SECONDS")),
         auth_source=auth_source or "unknown",
         transport=resolved_transport,
         workspace_root=os.getenv("AI_VALIDATION_WORKSPACE_ROOT", os.getcwd()),
@@ -216,6 +287,22 @@ def load_openai_provider_config(
             "AI_VALIDATION_CODEX_CLI_OUTPUT_MODE",
             "auto",
             {"auto", "direct", "wrapper"},
+        ),
+        agnes_enable_thinking=_env_flag(
+            "AI_VALIDATION_AGNES_ENABLE_THINKING",
+            provider_name == "agnes",
+        ),
+        agnes_transport_retries=int(
+            os.getenv(
+                "AI_VALIDATION_AGNES_TRANSPORT_RETRIES",
+                "2" if provider_name == "agnes" and resolved_transport in {"python_urllib", "node_https", "powershell_webrequest"} else "0",
+            )
+        ),
+        agnes_transport_retry_backoff_seconds=int(
+            os.getenv(
+                "AI_VALIDATION_AGNES_TRANSPORT_RETRY_BACKOFF_SECONDS",
+                "2",
+            )
         ),
     )
 
@@ -513,6 +600,32 @@ def extract_output_text(payload: dict[str, Any]) -> str:
     return "\n".join(collected).strip()
 
 
+def extract_chat_completion_text(payload: dict[str, Any]) -> str:
+    choices = payload.get("choices")
+    if not isinstance(choices, list):
+        return ""
+    for choice in choices:
+        if not isinstance(choice, dict):
+            continue
+        message = choice.get("message")
+        if not isinstance(message, dict):
+            continue
+        content = message.get("content")
+        if isinstance(content, str) and content.strip():
+            return content.strip()
+        if isinstance(content, list):
+            collected: list[str] = []
+            for item in content:
+                if not isinstance(item, dict):
+                    continue
+                text = item.get("text")
+                if isinstance(text, str) and text.strip():
+                    collected.append(text.strip())
+            if collected:
+                return "\n".join(collected).strip()
+    return ""
+
+
 def decode_codex_json_payload(payload_b64: str) -> dict[str, Any]:
     candidate = "".join(payload_b64.split()).strip()
     if not candidate:
@@ -574,6 +687,99 @@ class OpenAIResponsesClient:
         self.debug_writer(text)
         self.debug_writer(f"[llm] {label} <<<")
 
+    def _maybe_attach_agnes_chat_template_kwargs(self, body: dict[str, Any]) -> dict[str, Any]:
+        if self.config.provider_name != "agnes" or not self.config.agnes_enable_thinking:
+            return body
+        enriched = dict(body)
+        existing = enriched.get("chat_template_kwargs")
+        if isinstance(existing, dict):
+            kwargs = dict(existing)
+        else:
+            kwargs = {}
+        kwargs["enable_thinking"] = True
+        enriched["chat_template_kwargs"] = kwargs
+        return enriched
+
+    def _supports_agnes_transport_retry(self) -> bool:
+        return (
+            self.config.provider_name == "agnes"
+            and self.config.transport in {"python_urllib", "node_https", "powershell_webrequest"}
+        )
+
+    def _is_retryable_agnes_transport_failure(self, error: OpenAIProviderError) -> bool:
+        normalized = str(error).strip().lower()
+        retryable_fragments = (
+            "socket hang up",
+            "remote end closed connection without response",
+            "connection was closed unexpectedly",
+            "connection reset",
+            "connection aborted",
+            "econnreset",
+            "econnaborted",
+            "etimedout",
+            "timed out",
+            "timeout",
+            "temporarily unavailable",
+            "service unavailable",
+            "bad gateway",
+            "gateway timeout",
+            "rate limit",
+            "http 429",
+            "http 500",
+            "http 502",
+            "http 503",
+            "http 504",
+        )
+        return any(fragment in normalized for fragment in retryable_fragments)
+
+    def _agnes_transport_retry_delay(self, attempt_index: int) -> int:
+        base_delay = max(0, int(self.config.agnes_transport_retry_backoff_seconds))
+        if base_delay <= 0:
+            return 0
+        return base_delay * (2 ** attempt_index)
+
+    def _run_with_agnes_transport_retry(
+        self,
+        *,
+        operation: str,
+        request: Callable[[], dict[str, Any]],
+    ) -> dict[str, Any]:
+        attempts = max(1, int(self.config.agnes_transport_retries) + 1) if self._supports_agnes_transport_retry() else 1
+        for attempt_index in range(attempts):
+            try:
+                return request()
+            except OpenAIProviderError as exc:
+                remaining_attempts = attempts - attempt_index - 1
+                retryable = self._is_retryable_agnes_transport_failure(exc)
+                self._debug(
+                    f"[llm] agnes_transport_failure operation={operation} attempt={attempt_index + 1}/{attempts} "
+                    f"retryable={retryable} error={exc}"
+                )
+                if remaining_attempts <= 0 or not retryable:
+                    raise
+                delay_seconds = self._agnes_transport_retry_delay(attempt_index)
+                self._debug(
+                    f"[llm] agnes_transport_retry operation={operation} remaining_attempts={remaining_attempts} "
+                    f"backoff_seconds={delay_seconds}"
+                )
+                if delay_seconds > 0:
+                    time.sleep(delay_seconds)
+        raise OpenAIProviderError(f"Agnes transport retry loop exhausted without a result for operation '{operation}'.")
+
+    def _create_responses_payload_via_transport(self, body: dict[str, Any]) -> dict[str, Any]:
+        if self.config.transport == "node_https":
+            return self._create_response_via_node(body)
+        if self.config.transport == "powershell_webrequest":
+            return self._create_response_via_powershell(body)
+        return self._create_response_via_python(body)
+
+    def _create_chat_completion_payload_via_transport(self, body: dict[str, Any]) -> dict[str, Any]:
+        if self.config.transport == "node_https":
+            return self._create_chat_completion_via_node(body)
+        if self.config.transport == "powershell_webrequest":
+            return self._create_chat_completion_via_powershell(body)
+        return self._create_chat_completion_via_python(body)
+
     def create_json_response(
         self,
         *,
@@ -596,6 +802,7 @@ class OpenAIResponsesClient:
                 {"role": "user", "content": [{"type": "input_text", "text": user_prompt}]},
             ],
         }
+        body = self._maybe_attach_agnes_chat_template_kwargs(body)
         if self.config.transport == "codex_cli":
             return self._create_response_via_codex_cli(
                 system_prompt=system_prompt,
@@ -610,17 +817,103 @@ class OpenAIResponsesClient:
                 user_prompt=user_prompt,
                 output_schema=(output_schema or {"type": "object"}) if use_transport_output_schema else None,
             )
-        if self.config.transport == "node_https":
-            payload = self._create_response_via_node(body)
-        else:
-            payload = self._create_response_via_python(body)
+        try:
+            payload = self._run_with_agnes_transport_retry(
+                operation="responses",
+                request=lambda: self._create_responses_payload_via_transport(body),
+            )
+        except OpenAIProviderError as exc:
+            if not self._should_use_chat_completions_fallback(exc):
+                raise
+            self._debug(
+                f"[llm] responses_api_failed provider={self.config.provider_name} transport={self.config.transport} "
+                f"error={exc}; retrying via chat_completions"
+            )
+            payload = self._create_response_via_chat_completions(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+            )
         usage = _find_usage_in_jsonish(payload)
         if usage is not None:
             self.last_transport_metadata["usage"] = usage
             self._debug(f"[llm] usage {json.dumps(usage, ensure_ascii=False)}")
 
         output_text = extract_output_text(payload)
+        if not output_text and self.last_transport_metadata.get("fallback_transport") == "chat_completions":
+            output_text = extract_chat_completion_text(payload)
         return extract_json_object(output_text)
+
+    def create_text_response(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        codex_session_id: str | None = None,
+        persist_codex_session: bool = False,
+    ) -> str:
+        self.last_transport_metadata = {}
+        self._debug(
+            f"[llm] create_text_response transport={self.config.transport} model={self.config.model} "
+            f"reasoning={self.config.model_reasoning_effort} persist_session={persist_codex_session}"
+        )
+        if self.config.transport in {"codex_cli", "codex_sdk_node"}:
+            raise OpenAIProviderError("Text responses are not supported for codex transports.")
+        body = {
+            "model": self.config.model,
+            "input": [
+                {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
+                {"role": "user", "content": [{"type": "input_text", "text": user_prompt}]},
+            ],
+        }
+        body = self._maybe_attach_agnes_chat_template_kwargs(body)
+        del codex_session_id, persist_codex_session
+        try:
+            payload = self._run_with_agnes_transport_retry(
+                operation="responses_text",
+                request=lambda: self._create_responses_payload_via_transport(body),
+            )
+        except OpenAIProviderError as exc:
+            if not self._should_use_chat_completions_fallback(exc):
+                raise
+            self._debug(
+                f"[llm] responses_api_failed provider={self.config.provider_name} transport={self.config.transport} "
+                f"error={exc}; retrying via chat_completions"
+            )
+            payload = self._create_response_via_chat_completions(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+            )
+        usage = _find_usage_in_jsonish(payload)
+        if usage is not None:
+            self.last_transport_metadata["usage"] = usage
+            self._debug(f"[llm] usage {json.dumps(usage, ensure_ascii=False)}")
+
+        output_text = extract_output_text(payload)
+        if not output_text and self.last_transport_metadata.get("fallback_transport") == "chat_completions":
+            output_text = extract_chat_completion_text(payload)
+        text = output_text.strip()
+        if not text:
+            raise OpenAIProviderError("Model returned empty text when plain text was expected.")
+        self.last_transport_metadata["response_format"] = "text"
+        self._debug_block("text_response", text)
+        return text
+
+    def _should_use_chat_completions_fallback(self, exc: OpenAIProviderError) -> bool:
+        if self.config.provider_name != "agnes":
+            return False
+        if self.config.transport not in {"python_urllib", "node_https", "powershell_webrequest"}:
+            return False
+        message = str(exc).lower()
+        return any(
+            fragment in message
+            for fragment in (
+                "socket hang up",
+                "remote end closed connection without response",
+                "request failed",
+                "response body was not a json object",
+                "connection was closed unexpectedly",
+            )
+        )
 
     def _create_response_via_codex_cli(
         self,
@@ -887,6 +1180,52 @@ class OpenAIResponsesClient:
             raise OpenAIProviderError(f"OpenAI Responses API request failed: HTTP {exc.code} {details}") from exc
         except urllib.error.URLError as exc:
             raise OpenAIProviderError(f"OpenAI Responses API request failed: {exc.reason}") from exc
+        except (http.client.HTTPException, ConnectionError, OSError) as exc:
+            raise OpenAIProviderError(f"OpenAI Responses API request failed: {exc}") from exc
+
+    def _create_response_via_chat_completions(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+    ) -> dict[str, Any]:
+        body = {
+            "model": self.config.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        }
+        body = self._maybe_attach_agnes_chat_template_kwargs(body)
+        if self.config.provider_name != "agnes":
+            body["response_format"] = {"type": "json_object"}
+        payload = self._run_with_agnes_transport_retry(
+            operation="chat_completions",
+            request=lambda: self._create_chat_completion_payload_via_transport(body),
+        )
+        self.last_transport_metadata["fallback_transport"] = "chat_completions"
+        return payload
+
+    def _create_chat_completion_via_python(self, body: dict[str, Any]) -> dict[str, Any]:
+        request = urllib.request.Request(
+            url=f"{self.config.api_base.rstrip('/')}/chat/completions",
+            data=json.dumps(body).encode("utf-8"),
+            headers={
+                "Authorization": f"Bearer {self.config.api_key}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            details = exc.read().decode("utf-8", errors="replace")
+            raise OpenAIProviderError(f"OpenAI Chat Completions API request failed: HTTP {exc.code} {details}") from exc
+        except urllib.error.URLError as exc:
+            raise OpenAIProviderError(f"OpenAI Chat Completions API request failed: {exc.reason}") from exc
+        except (http.client.HTTPException, ConnectionError, OSError) as exc:
+            raise OpenAIProviderError(f"OpenAI Chat Completions API request failed: {exc}") from exc
 
     def _create_response_via_node(self, body: dict[str, Any]) -> dict[str, Any]:
         helper_path = Path(__file__).with_name("openai_transport_node.mjs")
@@ -928,6 +1267,128 @@ class OpenAIResponsesClient:
         if not isinstance(response_body, dict):
             raise OpenAIProviderError("Node transport response body was not a JSON object.")
         return response_body
+
+    def _create_response_via_powershell(self, body: dict[str, Any]) -> dict[str, Any]:
+        return self._invoke_via_powershell(
+            url=f"{self.config.api_base.rstrip('/')}/responses",
+            body=body,
+            error_prefix="OpenAI Responses API request failed via powershell transport",
+        )
+
+    def _create_chat_completion_via_node(self, body: dict[str, Any]) -> dict[str, Any]:
+        helper_path = Path(__file__).with_name("openai_transport_node.mjs")
+        helper_input = {
+            "url": f"{self.config.api_base.rstrip('/')}/chat/completions",
+            "api_key": self.config.api_key,
+            "timeout_seconds": self.config.timeout_seconds,
+            "body": body,
+        }
+        completed = subprocess.run(
+            ["node", "--use-system-ca", str(helper_path)],
+            input=json.dumps(helper_input),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=self.config.timeout_seconds + 5,
+            check=False,
+        )
+        stdout = completed.stdout.strip()
+        stderr = completed.stderr.strip()
+        if completed.returncode != 0:
+            details = stderr or stdout or "unknown node transport error"
+            raise OpenAIProviderError(f"OpenAI Chat Completions API request failed via node transport: {details}")
+
+        try:
+            payload = json.loads(stdout)
+        except json.JSONDecodeError as exc:
+            raise OpenAIProviderError(f"Node transport returned invalid JSON: {stdout[:300]}") from exc
+
+        if not isinstance(payload, dict):
+            raise OpenAIProviderError("Node transport returned a non-object payload.")
+
+        if payload.get("ok") is not True:
+            status = payload.get("status", "unknown")
+            details = payload.get("body", "")
+            raise OpenAIProviderError(f"OpenAI Chat Completions API request failed: HTTP {status} {details}")
+
+        response_body = payload.get("response")
+        if not isinstance(response_body, dict):
+            raise OpenAIProviderError("Node transport response body was not a JSON object.")
+        return response_body
+
+    def _create_chat_completion_via_powershell(self, body: dict[str, Any]) -> dict[str, Any]:
+        return self._invoke_via_powershell(
+            url=f"{self.config.api_base.rstrip('/')}/chat/completions",
+            body=body,
+            error_prefix="OpenAI Chat Completions API request failed via powershell transport",
+        )
+
+    def _invoke_via_powershell(self, *, url: str, body: dict[str, Any], error_prefix: str) -> dict[str, Any]:
+        workspace_root = Path(self.config.workspace_root or os.getcwd())
+        tmp_root = workspace_root / ".tmp"
+        tmp_root.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="ps-http-", dir=tmp_root) as temp_dir:
+            body_path = Path(temp_dir) / "body.json"
+            body_path.write_text(json.dumps(body, ensure_ascii=False), encoding="utf-8")
+            script = "\n".join(
+                [
+                    "$ErrorActionPreference = 'Stop'",
+                    f"$url = '{url}'",
+                    f"$apiKey = '{self.config.api_key}'",
+                    f"$bodyPath = '{str(body_path)}'",
+                    "$headers = @{ Authorization = \"Bearer $apiKey\"; 'Content-Type' = 'application/json' }",
+                    "$body = [System.IO.File]::ReadAllText($bodyPath, [System.Text.Encoding]::UTF8)",
+                    "try {",
+                    "  $response = Invoke-WebRequest -Uri $url -Headers $headers -Method Post -Body $body -UseBasicParsing -TimeoutSec 240",
+                    "  $content = $response.Content",
+                    "  try { $parsed = $content | ConvertFrom-Json } catch { $parsed = $null }",
+                    "  $result = @{ ok = $true; status = [int]$response.StatusCode; response = $parsed; body = $content }",
+                    "  $result | ConvertTo-Json -Depth 100 -Compress",
+                    "} catch {",
+                    "  $httpResponse = $_.Exception.Response",
+                    "  if ($httpResponse) {",
+                    "    $stream = $httpResponse.GetResponseStream()",
+                    "    $reader = New-Object System.IO.StreamReader($stream)",
+                    "    $errorBody = $reader.ReadToEnd()",
+                    "    $statusCode = [int]$httpResponse.StatusCode",
+                    "  } else {",
+                    "    $errorBody = $_.Exception.Message",
+                    "    $statusCode = 0",
+                    "  }",
+                    "  $result = @{ ok = $false; status = $statusCode; response = $null; body = $errorBody }",
+                    "  $result | ConvertTo-Json -Depth 100 -Compress",
+                    "  exit 1",
+                    "}",
+                ]
+            )
+            completed = subprocess.run(
+                ["powershell.exe", "-NoProfile", "-Command", script],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                timeout=self.config.timeout_seconds + 120,
+                check=False,
+            )
+            stdout = completed.stdout.strip()
+            stderr = completed.stderr.strip()
+            raw = stdout or stderr
+            if not raw:
+                raise OpenAIProviderError(f"{error_prefix}: empty powershell response")
+            try:
+                payload = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                snippet = raw[:500]
+                raise OpenAIProviderError(f"{error_prefix}: invalid JSON wrapper {snippet}") from exc
+            if not isinstance(payload, dict):
+                raise OpenAIProviderError(f"{error_prefix}: non-object wrapper payload")
+            if payload.get("ok") is not True:
+                status = payload.get("status", "unknown")
+                details = payload.get("body", "")
+                raise OpenAIProviderError(f"{error_prefix}: HTTP {status} {details}")
+            response_body = payload.get("response")
+            if not isinstance(response_body, dict):
+                raise OpenAIProviderError(f"{error_prefix}: response body was not a JSON object")
+            return response_body
 
     def _create_response_via_codex_sdk(
         self,

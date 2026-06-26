@@ -1,0 +1,118 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0005",
+    "panel_role": "political_risk",
+    "age_band": "55-64",
+    "location_type": "regional",
+    "household_structure": "living with partner and one child",
+    "occupation_band": "communications",
+    "income_band": "middle",
+    "education_band": "bachelor",
+    "language": [
+      "English",
+      "Malay"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "medium",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "high",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "high",
+    "locale_pack": "regional_sea_service_ops",
+    "occupation_title": "communications manager",
+    "life_stage": "mature_operator",
+    "purchase_authority_type": "department_budget_requester",
+    "employment_stability": "variable",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "fast",
+    "proof_threshold": "peer_reference_required",
+    "cash_flow_volatility": "high"
+  },
+  "decision_policy": {
+    "adoption_style": "Adopts when the payoff is concrete and the risk feels bounded.",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding",
+      "specific examples from similar users",
+      "evidence that the workflow can survive internal review and comparison"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "setup that requires heavy migration before value is visible",
+      "automation that obscures accountability",
+      "pricing that feels hard to justify during volatile periods"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "evidence that the workflow can survive internal review and comparison",
+      "clear explanation of privacy stance and data handling"
+    ],
+    "decision_sequence": [
+      "first asks whether the tool removes a real weekly burden or just reorganises it",
+      "then checks whether setup can happen without a long cleanup tail",
+      "then looks for peer proof from similar teams or workflows",
+      "then evaluates whether the tool can survive manager review on cost, privacy, and clarity"
+    ],
+    "purchase_logic": {
+      "authority": "department_budget_requester",
+      "approval_dependencies": [
+        "manager confidence",
+        "peer comparability",
+        "budget timing"
+      ],
+      "price_logic": "Casey is not looking for the cheapest option; Casey is looking for an option whose value can be explained quickly and whose downside is limited if adoption stalls.",
+      "switching_cost_logic": "High switching cost means Casey prefers phased adoption, coexistence with current tools during evaluation, and easy exit if the tool creates more maintenance than relief."
+    }
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "conversation_pattern": "Usually answers with practical specifics, gives enough context to explain the constraint, and becomes more detailed when discussing trust, approval, or workflow risk.",
+    "demo_reaction_style": "Responds best to a short, realistic walkthrough tied to follow-up work. Loses interest when a demo stays high-level for too long or assumes unlimited time for setup.",
+    "objection_style": "Often phrases objections as operational concerns rather than emotional resistance, for example asking how a tool fits existing habits, how quickly it shows value, or what happens if the team only adopts part of it."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "codex",
+      "profile": "chatgpt-5.4-high",
+      "model": "gpt-5.4",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T04:28:40+00:00",
+      "rationale": "{\"anchor_preservation\": \"The enrichment keeps the fixed identity and seed facts intact: Casey Patel, age 62, non-binary, in Kuching, living with partner and one child, working as a communications manager with English and Malay, medium schedule pressure, medium budget flexibility, high switching cost, variable employment stability, and high cash-flow volatility.\", \"realism_added\": \"Realism was deepened through concrete routines, approval dynamics, workload fragmentation, privacy boundaries, and phased adoption logic instead of adding speculative traits or diagnostic claims.\", \"validation_usefulness\": \"The persona is tuned for product validation by clarifying evaluation triggers, trust signals, rejection conditions, and success criteria that would shape real adoption behavior for workflow, communication, and AI-assisted coordination products.\"}"
+    }
+  }
+}

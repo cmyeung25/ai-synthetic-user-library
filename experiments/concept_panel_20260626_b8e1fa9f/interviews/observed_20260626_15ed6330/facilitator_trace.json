@@ -1,0 +1,131 @@
+[
+  {
+    "interview_phase": "recent_event",
+    "probing_strategy": "open_ended_question",
+    "decision_rationale": "以開放式問題引導參與者回憶最近一次實際處理日常財務的具體事件，建立行為基線與情境脈絡，避免直接假設痛點所在或跳入抽象意見。",
+    "message_to_persona": "想請你講吓最近一次你自己要處理日常開支或者管錢嘅經歷，當時具體發生咩事、你係點樣做㗎？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "pain_strength_and_consequence",
+    "probing_strategy": "consequence_probe",
+    "decision_rationale": "Participant剛描述了具體行為（轉數快+手寫記錄）及痛點（怕對唔齊）。需通過探問「最壞後果」來區分這是單純的行政麻煩還是具有實際財務風險的痛点，這對於後續評估概念價值和信任邊界至關重要。此問題旨在挖掘潛在的驅動因素（Driver Deepening）。",
+    "message_to_persona": "你提到最怕對唔齊數，如果我哋假設有一筆大額支出你轉咗錢但忘記咗記低，你覺得最嚴重嘅後果係咩？係會影響到月底其他必須支付嘅帳單（例如租金或按揭），定係純粹係心理上好煩、覺得失控？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "",
+    "decision_status": "rejected_by_concept_timing_gate"
+  },
+  {
+    "interview_phase": "current_workaround_probe",
+    "probing_strategy": "workaround_function_probe",
+    "decision_rationale": "Participant described a multi-step workaround (screenshot + manual log). Protocol requires isolating which gap each component fills and which missed-risk matters most. This single trade-off question forces prioritisation of the actual pain driver without bundling multiple variables.",
+    "message_to_persona": "你提到靠截圖同手寫簿去防錯，你覺得最擔心嘅其實係WhatsApp訊息被覆蓋搵唔返，定係手寫簿本身容易漏記對唔齊？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "participant_cause",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_validation_current_state",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "Participant emphasized fear of losing WhatsApp evidence and the manual screenshot/book workaround. Asking for a recalled instance where they skipped the step reveals the actual abandonment threshold and real-world consequence, mapping the concrete trade-off and stress point before concept introduction prerequisites can be addressed.",
+    "message_to_persona": "你之前有冇試過因為太忙或訊息太多而直接跳過截圖寫簿呢步？最後實際對帳嗰陣係咪真係出咩問題，定係單純覺得好險？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [
+      "你之前有冇試過因為太忙或訊息太多而直接跳過截圖寫簿呢步？最後實際對帳嗰陣係咪真係出咩問題，定係單純覺得好險？"
+    ],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "recalled_contrast_event",
+    "question_evidence_target": "threshold_probe",
+    "provider_session_id": "",
+    "decision_status": "rejected_by_concept_timing_gate"
+  },
+  {
+    "interview_phase": "concept_validation_current_state",
+    "probing_strategy": "missing_evidence_probe",
+    "decision_rationale": "Addresses the concept timing gate by isolating the missing_evidence gap from the recent summer class decision. Asks one short, neutral question in Cantonese register without introducing the concept, trust, pricing, or workflow fit.",
+    "message_to_persona": "喺你上個星期處理暑期班報名同家長訊息嗰陣，你覺得自己當時仲係搵唔到嘅關鍵資料，以及仲係確認唔到嘅具體情況係咩？",
+    "evidence_updates": [
+      "Gap identified: missing_evidence, pressure, defensible_vs_uncertain, decision_change require mapping from one recent real decision."
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "current_state_deepening",
+    "probing_strategy": "threshold_probe",
+    "decision_rationale": "Participant highlighted a high-signal fear (messages being overwritten/buried) and a current workaround (screenshots + handwritten log). Coverage is missing threshold, contrast, and action-followthrough probes. This question anchors to the recent summer camp event, isolates the exact friction point (time spent reconfirming/notification backlog), and seeks a concrete behavioural threshold for abandoning the current workaround, satisfying depth requirements without introducing concept jargon.",
+    "message_to_persona": "你提到最驚WhatsApp訊息俾其他對話蓋咗，大概要浪費幾耐時間去逐個重新確認，或者積累到幾多條未處理嘅通知，先至會令你覺得一定要換一種方法處理，而不係繼續靠截圖同手寫簿？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "target_behaviour",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_validation",
+    "probing_strategy": "threshold_probe",
+    "decision_rationale": "The participant provided a high-signal cue regarding the 'half-hour' threshold for switching from manual workarounds. This is a concrete behavioral indicator of pain intensity. I am applying a `threshold_probe` to understand the specific value proposition required for adoption (accuracy vs. time saved) and to test the 'setup friction' assumption inherent in automation concepts. This moves us towards understanding the 'action_followthrough' and 'repeat_use_condition' gaps in coverage.",
+    "message_to_persona": "你話當每日花超過半鐘去翻舊對話先至會考慮換工具，咁如果有一個方法可以自動攬晒WhatsApp嘅付款截圖同文件，但係需要你先設定好分類規則，你覺得要攞到咩樣嘅準確度或者省返幾多時間，先至值得你肯花時間去設定個系統？",
+    "evidence_updates": [
+      {
+        "pain_threshold": "Spending >30 minutes/day on manual reconciliation triggers consideration of alternatives.",
+        "workaround_limit": "Manual screenshot/notebook method fails when message backlog exceeds 3-4 days or requires multi-day clearing."
+      }
+    ],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "hypothetical",
+    "question_evidence_target": "consequence",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  },
+  {
+    "interview_phase": "concept_validation_depth_probe",
+    "probing_strategy": "contrast_probe",
+    "decision_rationale": "Participant provided a concrete threshold (90% accuracy, 2 hours saved). Per depth-first rules, I anchor to their recently recalled event to elicit a contrast case where the current workaround fully sufficed, satisfying the missing `contrast_probe` depth requirement without shifting to hypotheticals.",
+    "message_to_persona": "你話要九成準確同每月慳兩鐘先值得搞，咁喺你上個月處理暑期班同家長訊息嗰陣，有冇邊一刻其實完全無壓力，令到你覺得手寫簿同截圖依然夠用，完全唔想換？",
+    "evidence_updates": [],
+    "root_cause_hypotheses": [],
+    "open_questions": [],
+    "should_end": false,
+    "end_reason": "",
+    "question_evidence_basis": "current_event",
+    "question_evidence_target": "context",
+    "provider_session_id": "",
+    "decision_status": "asked"
+  }
+]

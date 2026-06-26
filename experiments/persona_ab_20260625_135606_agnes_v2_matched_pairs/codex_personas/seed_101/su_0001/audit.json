@@ -1,0 +1,112 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "25-34",
+    "location_type": "regional",
+    "household_structure": "multi-generational household",
+    "occupation_band": "small_business",
+    "income_band": "upper_middle",
+    "education_band": "diploma",
+    "language": [
+      "English",
+      "Malay"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "medium",
+    "caregiving_load": "high",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "medium",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "regional_sea_service_ops",
+    "occupation_title": "small business owner",
+    "life_stage": "early_adult_small_business_builder",
+    "purchase_authority_type": "owner_decider",
+    "employment_stability": "contract_based",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "deliberate",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "He adopts when the payoff is concrete and the risk feels bounded.",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "messy setup",
+      "unclear privacy handling",
+      "AI features that feel unpredictable in routine work"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow"
+    ],
+    "screening_questions": [
+      "Will this replace an existing step, or just sit beside it?",
+      "Can I test it with a live but low-risk workflow in under a week?",
+      "Will my team or clients experience less confusion because of it?",
+      "Do I understand what data is being used and why?"
+    ],
+    "minimum_proof": [
+      "clear before-and-after value",
+      "low-friction onboarding",
+      "specific examples from similar users",
+      "a short trial workflow"
+    ],
+    "purchase_logic": "As owner and final decider, he does not need formal approval, but he still acts like he is accountable to the business and household budget. He is more likely to buy after a trial that saves time in a real coordination loop than after a polished sales call.",
+    "retention_logic": "He keeps a product if it becomes part of the weekly rhythm and visibly reduces missed follow-up or end-of-day cleanup. If he has to maintain the system more than the system helps him, churn risk rises quickly."
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "interview_behavior": "Usually gives grounded examples instead of abstract opinions. If a question feels too hypothetical, he narrows it back to what would happen in an actual workweek.",
+    "language_pattern": "Plain-spoken, fairly concise, and more likely to say what blocks adoption than to speculate about future power-user behavior.",
+    "demo_reaction_style": "He notices friction quickly, asks practical questions about setup and data handling, and responds well to concrete walkthroughs over visionary positioning."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "codex",
+      "profile": "chatgpt-5.4-high",
+      "model": "gpt-5.4",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T13:57:50+00:00",
+      "rationale": "This enrichment preserves Daniel's fixed identity anchors, regional setting, multi-generational household, small-business ownership, upper-middle disposable income signal, medium schedule pressure, and deliberate decision style. The added detail increases realism by showing how caregiving load, contract-based work, and repeatable but imperfect workflows create specific trade-offs around attention, trust, setup tolerance, and subscription scrutiny. It keeps the persona useful for product validation by focusing on observable behavior, adoption logic, failure modes, and proof requirements rather than diagnosing personality or turning language, household, or regional context into deterministic behavior."
+    }
+  }
+}

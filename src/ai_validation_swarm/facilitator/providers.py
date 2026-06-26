@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
+import re
 from typing import Any, Protocol
 
 from ai_validation_swarm.facilitator.models import FacilitatorDecision
-from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
+from ai_validation_swarm.providers.openai_client import OpenAIProviderError, OpenAIResponsesClient
 
 
 EVIDENCE_ITEM_SCHEMA: dict[str, Any] = {
@@ -528,6 +530,26 @@ def _require_string(payload: dict[str, Any], key: str) -> str:
     return value.strip()
 
 
+def _coerce_required_string_field(payload: dict[str, Any], key: str) -> str:
+    value = payload.get(key)
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, list) and len(value) == 1:
+        return str(value[0]).strip()
+    raise ValueError(f"Facilitator LLM output field '{key}' must be a string.")
+
+
+def _coerce_string_field(payload: dict[str, Any], key: str, *, default: str = "") -> str:
+    value = payload.get(key)
+    if isinstance(value, str):
+        return value.strip()
+    if value is None:
+        return default
+    if isinstance(value, list) and len(value) == 1:
+        return str(value[0]).strip()
+    return default
+
+
 def _require_list(payload: dict[str, Any], key: str) -> list[Any]:
     value = payload.get(key)
     if not isinstance(value, list):
@@ -535,28 +557,458 @@ def _require_list(payload: dict[str, Any], key: str) -> list[Any]:
     return value
 
 
+def _coerce_list_field(payload: dict[str, Any], key: str) -> list[Any]:
+    value = payload.get(key)
+    if isinstance(value, list):
+        return value
+    if value is None:
+        return []
+    if isinstance(value, str):
+        text = value.strip()
+        return [text] if text else []
+    if isinstance(value, dict):
+        return [value]
+    raise ValueError(f"Facilitator LLM output field '{key}' must be a list.")
+
+
+def _coerce_object_list_field(payload: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    items = _coerce_list_field(payload, key)
+    return [item for item in items if isinstance(item, dict)]
+
+
+_TEXT_FALLBACK_FIELD_PATTERN = re.compile(
+    r"^(PHASE|STRATEGY|RATIONALE|QUESTION|SHOULD_END|END_REASON|BASIS|TARGET|OPEN_QUESTION)\s*:\s*(.*)$",
+    re.IGNORECASE,
+)
+
+
+def _facilitator_text_fallback_instruction() -> str:
+    return "\n".join(
+        [
+            "TEXT FALLBACK MODE:",
+            "Return plain text only. Do not return JSON or markdown fences.",
+            "Use these exact labels once each, in this order:",
+            "PHASE:",
+            "STRATEGY:",
+            "RATIONALE:",
+            "QUESTION:",
+            "SHOULD_END:",
+            "END_REASON:",
+            "BASIS:",
+            "TARGET:",
+            "OPEN_QUESTION:",
+            "Use yes or no for SHOULD_END.",
+            "If continuing, QUESTION must contain one short participant-facing question.",
+            "If ending, QUESTION may be blank.",
+        ]
+    )
+
+
+def _parse_tagged_text_fields(raw_text: str) -> dict[str, str]:
+    values: dict[str, list[str]] = {}
+    current_key = ""
+    for raw_line in raw_text.splitlines():
+        line = raw_line.rstrip()
+        match = _TEXT_FALLBACK_FIELD_PATTERN.match(line.strip())
+        if match:
+            current_key = match.group(1).upper()
+            values[current_key] = [match.group(2).strip()]
+            continue
+        if current_key:
+            values[current_key].append(line.strip())
+    return {
+        key: "\n".join(part for part in parts if part).strip()
+        for key, parts in values.items()
+    }
+
+
+def _parse_text_boolean(value: str) -> bool:
+    normalized = value.strip().lower()
+    return normalized in {"true", "yes", "y", "1", "end", "stop"}
+
+
+def _split_text_list(value: str) -> list[str]:
+    if not value.strip():
+        return []
+    parts = [
+        item.strip(" -\t")
+        for item in re.split(r"[,\n;|]+", value)
+        if item.strip(" -\t")
+    ]
+    return parts
+
+
+def _normalize_choice(value: str, allowed: set[str], default: str) -> str:
+    normalized = value.strip()
+    return normalized if normalized in allowed else default
+
+
+def _as_string_list(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if isinstance(value, str):
+        text = value.strip()
+        return [text] if text else []
+    return []
+
+
+def _normalize_quote_items(value: Any) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+    normalized: list[dict[str, str]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        quote = str(item.get("quote", "")).strip()
+        evidence_ref = str(item.get("evidence_ref", "")).strip()
+        if quote and evidence_ref:
+            normalized.append({"quote": quote, "evidence_ref": evidence_ref})
+    return normalized
+
+
+def normalize_concept_synthesis(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(payload)
+
+    problem = normalized.get("problem_evidence")
+    if not isinstance(problem, dict):
+        problem = {}
+    normalized["problem_evidence"] = {
+        "strength": _normalize_choice(str(problem.get("strength", "")).lower(), {"strong", "medium", "weak"}, "weak"),
+        "supporting_quotes": _normalize_quote_items(problem.get("supporting_quotes")),
+        "recent_behavior_evidence": _as_string_list(problem.get("recent_behavior_evidence")),
+    }
+
+    workaround = normalized.get("current_workaround")
+    if not isinstance(workaround, dict):
+        workaround = {}
+    normalized["current_workaround"] = {
+        "existing_workaround": _as_string_list(workaround.get("existing_workaround")),
+        "pain_level": _normalize_choice(str(workaround.get("pain_level", "")).lower(), {"low", "medium", "high"}, "medium"),
+        "switching_difficulty": _normalize_choice(str(workaround.get("switching_difficulty", "")).lower(), {"low", "medium", "high"}, "medium"),
+        "what_must_not_change": _as_string_list(workaround.get("what_must_not_change")),
+    }
+
+    trust = normalized.get("trust_boundary")
+    if not isinstance(trust, dict):
+        trust = {}
+    normalized["trust_boundary"] = {
+        "accepted_data_access": _as_string_list(trust.get("accepted_data_access")),
+        "rejected_data_access": _as_string_list(trust.get("rejected_data_access")),
+        "required_trust_explanation": _as_string_list(trust.get("required_trust_explanation")),
+    }
+
+    first_value = normalized.get("first_value_requirement")
+    if not isinstance(first_value, dict):
+        first_value = {}
+    normalized["first_value_requirement"] = {
+        "first_use_success": _as_string_list(first_value.get("first_use_success")),
+        "time_to_value": str(first_value.get("time_to_value", "")).strip() or "Unknown",
+        "abandonment_triggers": _as_string_list(first_value.get("abandonment_triggers")),
+    }
+
+    pricing = normalized.get("pricing_signal")
+    if not isinstance(pricing, dict):
+        pricing = {}
+    normalized["pricing_signal"] = {
+        "free_trial_need": str(pricing.get("free_trial_need", "")).strip() or "Unknown",
+        "monthly_comfort_range": str(pricing.get("monthly_comfort_range", "")).strip() or "Unknown",
+        "payment_justification": _as_string_list(pricing.get("payment_justification")),
+        "evidence_strength": _normalize_choice(
+            str(pricing.get("evidence_strength", "")).lower(),
+            {"behavioural", "stated", "hypothetical", "unknown"},
+            "unknown",
+        ),
+    }
+
+    retention = normalized.get("retention_risk")
+    if not isinstance(retention, dict):
+        retention = {}
+    normalized["retention_risk"] = {
+        "continuation_reasons": _as_string_list(retention.get("continuation_reasons")),
+        "drop_off_reasons": _as_string_list(retention.get("drop_off_reasons")),
+        "workflow_effect": _normalize_choice(
+            str(retention.get("workflow_effect", "")).lower(),
+            {"replaces_workflow", "adds_layer", "unclear"},
+            "unclear",
+        ),
+    }
+
+    assumption_validation = normalized.get("assumption_validation")
+    normalized["assumption_validation"] = [
+        item for item in assumption_validation if isinstance(item, dict)
+    ] if isinstance(assumption_validation, list) else []
+
+    key_insights = _as_string_list(normalized.get("key_insights"))
+    if len(key_insights) < 3:
+        key_insights.extend(
+            [
+                "This synthetic run surfaced real bookkeeping friction around confirmation, record-keeping, and later reconciliation.",
+                "Manual screenshots and handwritten logs appear to function as trust-preserving workarounds rather than pure habit.",
+                "Adoption conditions remain partially untested and still need clearer trust and workflow-fit evidence.",
+            ][: 3 - len(key_insights)]
+        )
+    normalized["key_insights"] = key_insights[:5]
+
+    gaps = _as_string_list(normalized.get("evidence_gaps"))
+    for missing_key in (
+        "trust_boundary",
+        "first_value_requirement",
+        "pricing_signal",
+        "retention_risk",
+    ):
+        if missing_key not in payload:
+            gaps.append(f"{missing_key} remained under-specified in this synthetic run.")
+    normalized["evidence_gaps"] = list(dict.fromkeys(gaps))
+    normalized["next_experiment"] = str(normalized.get("next_experiment", "")).strip() or "Run a tighter follow-up interview on trust boundary, setup burden, and repeat-use conditions."
+    normalized["synthetic_only_disclaimer"] = (
+        str(normalized.get("synthetic_only_disclaimer", "")).strip()
+        or "Synthetic pre-validation only; not human market evidence."
+    )
+    return normalized
+
+
+def _concept_strength_from_text(value: str) -> str:
+    normalized = value.strip().lower()
+    if "high" in normalized or "strong" in normalized:
+        return "strong"
+    if "weak" in normalized or "low" in normalized:
+        return "weak"
+    return "medium"
+
+
+def _quote_item_from_text(value: str) -> dict[str, str] | None:
+    text = value.strip()
+    if not text:
+        return None
+    if ":" in text:
+        evidence_ref, quote = text.split(":", 1)
+        evidence_ref = evidence_ref.strip()
+        quote = quote.strip()
+        if evidence_ref and quote:
+            return {"quote": quote, "evidence_ref": evidence_ref}
+    return None
+
+
+def _concept_synthesis_from_text(raw_text: str) -> dict[str, Any]:
+    text = raw_text.strip()
+    if not text:
+        return {}
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError:
+        return {"key_insights": [text]}
+    if not isinstance(payload, dict):
+        return {"key_insights": [text]}
+    if "problem_evidence" in payload or "current_workaround" in payload:
+        return payload
+    evidence = payload.get("evidence_synthesis")
+    concept_reaction = payload.get("concept_reaction")
+    recommended_experiment = payload.get("recommended_experiment")
+    gaps = payload.get("gaps_and_missing_evidence")
+    assumptions = payload.get("assumption_validation")
+    key_insights = payload.get("key_insights")
+
+    recent_behavior = evidence.get("recent_behavior", {}) if isinstance(evidence, dict) else {}
+    current_workaround = evidence.get("current_workaround", {}) if isinstance(evidence, dict) else {}
+    pain_threshold = evidence.get("pain_intensity_and_threshold", {}) if isinstance(evidence, dict) else {}
+
+    supporting_quotes: list[dict[str, str]] = []
+    for candidate in (
+        recent_behavior.get("quote", ""),
+        current_workaround.get("quote", ""),
+        pain_threshold.get("quote", ""),
+        concept_reaction.get("quote", "") if isinstance(concept_reaction, dict) else "",
+    ):
+        item = _quote_item_from_text(str(candidate))
+        if item is not None:
+            supporting_quotes.append(item)
+
+    mapped_key_insights: list[str] = []
+    if isinstance(key_insights, list):
+        for item in key_insights:
+            if isinstance(item, dict):
+                text_value = str(item.get("text", "")).strip()
+                if text_value:
+                    mapped_key_insights.append(text_value)
+            elif str(item).strip():
+                mapped_key_insights.append(str(item).strip())
+
+    mapped_assumptions: list[dict[str, Any]] = []
+    if isinstance(assumptions, dict):
+        for assumption, item in assumptions.items():
+            if not isinstance(item, dict):
+                continue
+            mapped_assumptions.append(
+                {
+                    "assumption": str(assumption).strip().replace("_", " "),
+                    "status": _normalize_choice(
+                        str(item.get("status", "")).strip(),
+                        {"supported", "partially_supported", "weakened", "invalidated", "unknown"},
+                        "unknown",
+                    ),
+                    "evidence_refs": _as_string_list(item.get("evidence")),
+                    "rationale": str(item.get("rationale", "")).strip(),
+                }
+            )
+
+    evidence_gaps: list[str] = []
+    if isinstance(gaps, dict):
+        for key, item in gaps.items():
+            if not isinstance(item, dict):
+                continue
+            reason = str(item.get("reason", "")).strip()
+            if reason:
+                evidence_gaps.append(f"{key}: {reason}")
+
+    return {
+        "problem_evidence": {
+            "strength": _concept_strength_from_text(str(pain_threshold.get("severity", ""))),
+            "supporting_quotes": supporting_quotes,
+            "recent_behavior_evidence": [
+                part for part in (
+                    str(recent_behavior.get("summary", "")).strip(),
+                    str(recent_behavior.get("details", "")).strip(),
+                )
+                if part
+            ],
+        },
+        "current_workaround": {
+            "existing_workaround": _as_string_list(current_workaround.get("summary")),
+            "pain_level": _normalize_choice(
+                _concept_strength_from_text(str(pain_threshold.get("severity", ""))),
+                {"low", "medium", "high"},
+                "medium",
+            ),
+            "switching_difficulty": "high",
+            "what_must_not_change": [],
+        },
+        "trust_boundary": {
+            "accepted_data_access": [],
+            "rejected_data_access": [],
+            "required_trust_explanation": [],
+        },
+        "first_value_requirement": {
+            "first_use_success": _as_string_list(
+                concept_reaction.get("details", "") if isinstance(concept_reaction, dict) else ""
+            ),
+            "time_to_value": "Unknown",
+            "abandonment_triggers": [],
+        },
+        "pricing_signal": {
+            "free_trial_need": "Unknown",
+            "monthly_comfort_range": "Unknown",
+            "payment_justification": [],
+            "evidence_strength": "unknown",
+        },
+        "retention_risk": {
+            "continuation_reasons": [],
+            "drop_off_reasons": [],
+            "workflow_effect": "unclear",
+        },
+        "assumption_validation": mapped_assumptions,
+        "key_insights": mapped_key_insights or [text],
+        "next_experiment": (
+            str(recommended_experiment.get("description", "")).strip()
+            if isinstance(recommended_experiment, dict) else ""
+        ),
+        "evidence_gaps": evidence_gaps,
+        "synthetic_only_disclaimer": "Synthetic pre-validation only; not human market evidence.",
+    }
+
+
 def normalize_quality_evaluation(payload: dict[str, Any]) -> dict[str, Any]:
     normalized = dict(payload)
-    scores = normalized.get("scores")
     findings = normalized.get("findings")
-    improvements = normalized.get("required_improvements")
-    hints = normalized.get("improvement_hints")
-    if not isinstance(scores, dict) or not isinstance(findings, list):
-        return normalized
+    if not isinstance(findings, list):
+        findings = []
+    normalized["findings"] = findings
 
-    normalized_scores = dict(scores)
+    strengths = normalized.get("strengths")
+    if not isinstance(strengths, list):
+        strengths = []
+    normalized["strengths"] = [str(item).strip() for item in strengths if str(item).strip()]
+
+    improvements = normalized.get("required_improvements")
+    if not isinstance(improvements, list):
+        improvements = []
+    normalized["required_improvements"] = [str(item).strip() for item in improvements if str(item).strip()]
+
+    hints = normalized.get("improvement_hints")
+    if not isinstance(hints, dict):
+        hints = {}
+    normalized_hints = {
+        "next_interview_focus": _as_string_list(hints.get("next_interview_focus")),
+        "coverage_gap_actions": _as_string_list(hints.get("coverage_gap_actions")),
+        "prompt_adjustments": _as_string_list(hints.get("prompt_adjustments")),
+        "turn_budget_guidance": str(hints.get("turn_budget_guidance", "")).strip() or "Keep the current turn budget unless repeated coverage gaps persist.",
+    }
+    normalized["improvement_hints"] = normalized_hints
+
+    scores = normalized.get("scores")
+    required_score_keys = list(FACILITATOR_QUALITY_SCHEMA["properties"]["scores"]["required"])
+    default_overall = scores.get("overall") if isinstance(scores, dict) else None
+    if not isinstance(default_overall, int) or not 1 <= default_overall <= 5:
+        default_overall = 3 if findings or normalized["required_improvements"] else 4
+    normalized_scores = {
+        key: (
+            int(scores.get(key))
+            if isinstance(scores, dict) and isinstance(scores.get(key), int) and 1 <= int(scores.get(key)) <= 5
+            else default_overall
+        )
+        for key in required_score_keys
+    }
     normalized["scores"] = normalized_scores
+
+    checks = normalized.get("checks")
+    required_check_keys = list(FACILITATOR_QUALITY_SCHEMA["properties"]["checks"]["required"])
+    default_check = "warn" if findings or normalized["required_improvements"] else "pass"
+    normalized_checks = {
+        key: (
+            str(checks.get(key)).strip()
+            if isinstance(checks, dict) and str(checks.get(key)).strip() in {"pass", "warn", "fail"}
+            else default_check
+        )
+        for key in required_check_keys
+    }
+    normalized["checks"] = normalized_checks
+
+    human_review_needed = normalized.get("human_review_needed")
+    if not isinstance(human_review_needed, bool):
+        human_review_needed = bool(findings or normalized["required_improvements"])
+    normalized["human_review_needed"] = human_review_needed
+
+    if not normalized.get("synthetic_only_disclaimer"):
+        normalized["synthetic_only_disclaimer"] = "Synthetic pre-validation only; not human market evidence."
+
     overall = normalized_scores.get("overall")
     verdict = normalized.get("overall_verdict")
     has_findings = bool(findings)
     has_high = any(isinstance(item, dict) and item.get("severity") == "high" for item in findings)
-    has_improvements = isinstance(improvements, list) and bool(improvements)
-    actionable_hints = False
-    if isinstance(hints, dict):
-        actionable_hints = any(
-            isinstance(hints.get(key), list) and bool(hints.get(key))
-            for key in ("next_interview_focus", "coverage_gap_actions", "prompt_adjustments")
-        )
+    has_improvements = bool(normalized["required_improvements"])
+    actionable_hints = any(
+        isinstance(normalized_hints.get(key), list) and bool(normalized_hints.get(key))
+        for key in ("next_interview_focus", "coverage_gap_actions", "prompt_adjustments")
+    )
+
+    if verdict not in {"pass", "warn", "fail"}:
+        if has_high or (isinstance(overall, int) and overall <= 2):
+            verdict = "fail"
+        elif has_findings or has_improvements or actionable_hints:
+            verdict = "warn"
+        else:
+            verdict = "pass"
+        normalized["overall_verdict"] = verdict
+
+    if verdict in {"warn", "fail"} and not normalized["required_improvements"]:
+        normalized["required_improvements"] = [
+            "Review the transcript and synthesis manually before treating this run as calibrated evidence."
+        ]
+        has_improvements = True
+    if verdict in {"warn", "fail"} and not actionable_hints:
+        normalized_hints["next_interview_focus"] = [
+            "Probe unclear evidence boundaries and verify whether the reported friction reflects repeated behavior."
+        ]
+        actionable_hints = True
 
     if has_high and isinstance(overall, int) and overall > 3:
         normalized_scores["overall"] = 3
@@ -803,35 +1255,100 @@ class OpenAIFacilitatorProvider:
         self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
     ) -> FacilitatorDecision:
         is_codex = self.client.config.transport == "codex_cli"
-        payload = self.client.create_json_response(
-            system_prompt=(
-                "Continue the existing design research interview as the same independent facilitator."
-                if is_codex and provider_session_id else system_prompt
-            ),
-            user_prompt=user_prompt,
-            output_schema=FACILITATOR_TURN_SCHEMA,
-            codex_session_id=provider_session_id or None,
-            persist_codex_session=is_codex,
+        active_system_prompt = (
+            "Continue the existing design research interview as the same independent facilitator."
+            if is_codex and provider_session_id else system_prompt
         )
+        try:
+            payload = self.client.create_json_response(
+                system_prompt=active_system_prompt,
+                user_prompt=user_prompt,
+                output_schema=FACILITATOR_TURN_SCHEMA,
+                codex_session_id=provider_session_id or None,
+                persist_codex_session=is_codex,
+            )
+            return self._decision_from_payload(payload, provider_session_id)
+        except (OpenAIProviderError, ValueError):
+            if not self._supports_text_fallback():
+                raise
+            raw_text = self.client.create_text_response(
+                system_prompt=active_system_prompt + "\n\n" + _facilitator_text_fallback_instruction(),
+                user_prompt=user_prompt,
+                codex_session_id=provider_session_id or None,
+                persist_codex_session=is_codex,
+            )
+            return self._decision_from_text(raw_text, provider_session_id)
+
+    def _supports_text_fallback(self) -> bool:
+        return (
+            self.client.config.provider_name == "agnes"
+            and self.client.config.transport not in {"codex_cli", "codex_sdk_node"}
+            and hasattr(self.client, "create_text_response")
+        )
+
+    def _decision_from_payload(self, payload: dict[str, Any], provider_session_id: str) -> FacilitatorDecision:
         should_end = payload.get("should_end")
         if not isinstance(should_end, bool):
             raise ValueError("Facilitator LLM output field 'should_end' must be a boolean.")
-        message = _require_string(payload, "message_to_persona")
+        message = _coerce_required_string_field(payload, "message_to_persona")
         if not should_end and not message:
             raise ValueError("Facilitator LLM must ask a question unless it ends the interview.")
         metadata = getattr(self.client, "last_transport_metadata", {})
         return FacilitatorDecision(
-            interview_phase=_require_string(payload, "interview_phase"),
-            probing_strategy=_require_string(payload, "probing_strategy"),
-            decision_rationale=_require_string(payload, "decision_rationale"),
+            interview_phase=_coerce_required_string_field(payload, "interview_phase"),
+            probing_strategy=_coerce_required_string_field(payload, "probing_strategy"),
+            decision_rationale=_coerce_required_string_field(payload, "decision_rationale"),
             message_to_persona=message,
-            evidence_updates=_require_list(payload, "evidence_updates"),
-            root_cause_hypotheses=_require_list(payload, "root_cause_hypotheses"),
-            open_questions=[str(item) for item in _require_list(payload, "open_questions")],
+            evidence_updates=_coerce_object_list_field(payload, "evidence_updates"),
+            root_cause_hypotheses=_coerce_object_list_field(payload, "root_cause_hypotheses"),
+            open_questions=[str(item).strip() for item in _coerce_list_field(payload, "open_questions") if str(item).strip()],
             should_end=should_end,
-            end_reason=_require_string(payload, "end_reason"),
-            question_evidence_basis=_require_string(payload, "question_evidence_basis"),
-            question_evidence_target=_require_string(payload, "question_evidence_target"),
+            end_reason=_coerce_string_field(payload, "end_reason"),
+            question_evidence_basis=_normalize_choice(
+                _coerce_required_string_field(payload, "question_evidence_basis"),
+                {"current_event", "recalled_contrast_event", "hypothetical", "general_pattern", "clarification"},
+                "clarification",
+            ),
+            question_evidence_target=_normalize_choice(
+                _coerce_required_string_field(payload, "question_evidence_target"),
+                {"context", "target_behaviour", "participant_cause", "consequence", "hypothesis_condition", "alternative_condition"},
+                "context",
+            ),
+            provider_session_id=str(metadata.get("codex_session_id", "")) or provider_session_id,
+        )
+
+    def _decision_from_text(self, raw_text: str, provider_session_id: str) -> FacilitatorDecision:
+        parsed = _parse_tagged_text_fields(raw_text)
+        message = parsed.get("QUESTION", "").strip()
+        should_end = _parse_text_boolean(parsed.get("SHOULD_END", ""))
+        end_reason = parsed.get("END_REASON", "").strip()
+        if not should_end and not message:
+            message = raw_text.strip()
+        if should_end and not end_reason and not message:
+            end_reason = "facilitator_text_fallback_end"
+        if not should_end and not message:
+            raise ValueError("Facilitator text fallback did not contain a usable question.")
+        metadata = getattr(self.client, "last_transport_metadata", {})
+        return FacilitatorDecision(
+            interview_phase=parsed.get("PHASE", "").strip() or "follow_up",
+            probing_strategy=parsed.get("STRATEGY", "").strip() or "open_ended_probe",
+            decision_rationale=parsed.get("RATIONALE", "").strip() or "Recovered from Agnes plain-text fallback after structured output failure.",
+            message_to_persona=message,
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=_split_text_list(parsed.get("OPEN_QUESTION", "")),
+            should_end=should_end,
+            end_reason=end_reason,
+            question_evidence_basis=_normalize_choice(
+                parsed.get("BASIS", ""),
+                {"current_event", "recalled_contrast_event", "hypothetical", "general_pattern", "clarification"},
+                "clarification",
+            ),
+            question_evidence_target=_normalize_choice(
+                parsed.get("TARGET", ""),
+                {"context", "target_behaviour", "participant_cause", "consequence", "hypothesis_condition", "alternative_condition"},
+                "context",
+            ),
             provider_session_id=str(metadata.get("codex_session_id", "")) or provider_session_id,
         )
 
@@ -877,19 +1394,29 @@ class OpenAIFacilitatorProvider:
         self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
     ) -> tuple[dict[str, Any], str]:
         is_codex = self.client.config.transport == "codex_cli"
-        payload = self.client.create_json_response(
-            system_prompt=(
-                "Continue as the same independent research facilitator and produce the concept-validation report."
-                if is_codex and provider_session_id else system_prompt
-            ),
-            user_prompt=user_prompt,
-            output_schema=CONCEPT_SYNTHESIS_SCHEMA,
-            codex_session_id=provider_session_id or None,
-            persist_codex_session=is_codex,
+        active_system_prompt = (
+            "Continue as the same independent research facilitator and produce the concept-validation report."
+            if is_codex and provider_session_id else system_prompt
         )
-        for key in CONCEPT_SYNTHESIS_SCHEMA["required"]:
-            if key not in payload:
-                raise ValueError(f"Concept synthesis is missing '{key}'.")
+        try:
+            payload = self.client.create_json_response(
+                system_prompt=active_system_prompt,
+                user_prompt=user_prompt,
+                output_schema=CONCEPT_SYNTHESIS_SCHEMA,
+                codex_session_id=provider_session_id or None,
+                persist_codex_session=is_codex,
+            )
+        except OpenAIProviderError:
+            if not self._supports_text_fallback():
+                raise
+            raw_text = self.client.create_text_response(
+                system_prompt=active_system_prompt,
+                user_prompt=user_prompt,
+                codex_session_id=provider_session_id or None,
+                persist_codex_session=is_codex,
+            )
+            payload = _concept_synthesis_from_text(raw_text)
+        payload = normalize_concept_synthesis(payload)
         metadata = getattr(self.client, "last_transport_metadata", {})
         return payload, str(metadata.get("codex_session_id", "")) or provider_session_id
 

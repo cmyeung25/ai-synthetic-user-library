@@ -1,0 +1,107 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0004",
+    "panel_role": "inclusion",
+    "age_band": "25-34",
+    "location_type": "urban_core",
+    "household_structure": "multi-generational household",
+    "occupation_band": "education_ops",
+    "income_band": "middle",
+    "education_band": "bachelor",
+    "language": [
+      "Mandarin",
+      "English"
+    ],
+    "device_environment": "smartphone-first",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "low",
+    "budget_flexibility": "medium",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "high",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "taiwan_knowledge_work",
+    "occupation_title": "program coordinator",
+    "life_stage": "early_career_specialist",
+    "purchase_authority_type": "team_budget_influencer",
+    "employment_stability": "stable",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "committee_slow",
+    "proof_threshold": "light_demo",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding",
+      "visible data handling practices",
+      "peer validation within professional networks"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "forced migration steps",
+      "lack of mobile parity"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "buy-in material that can be shared with other decision-makers",
+      "evidence that the workflow can survive internal review and comparison"
+    ],
+    "approval_pathway": "researches independently -> tests with dummy data -> requests light demo -> gathers peer feedback -> presents ROI summary to manager -> approves pilot -> evaluates full rollout"
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "communication_preferences": [
+      "structured, scannable formats",
+      "step-by-step logic over abstract benefits",
+      "bilingual flexibility (Mandarin/English) depending on audience",
+      "avoids marketing jargon; prefers operational language"
+    ],
+    "feedback_tone": "measured, practical, focused on workflow impact",
+    "question_style": "asks for concrete examples, trial access, and integration details before committing"
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T13:03:37+00:00",
+      "rationale": "Enriched by embedding realistic trade-offs (bandwidth protection vs. tool adoption, peer validation vs. solo trial), clarifying daily constraints (multi-generational household interruptions, committee-slow decisions, mobile-first reliance), and aligning all expansions with fixed anchors. Structural fields preserved; single brief explanation provided."
+    }
+  }
+}

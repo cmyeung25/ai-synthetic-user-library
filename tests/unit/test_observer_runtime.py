@@ -670,6 +670,72 @@ class ObserverRuntimeTest(unittest.TestCase):
             self.assertIn("INTERVIEW MODE:\nvalidate_hypothesis", quality_context)
             self.assertIn(hypothesis, quality_context)
 
+    def test_observed_pain_point_discovery_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Discover whether daily finance tracking is a real problem.",
+                interview_mode="pain_point_discovery",
+            )
+            self.assertEqual(session.interview_mode, "pain_point_discovery")
+            self.assertIn("INTERVIEW MODE:\npain_point_discovery", facilitator.calls[0]["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("INTERVIEW MODE:\npain_point_discovery", quality_context)
+
+    def test_observed_adoption_barrier_validation_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Understand why a useful workflow tool still might not be adopted.",
+                interview_mode="adoption_barrier_validation",
+            )
+            self.assertEqual(session.interview_mode, "adoption_barrier_validation")
+            self.assertIn("INTERVIEW MODE:\nadoption_barrier_validation", facilitator.calls[0]["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("INTERVIEW MODE:\nadoption_barrier_validation", quality_context)
+
+    def test_observed_decision_reconstruction_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Reconstruct the last real scope decision.",
+                interview_mode="decision_reconstruction",
+            )
+            self.assertEqual(session.interview_mode, "decision_reconstruction")
+            self.assertIn("INTERVIEW MODE:\ndecision_reconstruction", facilitator.calls[0]["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("INTERVIEW MODE:\ndecision_reconstruction", quality_context)
+
     def test_observed_concept_validation_uses_custom_protocol(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

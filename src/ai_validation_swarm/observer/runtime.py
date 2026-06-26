@@ -26,7 +26,7 @@ from ai_validation_swarm.facilitator.runtime import (
     _read,
     _repo_root,
 )
-from ai_validation_swarm.storage.files import ensure_dir, load_persona, read_json, write_json
+from ai_validation_swarm.storage.files import ensure_dir, load_persona, read_json, write_json, write_markdown
 
 
 QUALITY_PROMPT_VERSION = "facilitator-quality-evaluator/v2"
@@ -359,7 +359,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             )
             session.insight_report = synthesis
             write_json(folder / "insight_report.json", synthesis)
-            (folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
+            write_markdown(folder / "insights.md", self._render_insights(session))
 
         if not session.persona_driver_trace:
             session.status = "analyzing_persona_driver_trace"
@@ -410,11 +410,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
-        (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        write_markdown(folder / "quality_evaluation.md", self._render_quality(quality))
         write_json(folder / "facilitator_audit_feedback.json", audit_feedback)
-        (folder / "facilitator_audit_feedback.md").write_text(
+        write_markdown(
+            folder / "facilitator_audit_feedback.md",
             self._render_audit_feedback(audit_feedback),
-            encoding="utf-8",
         )
         self._progress(f"completed_observed interview_id={interview_id}")
         return session
@@ -465,11 +465,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
-        (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        write_markdown(folder / "quality_evaluation.md", self._render_quality(quality))
         write_json(folder / "facilitator_audit_feedback.json", audit_feedback)
-        (folder / "facilitator_audit_feedback.md").write_text(
+        write_markdown(
+            folder / "facilitator_audit_feedback.md",
             self._render_audit_feedback(audit_feedback),
-            encoding="utf-8",
         )
         self._progress(f"completed_quality_reevaluation interview_id={interview_id}")
         return session
@@ -535,7 +535,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         )
         session.insight_report = synthesis
         write_json(folder / "insight_report.json", synthesis)
-        (folder / "insights.md").write_text(self._render_insights(session), encoding="utf-8")
+        write_markdown(folder / "insights.md", self._render_insights(session))
 
         session.status = "analyzing_persona_driver_trace"
         self._save_controlled(session, folder)
@@ -574,11 +574,11 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
         write_json(folder / "quality_evaluation.json", quality)
-        (folder / "quality_evaluation.md").write_text(self._render_quality(quality), encoding="utf-8")
+        write_markdown(folder / "quality_evaluation.md", self._render_quality(quality))
         write_json(folder / "facilitator_audit_feedback.json", audit_feedback)
-        (folder / "facilitator_audit_feedback.md").write_text(
+        write_markdown(
+            folder / "facilitator_audit_feedback.md",
             self._render_audit_feedback(audit_feedback),
-            encoding="utf-8",
         )
         self._progress(f"completed_resynthesis interview_id={interview_id}")
         return session
@@ -606,9 +606,9 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         session.updated_at = utc_now_iso()
         self._save_controlled(session, folder)
         write_json(folder / "persona_driver_trace.json", payload)
-        (folder / "persona_driver_trace.md").write_text(
+        write_markdown(
+            folder / "persona_driver_trace.md",
             self._render_persona_driver_trace(session),
-            encoding="utf-8",
         )
 
     @staticmethod
@@ -846,6 +846,15 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
     def _render_audit_feedback(audit_feedback: dict[str, Any]) -> str:
         summary = audit_feedback.get("summary", {})
         applies_to = audit_feedback.get("applies_to", {})
+
+        def _append_item(lines: list[str], item: Any, formatter) -> None:
+            if isinstance(item, dict):
+                lines.append(formatter(item))
+                return
+            text = str(item).strip()
+            if text:
+                lines.append(f"- {text}")
+
         lines = [
             "# Facilitator Audit Feedback", "",
             f"- Scope: {audit_feedback.get('feedback_scope', 'unknown')}",
@@ -859,29 +868,54 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             "## Feedback Tags", "",
         ]
         for item in audit_feedback.get("facilitator_feedback_tags", []):
-            lines.append(
-                f"- [{item.get('severity', 'unknown')}] {item.get('tag', '')}: {item.get('observed_pattern', '')}"
+            _append_item(
+                lines,
+                item,
+                lambda row: f"- [{row.get('severity', 'unknown')}] {row.get('tag', '')}: {row.get('observed_pattern', '')}",
             )
         lines.extend(["", "## Missed High-Value Follow-Ups", ""])
         for item in audit_feedback.get("high_value_missed_followups", []):
-            lines.append(f"- [{item.get('priority', 'unknown')}] {item.get('missed_followup_question', '')}")
-            if item.get("trigger_type"):
-                lines.append(f"  Trigger: {item.get('trigger_type')}")
+            if isinstance(item, dict):
+                lines.append(f"- [{item.get('priority', 'unknown')}] {item.get('missed_followup_question', '')}")
+                if item.get("trigger_type"):
+                    lines.append(f"  Trigger: {item.get('trigger_type')}")
+            else:
+                text = str(item).strip()
+                if text:
+                    lines.append(f"- {text}")
         lines.extend(["", "## Likely Misclassified Drivers", ""])
         for item in audit_feedback.get("likely_misclassified_driver_patterns", []):
-            lines.append(
-                f"- {item.get('observed_surface_frame', '')} -> {item.get('possible_underlying_driver', '')}"
+            _append_item(
+                lines,
+                item,
+                lambda row: f"- {row.get('observed_surface_frame', '')} -> {row.get('possible_underlying_driver', '')}",
             )
         lines.extend(["", "## Evidence Handling Issues", ""])
         for item in audit_feedback.get("evidence_handling_issues", []):
-            lines.append(f"- [{item.get('severity', 'unknown')}] {item.get('issue', '')}")
+            _append_item(
+                lines,
+                item,
+                lambda row: f"- [{row.get('severity', 'unknown')}] {row.get('issue', '')}",
+            )
         lines.extend(["", "## Prompt Adjustments", ""])
         for item in audit_feedback.get("prompt_adjustments", []):
-            lines.append(f"- {item.get('adjustment_type', '')}: {item.get('text', '')}")
+            _append_item(
+                lines,
+                item,
+                lambda row: f"- {row.get('adjustment_type', '')}: {row.get('text', '')}",
+            )
         lines.extend(["", "## Carry-Forward Rules", ""])
         for item in audit_feedback.get("carry_forward_rules", []):
-            lines.append(f"- {item.get('rule_id', '')}: {item.get('rule', '')}")
+            _append_item(
+                lines,
+                item,
+                lambda row: f"- {row.get('rule_id', '')}: {row.get('rule', '')}",
+            )
         lines.extend(["", "## Blocked Feedback", ""])
         for item in audit_feedback.get("blocked_feedback", []):
-            lines.append(f"- {item.get('blocked_item', '')} ({item.get('block_reason', '')})")
+            _append_item(
+                lines,
+                item,
+                lambda row: f"- {row.get('blocked_item', '')} ({row.get('block_reason', '')})",
+            )
         return "\n".join(lines).rstrip() + "\n"

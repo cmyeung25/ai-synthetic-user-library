@@ -18,7 +18,7 @@ from ai_validation_swarm.facilitator.learning import build_approved_facilitator_
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
 from ai_validation_swarm.facilitator.optimism import attach_over_optimism_risks
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
-from ai_validation_swarm.storage.files import ensure_dir, load_persona, write_json
+from ai_validation_swarm.storage.files import ensure_dir, load_persona, write_json, write_markdown
 
 
 FACILITATOR_PROMPT_VERSION = "facilitator-interview/v2"
@@ -39,6 +39,30 @@ ROOT_CAUSE_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "recent_behaviour",
     "participant_cause",
     "consequence",
+)
+PAIN_POINT_DISCOVERY_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "recent_behaviour",
+    "problem_reality",
+    "frequency",
+    "consequence",
+    "current_workaround",
+)
+ADOPTION_BARRIER_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "recent_behaviour",
+    "current_workaround",
+    "setup_burden",
+    "permission_boundary",
+    "trust_boundary",
+    "pricing_condition",
+    "reversibility",
+    "workflow_burden",
+)
+DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "recent_real_decision",
+    "missing_evidence",
+    "pressure",
+    "defensible_vs_uncertain",
+    "decision_change",
 )
 HYPOTHESIS_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "target_behaviour",
@@ -322,6 +346,12 @@ class FacilitatedInterviewRuntime:
     def _coverage_requirements(interview_mode: str) -> tuple[str, ...]:
         if interview_mode == "concept_validation":
             return CONCEPT_VALIDATION_COVERAGE_REQUIREMENTS
+        if interview_mode == "adoption_barrier_validation":
+            return ADOPTION_BARRIER_VALIDATION_COVERAGE_REQUIREMENTS
+        if interview_mode == "decision_reconstruction":
+            return DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS
+        if interview_mode == "pain_point_discovery":
+            return PAIN_POINT_DISCOVERY_COVERAGE_REQUIREMENTS
         if interview_mode == "validate_hypothesis":
             return HYPOTHESIS_VALIDATION_COVERAGE_REQUIREMENTS
         return ROOT_CAUSE_COVERAGE_REQUIREMENTS
@@ -624,6 +654,30 @@ class FacilitatedInterviewRuntime:
         }
 
     @staticmethod
+    def _decision_reconstruction_coverage_status(session: InterviewSession) -> dict[str, Any]:
+        covered = {item: False for item in DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS}
+        for exchange in session.exchanges:
+            basis = FacilitatedInterviewRuntime._effective_question_basis(
+                exchange.facilitator_question,
+                exchange.question_evidence_basis,
+            )
+            flags = FacilitatedInterviewRuntime._concept_intro_prerequisite_flags(
+                question=exchange.facilitator_question,
+                phase=exchange.facilitator_phase,
+                strategy=exchange.probing_strategy,
+                basis=basis,
+            )
+            for item in DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS:
+                if flags.get(item):
+                    covered[item] = True
+        return {
+            "required": list(DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS),
+            "covered": {item: bool(covered[item]) for item in DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS},
+            "missing": [item for item in DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS if not covered[item]],
+            "ready": all(covered.values()),
+        }
+
+    @staticmethod
     def _concept_already_introduced(session: InterviewSession) -> bool:
         return any(
             "concept" in FacilitatedInterviewRuntime._normalize_probe_text(exchange.facilitator_phase)
@@ -654,12 +708,26 @@ class FacilitatedInterviewRuntime:
             "scenario",
             "reaction",
             "fit",
+            "setup",
+            "activation",
+            "onboard",
+            "permission",
+            "approval",
+            "access",
             "trust",
             "pricing",
+            "payment",
+            "budget",
             "retention",
             "repeat",
+            "revers",
+            "undo",
+            "rollback",
             "service_embedding",
             "workflow_insertion",
+            "workflow",
+            "routine",
+            "burden",
             "adoption",
             "output_to_decision",
             "decision_mapping",
@@ -698,6 +766,50 @@ class FacilitatedInterviewRuntime:
             (
                 "recent_event",
                 "Ask one short current-state question that fills the highest-value missing pre-concept evidence gap.",
+            ),
+        )
+
+    @staticmethod
+    def _adoption_barrier_gap_instruction(gap: str) -> tuple[str, str]:
+        mapping = {
+            "recent_behaviour": (
+                "recent_event",
+                "Ask for one recent real moment when they handled this job or problem in practice.",
+            ),
+            "current_workaround": (
+                "current_workaround",
+                "Ask what they do today instead, and what the current workaround already protects against.",
+            ),
+            "setup_burden": (
+                "setup_burden",
+                "Ask what setup, onboarding, or activation effort would already feel too heavy before routine use starts.",
+            ),
+            "permission_boundary": (
+                "permission_boundary",
+                "Ask what data access, approvals, stakeholder sign-off, or coordination permission would block trial or use.",
+            ),
+            "trust_boundary": (
+                "trust_boundary",
+                "Ask what trust proof, accuracy threshold, or risk explanation they would need before relying on it.",
+            ),
+            "pricing_condition": (
+                "pricing_condition",
+                "Ask what payment, budget, or value-for-cost condition would need to be true before adoption feels defensible.",
+            ),
+            "reversibility": (
+                "reversibility_probe",
+                "Ask how easy it must be to undo, exit, turn off, or back out if it does not work as expected.",
+            ),
+            "workflow_burden": (
+                "workflow_burden",
+                "Ask what extra routine step, habit change, or workflow burden would stop repeated use even if the value sounds real.",
+            ),
+        }
+        return mapping.get(
+            gap,
+            (
+                "adoption_barrier_probe",
+                "Ask one short adoption-friction question that fills the highest-value missing barrier gap.",
             ),
         )
 
@@ -784,6 +896,22 @@ class FacilitatedInterviewRuntime:
 
     @staticmethod
     def _update_coverage_status(session: InterviewSession) -> None:
+        if session.interview_mode == "decision_reconstruction":
+            decision_gate = FacilitatedInterviewRuntime._decision_reconstruction_coverage_status(session)
+            session.coverage_status = {
+                "requirements": decision_gate["required"],
+                "covered": decision_gate["covered"],
+                "missing": decision_gate["missing"],
+                "coverage_complete": decision_gate["ready"],
+                "depth_requirements": [],
+                "depth_covered": {},
+                "depth_missing": [],
+                "depth_complete": True,
+                "soft_limit_reached": len(session.exchanges) >= session.soft_turn_limit,
+                "hard_limit_reached": len(session.exchanges) >= session.hard_turn_limit,
+                "exchange_count": len(session.exchanges),
+            }
+            return
         requirements = FacilitatedInterviewRuntime._coverage_requirements(session.interview_mode)
         depth_requirements = FacilitatedInterviewRuntime._depth_requirements(session.interview_mode)
         covered = {item: False for item in requirements}
@@ -794,37 +922,68 @@ class FacilitatedInterviewRuntime:
                 exchange.question_evidence_basis,
             )
             phase = exchange.facilitator_phase.casefold()
+            strategy = exchange.probing_strategy.casefold()
+            labels = f"{phase} {strategy}"
             target = (exchange.question_evidence_target or "context").casefold()
-            if "recent_behaviour" in covered and ("recent" in phase or "event" in phase or "warm" in phase):
+            if "recent_behaviour" in covered and ("recent" in labels or "event" in labels or "warm" in labels):
                 covered["recent_behaviour"] = True
-            if "current_workaround" in covered and ("workflow" in phase or "workaround" in phase or "current" in phase):
+            if "current_workaround" in covered and ("workflow" in labels or "workaround" in labels or "current" in labels):
                 covered["current_workaround"] = True
-            if "concept_reaction" in covered and ("concept" in phase or "scenario" in phase or "reaction" in phase or "fit" in phase):
+            if "problem_reality" in covered and (
+                "problem" in labels or "pain" in labels or "severity" in labels or "reality" in labels
+            ):
+                covered["problem_reality"] = True
+            if "frequency" in covered and (
+                "frequency" in labels or "recurrence" in labels or "repeat" in labels or "pattern" in labels
+            ):
+                covered["frequency"] = True
+            if "concept_reaction" in covered and ("concept" in labels or "scenario" in labels or "reaction" in labels or "fit" in labels):
                 covered["concept_reaction"] = True
-            if "trust_boundary" in covered and ("trust" in phase or "privacy" in phase or "data" in phase):
+            if "setup_burden" in covered and (
+                "setup" in labels or "activation" in labels or "onboard" in labels or "install" in labels
+            ):
+                covered["setup_burden"] = True
+            if "permission_boundary" in covered and (
+                "permission" in labels or "approval" in labels or "access" in labels or "sign_off" in labels
+            ):
+                covered["permission_boundary"] = True
+            if "trust_boundary" in covered and ("trust" in labels or "privacy" in labels or "data" in labels):
                 covered["trust_boundary"] = True
             if "action_followthrough" in covered and (
-                "action" in phase or "follow" in phase or "next_step" in phase or "decision" in phase
+                "action" in labels or "follow" in labels or "next_step" in labels or "decision" in labels
             ):
                 covered["action_followthrough"] = True
+            if "pricing_condition" in covered and (
+                "pricing" in labels or "payment" in labels or "budget" in labels or "price" in labels or "cost" in labels
+            ):
+                covered["pricing_condition"] = True
+            if "reversibility" in covered and (
+                "revers" in labels or "undo" in labels or "rollback" in labels or "exit" in labels or "cancel" in labels
+            ):
+                covered["reversibility"] = True
             if "repeat_use_condition" in covered and (
-                "retention" in phase or "repeat" in phase or "month" in phase or "habit" in phase
+                "retention" in labels or "repeat" in labels or "month" in labels or "habit" in labels
             ):
                 covered["repeat_use_condition"] = True
+            if "workflow_burden" in covered and (
+                "workflow" in labels or "routine" in labels or "habit" in labels or "friction" in labels
+                or "integration" in labels or "extra_step" in labels
+            ):
+                covered["workflow_burden"] = True
             if "service_embedding" in covered and (
-                "embed" in phase or "journey" in phase or "channel" in phase or "placement" in phase
-                or "workflow" in phase or "rm" in phase
+                "embed" in labels or "journey" in labels or "channel" in labels or "placement" in labels
+                or "workflow" in labels or "rm" in labels
             ):
                 covered["service_embedding"] = True
             if "target_behaviour" in covered and (target == "target_behaviour" or basis == "current_event"):
                 covered["target_behaviour"] = True
-            if "participant_cause" in covered and (target == "participant_cause" or "cause" in phase or "root_cause" in phase):
+            if "participant_cause" in covered and (target == "participant_cause" or "cause" in labels or "root_cause" in labels):
                 covered["participant_cause"] = True
-            if "consequence" in covered and (target == "consequence" or "consequence" in phase):
+            if "consequence" in covered and (target == "consequence" or "consequence" in labels):
                 covered["consequence"] = True
             if "hypothesis_condition" in covered and target == "hypothesis_condition":
                 covered["hypothesis_condition"] = True
-            if "alternative_condition" in covered and (target == "alternative_condition" or "counterexample" in phase or "contrast" in phase):
+            if "alternative_condition" in covered and (target == "alternative_condition" or "counterexample" in labels or "contrast" in labels):
                 covered["alternative_condition"] = True
             depth_flags = FacilitatedInterviewRuntime._depth_probe_flags(
                 question=exchange.facilitator_question,
@@ -853,6 +1012,21 @@ class FacilitatedInterviewRuntime:
             concept_gate = FacilitatedInterviewRuntime._concept_intro_prerequisite_status(session)
             session.coverage_status["concept_intro_prerequisites"] = concept_gate
             session.coverage_status["concept_intro_allowed"] = concept_gate["ready"]
+        if session.interview_mode == "adoption_barrier_validation":
+            adoption_gate_required = ("recent_behaviour", "current_workaround")
+            adoption_gate = {
+                "required": list(adoption_gate_required),
+                "covered": {
+                    key: bool(session.coverage_status["covered"].get(key, False))
+                    for key in adoption_gate_required
+                },
+            }
+            adoption_gate["missing"] = [
+                key for key in adoption_gate_required if not adoption_gate["covered"].get(key, False)
+            ]
+            adoption_gate["ready"] = not adoption_gate["missing"]
+            session.coverage_status["adoption_intro_prerequisites"] = adoption_gate
+            session.coverage_status["adoption_intro_allowed"] = adoption_gate["ready"]
 
     @staticmethod
     def _should_finalize_after_exchange(session: InterviewSession) -> bool:
@@ -927,6 +1101,92 @@ class FacilitatedInterviewRuntime:
                     user_prompt=correction,
                     provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
                 )
+        if session.interview_mode == "adoption_barrier_validation":
+            self._update_coverage_status(session)
+            adoption_gate = session.coverage_status.get("adoption_intro_prerequisites", {})
+            if (
+                not adoption_gate.get("ready", False)
+                and self._decision_attempts_concept_progression(session, decision)
+            ):
+                missing = adoption_gate.get("missing", [])
+                next_gap = missing[0] if missing else "recent_behaviour"
+                phase_hint, gap_instruction = self._adoption_barrier_gap_instruction(next_gap)
+                rejected = decision.to_dict()
+                rejected["question_evidence_basis"] = basis
+                rejected["decision_status"] = "rejected_by_adoption_timing_gate"
+                session.facilitator_decisions.append(rejected)
+                correction = (
+                    "ADOPTION BARRIER TIMING GATE: Do not test setup, permissions, trust, pricing, reversibility, "
+                    "or workflow burden yet. In adoption-barrier mode, first anchor the interview in one recent real "
+                    "behavior and the current workaround. "
+                    f"Current missing prerequisites: {', '.join(missing) or '(none listed)'}. "
+                    f"Ask one short current-state question next. Use a phase or strategy label like '{phase_hint}' "
+                    f"so the runtime can audit the gap. {gap_instruction} "
+                    "Do not ask hypothetical adoption, payment, trust, or routine-use questions in this turn.\n\n"
+                    f"REJECTED QUESTION:\n{decision.message_to_persona}\n\n"
+                    f"TRANSCRIPT:\n{self._plain_transcript(session)}"
+                )
+                return self.facilitator_provider.next_turn(
+                    system_prompt=system_prompt,
+                    user_prompt=correction,
+                    provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
+                )
+            missing = list(session.coverage_status.get("missing", []))
+            if not decision.should_end or not missing:
+                return decision
+            next_gap = missing[0]
+            phase_hint, gap_instruction = self._adoption_barrier_gap_instruction(next_gap)
+            rejected = decision.to_dict()
+            rejected["question_evidence_basis"] = basis
+            rejected["decision_status"] = "rejected_by_adoption_barrier_gate"
+            session.facilitator_decisions.append(rejected)
+            correction = (
+                "ADOPTION BARRIER GATE: Do not end yet. This mode must cover recent real behavior, current workaround, "
+                "setup burden, permission boundary, trust boundary, pricing condition, reversibility, and workflow burden. "
+                f"Missing items: {', '.join(missing) or '(none listed)'}. "
+                f"Ask one short barrier question next. Use a phase or strategy label like '{phase_hint}' so the runtime "
+                f"can audit the gap. {gap_instruction}\n\n"
+                f"TRANSCRIPT:\n{self._plain_transcript(session)}"
+            )
+            return self.facilitator_provider.next_turn(
+                system_prompt=system_prompt,
+                user_prompt=correction,
+                provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
+            )
+        if session.interview_mode == "decision_reconstruction":
+            self._update_coverage_status(session)
+            missing = list(session.coverage_status.get("missing", []))
+            non_episodic_question = not decision.should_end and basis in {"hypothetical", "general_pattern"}
+            premature_closure = bool(decision.should_end and missing)
+            if not non_episodic_question and not premature_closure:
+                return decision
+            rejected = decision.to_dict()
+            rejected["question_evidence_basis"] = basis
+            rejected["decision_status"] = "rejected_by_decision_reconstruction_gate"
+            session.facilitator_decisions.append(rejected)
+            if premature_closure:
+                correction = (
+                    "DECISION RECONSTRUCTION GATE: Do not end yet. This mode must reconstruct one real recent decision "
+                    "through five participant-facing items: the event itself, missing evidence, stakeholder or time pressure, "
+                    "what was publicly defensible versus privately uncertain, and what actually changed in scope, sequence, "
+                    f"priority, or go-no-go. Missing items: {', '.join(missing) or '(none listed)'}. "
+                    "Ask one short factual question that fills the highest-value missing item next.\n\n"
+                    f"TRANSCRIPT:\n{self._plain_transcript(session)}"
+                )
+            else:
+                correction = (
+                    "DECISION RECONSTRUCTION GATE: Your proposed participant question is hypothetical or generic. "
+                    "Rewrite it as one short factual reconstruction question about the same real decision event. "
+                    "Stay anchored in what happened, what evidence was missing, what pressure existed, what felt defensible "
+                    "versus uncertain, or what actually changed.\n\n"
+                    f"REJECTED QUESTION:\n{decision.message_to_persona}\n\n"
+                    f"TRANSCRIPT:\n{self._plain_transcript(session)}"
+                )
+            return self.facilitator_provider.next_turn(
+                system_prompt=system_prompt,
+                user_prompt=correction,
+                provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
+            )
         if session.interview_mode != "validate_hypothesis":
             return decision
         recalled_count = sum(
@@ -1148,17 +1408,27 @@ class FacilitatedInterviewRuntime:
         write_json(folder / "facilitator_trace.json", session.facilitator_decisions)
         if session.persona_driver_trace:
             write_json(folder / "persona_driver_trace.json", session.persona_driver_trace)
-            (folder / "persona_driver_trace.md").write_text(
+            write_markdown(
+                folder / "persona_driver_trace.md",
                 self._render_persona_driver_trace(session),
-                encoding="utf-8",
             )
-        (folder / "transcript.md").write_text(self._render_transcript(session), encoding="utf-8")
+        write_markdown(folder / "transcript.md", self._render_transcript(session))
 
     @staticmethod
     def _validate_interview_brief(interview_mode: str, hypothesis: str) -> str:
         mode = interview_mode.strip() or "explore_root_cause"
-        if mode not in {"explore_root_cause", "validate_hypothesis", "concept_validation"}:
-            raise ValueError("interview_mode must be explore_root_cause, validate_hypothesis, or concept_validation.")
+        if mode not in {
+            "pain_point_discovery",
+            "adoption_barrier_validation",
+            "decision_reconstruction",
+            "explore_root_cause",
+            "validate_hypothesis",
+            "concept_validation",
+        }:
+            raise ValueError(
+                "interview_mode must be pain_point_discovery, adoption_barrier_validation, decision_reconstruction, "
+                "explore_root_cause, validate_hypothesis, or concept_validation."
+            )
         if mode == "validate_hypothesis" and not hypothesis.strip():
             raise ValueError("validate_hypothesis mode requires a non-empty hypothesis.")
         return mode

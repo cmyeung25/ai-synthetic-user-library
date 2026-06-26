@@ -1,0 +1,95 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0008",
+    "panel_role": "extreme_user",
+    "age_band": "25-34",
+    "location_type": "urban_core",
+    "household_structure": "single parent with one child",
+    "occupation_band": "customer_success",
+    "income_band": "upper_middle",
+    "education_band": "bachelor",
+    "language": [
+      "English",
+      "Mandarin"
+    ],
+    "device_environment": "smartphone-first",
+    "payment_environment": "digital-first",
+    "schedule_pressure": "low",
+    "budget_flexibility": "high",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "low",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "high",
+    "locale_pack": "singapore_smb",
+    "occupation_title": "customer success manager",
+    "life_stage": "emerging_manager",
+    "purchase_authority_type": "department_budget_requester",
+    "employment_stability": "stable",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "fast",
+    "proof_threshold": "case_studies_required",
+    "cash_flow_volatility": "high"
+  },
+  "decision_policy": {
+    "adoption_style": "tries new tools early if the workflow gain is obvious",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "evidence that the workflow can survive internal review and comparison"
+    ]
+  },
+  "response_style": {
+    "articulation_level": "high",
+    "directness": "medium",
+    "detail_tendency": "high",
+    "communication_preference": "structured, example-driven, and focused on operational impact rather than marketing language",
+    "feedback_pattern": "asks clarifying questions about setup time, data handling, and approval steps before committing"
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T13:08:00+00:00",
+      "rationale": "The enrichment preserves all structural anchors (role, location, household, income, tech profile, education, locale) while layering in realistic operational tensions: high digital literacy versus app fatigue, stable employment versus volatile cash flow, and low caregiving load versus high mental tracking. Trade-offs are emphasized around workflow maturity, approval dependence, and proof thresholds to reflect how an emerging manager navigates tool selection under real constraints. The narrative grounds these signals in a typical weekly cadence, ensuring the persona remains actionable for product validation without drifting into stereotyping or diagnostic framing."
+    }
+  }
+}

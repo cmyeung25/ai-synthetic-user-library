@@ -1,0 +1,440 @@
+{
+  "comparison_version": "persona-quality-compare/v1",
+  "experiment_id": "persona_ab_20260625_cli_verify_agnes_v2_pairs",
+  "generated_at": "2026-06-25T14:29:00+00:00",
+  "seeds": [
+    101,
+    202
+  ],
+  "setup": {
+    "baseline_backend": "codex",
+    "candidate_backend": "agnes",
+    "judge_backend": "codex",
+    "baseline_label": "Codex",
+    "candidate_label": "Agnes",
+    "judge_label": "Codex",
+    "baseline_prompt_version": "persona-enrichment/v1",
+    "candidate_prompt_version": "persona-enrichment/v2",
+    "judge_prompt_version": "persona-judge/v1",
+    "baseline_model": "gpt-5.4",
+    "candidate_model": "agnes-2.0-flash",
+    "judge_model": "gpt-5.4",
+    "quality_only": true,
+    "matched_pairs": true,
+    "sample_size": 2,
+    "pause_seconds": 6.0
+  },
+  "runs": [
+    {
+      "seed": 101,
+      "baseline": {
+        "label": "Codex",
+        "backend": "codex",
+        "elapsed_seconds": 79.3,
+        "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+        "llm_enrichment": {
+          "provider": "codex",
+          "profile": "chatgpt-5.4-high",
+          "model": "gpt-5.4",
+          "prompt_version": "persona-enrichment/v1",
+          "generated_at": "2026-06-25T14:29:53+00:00",
+          "rationale": "{\"added_realism_dimensions\": [\"time fragmentation from caregiving load\", \"subscription caution tied to operational commitment rather than low means\", \"adoption logic based on busy-week survivability\", \"privacy sensitivity focused on third-party data handling\", \"workflow behavior across mobile, desktop, notes, reminders, and message threads\"], \"enrichment_goal\": \"Increase behavioral realism for product validation by making trade-offs, constraints, trust logic, and day-to-day failure modes more concrete while preserving all fixed seed facts.\", \"kept_anchors\": [\"Daniel Chan\", \"33\", \"man\", \"Kuching\", \"English and Malay\", \"small business owner\", \"multi-generational household\", \"household size 4\", \"regional living area\", \"early adult small business builder\"], \"product_validation_use\": \"This persona is useful for testing onboarding friction, proof thresholds, workflow fit, trust signals, and whether a product genuinely reduces admin burden for a mainstream owner-decider with moderate digital literacy and real household pressure.\"}"
+        },
+        "judge": {
+          "verdict": "usable_with_revisions",
+          "plausibility_score": 7.6,
+          "stereotype_risk_score": 3.8,
+          "panel_fit_score": 8.4,
+          "normalized_scores": {
+            "plausibility_score": 7.6,
+            "stereotype_risk_score": 3.8,
+            "panel_fit_score": 8.4
+          },
+          "findings": [
+            "The persona is broadly plausible: the workload, caregiving pressure, cautious software spend, and preference for visible trial all reinforce each other.",
+            "Panel-role fit is strong for a mainstream owner-operator: needs are practical, constraints are common, and adoption behavior is neither overly innovative nor unusually resistant.",
+            "Decision-policy consistency is good. The stated rejection triggers, proof requirements, switching logic, and daily routine all point to the same adoption pattern.",
+            "Narrative coherence is weakened by template residue such as 'regional sea service ops context' and 'early adult small business builder phase,' which read as system-generated labels rather than lived biography.",
+            "Some details are still generic despite the length. The business type, client mix, and concrete operational environment are missing, so the persona risks sounding interchangeable with many SMB workflow personas.",
+            "There is a mild plausibility gap around 'small business owner' paired with 'employment_stability: contract_based.' That can be realistic, but it needs clearer wording such as contract-driven revenue or project-based client income.",
+            "Stereotype risk is low to moderate, not because of overt bias, but because regional, multilingual, family-bound, privacy-cautious small-business traits are bundled in a familiar way without enough individualized texture.",
+            "MBTI and zodiac add little behavioral value here and make the profile feel more decorative than evidence-driven."
+          ],
+          "revision_hints": [
+            "Specify the business category and operating pattern, for example marine services coordination, equipment supply, field maintenance, or another concrete local business model.",
+            "Replace at least two template phrases with one specific recent scenario, such as a missed follow-up, a client handoff problem, or a software trial he abandoned after a busy week.",
+            "Clarify the income/stability logic by stating whether his revenue is steady because of repeat clients even though jobs are contract-based.",
+            "Explain the caregiving load with one concrete household responsibility so the constraint feels behavioral rather than symbolic.",
+            "Add one or two distinct non-stereotyped personal habits or preferences unrelated to productivity software to reduce interchangeability.",
+            "Remove or de-emphasize MBTI and zodiac unless they are used downstream in generation rules or reaction modeling.",
+            "Ground trust signals in a more local buying pattern, such as whose recommendation he would trust, what counts as credible proof, and what kind of onboarding would feel acceptable in practice."
+          ],
+          "rationale": "This persona is directionally strong for synthetic research use because its constraints, motivations, and adoption logic are mostly aligned and behaviorally usable. The main weakness is not contradiction but generic construction: several labels feel templated, and the absence of a concrete business context limits predictive sharpness. Stereotype risk remains relatively low, but individuality should be strengthened so regional and household factors shape behavior without becoming the whole explanation of it.",
+          "provider": "codex",
+          "profile": "chatgpt-5.4-high",
+          "model": "gpt-5.4",
+          "prompt_version": "persona-judge/v1",
+          "generated_at": "2026-06-25T14:30:19+00:00"
+        },
+        "attempt_count": 1,
+        "fallback_used": false,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "success",
+            "elapsed_seconds": 79.3,
+            "transport": "codex_cli",
+            "fallback_transport": null,
+            "usage": {
+              "input_tokens_estimated": 2254,
+              "output_tokens_estimated": 2654,
+              "total_tokens_estimated": 4908,
+              "source": "estimated_from_text"
+            }
+          }
+        ]
+      },
+      "candidate": {
+        "label": "Agnes",
+        "backend": "agnes",
+        "elapsed_seconds": 78.0,
+        "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v2",
+        "llm_enrichment": {
+          "provider": "agnes",
+          "profile": "agnes-2.0-flash",
+          "model": "agnes-2.0-flash",
+          "prompt_version": "persona-enrichment/v2",
+          "generated_at": "2026-06-25T14:31:06+00:00",
+          "rationale": "The enrichment preserves all seed facts and identity anchors while grounding them in observable regional SEA behavior: bilingual switching, WhatsApp-centric ops, FPX/invoice billing preferences, and PDPA-aware data caution. The tension between high caregiving load and contract-based income is explained through fragmented attention windows and the need for low-friction capture. A concrete Q3 failure memory justifies current caution. The current workaround (notebook + Sheets + WhatsApp broadcasts) is specified. Willingness to try, pay, and roll out are explicitly separated. Mainstream panel role is visible through measured adoption, peer-referral reliance, and feature skepticism. Locale is embedded in channels, support expectations, and trust norms. All constraints are satisfied without abstract SaaS phrasing."
+        },
+        "judge": {
+          "verdict": "pass_with_revisions",
+          "plausibility_score": 8.1,
+          "stereotype_risk_score": 4.2,
+          "panel_fit_score": 8.7,
+          "normalized_scores": {
+            "plausibility_score": 8.1,
+            "stereotype_risk_score": 4.2,
+            "panel_fit_score": 8.7
+          },
+          "findings": [
+            {
+              "area": "plausibility",
+              "severity": "medium",
+              "message": "The persona is broadly believable because the workflow, trust thresholds, trial requirements, and prior failure memory align with a cautious small-business operator. The strongest realism comes from concrete operational behaviors like Friday reconciliation, sandbox testing, and invoice/export demands."
+            },
+            {
+              "area": "stereotype_risk",
+              "severity": "medium",
+              "message": "Several locale cues read as an assembled regional checklist rather than naturally emerging behavior: WhatsApp-first ops, FPX/e-wallet billing, bilingual support, PDPA caution, and local-logo trust signals all point in the same direction at once. None is implausible alone, but together they risk flattening the character into a 'regional SEA SME owner' template."
+            },
+            {
+              "area": "panel_role_fit",
+              "severity": "low",
+              "message": "The persona fits a mainstream panel role well. He is not novelty-seeking, requires visible proof, prefers stable core workflows, and relies on peer validation over vendor messaging."
+            },
+            {
+              "area": "narrative_coherence",
+              "severity": "medium",
+              "message": "The central tension is coherent: caregiving load, fragmented attention, and contract delivery pressure explain the preference for low-friction tools. However, the business context is still underspecified, so some details feel reverse-engineered from the decision policy rather than arising from a fully grounded day-to-day job."
+            },
+            {
+              "area": "decision_policy_consistency",
+              "severity": "low",
+              "message": "The decision policy is mostly consistent with the profile and narrative. Setup-time limits, export requirements, privacy guarantees, and rollback needs all match the described near-miss and switching-cost concerns."
+            },
+            {
+              "area": "generic_or_weak_elements",
+              "severity": "medium",
+              "message": "Some traits feel generic or low-signal for behavior prediction: MBTI, zodiac, 'responsible/careful/steady' identity wording, and multiple empty schema sections. These do not break plausibility, but they dilute evidence quality and make the persona feel partially template-driven."
+            },
+            {
+              "area": "minor_inconsistency",
+              "severity": "medium",
+              "message": "'Small business owner' combined with 'employment_stability: contract_based' is plausible but ambiguous. It is unclear whether he runs a services firm dependent on project contracts, works as an owner-operator contractor, or mixes owner and freelancer roles."
+            }
+          ],
+          "revision_hints": [
+            "Specify the business type, staff count, and client pattern. For example: marine repair coordination, facilities maintenance, small logistics brokerage, or another concrete service domain that explains site visits, quoting, follow-up, and courier urgency.",
+            "Clarify the owner-versus-contractor ambiguity. State whether he owns a small firm that wins contract work, or personally operates as a contractor with light admin support.",
+            "Reduce checklist-style locale signaling. Keep the strongest 2 to 3 local grounding cues and let the rest emerge through scenarios rather than attribute lists.",
+            "Replace low-predictive traits like MBTI and zodiac with behaviorally causal detail such as tolerance for missed messages, response to staff errors, or how he handles client escalation under time pressure.",
+            "Add one concrete household-caregiving example that affects tool adoption behavior, such as being unavailable during a recurring evening care task or needing handoff-friendly reminders.",
+            "Tighten the Q3 failure story by naming the migration goal and the exact operational consequence. This will make the trust barrier feel less narratively convenient.",
+            "Fill only the schema sections that materially improve simulation quality, especially workflow_adoption_model, objection_language_style, local_grounding_layer, and communication_behavior_model. Leave nonessential decorative fields out instead of keeping many empty sections."
+          ],
+          "rationale": "This persona is stronger than a generic SaaS persona because it contains a clear operating context, a believable trust barrier, and decision rules that connect to lived constraints rather than abstract preferences. Its main weakness is over-formatting: too many attributes appear selected to satisfy a taxonomy, which raises stereotype risk and slightly reduces narrative naturalness. With a more specific business domain, fewer decorative traits, and cleaner causal grounding between locale, caregiving, and workflow choices, it would be a solid mainstream panel persona for concept and workflow-validation tasks.",
+          "provider": "codex",
+          "profile": "chatgpt-5.4-high",
+          "model": "gpt-5.4",
+          "prompt_version": "persona-judge/v1",
+          "generated_at": "2026-06-25T14:31:37+00:00"
+        },
+        "attempt_count": 1,
+        "fallback_used": false,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "success",
+            "elapsed_seconds": 78.0,
+            "transport": "powershell_webrequest",
+            "fallback_transport": null,
+            "usage": {
+              "input_tokens": 2662,
+              "output_tokens": 5229,
+              "total_tokens": 7891,
+              "source": "api"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "seed": 202,
+      "baseline": {
+        "label": "Codex",
+        "backend": "codex",
+        "elapsed_seconds": 146.6,
+        "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+        "llm_enrichment": {
+          "provider": "codex",
+          "profile": "chatgpt-5.4-high",
+          "model": "gpt-5.4",
+          "prompt_version": "persona-enrichment/v1",
+          "generated_at": "2026-06-25T14:33:37+00:00",
+          "rationale": "{\"enrichment_focus\": [\"added realistic routine pressure instead of generic busyness\", \"made trust and trial behavior concrete around privacy, setup, and proof\", \"connected household constraints to purchase logic without changing identity anchors\", \"kept the persona useful for workflow and adoption validation rather than personal profiling\"], \"kept_fixed\": [\"structural identity\", \"locale\", \"household structure\", \"occupation\", \"language\", \"life stage\", \"seed constraints\"], \"validation_relevance\": \"This enrichment is tuned to test whether a product can earn trust quickly, replace manual follow-up in real conditions, and survive contact with a busy, tool-heavy weekly routine.\", \"why_it_improves_realism\": \"The persona now has believable friction between documentation discipline, fragmented coordination, caregiving load, and budget caution. That makes reactions to onboarding, proof, pricing, and privacy more predictive for product validation.\"}"
+        },
+        "judge": {
+          "verdict": "usable_with_revisions",
+          "plausibility_score": 7,
+          "stereotype_risk_score": 4,
+          "panel_fit_score": 7,
+          "normalized_scores": {
+            "plausibility_score": 7.0,
+            "stereotype_risk_score": 4.0,
+            "panel_fit_score": 7.0
+          },
+          "findings": [
+            {
+              "type": "plausibility",
+              "severity": "medium",
+              "issue": "The core profile is believable: a 37-year-old Hong Kong program manager, single parent, medium income, and tool-heavy workflow can plausibly produce the stated time pressure, trial-first buying behavior, and follow-up anxiety.",
+              "evidence": [
+                "occupation, schedule pressure, and workflow maturity align with the stated admin-drag pain",
+                "caregiving load reasonably explains preference for predictable, low-maintenance tools"
+              ]
+            },
+            {
+              "type": "narrative_coherence",
+              "severity": "medium",
+              "issue": "Several biography lines read like seed fields pasted into prose rather than lived experience.",
+              "evidence": [
+                "phrases such as 'hong kong smb context', 'mid career operator phase', 'workflow maturity is currently tool heavy', and 'decision speed is committee slow' sound taxonomic rather than human",
+                "the narrative field is a pseudo-JSON string instead of a natural narrative object"
+              ]
+            },
+            {
+              "type": "decision_policy_consistency",
+              "severity": "medium",
+              "issue": "Most decision logic is internally consistent, but one authority detail is under-explained.",
+              "evidence": [
+                "low switching cost plus quick abandonment of confusing tools is coherent",
+                "needs trial, visible proof, and low-sensitivity first use all reinforce each other",
+                "'shared_household_decider' sits awkwardly with 'single parent with one child' and household size 2 unless an ex-partner, elder, or family budget influence is explicitly defined"
+              ]
+            },
+            {
+              "type": "panel_fit",
+              "severity": "medium",
+              "issue": "The persona fits a workflow-software evaluation panel, but is somewhat specialized for a supposedly mainstream role.",
+              "evidence": [
+                "high digital literacy, heavy documentation discipline, and program-management work make him more operationally sophisticated than a broad mainstream consumer",
+                "fit is stronger for B2B productivity or SMB coordination panels than for a general-population mainstream panel"
+              ]
+            },
+            {
+              "type": "stereotype_risk",
+              "severity": "low",
+              "issue": "The persona avoids overt harmful stereotyping, but there is mild risk of collapsing Hong Kong identity into generic 'practical, cautious, efficiency-focused' shorthand.",
+              "evidence": [
+                "locale appears mainly through broad caution and work ethic signals rather than concrete local texture",
+                "Cantonese/English bilingualism is plausible, but local grounding is thin and could become tokenistic if reused at scale"
+              ]
+            },
+            {
+              "type": "genericity",
+              "severity": "medium",
+              "issue": "The persona is useful but still partly generic because many motivations are common SaaS-buyer defaults.",
+              "evidence": [
+                "privacy, ROI, messy setup, another dashboard, and clear onboarding are standard objections across many personas",
+                "there are few domain-specific examples of what he actually coordinates, buys, or drops during a bad week"
+              ]
+            }
+          ],
+          "revision_hints": [
+            "Explain why purchase authority is 'shared_household_decider' despite single-parent status; specify whether budgeting is influenced by an ex-partner, parents, or another household contributor.",
+            "Replace taxonomy-like phrases with observable details, such as commute pattern, child-care handoff timing, or a concrete weekly coordination failure that triggers tool evaluation.",
+            "Add one or two local grounding details tied to Shatin and bilingual work habits without making them causal stereotypes.",
+            "Narrow the work context: specify what kind of program manager he is, what stakeholders he coordinates, and what 'manual follow-up' looks like in practice.",
+            "Differentiate him from a generic productivity persona by adding a concrete rejection pattern, for example what exact setup burden makes him abandon a tool on day 3.",
+            "Convert the 'narrative' field from a pseudo-JSON string into structured JSON or plain text fields to improve downstream reliability and auditability.",
+            "If 'mainstream' is important, slightly reduce the sophistication signals or explain why this panel defines mainstream within an SMB workflow-software segment."
+          ],
+          "rationale": "This persona is directionally strong because the caregiving load, workflow fragmentation, proof threshold, and renewal logic all point to a coherent adoption policy: he trials narrowly, looks for immediate reduction in admin drag, and rejects tools that add maintenance. That makes the persona useful for discovery and concept evaluation around workflow reliability and trust-building. The main weaknesses are not implausibility but over-templating and panel ambiguity. Too much of the biography echoes seed labels instead of lived specifics, which weakens behavioral realism. Panel fit is decent if 'mainstream' means mainstream within productivity-tool buyers, but weaker if it means a broad general-market respondent. Stereotype risk is present but limited; the bigger issue is generic SaaS-buyer language and insufficient local texture rather than harmful identity caricature.",
+          "provider": "codex",
+          "profile": "chatgpt-5.4-high",
+          "model": "gpt-5.4",
+          "prompt_version": "persona-judge/v1",
+          "generated_at": "2026-06-25T14:34:10+00:00"
+        },
+        "attempt_count": 1,
+        "fallback_used": false,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "success",
+            "elapsed_seconds": 146.6,
+            "transport": "codex_cli",
+            "fallback_transport": null,
+            "usage": {
+              "input_tokens_estimated": 2341,
+              "output_tokens_estimated": 3602,
+              "total_tokens_estimated": 5943,
+              "source": "estimated_from_text"
+            }
+          }
+        ]
+      },
+      "candidate": {
+        "label": "Agnes",
+        "backend": "agnes",
+        "elapsed_seconds": 279.8,
+        "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v2",
+        "llm_enrichment": {
+          "provider": "agnes",
+          "profile": "agnes-2.0-flash",
+          "model": "agnes-2.0-flash",
+          "prompt_version": "persona-enrichment/v2",
+          "generated_at": "2026-06-25T14:38:16+00:00",
+          "rationale": "This enrichment preserves all fixed anchors (age, location, role, family status) while adding specific, realistic behaviors driven by his 'high caregiving load' and 'tool-heavy' workflow. The 'recent failure memory' provides a concrete trigger for his current caution and willingness to change. The 'locale-specific behaviors' reflect the Hong Kong SMB context (WhatsApp reliance, bilingual needs, data residency concerns). The 'workaround' section details actual actions he takes, making the persona actionable for product validation. The 'decision policy' explicitly links his trust threshold to tangible proof points like trials and case studies, avoiding abstract SaaS jargon."
+        },
+        "judge": {
+          "verdict": "pass_with_revisions",
+          "plausibility_score": 7.6,
+          "stereotype_risk_score": 3.1,
+          "panel_fit_score": 6.4,
+          "normalized_scores": {
+            "plausibility_score": 7.6,
+            "stereotype_risk_score": 3.1,
+            "panel_fit_score": 6.4
+          },
+          "findings": [
+            {
+              "area": "plausibility",
+              "severity": "medium",
+              "issue": "The persona is materially more believable than a generic SaaS persona because it ties needs to concrete workflow failures, time constraints, and trial behavior.",
+              "evidence": "The Slack miss, WhatsApp/Excel/email fragmentation, mobile commute need, and 3-day integration cutoff create actionable behavioral anchors."
+            },
+            {
+              "area": "narrative_coherence",
+              "severity": "medium",
+              "issue": "The story is mostly coherent, but a few fields feel mechanically assembled rather than humanly integrated.",
+              "evidence": "MBTI, zodiac, and multiple schema labels add profile bulk without affecting decisions, while many adjacent sections remain empty. This makes the persona feel partially template-driven."
+            },
+            {
+              "area": "panel_role_fit",
+              "severity": "medium",
+              "issue": "Fit to a \"mainstream\" panel role is only moderate because the profile is quite specific: Hong Kong suburban single parent, program manager, tool-heavy workflow, high digital literacy, bilingual business context.",
+              "evidence": "This is a strong SMB/workflow persona, but it may over-represent organized knowledge workers rather than a broader mainstream population unless the panel is explicitly mainstream within HK SMB operators."
+            },
+            {
+              "area": "decision_policy_consistency",
+              "severity": "low",
+              "issue": "The decision policy is internally consistent overall, but the buying arena is slightly blurred between household and work-tool decision making.",
+              "evidence": "He is framed as a shared household decider, yet most objections, proof needs, and workflows describe a work-software evaluation process. The committee-slow decision speed also reads more organizational than household."
+            },
+            {
+              "area": "stereotype_risk",
+              "severity": "low",
+              "issue": "The persona avoids overt caricature, but some locale cues risk becoming stock shorthand if reused broadly across similar personas.",
+              "evidence": "Heavy WhatsApp/WeChat use, bilingual preference, and HK data-hosting caution are plausible, but they should be treated as evidence-backed behaviors for this persona, not default Hong Kong traits."
+            },
+            {
+              "area": "genericness",
+              "severity": "medium",
+              "issue": "Several motivations and values are credible but still somewhat generic and common across many B2B productivity personas.",
+              "evidence": "Phrases like \"reduce admin drag,\" \"protect bandwidth,\" and \"another tool that becomes shelfware\" are useful but familiar; they need more distinctive personal language or habits to sharpen differentiation."
+            }
+          ],
+          "revision_hints": [
+            "Clarify the buying context explicitly: specify whether he is evaluating tools for personal workflow, team workflow, or a household-influenced work purchase, and separate those decision rules.",
+            "Replace MBTI and zodiac with behaviorally predictive cues drawn from repeated habits, such as how he triages messages, when he abandons trials, or what he screenshots/saves for later.",
+            "Add 2-3 small, concrete micro-behaviors that are hard to fake generically, such as how he names reminder items, what he does during school-run dead time, or how he reconciles chat promises into Excel.",
+            "Sharpen the \"mainstream\" justification or relabel the panel segment. If this persona is meant to represent mainstream HK SMB operators, say that directly; otherwise the current profile is narrower than a general mainstream panel.",
+            "Explain the \"shared_household_decider\" field in narrative terms, for example whether spending on software is discussed with parents, ex-partner, or another household stakeholder.",
+            "Tighten locale evidence by anchoring each local behavior to a reason: why bilingual docs matter, what data-residency concern he has encountered, and when WhatsApp is chosen over email.",
+            "Reduce template leakage by removing or de-emphasizing empty schema blocks in downstream use, since they make the persona feel generated rather than observed."
+          ],
+          "rationale": "Scores are on a 0-10 scale. This persona is usable for concept or workflow-evaluation research because it has concrete constraints, a believable trigger event, and a coherent trial-based adoption policy. Its main weakness is not implausibility but over-assembly: some attributes feel like schema furniture rather than decision-relevant evidence. Stereotype risk is low to moderate because the localized details are plausible, but they should not harden into default assumptions for Hong Kong users. Panel fit is moderate rather than high because the persona is a fairly specific SMB operations archetype, not an obviously broad mainstream respondent.",
+          "provider": "codex",
+          "profile": "chatgpt-5.4-high",
+          "model": "gpt-5.4",
+          "prompt_version": "persona-judge/v1",
+          "generated_at": "2026-06-25T14:38:55+00:00"
+        },
+        "attempt_count": 2,
+        "fallback_used": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "failed",
+            "elapsed_seconds": 121.9,
+            "error": "OpenAI Chat Completions API request failed via powershell transport: HTTP 0 The underlying connection was closed: The connection was closed unexpectedly."
+          },
+          {
+            "attempt": 2,
+            "status": "success",
+            "elapsed_seconds": 157.9,
+            "transport": "powershell_webrequest",
+            "fallback_transport": "chat_completions",
+            "usage": {
+              "total_tokens": 4865,
+              "source": "api"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "output_paths": {
+    "experiment_dir": "experiments\\persona_ab_20260625_cli_verify_agnes_v2_pairs",
+    "report_json": "experiments\\persona_ab_20260625_cli_verify_agnes_v2_pairs\\comparison_report.json",
+    "report_md": "experiments\\persona_ab_20260625_cli_verify_agnes_v2_pairs\\comparison_report.md"
+  },
+  "aggregates": {
+    "baseline": {
+      "average_plausibility_score_normalized": 7.3,
+      "average_stereotype_risk_score_normalized": 3.9,
+      "average_panel_fit_score_normalized": 7.7
+    },
+    "candidate": {
+      "average_plausibility_score_normalized": 7.85,
+      "average_stereotype_risk_score_normalized": 3.65,
+      "average_panel_fit_score_normalized": 7.55
+    },
+    "reliability": {
+      "baseline_successes": 2,
+      "candidate_successes": 2,
+      "baseline_total_attempts": 2,
+      "candidate_total_attempts": 3,
+      "baseline_pairs_using_fallback": 0,
+      "candidate_pairs_using_fallback": 1
+    },
+    "deltas_candidate_minus_baseline": {
+      "plausibility_score_normalized": 0.55,
+      "stereotype_risk_score_normalized": -0.25,
+      "panel_fit_score_normalized": -0.15
+    }
+  },
+  "score_normalization_note": "Judge outputs mixed 0-10 and 0-100 scales. Scores above 10 were normalized by dividing by 10 before aggregation."
+}

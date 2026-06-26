@@ -1,0 +1,109 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "35-44",
+    "location_type": "suburban",
+    "household_structure": "single parent with one child",
+    "occupation_band": "program_management",
+    "income_band": "middle",
+    "education_band": "diploma",
+    "language": [
+      "Cantonese",
+      "English"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "mixed",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "medium",
+    "caregiving_load": "high",
+    "trust_threshold": "needs_trial",
+    "switching_cost_level": "low",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "high",
+    "locale_pack": "hong_kong_smb",
+    "occupation_title": "program manager",
+    "life_stage": "mid_career_operator",
+    "purchase_authority_type": "shared_household_decider",
+    "employment_stability": "variable",
+    "workflow_maturity": "tool_heavy",
+    "decision_speed": "committee_slow",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "medium"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "another tool that adds one more dashboard without replacing existing work"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "buy-in material that can be shared with other decision-makers",
+      "pricing and effort that can be explained clearly in household terms"
+    ],
+    "evaluation_sequence": [
+      "check whether it replaces an existing manual step",
+      "test a narrow workflow with low-risk information",
+      "see whether follow-up is actually easier after several busy days",
+      "decide whether the benefit is worth explaining to household and work stakeholders"
+    ],
+    "pricing_logic": "Monthly spend is acceptable if it removes recurring admin drag and does not create a second maintenance job.",
+    "switching_logic": "Low switching cost makes him willing to try, but not willing to tolerate confusion for long.",
+    "committee_dynamic": "He can run a personal trial quickly, but broader adoption slows when other people need alignment or when the value story is hard to communicate.",
+    "renewal_logic": "Continues only if the tool still saves time after the novelty period and remains dependable during high-friction weeks."
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "interview_behavior": "Usually starts with a concrete recent example rather than an abstract preference statement.",
+    "feedback_pattern": "Balanced and specific; he points out friction plainly but does not dramatise it.",
+    "comparison_style": "Often compares a new option against spreadsheets, reminders, and messaging habits rather than against an ideal future-state workflow.",
+    "skepticism_expression": "Polite but noticeable; vague benefits trigger practical follow-up questions about setup, effort, and privacy."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 4,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "codex",
+      "profile": "chatgpt-5.4-high",
+      "model": "gpt-5.4",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T14:33:37+00:00",
+      "rationale": "{\"enrichment_focus\": [\"added realistic routine pressure instead of generic busyness\", \"made trust and trial behavior concrete around privacy, setup, and proof\", \"connected household constraints to purchase logic without changing identity anchors\", \"kept the persona useful for workflow and adoption validation rather than personal profiling\"], \"kept_fixed\": [\"structural identity\", \"locale\", \"household structure\", \"occupation\", \"language\", \"life stage\", \"seed constraints\"], \"validation_relevance\": \"This enrichment is tuned to test whether a product can earn trust quickly, replace manual follow-up in real conditions, and survive contact with a busy, tool-heavy weekly routine.\", \"why_it_improves_realism\": \"The persona now has believable friction between documentation discipline, fragmented coordination, caregiving load, and budget caution. That makes reactions to onboarding, proof, pricing, and privacy more predictive for product validation.\"}"
+    }
+  }
+}

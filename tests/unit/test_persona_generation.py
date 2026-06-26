@@ -111,7 +111,10 @@ class PersonaGenerationTest(unittest.TestCase):
                     {"owner_decider", "owner_with_family_consultation", "owner_with_staff_input"},
                 )
             if occupation == "startup founder":
-                self.assertIn(life_stage, {"young_operator_founder", "regional_business_builder", "senior_operator"})
+                self.assertIn(
+                    life_stage,
+                    {"young_operator_founder", "regional_business_builder", "senior_operator", "late_career_specialist"},
+                )
                 self.assertIn(
                     authority,
                     {"owner_decider", "owner_with_business_partner_input", "owner_with_family_consultation"},

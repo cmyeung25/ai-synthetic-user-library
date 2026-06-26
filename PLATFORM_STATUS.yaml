@@ -1,0 +1,307 @@
+metadata:
+  schema_version: v2
+  last_updated: 2026-06-26
+  owner: platform-development-chief
+  source_documents:
+    - AGENTS.md
+    - PRODUCT_BRIEF.md
+    - PLATFORM_BLUEPRINT.md
+    - DEVELOPMENT_ROADMAP.md
+    - README.md
+
+current_platform_state:
+  current_stage: milestone_7_facilitated_interview_runtime
+  strategic_focus: define the prototype-validation contract before expanding the fuller stimulus layer
+  proven_capabilities:
+    - reusable persona generation
+    - structured synthetic interviews
+    - observer-controlled interviews
+    - panel synthesis
+    - conversation realism scoring
+    - over-optimism warnings
+  not_yet_proven:
+    - complete discovery-stage coverage
+    - prototype behavior validation
+    - action-grounded adoption prediction
+  next_moves:
+    - define interview_mode.prototype_validation contract
+    - implement stimulus.image_stimulus_review
+    - add observed_action evidence outputs
+
+capabilities:
+  - id: interview_mode.pain_point_discovery
+    type: interview_mode
+    status: implemented
+    priority: P0
+    research_stage: discovery
+    improves:
+      - evidence_quality
+      - scalable_research_throughput
+    bottleneck: discovery coverage is incomplete without a dedicated problem-reality interview mode
+    evidence:
+      - supported as an explicit interview_mode in src/ai_validation_swarm/cli/main.py
+      - covered by runtime coverage requirements in src/ai_validation_swarm/facilitator/runtime.py
+      - verified by unit tests for facilitator and observer runtimes
+    remaining_gap: keep improving realism and downstream synthesis quality, but the mode exists as first-class runtime surface
+    next_step: calibrate interview quality and keep the problem-discovery evidence boundary disciplined
+
+  - id: interview_mode.explore_root_cause
+    type: interview_mode
+    status: implemented
+    priority: P0
+    research_stage: discovery
+    improves:
+      - behavioral_realism
+      - evidence_quality
+    bottleneck: teams need a disciplined way to investigate known problems without jumping to solution framing
+    evidence:
+      - listed as implemented in DEVELOPMENT_ROADMAP.md
+      - included in the current facilitated interview runtime surface
+    remaining_gap: continue improving realism and facilitation discipline, but the mode exists
+    next_step: keep calibrating against human-like conversational behavior
+
+  - id: interview_mode.decision_reconstruction
+    type: interview_mode
+    status: implemented
+    priority: P0
+    research_stage: discovery
+    improves:
+      - decision_prediction
+      - evidence_quality
+    bottleneck: roadmap and priority choices cannot be simulated credibly without reconstructing a real recent decision
+    evidence:
+      - supported as an explicit interview_mode in src/ai_validation_swarm/cli/main.py
+      - covered by runtime coverage requirements and evidence gate rules in src/ai_validation_swarm/facilitator/runtime.py
+      - verified by unit tests for facilitator and observer runtimes
+    remaining_gap: keep improving realism and synthesis quality, but the decision-event contract exists as first-class runtime surface
+    next_step: calibrate interview quality and preserve the event-level evidence boundary
+
+  - id: interview_mode.validate_hypothesis
+    type: interview_mode
+    status: implemented
+    priority: P0
+    research_stage: concept_evaluation
+    improves:
+      - evidence_quality
+      - scalable_research_throughput
+    bottleneck: teams need a way to test causal or behavioral hypotheses without leading the participant
+    evidence:
+      - listed as implemented in DEVELOPMENT_ROADMAP.md
+      - included in the current facilitated interview runtime surface
+    remaining_gap: maintain contradiction-seeking interview quality
+    next_step: keep refining audit discipline and realism controls
+
+  - id: interview_mode.concept_validation
+    type: interview_mode
+    status: implemented
+    priority: P0
+    research_stage: concept_evaluation
+    improves:
+      - decision_prediction
+      - scalable_research_throughput
+    bottleneck: concept-stage work needs structured objection, trust-gap, and stated-adoption testing
+    evidence:
+      - listed as implemented in DEVELOPMENT_ROADMAP.md
+      - included in the current facilitated interview runtime surface
+    remaining_gap: concept evidence must stay separate from prototype behavior evidence
+    next_step: keep concept introduction discipline and over-optimism warnings explicit
+
+  - id: interview_mode.prototype_validation
+    type: interview_mode
+    status: planned
+    priority: P0
+    research_stage: prototype_validation
+    improves:
+      - decision_prediction
+      - evidence_quality
+    bottleneck: the platform cannot claim interface-level validation until it can handle stimuli and observed behavior
+    evidence:
+      - listed as planned in DEVELOPMENT_ROADMAP.md
+      - platform blueprint marks prototype behavior validation as not yet proven
+    remaining_gap: no formal contract for stimuli, action traces, or synthesis boundaries exists
+    next_step: define the input, evidence, and output contract before implementation
+
+  - id: interview_mode.adoption_barrier_validation
+    type: interview_mode
+    status: implemented
+    priority: P0
+    research_stage: concept_evaluation_and_prototype_validation
+    improves:
+      - decision_prediction
+      - behavioral_realism
+    bottleneck: stated value is not enough if the platform cannot simulate why adoption still fails in practice
+    evidence:
+      - supported as an explicit interview_mode in src/ai_validation_swarm/cli/main.py
+      - covered by runtime coverage requirements and adoption-gate rules in src/ai_validation_swarm/facilitator/runtime.py
+      - verified by unit tests for facilitator and observer runtimes
+    remaining_gap: keep calibrating barrier realism and preserve the distinction between stated usefulness and routine adoption conditions, but the mode exists as first-class runtime surface
+    next_step: calibrate interview quality and keep setup, permission, trust, pricing, reversibility, and workflow friction distinct from generic concept appeal
+
+  - id: interview_mode.workflow_mapping
+    type: interview_mode
+    status: planned
+    priority: P1
+    research_stage: discovery
+    improves:
+      - behavioral_realism
+      - evidence_quality
+    bottleneck: discovery work will later need current-state fragmentation and handoff mapping
+    evidence:
+      - listed as a phase 2 interview mode in DEVELOPMENT_ROADMAP.md
+    remaining_gap: phase 1 core coverage should land first
+    next_step: defer until the 7 core modes are explicit and stable
+
+  - id: interview_mode.messaging_validation
+    type: interview_mode
+    status: planned
+    priority: P1
+    research_stage: concept_evaluation
+    improves:
+      - decision_prediction
+      - scalable_research_throughput
+    bottleneck: positioning and wording clarity matter, but this is not ahead of core behavioral capability gaps
+    evidence:
+      - listed as a phase 2 interview mode in DEVELOPMENT_ROADMAP.md
+    remaining_gap: should wait until the core research mode layer is complete
+    next_step: revisit after phase 1 mode coverage is complete
+
+  - id: stimulus.image_stimulus_review
+    type: prototype_capability
+    status: planned
+    priority: P0
+    research_stage: prototype_validation
+    improves:
+      - decision_prediction
+      - evidence_quality
+    bottleneck: prototype work needs a first stimulus layer before live interactive behavior simulation
+    evidence:
+      - listed as the first prototype validation capability in DEVELOPMENT_ROADMAP.md
+      - explicitly recommended next in PLATFORM_BLUEPRINT.md
+    remaining_gap: no image-based stimulus contract exists yet
+    next_step: implement static image upload and interpretation-friction synthesis
+
+  - id: stimulus.flow_stimulus_review
+    type: prototype_capability
+    status: planned
+    priority: P1
+    research_stage: prototype_validation
+    improves:
+      - evidence_quality
+      - scalable_research_throughput
+    bottleneck: image review alone cannot cover multi-step comprehension breakdown
+    evidence:
+      - listed as planned in DEVELOPMENT_ROADMAP.md
+    remaining_gap: depends on a stable image stimulus layer first
+    next_step: sequence after image stimulus support is stable
+
+  - id: stimulus.interactive_prototype_validation
+    type: prototype_capability
+    status: planned
+    priority: P1
+    research_stage: prototype_validation
+    improves:
+      - decision_prediction
+      - evidence_quality
+    bottleneck: action-grounded evidence needs a clickable task loop, not just stated reaction
+    evidence:
+      - listed as planned in DEVELOPMENT_ROADMAP.md
+      - platform blueprint marks prototype behavior validation as not yet proven
+    remaining_gap: depends on stimulus support and action-trace design
+    next_step: sequence after image and flow review contracts are stable
+
+  - id: stimulus.live_app_task_simulation
+    type: prototype_capability
+    status: planned
+    priority: P2
+    research_stage: prototype_validation
+    improves:
+      - decision_prediction
+      - evidence_quality
+    bottleneck: live product simulation is valuable, but premature before simpler prototype layers are stable
+    evidence:
+      - listed as planned in DEVELOPMENT_ROADMAP.md
+    remaining_gap: depends on full stimulus and behavior layers
+    next_step: defer until earlier prototype layers are proven
+
+milestones:
+  - id: milestone.architecture_and_harness
+    status: implemented
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 0 implemented
+
+  - id: milestone.persona_generator
+    status: implemented
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 1 implemented
+
+  - id: milestone.sampling_engine
+    status: implemented
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 2 implemented
+
+  - id: milestone.validation_runner
+    status: implemented
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 3 implemented
+
+  - id: milestone.auditor_and_aggregator
+    status: implemented
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 4 implemented
+
+  - id: milestone.report_generator
+    status: implemented
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 5 implemented
+
+  - id: milestone.evaluation_harness
+    status: implemented
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 6 implemented
+
+  - id: milestone.facilitated_interview_runtime
+    status: in_progress
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 7 in progress
+    remaining_gap:
+      - missing prototype_validation
+      - missing stimulus-aware and action-aware runtime
+
+  - id: milestone.prototype_validation_layer
+    status: planned
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 8 planned
+
+  - id: milestone.saas_readiness
+    status: in_progress
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 9 in progress
+    remaining_gap:
+      - should not outpace simulation-core maturity
+
+active_workstreams:
+  - id: workstream.complete_core_interview_modes
+    status: in_progress
+    focus:
+      - interview_mode.prototype_validation
+    why_now: prototype validation is now the last missing core interview mode before the facilitated interview runtime can claim full phase-1 mode coverage
+
+  - id: workstream.prototype_validation_contract
+    status: in_progress
+    focus:
+      - interview_mode.prototype_validation
+      - stimulus.image_stimulus_review
+    why_now: with adoption-barrier mode landed, the next platform bottleneck is defining a stimulus-aware evidence contract before claiming prototype validation
+
+blockers:
+  - id: blocker.discovery_mode_gap
+    severity: high
+    detail: the platform still lacks fuller discovery coverage because workflow mapping remains deferred, even though pain discovery and decision reconstruction now exist
+
+  - id: blocker.prototype_evidence_gap
+    severity: high
+    detail: the platform does not yet distinguish concept-only self-report from prototype behavior evidence through a real stimulus layer
+
+  - id: blocker.adoption_prediction_gap
+    severity: medium
+    detail: the platform can now simulate concept-stage adoption barriers, but it still cannot ground adoption prediction in observed interface behavior

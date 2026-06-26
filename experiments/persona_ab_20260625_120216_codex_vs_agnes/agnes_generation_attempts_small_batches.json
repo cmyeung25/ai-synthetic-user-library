@@ -1,0 +1,191 @@
+[
+  {
+    "persona_id": "su_0001",
+    "index": 1,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": true,
+        "elapsed_seconds": 56.6,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "usage": {
+            "input_tokens": 2473,
+            "output_tokens": 3901,
+            "total_tokens": 6374,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "persona_id": "su_0002",
+    "index": 2,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": false,
+        "elapsed_seconds": 121.5,
+        "error": "OpenAI Chat Completions API request failed via powershell transport: HTTP 0 The underlying connection was closed: The connection was closed unexpectedly."
+      },
+      {
+        "attempt": 2,
+        "ok": false,
+        "elapsed_seconds": 121.5,
+        "error": "OpenAI Chat Completions API request failed via powershell transport: HTTP 0 The underlying connection was closed: The connection was closed unexpectedly."
+      },
+      {
+        "attempt": 3,
+        "ok": true,
+        "elapsed_seconds": 102.0,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "fallback_transport": "chat_completions",
+          "usage": {
+            "total_tokens": 4843,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "persona_id": "su_0003",
+    "index": 3,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": false,
+        "elapsed_seconds": 121.5,
+        "error": "OpenAI Chat Completions API request failed via powershell transport: HTTP 0 The underlying connection was closed: The connection was closed unexpectedly."
+      },
+      {
+        "attempt": 2,
+        "ok": true,
+        "elapsed_seconds": 109.8,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "fallback_transport": "chat_completions",
+          "usage": {
+            "total_tokens": 4657,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "persona_id": "su_0004",
+    "index": 4,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": false,
+        "elapsed_seconds": 110.0,
+        "error": "Model did not return a valid JSON object: Extra data: line 153 column 4 (char 9108)"
+      },
+      {
+        "attempt": 2,
+        "ok": true,
+        "elapsed_seconds": 41.2,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "usage": {
+            "input_tokens": 2486,
+            "output_tokens": 4260,
+            "total_tokens": 6746,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "persona_id": "su_0005",
+    "index": 5,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": true,
+        "elapsed_seconds": 44.6,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "usage": {
+            "input_tokens": 2516,
+            "output_tokens": 4558,
+            "total_tokens": 7074,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "persona_id": "su_0006",
+    "index": 6,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": true,
+        "elapsed_seconds": 97.3,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "fallback_transport": "chat_completions",
+          "usage": {
+            "total_tokens": 4692,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "persona_id": "su_0007",
+    "index": 7,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": true,
+        "elapsed_seconds": 56.8,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "usage": {
+            "input_tokens": 2538,
+            "output_tokens": 5179,
+            "total_tokens": 7717,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "persona_id": "su_0008",
+    "index": 8,
+    "success": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": true,
+        "elapsed_seconds": 40.8,
+        "transport": "powershell_webrequest",
+        "meta": {
+          "usage": {
+            "input_tokens": 2496,
+            "output_tokens": 4020,
+            "total_tokens": 6516,
+            "source": "api"
+          }
+        }
+      }
+    ]
+  }
+]

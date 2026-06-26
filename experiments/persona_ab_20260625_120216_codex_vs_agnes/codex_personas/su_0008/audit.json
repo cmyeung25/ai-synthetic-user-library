@@ -1,0 +1,122 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0008",
+    "panel_role": "extreme_user",
+    "age_band": "25-34",
+    "location_type": "urban_core",
+    "household_structure": "single parent with one child",
+    "occupation_band": "customer_success",
+    "income_band": "upper_middle",
+    "education_band": "bachelor",
+    "language": [
+      "English",
+      "Mandarin"
+    ],
+    "device_environment": "smartphone-first",
+    "payment_environment": "digital-first",
+    "schedule_pressure": "low",
+    "budget_flexibility": "high",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "low",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "high",
+    "locale_pack": "singapore_smb",
+    "occupation_title": "customer success manager",
+    "life_stage": "emerging_manager",
+    "purchase_authority_type": "department_budget_requester",
+    "employment_stability": "stable",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "fast",
+    "proof_threshold": "case_studies_required",
+    "cash_flow_volatility": "high"
+  },
+  "decision_policy": {
+    "adoption_style": "tries new tools early if the workflow gain is obvious",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding",
+      "plain-language privacy explanation",
+      "evidence that the workflow will hold up under internal review"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof",
+      "forced migration before value is visible",
+      "messy setup that creates cleanup work for Morgan or teammates"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "evidence that the workflow can survive internal review and comparison",
+      "at least one believable case study showing reduced follow-up or better task capture"
+    ],
+    "screening_rules": [
+      "first checks whether the product solves a narrow repetitive pain in under one week",
+      "looks for evidence from similar customer-facing teams, preferably SMB or service workflows",
+      "tests whether the product can coexist with spreadsheets and messaging apps before replacing anything"
+    ],
+    "approval_logic": "If personal conviction is high, Morgan can move quickly to a department budget request, but still prepares a simple internal justification focused on time saved, reduced dropped follow-ups, and privacy posture.",
+    "pilot_conditions": [
+      "small scope",
+      "clear exit path",
+      "no forced full-team migration",
+      "visible before-and-after workflow change"
+    ],
+    "switching_cost_logic": "Switching cost is structurally low because the current stack is lightweight, but habit change still has to feel worth the attention tax."
+  },
+  "response_style": {
+    "articulation_level": "high",
+    "directness": "medium",
+    "detail_tendency": "high",
+    "interview_behavior": [
+      "answers with concrete examples from recent work rather than abstractions",
+      "volunteers edge cases when a claim sounds too clean",
+      "may sound open early in the conversation, but final judgment depends on whether the workflow survives comparison to current habits"
+    ],
+    "preferred_prompting": [
+      "ask about specific moments in the day",
+      "show realistic before-and-after examples",
+      "avoid leading language that assumes the product already fits"
+    ],
+    "likely_research_value": "Morgan gives strong signal when shown realistic flows, tradeoffs, and proof. They are less useful for purely aspirational concept reactions without operational detail."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_codex_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "codex",
+      "profile": "chatgpt-5.4-high",
+      "model": "gpt-5.4",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T04:34:50+00:00",
+      "rationale": "{\"anchor_preservation\": \"Identity, household structure, occupation, locale, language, device and payment environment, decision speed, budget position, workflow maturity, and trust and proof thresholds were kept aligned with the seed.\", \"realism_enrichment\": [\"Low schedule pressure was reconciled with high urgency by framing the problem as repeated attention leakage rather than constant crisis.\", \"Single parent plus low caregiving load was reconciled through stable routines and protected bandwidth rather than by removing parenting constraints.\", \"Upper-middle income was reconciled with high price sensitivity and cash-flow volatility by separating ability to pay from scrutiny over recurring spend and timing risk.\"], \"validation_usefulness\": [\"Added observable adoption tests, proof logic, and rejection triggers that can guide concept, messaging, and prototype evaluation.\", \"Kept sensitive identity context focused on respectful interaction and privacy boundaries rather than deterministic behavior or profiling.\"]}"
+    }
+  }
+}

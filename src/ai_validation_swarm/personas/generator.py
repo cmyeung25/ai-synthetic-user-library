@@ -26,6 +26,7 @@ PANEL_ROLES = [
     "low_tech",
     "budget_constrained",
     "extreme_user",
+    "expert_advisor",
 ]
 
 FIRST_NAMES_BY_GENDER = {
@@ -216,6 +217,14 @@ ROLE_PROFILES = {
         "income_bands": ["middle", "upper_middle"],
         "budget_flexibility": ["high"],
         "privacy_risk_tolerance": ["medium", "high"],
+        "digital_literacy_ceiling": ["high"],
+    },
+    "expert_advisor": {
+        "age_bands": ["35-44", "45-54", "55-64"],
+        "occupation_bands": ["founder", "consulting", "program_management", "communications"],
+        "income_bands": ["upper_middle", "middle"],
+        "budget_flexibility": ["medium", "high"],
+        "privacy_risk_tolerance": ["medium"],
         "digital_literacy_ceiling": ["high"],
     },
 }

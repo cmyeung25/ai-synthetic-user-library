@@ -9,7 +9,7 @@ This repository currently contains:
 - Milestone 0 architecture documents
 - Milestone 1 project skeleton
 - local persona generation
-- optional OpenAI-backed persona enrichment and persona judging
+- optional Agnes-backed persona enrichment and persona judging
 - deterministic panel sampling
 - offline validation flow using a mock provider
 - Markdown, JSON, and CSV report export
@@ -29,6 +29,7 @@ The repository-wide working agreement lives in [AGENTS.md](/C:/Users/user/OneDri
 - Core belief: synthetic users are valuable only if they can generate behaviorally plausible responses that help predict real human behavior
 
 See [PRODUCT_BRIEF.md](/C:/Users/user/OneDrive/%E6%96%87%E4%BB%B6/AI%20Synthetic%20User%20Library/PRODUCT_BRIEF.md) for the locked positioning and platform vision.
+See [PLATFORM_BLUEPRINT.md](/C:/Users/user/OneDrive/%E6%96%87%E4%BB%B6/AI%20Synthetic%20User%20Library/PLATFORM_BLUEPRINT.md) for the higher-level capability blueprint that separates the simulation core, interview modes, stimulus layer, orchestration layer, and SaaS surface.
 
 ## Current Scope
 
@@ -69,10 +70,11 @@ The CLI exposes these commands:
 
 ## Persona generation backends
 
-`generate-personas` supports three modes:
+`generate-personas` supports four modes:
 
 - `template`: deterministic seeded generation only
 - `openai`: deterministic seeded generation plus LLM enrichment
+- `agnes`: deterministic seeded generation plus Agnes OpenAI-compatible enrichment
 - `codex`: deterministic seeded generation plus Codex-authenticated LLM enrichment
 
 You can also add `--judge-personas` to run an LLM plausibility and stereotype-risk pass after generation.
@@ -88,7 +90,7 @@ $env:PYTHONPATH='src'
 & 'C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
   -m ai_validation_swarm.cli.main generate-v3-2-persona `
   --persona-id su_0031 `
-  --backend codex `
+  --backend agnes `
   --seed-offset 11 `
   --output-dir data/personas
 
@@ -97,7 +99,7 @@ $env:PYTHONPATH='src'
   --data-dir data/personas
 ```
 
-The V3.2 production command requires `codex` or `openai`; deterministic adapters are reserved for tests. Each output records provider, model, prompts, seed, attempt count, input hash, section hash, and section ownership in `generation_notes.json` and `section_manifest.json`. Similarity is written as `duplicate_report.json` for reporting and panel composition, not used to force every persona to be different.
+The V3.2 production command requires a live backend such as `agnes`, `codex`, `codex-sdk`, or `openai`; deterministic adapters are reserved for tests. Each output records provider, model, prompts, seed, attempt count, input hash, section hash, and section ownership in `generation_notes.json` and `section_manifest.json`. Similarity is written as `duplicate_report.json` for reporting and panel composition, not used to force every persona to be different.
 
 Use `--backend codex-sdk` to reuse Codex Auth through a locally installed `@openai/codex-sdk` when the Codex CLI websocket transport is unavailable. Set `AI_VALIDATION_CODEX_SDK_MODULE` when the SDK is not installed under the workspace or the known sibling project path.
 
@@ -129,28 +131,46 @@ Example:
 
 ```powershell
 $env:PYTHONPATH='src'
-$env:OPENAI_API_KEY='...'
+$env:AGNES_API_KEY='...'
 & 'C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
   -m ai_validation_swarm.cli.main generate-personas `
   --count 50 `
   --seed 11 `
-  --backend openai `
+  --backend agnes `
   --judge-personas `
   --output-dir data/personas
 ```
 
+Agnes direct example:
+
+```powershell
+$env:PYTHONPATH='src'
+$env:AGNES_API_KEY='...'
+& 'C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
+  -m ai_validation_swarm.cli.main generate-personas `
+  --count 10 `
+  --seed 11 `
+  --backend agnes `
+  --output-dir data/personas_agnes
+```
+
 Auth note:
 
-- the supported credential path for live OpenAI API calls is `OPENAI_API_KEY`
+- the default credential path for Python-run live API calls is `AGNES_API_KEY`
+- explicit `openai` backend flows can still use `OPENAI_API_KEY`
 - the code also accepts `CODEX_API_KEY` as a best-effort fallback if your Codex session exposes a compatible bearer token
-- the code can also read `C:\Users\user\.codex\auth.json` and reuse the local ChatGPT/Codex access token as a best-effort fallback
+- the code can also read `C:\Users\user\.codex\auth.json` and reuse the local ChatGPT/Codex access token for explicit Codex-backed paths
 - the `codex` backend does not use the official `/v1/responses` API; it runs `codex exec` non-interactively with ChatGPT/Codex auth
-- if neither variable is present, the OpenAI-backed path will fail fast with a clear error
+- if `AGNES_API_KEY` is missing, the Agnes-backed Python API path will fail fast with a clear error
 
 Transport note:
 
-- on Windows, the OpenAI client defaults to `node_https` transport with `node --use-system-ca` because the bundled Python runtime may fail TLS handshakes on live requests
-- override with `AI_VALIDATION_OPENAI_TRANSPORT=python_urllib` only if your Python SSL stack is known-good
+- on Windows, the Agnes-backed Python client defaults to `powershell_webrequest`
+- override with `AI_VALIDATION_LLM_TRANSPORT=node_https` or `python_urllib` only if that transport is known-good in your environment
+- Agnes transport retries default to `AI_VALIDATION_AGNES_TRANSPORT_RETRIES=2` with exponential backoff from `AI_VALIDATION_AGNES_TRANSPORT_RETRY_BACKOFF_SECONDS=2`
+- Agnes thinking mode defaults to `AI_VALIDATION_AGNES_ENABLE_THINKING=true`
+- repo-level CLI defaults for live backend/model now come from `configs/runtime_defaults.json`
+- the checked-in default currently points live runs and persona-enrichment defaults to `codex`
 - the `codex` backend defaults to `codex_cli` transport and now runs with:
   - global `CODEX_HOME`
   - `--ignore-user-config`
@@ -185,7 +205,7 @@ Start an offline smoke-test conversation:
 ai-validation-swarm chat-with-persona --persona-id su_0001 --backend mock
 ```
 
-Use `--backend codex` or `--backend openai` when the corresponding live transport is available. Runtime model and reasoning can be selected with `--model MODEL --reasoning-effort medium`. Resume a saved conversation with `--resume SESSION_ID` and the same backend. Sessions are written to `conversations/{session_id}/session.json` and `transcript.md` with prompt, model, intent, and synthetic-only provenance.
+Use `--backend agnes`, `--backend codex`, or `--backend openai` when the corresponding live transport is available. Runtime model and reasoning can be selected with `--model MODEL --reasoning-effort medium`. Resume a saved conversation with `--resume SESSION_ID` and the same backend. Sessions are written to `conversations/{session_id}/session.json` and `transcript.md` with prompt, model, intent, and synthetic-only provenance.
 
 ## LLM-facilitated problem interview
 
@@ -197,13 +217,44 @@ ai-validation-swarm run-facilitated-interview `
   --interview-mode explore_root_cause `
   --research-goal "Understand the root causes of trip replanning friction" `
   --product-context "A possible trip-planning platform" `
-  --backend codex `
-  --model gpt-5.4 `
+  --backend agnes `
+  --model agnes-2.0-flash `
   --reasoning-effort medium `
   --max-turns 6
 ```
 
 Use `explore_root_cause` to discover possible causes from observed behaviour. To test a specific explanation without asking the participant to agree with it, use:
+
+Use `pain_point_discovery` when you need to establish whether the problem is real, how often it happens, what consequence makes it matter, and what workaround already exists before moving into root-cause analysis:
+
+```powershell
+ai-validation-swarm run-facilitated-interview `
+  --persona-id su_0002 `
+  --interview-mode pain_point_discovery `
+  --research-goal "Discover whether day-to-day finance tracking is a real recurring problem" `
+  --backend agnes
+```
+
+Use `decision_reconstruction` when you need to reconstruct one real recent decision, including what evidence was still missing, what pressure existed, what felt defensible versus uncertain, and what actually changed at the end:
+
+```powershell
+ai-validation-swarm run-facilitated-interview `
+  --persona-id su_0002 `
+  --interview-mode decision_reconstruction `
+  --research-goal "Reconstruct the last real product-scope decision under time pressure" `
+  --backend agnes
+```
+
+Use `adoption_barrier_validation` when something sounds useful but you need to understand why it still might not enter routine use because of setup, permissions, trust, pricing, reversibility, or workflow burden:
+
+```powershell
+ai-validation-swarm run-facilitated-interview `
+  --persona-id su_0002 `
+  --interview-mode adoption_barrier_validation `
+  --research-goal "Understand why a useful workflow tool still might not be adopted" `
+  --product-context "A research workflow assistant that summarizes evidence and follow-up gaps" `
+  --backend agnes
+```
 
 ```powershell
 ai-validation-swarm run-facilitated-interview `
@@ -211,7 +262,7 @@ ai-validation-swarm run-facilitated-interview `
   --interview-mode validate_hypothesis `
   --hypothesis "Travellers recheck changed plans because responsibility for updates is unclear" `
   --research-goal "Test why travellers repeatedly check changed trip arrangements" `
-  --backend codex
+  --backend agnes
 ```
 
 The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, and `persona_driver_trace.md` so the team can inspect both the observed answers and the likely values, memories, or constraints sitting behind them. Current outputs should still be treated as synthetic evidence, not human market proof, while the platform is being calibrated toward replacement-grade reliability.
@@ -225,7 +276,7 @@ ai-validation-swarm observe-facilitated-interview `
   --persona-id su_0002 `
   --research-goal "Understand the root causes of trip replanning friction" `
   --product-context "A possible trip-planning platform" `
-  --backend codex
+  --backend agnes
 ```
 
 At each pause, press Enter to approve the proposed question. Use `/steer TEXT` to ask the facilitator LLM to revise its direction, `/deepen TOPIC` to request more evidence, or `/ask QUESTION` to submit a question for neutral review and rewriting by the facilitator. `/ask-exact QUESTION` bypasses that review and is explicitly attributed as a direct observer question. `/pause`, `/retry`, `/status`, `/stop`, and `/quit` control the session. Resume later with `--resume INTERVIEW_ID`. Use `/reevaluate` to rerun only the quality audit, or `/resynthesize` to archive and rebuild both synthesis and quality from the saved transcript after prompt or evidence-gate upgrades.

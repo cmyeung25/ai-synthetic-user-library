@@ -1,0 +1,104 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "25-34",
+    "location_type": "regional",
+    "household_structure": "multi-generational household",
+    "occupation_band": "small_business",
+    "income_band": "upper_middle",
+    "education_band": "diploma",
+    "language": [
+      "English",
+      "Malay"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "medium",
+    "caregiving_load": "high",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "medium",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "regional_sea_service_ops",
+    "occupation_title": "small business owner",
+    "life_stage": "early_adult_small_business_builder",
+    "purchase_authority_type": "owner_decider",
+    "employment_stability": "contract_based",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "deliberate",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow"
+    ],
+    "operational_thresholds": {
+      "setup_time_limit": "under 20 minutes to import contacts and create first task",
+      "data_portability": "CSV/Excel export available without premium tier",
+      "privacy_guarantee": "explicit statement that data is not used for training or shared with third parties",
+      "rollback_plan": "one-click deactivation with full data archive before cancelling subscription"
+    }
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "communication_preferences": {
+      "format": "prefers numbered steps, bullet points, and short sentences; avoids marketing jargon and abstract ROI claims",
+      "validation_method": "asks for screenshot walkthroughs of the exact screen he will see after signup",
+      "question_pattern": "typically follows up with 'What happens if I stop using it?' or 'Can I run this with dummy data first?'",
+      "tone": "measured, pragmatic, and focused on operational stability rather than novelty"
+    }
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v2",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 4,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v2",
+      "generated_at": "2026-06-25T14:31:06+00:00",
+      "rationale": "The enrichment preserves all seed facts and identity anchors while grounding them in observable regional SEA behavior: bilingual switching, WhatsApp-centric ops, FPX/invoice billing preferences, and PDPA-aware data caution. The tension between high caregiving load and contract-based income is explained through fragmented attention windows and the need for low-friction capture. A concrete Q3 failure memory justifies current caution. The current workaround (notebook + Sheets + WhatsApp broadcasts) is specified. Willingness to try, pay, and roll out are explicitly separated. Mainstream panel role is visible through measured adoption, peer-referral reliance, and feature skepticism. Locale is embedded in channels, support expectations, and trust norms. All constraints are satisfied without abstract SaaS phrasing."
+    }
+  }
+}

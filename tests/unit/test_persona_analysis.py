@@ -24,7 +24,7 @@ class PersonaAnalysisTest(unittest.TestCase):
 
         self.assertEqual(summary["library_size"], 100)
         self.assertEqual(summary["unique_name_count"], 100)
-        self.assertEqual(summary["distinct_counts"]["panel_role"], 8)
+        self.assertEqual(summary["distinct_counts"]["panel_role"], 9)
         self.assertEqual(summary["distinct_counts"]["gender"], 3)
         self.assertGreaterEqual(summary["distinct_counts"]["location"], 10)
         self.assertTrue(summary["coverage_checks"]["all_names_unique"])

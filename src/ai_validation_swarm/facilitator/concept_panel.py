@@ -14,7 +14,7 @@ from ai_validation_swarm.facilitator.optimism import derive_panel_over_optimism_
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.observer.runtime import ObserverControlledInterviewRuntime
 from ai_validation_swarm.conversation.providers import ConversationProvider
-from ai_validation_swarm.storage.files import ensure_dir, read_json, write_json
+from ai_validation_swarm.storage.files import ensure_dir, read_json, write_json, write_markdown
 
 
 DEFAULT_TOPIC_LABEL = "Concept Validation"
@@ -42,7 +42,7 @@ DEPTH_PROBE_LABELS = {
 def _persona_ids(data_dir: Path, selected: list[str] | None = None) -> list[str]:
     available = sorted(
         path.name for path in data_dir.iterdir()
-        if path.is_dir() and (path / "v5" / "profile.json").exists()
+        if path.is_dir() and (path / "v5_1" / "profile.json").exists()
     )
     if not selected:
         return available
@@ -211,9 +211,16 @@ def _summary_payload(
                 why=str(audit_summary.get("depth_vs_coverage_assessment", "")),
             )
         for follow_up in audit_feedback.get("high_value_missed_followups", []):
-            trigger_type = str(follow_up.get("trigger_type", "")).strip() or "unknown"
-            learning = str(follow_up.get("generic_learning", "")).strip()
-            question = str(follow_up.get("missed_followup_question", "")).strip()
+            if isinstance(follow_up, dict):
+                trigger_type = str(follow_up.get("trigger_type", "")).strip() or "unknown"
+                learning = str(follow_up.get("generic_learning", "")).strip()
+                question = str(follow_up.get("missed_followup_question", "")).strip()
+                confidence = str(follow_up.get("priority", "unknown"))
+            else:
+                trigger_type = "unknown"
+                learning = ""
+                question = str(follow_up).strip()
+                confidence = "observed"
             if not learning and not question:
                 continue
             key = f"{trigger_type}|{_normalize_key(learning or question)}"
@@ -224,13 +231,18 @@ def _summary_payload(
                 item_type=trigger_type,
                 persona_id=interview["persona_id"],
                 persona_name=interview["persona_name"],
-                confidence=str(follow_up.get("priority", "unknown")),
+                confidence=confidence,
                 why=learning,
             )
         for pattern in audit_feedback.get("likely_misclassified_driver_patterns", []):
-            underlying_driver = str(pattern.get("possible_underlying_driver", "")).strip()
-            learning = str(pattern.get("generic_learning", "")).strip()
-            surface_frame = str(pattern.get("observed_surface_frame", "")).strip()
+            if isinstance(pattern, dict):
+                underlying_driver = str(pattern.get("possible_underlying_driver", "")).strip()
+                learning = str(pattern.get("generic_learning", "")).strip()
+                surface_frame = str(pattern.get("observed_surface_frame", "")).strip()
+            else:
+                underlying_driver = str(pattern).strip()
+                learning = ""
+                surface_frame = ""
             if not underlying_driver and not learning:
                 continue
             key = _normalize_key(learning or underlying_driver or surface_frame)
@@ -455,7 +467,16 @@ def _facilitator_audit_panel_payload(
         persona_name = interview["persona_name"]
 
         for item in audit.get("facilitator_feedback_tags", []):
-            tag = str(item.get("tag", "")).strip()
+            if isinstance(item, dict):
+                tag = str(item.get("tag", "")).strip()
+                severity = str(item.get("severity", "unknown"))
+                observed_pattern = str(item.get("observed_pattern", ""))
+                why_it_matters = str(item.get("why_it_matters", ""))
+            else:
+                tag = str(item).strip()
+                severity = "observed"
+                observed_pattern = ""
+                why_it_matters = ""
             if not tag:
                 continue
             _group(
@@ -465,13 +486,15 @@ def _facilitator_audit_panel_payload(
                 persona_id=persona_id,
                 persona_name=persona_name,
                 details={
-                    "severity": str(item.get("severity", "unknown")),
-                    "observed_pattern": str(item.get("observed_pattern", "")),
-                    "why_it_matters": str(item.get("why_it_matters", "")),
+                    "severity": severity,
+                    "observed_pattern": observed_pattern,
+                    "why_it_matters": why_it_matters,
                 },
             )
 
         for item in audit.get("prompt_adjustments", []):
+            if not isinstance(item, dict):
+                continue
             if not bool(item.get("safe_for_global_reuse", False)):
                 continue
             text = str(item.get("text", "")).strip()
@@ -491,6 +514,8 @@ def _facilitator_audit_panel_payload(
             )
 
         for item in audit.get("carry_forward_rules", []):
+            if not isinstance(item, dict):
+                continue
             if not bool(item.get("safe_for_global_reuse", False)):
                 continue
             rule = str(item.get("rule", "")).strip()
@@ -510,8 +535,12 @@ def _facilitator_audit_panel_payload(
             )
 
         for item in audit.get("blocked_feedback", []):
-            blocked_item = str(item.get("blocked_item", "")).strip()
-            block_reason = str(item.get("block_reason", "")).strip() or "unspecified"
+            if isinstance(item, dict):
+                blocked_item = str(item.get("blocked_item", "")).strip()
+                block_reason = str(item.get("block_reason", "")).strip() or "unspecified"
+            else:
+                blocked_item = str(item).strip()
+                block_reason = "unspecified"
             if not blocked_item:
                 continue
             blocked_feedback_count += 1
@@ -1019,12 +1048,22 @@ def _render_summary(summary: dict[str, Any], interviews: list[dict[str, Any]]) -
         for follow_up in item.get("persona_driver_trace", {}).get("missed_follow_up_questions", [])[:1]:
             lines.append(f"- Missed follow-up: {follow_up.get('question', '')}")
         for follow_up in audit.get("high_value_missed_followups", [])[:1]:
-            lines.append(f"- Audit follow-up gap: {follow_up.get('missed_followup_question', '')}")
+            if isinstance(follow_up, dict):
+                lines.append(f"- Audit follow-up gap: {follow_up.get('missed_followup_question', '')}")
+            else:
+                text = str(follow_up).strip()
+                if text:
+                    lines.append(f"- Audit follow-up gap: {text}")
         for pattern in audit.get("likely_misclassified_driver_patterns", [])[:1]:
-            lines.append(
-                f"- Audit driver risk: {pattern.get('observed_surface_frame', '')} -> "
-                f"{pattern.get('possible_underlying_driver', '')}"
-            )
+            if isinstance(pattern, dict):
+                lines.append(
+                    f"- Audit driver risk: {pattern.get('observed_surface_frame', '')} -> "
+                    f"{pattern.get('possible_underlying_driver', '')}"
+                )
+            else:
+                text = str(pattern).strip()
+                if text:
+                    lines.append(f"- Audit driver risk: {text}")
         if item.get("persona_driver_trace", {}).get("likely_drivers"):
             lines.append("")
         for insight in report.get("key_insights", []):
@@ -1234,11 +1273,11 @@ def run_concept_panel(
         summary=summary,
     )
     write_json(run_dir / "panel_summary.json", summary)
-    (run_dir / "panel_summary.md").write_text(_render_summary(summary, interviews), encoding="utf-8")
+    write_markdown(run_dir / "panel_summary.md", _render_summary(summary, interviews))
     write_json(run_dir / "facilitator_audit_panel.json", audit_panel)
-    (run_dir / "facilitator_audit_panel.md").write_text(
+    write_markdown(
+        run_dir / "facilitator_audit_panel.md",
         _render_facilitator_audit_panel(audit_panel),
-        encoding="utf-8",
     )
     write_json(run_dir / "manifest.json", {
         "run_id": run_id,
@@ -1371,11 +1410,11 @@ def summarize_existing_concept_panel(
         summary=summary,
     )
     write_json(run_dir / "panel_summary.json", summary)
-    (run_dir / "panel_summary.md").write_text(_render_summary(summary, interviews), encoding="utf-8")
+    write_markdown(run_dir / "panel_summary.md", _render_summary(summary, interviews))
     write_json(run_dir / "facilitator_audit_panel.json", audit_panel)
-    (run_dir / "facilitator_audit_panel.md").write_text(
+    write_markdown(
+        run_dir / "facilitator_audit_panel.md",
         _render_facilitator_audit_panel(audit_panel),
-        encoding="utf-8",
     )
     write_json(run_dir / "progress.json", {"run_id": run_id, "interviews": interviews})
     write_json(run_dir / "manifest.json", {
@@ -1406,9 +1445,9 @@ def aggregate_facilitator_audit_runs(
     ensure_dir(output_dir)
     report = _facilitator_audit_learning_report_payload(label=label, audit_panels=audit_panels)
     write_json(output_dir / "facilitator_audit_learning_report.json", report)
-    (output_dir / "facilitator_audit_learning_report.md").write_text(
+    write_markdown(
+        output_dir / "facilitator_audit_learning_report.md",
         _render_facilitator_audit_learning_report(report),
-        encoding="utf-8",
     )
     write_json(output_dir / "manifest.json", {
         "label": label,
@@ -1599,9 +1638,9 @@ def compare_facilitator_learning_effects(
         candidate_runs=candidate_runs,
     )
     write_json(output_dir / "facilitator_learning_effect_report.json", report)
-    (output_dir / "facilitator_learning_effect_report.md").write_text(
+    write_markdown(
+        output_dir / "facilitator_learning_effect_report.md",
         _render_facilitator_learning_effect_report(report),
-        encoding="utf-8",
     )
     write_json(output_dir / "manifest.json", {
         "label": label,

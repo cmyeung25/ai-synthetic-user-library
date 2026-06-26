@@ -1,0 +1,98 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0005",
+    "panel_role": "political_risk",
+    "age_band": "55-64",
+    "location_type": "regional",
+    "household_structure": "living with partner and one child",
+    "occupation_band": "communications",
+    "income_band": "middle",
+    "education_band": "bachelor",
+    "language": [
+      "English",
+      "Malay"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "medium",
+    "budget_flexibility": "medium",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "high",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "high",
+    "locale_pack": "regional_sea_service_ops",
+    "occupation_title": "communications manager",
+    "life_stage": "mature_operator",
+    "purchase_authority_type": "department_budget_requester",
+    "employment_stability": "variable",
+    "workflow_maturity": "repeatable",
+    "decision_speed": "fast",
+    "proof_threshold": "peer_reference_required",
+    "cash_flow_volatility": "high"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded",
+    "trust_requirements": [
+      "clear before-and-after value",
+      "low-friction onboarding"
+    ],
+    "rejection_triggers": [
+      "extra admin burden",
+      "vague claims without proof"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users",
+      "a short trial workflow",
+      "evidence that the workflow can survive internal review and comparison"
+    ],
+    "approval_chain_note": "requires documented use-case and cost breakdown before presenting to management; prefers vendor-provided compliance or security summary",
+    "trial_commitment_limit": "willing to test for 14 days maximum; expects full functionality without payment gateway during trial"
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "medium",
+    "detail_tendency": "medium",
+    "format_preference": "structured bullets, clear headings, minimal marketing language",
+    "tone_boundary": "avoids hype, urgency tactics, or assumptions about technical expertise; prefers factual comparisons and visible privacy/data handling statements",
+    "language_flexibility": "comfortable in English and Malay; defaults to professional English for work contexts but appreciates localized examples where relevant"
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T13:04:27+00:00",
+      "rationale": "The enrichment preserves all fixed anchors (age, location, occupation, household, income band, tech/economic profiles, values, decision thresholds) while layering in realistic operational constraints: monthly subscription auditing, 14-day trial limits, manager approval dependencies, and a strong preference for low-friction onboarding. Trade-offs are framed around cash-flow volatility and schedule pressure, emphasizing that Casey seeks bounded risk and concrete ROI rather than feature expansion. Sensitive identity and privacy boundaries are treated functionally, avoiding stereotypes and focusing on professional data stewardship and clear visual/linguistic accessibility. The resulting profile remains calibrated for product validation, highlighting adoption triggers, rejection patterns, and measurable success criteria."
+    }
+  }
+}

@@ -10,10 +10,10 @@ if str(SRC) not in sys.path:
 
 from ai_validation_swarm.conversation.providers import ChatResult, MockConversationProvider
 from ai_validation_swarm.conversation.providers import OpenAIConversationProvider
-from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig
+from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig, OpenAIProviderError
 from ai_validation_swarm.conversation.runtime import ConversationRuntime, resolve_persona_folder
 from ai_validation_swarm.personas.generator import generate_personas
-from ai_validation_swarm.storage.files import read_json, save_persona
+from ai_validation_swarm.storage.files import read_json, save_persona, write_json
 
 
 class FailingConversationProvider:
@@ -71,6 +71,8 @@ class ConversationRuntimeTest(unittest.TestCase):
             self.assertIn("Friction mode: `natural`", transcript)
             self.assertIn("PERSONA RUNTIME ARTIFACT", provider.calls[0]["system_prompt"])
             self.assertIn("FRICTION MODE: natural", provider.calls[0]["system_prompt"])
+            self.assertIn("COMMUNICATION BEHAVIOR MODEL", provider.calls[0]["system_prompt"])
+            self.assertIn("RELATIONAL DEFENSE MODEL", provider.calls[0]["system_prompt"])
             realism = read_json(root / "conversations" / session.session_id / "conversation_realism_report.json")
             self.assertIn("hesitation_frequency", realism["metrics"])
             self.assertEqual(realism["friction_mode"], "natural")
@@ -112,6 +114,35 @@ class ConversationRuntimeTest(unittest.TestCase):
             (base / "v5").mkdir()
             (base / "v5" / "profile.json").write_text("{}", encoding="utf-8")
             self.assertEqual(resolve_persona_folder(base.parent, "su_0001"), base / "v5")
+            (base / "v5_1").mkdir()
+            (base / "v5_1" / "profile.json").write_text("{}", encoding="utf-8")
+            self.assertEqual(resolve_persona_folder(base.parent, "su_0001"), base / "v5_1")
+
+    def test_runtime_upgrades_legacy_v5_persona_behavior_blocks_in_memory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=17)[0]
+            persona_dir = root / "personas" / persona.profile.synthetic_user_id / "v5"
+            persona_dir.mkdir(parents=True)
+            write_json(persona_dir / "profile.json", persona.profile.to_dict())
+            audit_payload = persona.to_audit_payload()
+            audit_payload["skill_version"] = "v5"
+            write_json(persona_dir / "audit.json", audit_payload)
+            (persona_dir / "persona.md").write_text(persona.narrative, encoding="utf-8")
+
+            provider = RecordingConversationProvider()
+            runtime = ConversationRuntime(data_dir=root / "personas", session_dir=root / "conversations", provider=provider)
+            session, loaded_persona, folder = runtime.start(persona.profile.synthetic_user_id, friction_mode="natural")
+            self.assertEqual(folder.name, "v5")
+            self.assertEqual(loaded_persona.profile.persona_schema_meta["source_version"], "v5")
+            self.assertEqual(loaded_persona.profile.persona_schema_meta["upgrade_strategy"], "fallback_from_v5")
+            self.assertTrue(loaded_persona.profile.relational_defense_model)
+            self.assertTrue(loaded_persona.profile.communication_behavior_model)
+            self.assertTrue(loaded_persona.profile.behavior_generation_rules)
+
+            runtime.send(session, loaded_persona, folder, "Would you trust this workflow?")
+            self.assertIn("COMMUNICATION BEHAVIOR MODEL", provider.calls[0]["system_prompt"])
+            self.assertIn("RELATIONAL DEFENSE MODEL", provider.calls[0]["system_prompt"])
 
     def test_invalid_friction_mode_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -132,6 +163,29 @@ class ConversationRuntimeTest(unittest.TestCase):
             system_prompt="rules", user_prompt="question", persona=generate_personas(count=1)[0]
         )
         self.assertEqual(result.reply, "可以試用")
+
+    def test_agnes_live_provider_falls_back_to_plain_text_reply(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="node_https",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                raise OpenAIProviderError("Model did not return a valid JSON object.")
+
+            def create_text_response(self, **kwargs):
+                return "{\"reply\":\"其實我最怕係到月尾先發現之前有筆數冇記低。\",\"intent_level\":\"willing_to_try\"}"
+
+        result = OpenAIConversationProvider(StubClient()).respond(
+            system_prompt="rules", user_prompt="question", persona=generate_personas(count=1)[0]
+        )
+        self.assertEqual(result.reply, "其實我最怕係到月尾先發現之前有筆數冇記低。")
+        self.assertEqual(result.intent_level, "unclear")
+        self.assertEqual(result.confidence, "low")
 
 
 if __name__ == "__main__":

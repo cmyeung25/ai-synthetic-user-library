@@ -15,12 +15,14 @@ if str(SRC) not in sys.path:
 from ai_validation_swarm.cli.main import main
 from ai_validation_swarm.personas.generator import build_seed, enrich_seed
 from ai_validation_swarm.personas.v3_1_2 import RAW_ENUM_TOKENS, upgrade_persona_to_v3_1_2
+from ai_validation_swarm.personas.schema_v5_1 import upgrade_profile_payload_to_v5_1
 from ai_validation_swarm.personas.v5 import (
     GENERATOR_VERSION,
     V5SynthesisResult,
     build_v5_output_schema,
     generate_v5_persona,
     normalize_v5_result_structure,
+    result_to_persona,
     validate_v5_persona_folder,
     validate_v5_result,
 )
@@ -106,6 +108,27 @@ class FixtureV5Adapter:
                 "guidance_preference": "Hybrid self-serve plus optional expert clarification.",
                 "reflection_style": "Explains decisions through recent examples and trade-offs.",
             }
+        profile["relational_defense_model"] = {
+            "self_other_position": "self_protective_other_guarded",
+            "default_trust_posture": "guarded_until_proven_safe",
+            "defensive_style": "question_then_withhold",
+            "status_sensitivity": "medium_high",
+            "attribution_style": "assumes_optimistic_claims_hide_cost",
+            "conflict_pattern": "polite_pushback_then_detach",
+            "withdrawal_pattern": "shorter_answers_when_not_convinced",
+        }
+        profile["communication_behavior_model"] = {
+            "baseline_answer_length": "short_to_medium",
+            "clarification_tendency": "high_when_abstract",
+            "misunderstanding_risk": "high_when_concept_dense",
+            "topic_drift_tendency": "medium_via_life_examples",
+            "memory_lapse_tendency": "medium",
+            "revision_tendency": "medium",
+            "disinterest_expression_style": "polite_but_direct",
+            "permission_sensitivity": "high",
+            "pricing_confusion_risk": "medium",
+            "dropoff_style": "says_probably_wont_bother_without_a_fast_first_win",
+        }
         if "banking_context" in contract.get("profile_sections", []):
             profile["banking_context"] = {
                 "bank_relationship": "Uses one main Hong Kong retail bank app.",
@@ -222,6 +245,17 @@ class PersonaV5Test(unittest.TestCase):
         self.assertEqual(result.profile["domain_fit"]["summary"], "Strong fit for the target panel.")
         self.assertEqual(result.profile["sensitive_scenario_reactions"]["identity_disclosure"]["reaction"], "Prefers minimal identity disclosure.")
 
+    def test_normalize_flattens_buying_behavior_object_to_text(self) -> None:
+        result = FixtureV5Adapter().synthesize(type("Request", (), {"random_seed": 9, "contract": lambda self: {}})())
+        result.profile["behavior_profile"]["buying_behavior"] = {
+            "research_pattern": "Checks reviews first.",
+            "trial_pattern": "Starts small.",
+        }
+        changes = normalize_v5_result_structure(result)
+        self.assertIn("flattened_container_as_text:behavior_profile.buying_behavior", changes)
+        self.assertIsInstance(result.profile["behavior_profile"]["buying_behavior"], str)
+        self.assertIn("research pattern: Checks reviews first.", result.profile["behavior_profile"]["buying_behavior"])
+
     def test_generation_writes_trace_usage_and_guided_brief(self) -> None:
         adapter = FixtureV5Adapter()
         guide = {"mode": "guided", "fixed": {"location": "Kuala Lumpur"}, "preferred": {"interests": ["urban gardening"]}}
@@ -236,6 +270,10 @@ class PersonaV5Test(unittest.TestCase):
             report = validate_v5_persona_folder(target)
             self.assertTrue(report["valid"], report)
             self.assertEqual(read_json(target / "generation_notes.json")["generator_version"], GENERATOR_VERSION)
+            self.assertEqual(read_json(target / "audit.json")["skill_version"], "v5.1")
+            schema_payload = read_json(target / "persona_schema_v5_1.json")
+            self.assertEqual(schema_payload["schema_version"], "v5.1")
+            self.assertIn("behavior_generation_rules", schema_payload["optional_profile_fields"])
             self.assertEqual(read_json(target / "generation_notes.json")["token_usage"]["total_tokens"], 3000)
             self.assertEqual(read_json(target / "generation_brief.json")["fixed"]["location"], "Kuala Lumpur")
             self.assertTrue((target / "generation.log.jsonl").read_text(encoding="utf-8").strip())
@@ -300,8 +338,37 @@ class PersonaV5Test(unittest.TestCase):
             profile = read_json(target / "profile.json")
             self.assertIn("human_difference_axes", profile)
             self.assertIn("banking_context", profile)
+            self.assertIn("relational_defense_model", profile)
+            self.assertIn("communication_behavior_model", profile)
+            self.assertIn("persona_schema_meta", profile)
+            self.assertIn("behavior_generation_rules", profile)
             concept_outputs = read_json(target / "concept_outputs.json")
             self.assertIn("portfolio_health_check", concept_outputs)
+
+    def test_result_to_persona_canonicalizes_v5_1_behavior_blocks(self) -> None:
+        result = FixtureV5Adapter().synthesize(type("Request", (), {"random_seed": 9, "contract": lambda self: {}})())
+        result.profile.pop("relational_defense_model", None)
+        result.profile.pop("communication_behavior_model", None)
+        persona = result_to_persona(result, "su_1004")
+        self.assertEqual(persona.skill_version, "v5.1")
+        self.assertTrue(persona.profile.relational_defense_model)
+        self.assertTrue(persona.profile.communication_behavior_model)
+        self.assertTrue(persona.profile.behavior_generation_rules)
+        self.assertEqual(persona.profile.persona_schema_meta["schema_version"], "v5.1")
+
+    def test_upgrade_profile_payload_to_v5_1_maps_legacy_v5_behavior_blocks(self) -> None:
+        legacy_result = FixtureV5Adapter().synthesize(type("Request", (), {"random_seed": 9, "contract": lambda self: {}})())
+        legacy_result.profile.pop("relational_defense_model", None)
+        legacy_result.profile.pop("communication_behavior_model", None)
+        legacy_result.profile.pop("behavior_generation_rules", None)
+        upgraded, applied = upgrade_profile_payload_to_v5_1(legacy_result.profile, source_version="v5")
+        self.assertTrue(upgraded["relational_defense_model"])
+        self.assertTrue(upgraded["communication_behavior_model"])
+        self.assertTrue(upgraded["behavior_generation_rules"])
+        self.assertEqual(upgraded["persona_schema_meta"]["schema_version"], "v5.1")
+        self.assertEqual(upgraded["persona_schema_meta"]["source_version"], "v5")
+        self.assertEqual(upgraded["persona_schema_meta"]["upgrade_strategy"], "fallback_from_v5")
+        self.assertTrue(any("v5_fallback_derivation" in step for step in applied))
 
     def test_resume_response_preserves_existing_guided_brief(self) -> None:
         guide = {"mode": "guided", "fixed": {"location": "Hong Kong urban districts"}, "preferred": {"persona_role": "spontaneous_free_time_explorer"}}

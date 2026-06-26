@@ -1,0 +1,106 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0002",
+    "panel_role": "skeptic",
+    "age_band": "55-64",
+    "location_type": "urban_core",
+    "household_structure": "single parent with one child",
+    "occupation_band": "operations",
+    "income_band": "middle",
+    "education_band": "postgraduate",
+    "language": [
+      "Cantonese",
+      "English"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "careful subscription user",
+    "schedule_pressure": "high",
+    "budget_flexibility": "medium",
+    "caregiving_load": "high",
+    "trust_threshold": "adopts_after_peer_signal",
+    "switching_cost_level": "low",
+    "privacy_risk_tolerance": "low",
+    "digital_literacy_ceiling": "high",
+    "locale_pack": "hong_kong_smb",
+    "occupation_title": "operations manager",
+    "life_stage": "mature_operator",
+    "purchase_authority_type": "workflow_tool_evaluator",
+    "employment_stability": "variable",
+    "workflow_maturity": "documented",
+    "decision_speed": "deliberate",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "high"
+  },
+  "decision_policy": {
+    "adoption_style": "waits for evidence and edge-case answers before changing habits; prefers monthly billing to test viability",
+    "trust_requirements": [
+      "clear before-and-after value demonstrated in demo",
+      "low-friction onboarding that works offline or with spotty internet",
+      "plain-language data handling explanation with no hidden terms",
+      "transparent pricing with no surprise fees"
+    ],
+    "rejection_triggers": [
+      "extra admin burden during setup",
+      "vague claims without proof or case studies",
+      "unclear data retention or model training policy",
+      "forced integration with tools I don't use"
+    ],
+    "proof_requirements": [
+      "specific examples from similar operations managers",
+      "a short trial workflow with dummy data",
+      "proof that sensitive data can stay minimal and secure",
+      "evidence that the workflow can survive internal review and comparison with existing tools"
+    ]
+  },
+  "response_style": {
+    "articulation_level": "high",
+    "directness": "high",
+    "detail_tendency": "medium",
+    "tone": "Professional, cautious, pragmatic, and slightly weary of marketing fluff",
+    "language_mix": "Code-switches between Cantonese for informal/quick checks and English for formal documentation/client communication",
+    "key_phrases": [
+      "Show me how it works with real data",
+      "What happens if I cancel?",
+      "Is my client's info safe?",
+      "How much time does this actually save?"
+    ]
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T12:56:54+00:00",
+      "rationale": "This enrichment layer preserves all structural anchors (age, location, occupation, family structure, etc.) while adding realistic psychological depth. It emphasizes the 'careful subscription user' trait by introducing specific financial anxieties related to cash flow volatility. The 'sensitive reality layer' is expanded to reflect the high stakes of data privacy for an operations manager handling client info. The behavior profile highlights the trade-off between high digital literacy and low willingness to learn complex new tools due to time scarcity. The response style incorporates the bilingual nature of the HK context and the pragmatic, skeptical tone expected from someone with high trust thresholds."
+    }
+  }
+}

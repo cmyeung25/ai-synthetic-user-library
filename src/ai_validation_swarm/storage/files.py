@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from ai_validation_swarm.domain.models import PersonaSeed, PersonaSkill, SyntheticUser
+from ai_validation_swarm.personas.schema_v5_1 import LEGACY_V5_SCHEMA_VERSION, upgrade_profile_payload_to_v5_1
 from ai_validation_swarm.personas.seed_coherence import occupation_title_for_band
 from ai_validation_swarm.personas.validator import ensure_valid_persona_artifact
 
@@ -16,6 +17,10 @@ def ensure_dir(path: Path) -> None:
 
 def write_json(path: Path, payload: dict[str, Any] | list[Any]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def write_markdown(path: Path, content: str) -> None:
+    path.write_text(content, encoding="utf-8-sig")
 
 
 def read_json(path: Path) -> Any:
@@ -36,13 +41,20 @@ def load_persona(folder: Path) -> PersonaSkill:
     profile_payload = read_json(folder / "profile.json")
     audit_payload = read_json(folder / "audit.json")
     narrative = (folder / "persona.md").read_text(encoding="utf-8")
+    skill_version = str(audit_payload["skill_version"])
+    if skill_version == LEGACY_V5_SCHEMA_VERSION:
+        profile_payload, _ = upgrade_profile_payload_to_v5_1(
+            profile_payload,
+            source_version=skill_version,
+            force_meta=True,
+        )
     profile = SyntheticUser(**profile_payload)
     seed_payload = dict(audit_payload["seed"])
     if not seed_payload.get("occupation_title") and seed_payload.get("occupation_band"):
         seed_payload["occupation_title"] = occupation_title_for_band(str(seed_payload["occupation_band"]))
     seed = PersonaSeed(**seed_payload)
     persona = PersonaSkill(
-        skill_version=audit_payload["skill_version"],
+        skill_version=skill_version,
         seed=seed,
         profile=profile,
         decision_policy=audit_payload["decision_policy"],
@@ -57,7 +69,7 @@ def load_persona(folder: Path) -> PersonaSkill:
 def resolve_persona_version_folder(folder: Path) -> Path:
     if (folder / "profile.json").exists():
         return folder
-    for version in ("v5", "v4", "v3_3", "v3_2", "v3_1_2", "v3_1_1", "v3_1", "v3", "v2"):
+    for version in ("v5_1", "v5", "v4", "v3_3", "v3_2", "v3_1_2", "v3_1_1", "v3_1", "v3", "v2"):
         candidate = folder / version
         if (candidate / "profile.json").exists():
             return candidate
@@ -67,12 +79,13 @@ def resolve_persona_version_folder(folder: Path) -> Path:
 def resolve_current_persona_version_folder(folder: Path) -> Path:
     if (folder / "profile.json").exists():
         return folder
-    candidate = folder / "v5"
-    if (candidate / "profile.json").exists():
-        return candidate
+    for version in ("v5_1", "v5"):
+        candidate = folder / version
+        if (candidate / "profile.json").exists():
+            return candidate
     raise ValueError(
         f"No current persona artifact found under {folder}. "
-        "Current runtime paths only support v5 personas. Legacy versions remain read-compatible only."
+        "Current runtime paths support native v5.1 artifacts and v5 fallback upgrade only."
     )
 
 
@@ -82,7 +95,7 @@ def load_personas(base_dir: Path) -> list[PersonaSkill]:
     personas = [
         load_persona(resolve_persona_version_folder(folder))
         for folder in sorted(base_dir.iterdir())
-        if folder.is_dir()
+        if folder.is_dir() and not folder.name.startswith((".", "_"))
     ]
     return personas
 

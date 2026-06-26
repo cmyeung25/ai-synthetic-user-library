@@ -159,6 +159,13 @@ def _persona_id(persona: PersonaSkill) -> str:
     return str(persona.profile.basic_identity.get("synthetic_user_id", "unknown"))
 
 
+def _is_public_figure_perspective(persona: PersonaSkill) -> bool:
+    extensions = getattr(persona.profile, "extensions", {})
+    if not isinstance(extensions, dict):
+        return False
+    return extensions.get("persona_kind") == "public_figure_perspective"
+
+
 def _non_empty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -210,6 +217,34 @@ OPTIONAL_STRUCTURED_SECTIONS: dict[str, tuple[str, ...]] = {
         "fee_sensitivity",
         "past_bad_investment_experience",
         "suitability_sensitivity",
+    ),
+    "persona_schema_meta": (
+        "schema_version",
+        "source_version",
+        "upgrade_strategy",
+        "optional_blocks_present",
+        "canonicalizations_applied",
+    ),
+    "relational_defense_model": (
+        "self_other_position",
+        "default_trust_posture",
+        "defensive_style",
+        "status_sensitivity",
+        "attribution_style",
+        "conflict_pattern",
+        "withdrawal_pattern",
+    ),
+    "communication_behavior_model": (
+        "baseline_answer_length",
+        "clarification_tendency",
+        "misunderstanding_risk",
+        "topic_drift_tendency",
+        "memory_lapse_tendency",
+        "revision_tendency",
+        "disinterest_expression_style",
+        "permission_sensitivity",
+        "pricing_confusion_risk",
+        "dropoff_style",
     ),
 }
 
@@ -447,6 +482,27 @@ def validate_persona_artifact(persona: PersonaSkill) -> list[PersonaValidationIs
                         message=f"Optional section '{section_name}' has invalid or missing field '{field_name}'.",
                     )
                 )
+    behavior_rules = getattr(persona.profile, "behavior_generation_rules", [])
+    if behavior_rules not in ([], None):
+        if not isinstance(behavior_rules, list):
+            issues.append(
+                PersonaValidationIssue(
+                    persona_id=persona_id,
+                    check_name="section_type",
+                    message="Optional section 'behavior_generation_rules' must be a list when present.",
+                )
+            )
+        else:
+            for item in behavior_rules:
+                if not isinstance(item, dict) or not _non_empty_string_or_object(item.get("because")):
+                    issues.append(
+                        PersonaValidationIssue(
+                            persona_id=persona_id,
+                            check_name="required_field",
+                            message="Optional section 'behavior_generation_rules' must contain objects with a non-empty 'because' field.",
+                        )
+                    )
+                    break
 
     return issues
 
@@ -479,65 +535,66 @@ def validate_personas(personas: list[PersonaSkill]) -> list[PersonaValidationIss
         identity = persona.profile.basic_identity
         persona_id = _persona_id(persona)
         name_value = identity.get("name", "")
-        first_name = name_value.split()[0] if _non_empty_string(name_value) else ""
-        gender = str(identity.get("gender", ""))
+        if not _is_public_figure_perspective(persona):
+            first_name = name_value.split()[0] if _non_empty_string(name_value) else ""
+            gender = str(identity.get("gender", ""))
 
-        if not first_name:
-            pass
-        elif gender not in FIRST_NAMES_BY_GENDER:
-            issues.append(
-                PersonaValidationIssue(
-                    persona_id=persona_id,
-                    check_name="unsupported_gender",
-                    message=f"Gender '{gender}' has no configured name pool.",
+            if not first_name:
+                pass
+            elif gender not in FIRST_NAMES_BY_GENDER:
+                issues.append(
+                    PersonaValidationIssue(
+                        persona_id=persona_id,
+                        check_name="unsupported_gender",
+                        message=f"Gender '{gender}' has no configured name pool.",
+                    )
                 )
-            )
-        elif first_name not in FIRST_NAMES_BY_GENDER[gender]:
-            issues.append(
-                PersonaValidationIssue(
-                    persona_id=persona_id,
-                    check_name="name_gender",
-                    message=f"First name '{first_name}' does not match gender '{gender}'.",
+            elif first_name not in FIRST_NAMES_BY_GENDER[gender]:
+                issues.append(
+                    PersonaValidationIssue(
+                        persona_id=persona_id,
+                        check_name="name_gender",
+                        message=f"First name '{first_name}' does not match gender '{gender}'.",
+                    )
                 )
-            )
 
-        issues.extend(
-            _validate_household_consistency(
-                persona_id=persona_id,
-                family_structure=identity.get("family_structure"),
-                household_size=identity.get("household_size"),
-                marital_status=identity.get("marital_status"),
-            )
-        )
-
-        location = identity.get("location")
-        raw_languages = identity.get("language", [])
-        languages = set(raw_languages) if isinstance(raw_languages, list) else set()
-        if location not in expected_languages:
-            issues.append(
-                PersonaValidationIssue(
+            issues.extend(
+                _validate_household_consistency(
                     persona_id=persona_id,
-                    check_name="location",
-                    message=f"Location '{location}' is not in the configured location catalog.",
-                )
-            )
-        elif not languages.issubset(expected_languages[location]):
-            issues.append(
-                PersonaValidationIssue(
-                    persona_id=persona_id,
-                    check_name="location_language",
-                    message=f"Languages {sorted(languages)} do not match configured options for '{location}'.",
+                    family_structure=identity.get("family_structure"),
+                    household_size=identity.get("household_size"),
+                    marital_status=identity.get("marital_status"),
                 )
             )
 
-        if _non_empty_string(name_value) and name_counts[name_value] > 1:
-            issues.append(
-                PersonaValidationIssue(
-                    persona_id=persona_id,
-                    check_name="duplicate_name",
-                    message=f"Name '{name_value}' appears {name_counts[name_value]} times in the library.",
+            location = identity.get("location")
+            raw_languages = identity.get("language", [])
+            languages = set(raw_languages) if isinstance(raw_languages, list) else set()
+            if location not in expected_languages:
+                issues.append(
+                    PersonaValidationIssue(
+                        persona_id=persona_id,
+                        check_name="location",
+                        message=f"Location '{location}' is not in the configured location catalog.",
+                    )
                 )
-            )
+            elif not languages.issubset(expected_languages[location]):
+                issues.append(
+                    PersonaValidationIssue(
+                        persona_id=persona_id,
+                        check_name="location_language",
+                        message=f"Languages {sorted(languages)} do not match configured options for '{location}'.",
+                    )
+                )
+
+            if _non_empty_string(name_value) and name_counts[name_value] > 1:
+                issues.append(
+                    PersonaValidationIssue(
+                        persona_id=persona_id,
+                        check_name="duplicate_name",
+                        message=f"Name '{name_value}' appears {name_counts[name_value]} times in the library.",
+                    )
+                )
 
         disclaimer = persona.audit.get("synthetic_only_disclaimer", "").strip()
         if not disclaimer:

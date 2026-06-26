@@ -14,7 +14,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from ai_validation_swarm.cli.main import main
+from ai_validation_swarm.cli.main import _load_live_llm_config, _load_openai_runtime_config, main
 from ai_validation_swarm.personas.generator import generate_personas
 from ai_validation_swarm.personas.llm import OpenAIPersonaEnricher, OpenAIPersonaJudge, _build_enrichment_payload
 from ai_validation_swarm.providers.openai_client import (
@@ -204,6 +204,55 @@ class OpenAIPersonaToolsTest(unittest.TestCase):
         self.assertEqual(enriched.audit["persona_generation_method"], "deterministic_seed_plus_codex_enrichment_v1")
         self.assertEqual(result["provider"], "codex")
 
+    def test_agnes_transport_updates_audit_provider_labels(self) -> None:
+        persona = generate_personas(count=1, random_seed=49)[0]
+        client = _StubClient(
+            [
+                {
+                    "values": {"core_values": ["clarity"]},
+                    "life_story": {"career_path": "Built trust through practical fixes instead of big promises."},
+                    "behavior_profile": {"decision_blockers": ["unclear proof"]},
+                    "problem_context": {"active_pain_points": ["workflow drift"]},
+                    "sensitive_reality_layer": {"public_explanation_preference": "specific"},
+                    "decision_policy": {"proof_requirements": ["one live example"]},
+                    "response_style": {"detail_tendency": "medium"},
+                    "narrative": "# Agnes persona narrative",
+                    "rationale": "Agnes enrichment probe.",
+                }
+            ]
+        )
+        config = OpenAIProviderConfig(api_key="test-key", provider_name="agnes", model="agnes-2.0-flash", profile="agnes-2.0-flash")
+
+        enriched = OpenAIPersonaEnricher(client, config).enrich(persona)
+
+        self.assertEqual(enriched.audit["llm_enrichment"]["provider"], "agnes")
+        self.assertEqual(enriched.audit["persona_generation_method"], "deterministic_seed_plus_agnes_enrichment_v2")
+        self.assertEqual(enriched.audit["llm_enrichment"]["prompt_version"], "persona-enrichment/v2")
+
+    def test_non_agnes_enrichment_stays_on_v1_prompt(self) -> None:
+        persona = generate_personas(count=1, random_seed=51)[0]
+        client = _StubClient(
+            [
+                {
+                    "values": {},
+                    "life_story": {},
+                    "behavior_profile": {},
+                    "problem_context": {},
+                    "sensitive_reality_layer": {},
+                    "decision_policy": {},
+                    "response_style": {},
+                    "narrative": persona.narrative,
+                    "rationale": "Prompt version probe.",
+                }
+            ]
+        )
+        config = OpenAIProviderConfig(api_key="test-key", transport="codex_cli")
+
+        enriched = OpenAIPersonaEnricher(client, config).enrich(persona)
+
+        self.assertEqual(enriched.audit["persona_generation_method"], "deterministic_seed_plus_codex_enrichment_v1")
+        self.assertEqual(enriched.audit["llm_enrichment"]["prompt_version"], "persona-enrichment/v1")
+
     def test_load_codex_access_token_reads_chatgpt_auth_file(self) -> None:
         import tempfile
 
@@ -316,6 +365,343 @@ class OpenAIPersonaToolsTest(unittest.TestCase):
                 )
 
         self.assertEqual(config.timeout_seconds, 360)
+
+    def test_load_openai_provider_config_supports_agnes_overrides(self) -> None:
+        with patch.dict(
+            os.environ,
+            {
+                "AGNES_API_KEY": "sk-agnes-key",
+                "AI_VALIDATION_LLM_MODEL": "agnes-2.0-flash",
+            },
+            clear=True,
+        ):
+            config = load_openai_provider_config(
+                force_transport="node_https",
+                force_provider_name="agnes",
+                force_api_key_env="AGNES_API_KEY",
+                default_model="agnes-2.0-flash",
+                default_profile="agnes-2.0-flash",
+                default_api_base="https://apihub.agnes-ai.com/v1",
+            )
+
+        self.assertEqual(config.api_key, "sk-agnes-key")
+        self.assertEqual(config.provider_name, "agnes")
+        self.assertEqual(config.model, "agnes-2.0-flash")
+        self.assertEqual(config.profile, "agnes-2.0-flash")
+        self.assertEqual(config.api_base, "https://apihub.agnes-ai.com/v1")
+        self.assertEqual(config.auth_source, "api_key_env:AGNES_API_KEY")
+
+    def test_load_live_llm_config_uses_agnes_defaults_for_agnes_backend(self) -> None:
+        with patch.dict(
+            os.environ,
+            {
+                "AGNES_API_KEY": "sk-agnes-key",
+            },
+            clear=True,
+        ):
+            config = _load_live_llm_config("agnes")
+
+        self.assertEqual(config.provider_name, "agnes")
+        self.assertEqual(config.model, "agnes-2.0-flash")
+        self.assertEqual(config.profile, "agnes-2.0-flash")
+        self.assertEqual(config.api_base, "https://apihub.agnes-ai.com/v1")
+        self.assertEqual(config.transport, "powershell_webrequest")
+        self.assertEqual(config.auth_source, "api_key_env:AGNES_API_KEY")
+
+    def test_load_openai_runtime_config_now_defaults_to_codex_from_repo_config(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            auth_path = Path(tmp) / "auth.json"
+            auth_path.write_text(
+                (
+                    "{"
+                    "\"auth_mode\":\"chatgpt\","
+                    "\"tokens\":{\"access_token\":\"codex_auth_token\"}"
+                    "}"
+                ),
+                encoding="utf-8",
+            )
+            with patch.dict(
+                os.environ,
+                {
+                    "AI_VALIDATION_CODEX_AUTH_FILE": str(auth_path),
+                },
+                clear=True,
+            ):
+                config = _load_openai_runtime_config()
+
+        self.assertEqual(config.transport, "codex_cli")
+        self.assertEqual(config.api_key, "codex_auth_token")
+        self.assertTrue(config.auth_source.startswith("codex_auth_file:"))
+
+    def test_build_parser_uses_repo_runtime_defaults_for_live_commands(self) -> None:
+        from ai_validation_swarm.cli.main import _build_parser
+
+        parser = _build_parser()
+        parsed = parser.parse_args([
+            "run-facilitated-interview",
+            "--persona-id", "su_0001",
+            "--research-goal", "Understand a problem",
+        ])
+
+        self.assertEqual(parsed.backend, "codex")
+        self.assertIsNone(parsed.model)
+
+    def test_agnes_responses_requests_attach_enable_thinking(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            provider_name="agnes",
+            model="agnes-2.0-flash",
+            transport="python_urllib",
+            agnes_enable_thinking=True,
+        )
+        client = OpenAIResponsesClient(config)
+        captured: dict[str, object] = {}
+
+        def fake_response(body):
+            captured.update(body)
+            return {"output_text": '{"ok": true}'}
+
+        with patch.object(client, "_create_response_via_python", side_effect=fake_response):
+            result = client.create_json_response(
+                system_prompt="Return JSON only.",
+                user_prompt="Set ok=true.",
+                output_schema={
+                    "type": "object",
+                    "required": ["ok"],
+                    "properties": {"ok": {"type": "boolean"}},
+                },
+            )
+
+        self.assertEqual(result, {"ok": True})
+        self.assertEqual(
+            captured.get("chat_template_kwargs"),
+            {"enable_thinking": True},
+        )
+
+    def test_agnes_chat_completions_attach_enable_thinking(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            provider_name="agnes",
+            model="agnes-2.0-flash",
+            transport="python_urllib",
+            agnes_enable_thinking=True,
+        )
+        client = OpenAIResponsesClient(config)
+        captured: dict[str, object] = {}
+
+        def fake_chat(body):
+            captured.update(body)
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": '{"ok": true, "path": "chat_completions"}',
+                        }
+                    }
+                ]
+            }
+
+        with patch.object(
+            client,
+            "_create_response_via_python",
+            side_effect=OpenAIProviderError("OpenAI Responses API request failed: Remote end closed connection without response"),
+        ):
+            with patch.object(client, "_create_chat_completion_via_python", side_effect=fake_chat):
+                result = client.create_json_response(
+                    system_prompt="Return JSON only.",
+                    user_prompt="Set ok=true and path=chat_completions.",
+                    output_schema={
+                        "type": "object",
+                        "required": ["ok", "path"],
+                        "properties": {
+                            "ok": {"type": "boolean"},
+                            "path": {"type": "string"},
+                        },
+                    },
+                )
+
+        self.assertEqual(result, {"ok": True, "path": "chat_completions"})
+        self.assertEqual(
+            captured.get("chat_template_kwargs"),
+            {"enable_thinking": True},
+        )
+
+    def test_agnes_falls_back_to_chat_completions_after_responses_failure(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            provider_name="agnes",
+            model="agnes-2.0-flash",
+            transport="python_urllib",
+        )
+        client = OpenAIResponsesClient(config)
+        with patch.object(
+            client,
+            "_create_response_via_python",
+            side_effect=OpenAIProviderError("OpenAI Responses API request failed: Remote end closed connection without response"),
+        ):
+            with patch.object(
+                client,
+                "_create_chat_completion_via_python",
+                return_value={
+                    "choices": [
+                        {
+                            "message": {
+                                "content": '{"ok": true, "path": "chat_completions"}',
+                            }
+                        }
+                    ],
+                    "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15},
+                },
+            ) as chat_mock:
+                result = client.create_json_response(
+                    system_prompt="Return JSON only.",
+                    user_prompt="Set ok=true and path=chat_completions.",
+                    output_schema={
+                        "type": "object",
+                        "required": ["ok", "path"],
+                        "properties": {
+                            "ok": {"type": "boolean"},
+                            "path": {"type": "string"},
+                        },
+                    },
+                )
+
+        self.assertEqual(result, {"ok": True, "path": "chat_completions"})
+        self.assertEqual(client.last_transport_metadata["fallback_transport"], "chat_completions")
+        self.assertEqual(client.last_transport_metadata["usage"]["total_tokens"], 15)
+        chat_mock.assert_called_once()
+
+    def test_agnes_responses_transport_retries_retryable_failure_then_succeeds(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            provider_name="agnes",
+            model="agnes-2.0-flash",
+            transport="python_urllib",
+            agnes_transport_retries=1,
+            agnes_transport_retry_backoff_seconds=1,
+        )
+        client = OpenAIResponsesClient(config)
+        calls = {"count": 0}
+
+        def fake_response(body):
+            del body
+            calls["count"] += 1
+            if calls["count"] == 1:
+                raise OpenAIProviderError(
+                    "OpenAI Responses API request failed: Remote end closed connection without response"
+                )
+            return {"output_text": '{"ok": true, "attempt": 2}'}
+
+        with patch.object(client, "_create_response_via_python", side_effect=fake_response):
+            with patch("time.sleep") as sleep_mock:
+                result = client.create_json_response(
+                    system_prompt="Return JSON only.",
+                    user_prompt="Set ok=true and attempt=2.",
+                    output_schema={
+                        "type": "object",
+                        "required": ["ok", "attempt"],
+                        "properties": {
+                            "ok": {"type": "boolean"},
+                            "attempt": {"type": "integer"},
+                        },
+                    },
+                )
+
+        self.assertEqual(result, {"ok": True, "attempt": 2})
+        self.assertEqual(calls["count"], 2)
+        sleep_mock.assert_called_once_with(1)
+
+    def test_agnes_chat_completions_transport_retries_after_fallback(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            provider_name="agnes",
+            model="agnes-2.0-flash",
+            transport="python_urllib",
+            agnes_transport_retries=1,
+            agnes_transport_retry_backoff_seconds=1,
+        )
+        client = OpenAIResponsesClient(config)
+        chat_calls = {"count": 0}
+
+        def fake_chat(body):
+            del body
+            chat_calls["count"] += 1
+            if chat_calls["count"] == 1:
+                raise OpenAIProviderError("OpenAI Chat Completions API request failed: socket hang up")
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": '{"ok": true, "path": "chat_completions_retry"}',
+                        }
+                    }
+                ]
+            }
+
+        with patch.object(
+            client,
+            "_create_response_via_python",
+            side_effect=OpenAIProviderError("OpenAI Responses API request failed: response body was not a JSON object"),
+        ):
+            with patch.object(client, "_create_chat_completion_via_python", side_effect=fake_chat):
+                with patch("time.sleep") as sleep_mock:
+                    result = client.create_json_response(
+                        system_prompt="Return JSON only.",
+                        user_prompt="Set ok=true and path=chat_completions_retry.",
+                        output_schema={
+                            "type": "object",
+                            "required": ["ok", "path"],
+                            "properties": {
+                                "ok": {"type": "boolean"},
+                                "path": {"type": "string"},
+                            },
+                        },
+                    )
+
+        self.assertEqual(result, {"ok": True, "path": "chat_completions_retry"})
+        self.assertEqual(chat_calls["count"], 2)
+        self.assertEqual(client.last_transport_metadata["fallback_transport"], "chat_completions")
+        sleep_mock.assert_called_once_with(1)
+
+    def test_agnes_can_request_plain_text_after_responses_failure(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            provider_name="agnes",
+            model="agnes-2.0-flash",
+            transport="python_urllib",
+        )
+        client = OpenAIResponsesClient(config)
+        with patch.object(
+            client,
+            "_create_response_via_python",
+            side_effect=OpenAIProviderError("OpenAI Responses API request failed: Remote end closed connection without response"),
+        ):
+            with patch.object(
+                client,
+                "_create_chat_completion_via_python",
+                return_value={
+                    "choices": [
+                        {
+                            "message": {
+                                "content": "我通常到對數先發現漏記。",
+                            }
+                        }
+                    ],
+                    "usage": {"input_tokens": 8, "output_tokens": 4, "total_tokens": 12},
+                },
+            ) as chat_mock:
+                result = client.create_text_response(
+                    system_prompt="Reply naturally.",
+                    user_prompt="What happens in real life?",
+                )
+
+        self.assertEqual(result, "我通常到對數先發現漏記。")
+        self.assertEqual(client.last_transport_metadata["fallback_transport"], "chat_completions")
+        self.assertEqual(client.last_transport_metadata["response_format"], "text")
+        self.assertEqual(client.last_transport_metadata["usage"]["total_tokens"], 12)
+        chat_mock.assert_called_once()
 
     def test_is_retryable_codex_failure_matches_models_refresh_errors(self) -> None:
         self.assertTrue(
@@ -660,7 +1046,7 @@ class OpenAIPersonaToolsTest(unittest.TestCase):
                 exit_code = main(["generate-personas", "--count", "1", "--backend", "openai"])
 
         self.assertEqual(exit_code, 1)
-        self.assertIn("OpenAI credentials are missing", stream.getvalue())
+        self.assertIn("LLM credentials are missing for provider 'openai'", stream.getvalue())
 
     def test_codex_payload_decoder_accepts_missing_padding_and_whitespace(self) -> None:
         encoded = base64.b64encode('{"reply":"繁體中文","ok":true}'.encode("utf-8")).decode("ascii").rstrip("=")

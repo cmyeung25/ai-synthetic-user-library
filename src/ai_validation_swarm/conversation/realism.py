@@ -166,6 +166,45 @@ def build_axis_behavior_prompt(axes: dict[str, Any]) -> str:
     return "\n".join(lines) if len(lines) > 1 else ""
 
 
+def build_persona_behavior_prompt(
+    *,
+    relational_defense_model: dict[str, Any],
+    communication_behavior_model: dict[str, Any],
+    behavior_generation_rules: list[dict[str, Any]],
+) -> str:
+    lines: list[str] = []
+    if relational_defense_model:
+        lines.extend([
+            "RELATIONAL DEFENSE MODEL:",
+            f"- self_other_position: {relational_defense_model.get('self_other_position', '')}",
+            f"- default_trust_posture: {relational_defense_model.get('default_trust_posture', '')}",
+            f"- defensive_style: {relational_defense_model.get('defensive_style', '')}",
+            f"- conflict_pattern: {relational_defense_model.get('conflict_pattern', '')}",
+            f"- withdrawal_pattern: {relational_defense_model.get('withdrawal_pattern', '')}",
+        ])
+    if communication_behavior_model:
+        lines.extend([
+            "COMMUNICATION BEHAVIOR MODEL:",
+            f"- baseline_answer_length: {communication_behavior_model.get('baseline_answer_length', '')}",
+            f"- clarification_tendency: {communication_behavior_model.get('clarification_tendency', '')}",
+            f"- misunderstanding_risk: {communication_behavior_model.get('misunderstanding_risk', '')}",
+            f"- topic_drift_tendency: {communication_behavior_model.get('topic_drift_tendency', '')}",
+            f"- revision_tendency: {communication_behavior_model.get('revision_tendency', '')}",
+            f"- disinterest_expression_style: {communication_behavior_model.get('disinterest_expression_style', '')}",
+            f"- permission_sensitivity: {communication_behavior_model.get('permission_sensitivity', '')}",
+            f"- dropoff_style: {communication_behavior_model.get('dropoff_style', '')}",
+        ])
+    if behavior_generation_rules:
+        lines.append("BEHAVIOR GENERATION RULES:")
+        for rule in behavior_generation_rules[:6]:
+            if not isinstance(rule, dict):
+                continue
+            lines.append(
+                f"- when {rule.get('when', {})} then {rule.get('then', [])} because {rule.get('because', '')}"
+            )
+    return "\n".join(lines).strip()
+
+
 def analyze_conversation_realism(session: ConversationSession) -> dict[str, Any]:
     persona_turns = [turn for turn in session.turns if turn.role == "persona"]
     sample_size = len(persona_turns)

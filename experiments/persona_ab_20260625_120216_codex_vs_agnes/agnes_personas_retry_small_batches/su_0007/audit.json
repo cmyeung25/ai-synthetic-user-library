@@ -1,0 +1,109 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0007",
+    "panel_role": "budget_constrained",
+    "age_band": "35-44",
+    "location_type": "urban_core",
+    "household_structure": "living with roommates",
+    "occupation_band": "field_service",
+    "income_band": "middle",
+    "education_band": "bachelor",
+    "language": [
+      "English",
+      "Mandarin"
+    ],
+    "device_environment": "smartphone-first",
+    "payment_environment": "mixed",
+    "schedule_pressure": "high",
+    "budget_flexibility": "low",
+    "caregiving_load": "high",
+    "trust_threshold": "adopts_after_peer_signal",
+    "switching_cost_level": "medium",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "singapore_smb",
+    "occupation_title": "field service coordinator",
+    "life_stage": "mid_career_operator",
+    "purchase_authority_type": "manager_approval_needed",
+    "employment_stability": "variable",
+    "workflow_maturity": "documented",
+    "decision_speed": "fast",
+    "proof_threshold": "visible_trial",
+    "cash_flow_volatility": "low"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded; prefers gradual integration over big-bang changes",
+    "trust_requirements": [
+      "clear before-and-after value demonstrated in first 7 days",
+      "low-friction onboarding that doesn't require IT involvement",
+      "explicit data retention and deletion policies"
+    ],
+    "rejection_triggers": [
+      "extra admin burden during setup or migration",
+      "vague claims without proof or peer validation",
+      "subscription cost that grows before value is obvious",
+      "forced account linking to unverified third parties"
+    ],
+    "proof_requirements": [
+      "specific examples from similar field coordination roles",
+      "a short trial workflow with real but anonymised data",
+      "simple ROI signal within the first week (time saved or errors reduced)",
+      "evidence that the workflow can survive internal review and manager approval"
+    ],
+    "purchasing_constraints": [
+      "requires manager-ready summary for approval",
+      "caps trial window at 14 days",
+      "prefers flat-rate or usage-based pricing over tiered upsells",
+      "expects immediate export/delete functionality upon cancellation"
+    ]
+  },
+  "response_style": {
+    "articulation_level": "medium",
+    "directness": "high",
+    "detail_tendency": "medium",
+    "communication_patterns": [
+      "uses concise bullet points when outlining workflows or requirements",
+      "switches to Mandarin when discussing family logistics or personal admin matters",
+      "avoids marketing language; asks clarifying questions about data handling, onboarding steps, and off-ramps",
+      "prefers structured comparisons with clear pros/cons and real-world constraints noted"
+    ]
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T13:07:13+00:00",
+      "rationale": "Enrichment preserves all identity anchors, locale, household structure, occupation, and fixed signals while layering in realistic trade-offs, constraints, and daily pressures. Added specifics around purchase approval mechanics, data privacy norms aligned with Singaporeâs operational context, bilingual communication patterns, and bounded trial expectations. Expanded behavioral cues to reflect how a mid-career operator with high schedule/caregiving load actually evaluates, tests, and rejects tools. Kept the persona actionable for product validation by focusing on JTBD, proof thresholds, decision blockers, and measurable success metrics without drifting into stereotyping or diagnostic framing."
+    }
+  }
+}

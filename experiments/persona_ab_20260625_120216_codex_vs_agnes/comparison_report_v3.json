@@ -1,0 +1,1561 @@
+{
+  "experiment_id": "persona_ab_20260625_120216_codex_vs_agnes",
+  "generated_at": "2026-06-25T13:21:34Z",
+  "purpose": "Compare Codex gpt-5.4 vs Agnes 2.0 Flash persona-generation quality and operational reliability after rerunning Agnes as smaller one-person batches with retries.",
+  "method": {
+    "matched_seed": 101,
+    "matched_count": 8,
+    "quality_judge": "codex/gpt-5.4",
+    "agnes_strategy": "one-person batches with up to 3 retries and a short pause between personas"
+  },
+  "reliability": {
+    "codex": {
+      "provider": "codex",
+      "model": "gpt-5.4",
+      "requested_count": 8,
+      "successful_count": 8,
+      "wall_elapsed_seconds": 825.9,
+      "status": "completed"
+    },
+    "agnes": {
+      "provider": "agnes",
+      "model": "agnes-2.0-flash",
+      "requested_count": 8,
+      "successful_count": 8,
+      "wall_elapsed_seconds": 1093.3,
+      "attempt_elapsed_seconds_total": 1023.6,
+      "status": "completed",
+      "personas_requiring_retry": 3,
+      "total_generation_attempts": 12,
+      "successful_chat_completion_fallbacks": 3,
+      "attempt_log": [
+        {
+          "persona_id": "su_0001",
+          "index": 1,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": true,
+              "elapsed_seconds": 56.6,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "usage": {
+                  "input_tokens": 2473,
+                  "output_tokens": 3901,
+                  "total_tokens": 6374,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "persona_id": "su_0002",
+          "index": 2,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": false,
+              "elapsed_seconds": 121.5,
+              "error": "OpenAI Chat Completions API request failed via powershell transport: HTTP 0 The underlying connection was closed: The connection was closed unexpectedly."
+            },
+            {
+              "attempt": 2,
+              "ok": false,
+              "elapsed_seconds": 121.5,
+              "error": "OpenAI Chat Completions API request failed via powershell transport: HTTP 0 The underlying connection was closed: The connection was closed unexpectedly."
+            },
+            {
+              "attempt": 3,
+              "ok": true,
+              "elapsed_seconds": 102.0,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "fallback_transport": "chat_completions",
+                "usage": {
+                  "total_tokens": 4843,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "persona_id": "su_0003",
+          "index": 3,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": false,
+              "elapsed_seconds": 121.5,
+              "error": "OpenAI Chat Completions API request failed via powershell transport: HTTP 0 The underlying connection was closed: The connection was closed unexpectedly."
+            },
+            {
+              "attempt": 2,
+              "ok": true,
+              "elapsed_seconds": 109.8,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "fallback_transport": "chat_completions",
+                "usage": {
+                  "total_tokens": 4657,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "persona_id": "su_0004",
+          "index": 4,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": false,
+              "elapsed_seconds": 110.0,
+              "error": "Model did not return a valid JSON object: Extra data: line 153 column 4 (char 9108)"
+            },
+            {
+              "attempt": 2,
+              "ok": true,
+              "elapsed_seconds": 41.2,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "usage": {
+                  "input_tokens": 2486,
+                  "output_tokens": 4260,
+                  "total_tokens": 6746,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "persona_id": "su_0005",
+          "index": 5,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": true,
+              "elapsed_seconds": 44.6,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "usage": {
+                  "input_tokens": 2516,
+                  "output_tokens": 4558,
+                  "total_tokens": 7074,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "persona_id": "su_0006",
+          "index": 6,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": true,
+              "elapsed_seconds": 97.3,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "fallback_transport": "chat_completions",
+                "usage": {
+                  "total_tokens": 4692,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "persona_id": "su_0007",
+          "index": 7,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": true,
+              "elapsed_seconds": 56.8,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "usage": {
+                  "input_tokens": 2538,
+                  "output_tokens": 5179,
+                  "total_tokens": 7717,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "persona_id": "su_0008",
+          "index": 8,
+          "success": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "ok": true,
+              "elapsed_seconds": 40.8,
+              "transport": "powershell_webrequest",
+              "meta": {
+                "usage": {
+                  "input_tokens": 2496,
+                  "output_tokens": 4020,
+                  "total_tokens": 6516,
+                  "source": "api"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "quality": {
+    "codex": {
+      "persona_count": 8,
+      "personas": [
+        {
+          "persona_id": "su_0001",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 35.7,
+          "judge": {
+            "verdict": "usable_with_revisions",
+            "plausibility_score": 7.6,
+            "stereotype_risk_score": 3.1,
+            "panel_fit_score": 8.2,
+            "findings": [
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "finding": "The persona is broadly believable and internally consistent, but it is still too template-shaped in several places.",
+                "evidence": "Household load, cautious software spend, deliberate trials, and medium digital literacy fit together, but many descriptions use generic productivity-tool language rather than lived specifics."
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "low",
+                "finding": "The profile mostly avoids crude demographic stereotypes and explicitly states non-determinism.",
+                "evidence": "Regional location, multilingual background, and multi-generational household are not directly tied to competence or ambition."
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "medium",
+                "finding": "There is mild contextual stereotyping risk because regional household structure and caregiving pressure are repeatedly used as the main explanation for caution and friction.",
+                "evidence": "Time pressure, trust logic, and admin burden are repeatedly anchored to family and regional context instead of a fuller mix of business realities, personality, and operating constraints."
+              },
+              {
+                "area": "panel_fit",
+                "severity": "low",
+                "finding": "The persona fits a mainstream panel role reasonably well for evaluating practical workflow or admin tools.",
+                "evidence": "He is not extreme on budget, literacy, risk, or novelty seeking, and his adoption logic is moderate rather than edge-case behavior."
+              },
+              {
+                "area": "narrative_coherence",
+                "severity": "medium",
+                "finding": "The narrative is coherent, but it lacks concrete domain texture that would make decisions feel less interchangeable with many other SMB personas.",
+                "evidence": "The business type, customer mix, work cadence, and exact collaboration pattern are unspecified, so the same narrative could fit many different operators."
+              },
+              {
+                "area": "decision_policy_consistency",
+                "severity": "low",
+                "finding": "Decision policy is one of the stronger parts and is mostly consistent across profile, behavior, and narrative layers.",
+                "evidence": "Proof threshold, trial behavior, rejection triggers, and conversion logic all align around low-friction, visible payoff, and bounded risk."
+              },
+              {
+                "area": "genericness",
+                "severity": "high",
+                "finding": "The persona is somewhat over-optimized for the target product category and uses repeated abstract phrases instead of observable behaviors.",
+                "evidence": "Repeated themes such as 'reduce admin drag', 'protect bandwidth', 'workflow fit', and 'visible trial' appear across sections with little new information."
+              },
+              {
+                "area": "schema_quality",
+                "severity": "medium",
+                "finding": "Empty sections and meta scaffolding weaken realism signals and make the profile look generated rather than grounded.",
+                "evidence": "Many fields such as canonical_biography, product_reaction_rules, local_grounding_layer, and interests_and_hobbies are empty objects."
+              }
+            ],
+            "revision_hints": [
+              "Specify one concrete business context, for example marine service coordination, repair scheduling, local logistics, or equipment supply, and tie daily decisions to that context.",
+              "Replace at least 3 abstract phrases with observable behaviors, for example how he captures follow-ups after calls, what causes missed tasks, and what he does during a 7-day trial.",
+              "Add one countervailing trait that creates tension, such as being fast to improvise operationally but slow to adopt new systems, so the persona feels less uniformly cautious.",
+              "Reduce repetition across values, problem context, and decision policy by keeping each section responsible for distinct evidence instead of restating the same adoption logic.",
+              "Broaden the causal model beyond family load and regional context by including business-specific factors such as client expectations, staff reliability, invoicing rhythm, or device handoff friction.",
+              "Fill 3 to 5 currently empty human-detail sections with lightweight but concrete content, especially interests_and_hobbies, social_circle_and_communities, daily_micro_behaviours, and local_grounding_layer.",
+              "Add one or two disconfirming details that limit overfitting to productivity tools, such as a category where he is willing to adopt quickly or a tool type he already trusts despite subscription cost.",
+              "Tighten panel-role calibration by clarifying why this is 'mainstream' rather than simply 'cautious SMB owner', ideally with a short note on how typical his workflow and proof requirements are within the intended panel."
+            ],
+            "rationale": "This persona is usable for simulated concept or prototype evaluation, especially for tools that promise operational clarity, lower follow-up burden, and low-friction onboarding. Its strongest qualities are cross-field consistency and a believable bounded-adoption policy. Its main weakness is that it reads like a well-structured product-evaluation template more than a person with distinctive local and occupational texture. Stereotype risk is relatively low because demographic markers are not treated as destiny, but there is still some risk from repeatedly using household and regional context as the dominant explanation for caution. Overall, the persona is fit for panel use after revisions that add concrete domain grounding, reduce repeated abstractions, and introduce more human-specific detail.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:09:46+00:00",
+            "plausibility_score_normalized": 7.6,
+            "stereotype_risk_score_normalized": 3.1,
+            "panel_fit_score_normalized": 8.2
+          }
+        },
+        {
+          "persona_id": "su_0002",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 102.7,
+          "judge": {
+            "verdict": "usable_with_targeted_revision",
+            "plausibility_score": 8,
+            "stereotype_risk_score": 4,
+            "panel_fit_score": 9,
+            "findings": [
+              {
+                "category": "plausibility",
+                "severity": "medium",
+                "issue": "The core behavior model is credible: high schedule pressure, documented workflows, privacy caution, and trial-first evaluation all fit an experienced operations manager with caregiving load.",
+                "evidence": [
+                  "Decision policy consistently favors visible trial, low-friction onboarding, and reversible spend.",
+                  "Workflow habits and blockers align with multi-device coordination work and interruption-heavy routines."
+                ]
+              },
+              {
+                "category": "panel_role_fit",
+                "severity": "low",
+                "issue": "Panel-role fit is strong for a skeptic persona.",
+                "evidence": [
+                  "The persona asks edge-case questions early, distrusts vague claims, and requires peer signal plus concrete proof.",
+                  "Response style, blockers, and acceptance criteria all reinforce a skeptical evaluator rather than a generic cautious buyer."
+                ]
+              },
+              {
+                "category": "narrative_coherence",
+                "severity": "medium",
+                "issue": "The narrative is coherent but somewhat over-templated and repetitive.",
+                "evidence": [
+                  "Similar points recur across values, life story, behavior profile, problem context, decision policy, and narrative.",
+                  "Repeated themes like privacy, admin burden, and proof threshold strengthen consistency but also make the persona feel generated rather than observed."
+                ]
+              },
+              {
+                "category": "decision_policy_consistency",
+                "severity": "low",
+                "issue": "Decision-policy consistency is good overall, including the potentially tricky combination of low switching cost and deliberate adoption.",
+                "evidence": [
+                  "The profile explains that low switching cost makes exit easy but does not reduce skepticism about starting a new habit.",
+                  "Spending logic, renewal logic, and rejection triggers are mutually consistent."
+                ]
+              },
+              {
+                "category": "stereotype_risk",
+                "severity": "medium",
+                "issue": "Risk is not high, but there is some stacking of identity markers and broad cultural shorthand that can read as constructed rather than lived-in.",
+                "evidence": [
+                  "Age 55, non-binary, single parent, Hong Kong urban core, postgraduate, bilingual, high digital literacy, and high caregiving load are all plausible individually, but together need more grounded specificity to avoid feeling diversity-assembled.",
+                  "Phrases like 'practical decisions and financial caution in a hong kong smb context' are broad and can slide toward generic regional coding if left unsupported."
+                ]
+              },
+              {
+                "category": "weak_or_generic_signals",
+                "severity": "medium",
+                "issue": "Some attributes are generic or low-signal for behavioral simulation.",
+                "evidence": [
+                  "MBTI, zodiac, and metaphysical flavor do not improve prediction quality here.",
+                  "Pain points such as 'too many tools' and 'manual follow-up' are common B2B defaults unless tied to a more concrete operating environment.",
+                  "Many schema sections are empty, which makes the persona look structurally complete but behaviorally thinner than it appears."
+                ]
+              }
+            ],
+            "revision_hints": [
+              "Replace MBTI and zodiac with two or three observed behavioral indicators tied to actual workflow decisions under pressure.",
+              "Add one concrete operating context, such as team size, industry, or type of coordination workload, so objections and proof requirements attach to a real job environment.",
+              "Ground the Hong Kong context with specific lived details that matter to product behavior, such as language switching in tools, WhatsApp-heavy coordination, landlord/rent pressure, or long commute fragmentation, instead of broad cultural shorthand.",
+              "Reduce identity-label salience unless it changes product interaction; keep non-binary identity factual but avoid making it feel like an explanatory feature for unrelated behavior.",
+              "Condense duplicated statements across life story, behavior profile, and decision policy so the persona reads more like a human pattern and less like a merged template.",
+              "Fill only the schema sections that materially affect prediction; remove or omit empty sections to avoid false depth.",
+              "Add one or two disconfirming traits or exceptions, such as a case where Jordan will adopt quickly despite skepticism, to make the persona less uniformly cautious and more behaviorally realistic."
+            ],
+            "rationale": "This persona is stronger than a generic synthetic buyer profile because it links skepticism to concrete operational constraints: interrupted work, privacy concerns, approval dynamics, reversible spend, and trial-based proof. The decision model is mostly internally consistent and well matched to the skeptic panel role. The main weakness is not contradiction but over-construction: repetition, empty schema shells, and a few broad identity and cultural markers make the persona feel curated by template logic. With more specific operating context and less decorative psychographic metadata, it would be more plausible and more useful for behavior prediction.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:11:29+00:00",
+            "plausibility_score_normalized": 8.0,
+            "stereotype_risk_score_normalized": 4.0,
+            "panel_fit_score_normalized": 9.0
+          }
+        },
+        {
+          "persona_id": "su_0003",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 30.3,
+          "judge": {
+            "verdict": "pass_with_revisions",
+            "plausibility_score": 7.4,
+            "stereotype_risk_score": 3.8,
+            "panel_fit_score": 8.6,
+            "findings": [
+              {
+                "dimension": "plausibility",
+                "severity": "medium",
+                "issue": "The operational workflow, privacy posture, and trial behavior are internally believable, but some identity and biography details feel assembled from schema slots rather than observed life texture.",
+                "evidence": "The workday, evaluation heuristic, privacy behaviors, and budget influence are coherent; however, local grounding for Penang/regional SEA is thin and several profile sections are left empty."
+              },
+              {
+                "dimension": "stereotype_risk",
+                "severity": "medium",
+                "issue": "The persona mostly avoids crude demographic stereotyping, but there is a mild risk of turning identity markers into token diversity because non-binary identity, bilingualism, caregiving, and privacy sensitivity are present without enough lived-context specificity.",
+                "evidence": "The profile correctly avoids saying gender identity causes product behavior, yet inclusion and identity expectations are described in a generalized compliance-safe way rather than through concrete experiences or preferences."
+              },
+              {
+                "dimension": "panel_fit",
+                "severity": "low",
+                "issue": "The persona fits the privacy_sensitive panel well.",
+                "evidence": "Low privacy risk tolerance, minimal-data trial behavior, concern about retention/model training, and preference for explainable permissions are all strong matches for the panel role."
+              },
+              {
+                "dimension": "narrative_coherence",
+                "severity": "medium",
+                "issue": "The main story is coherent, but parts of the profile read as highly templated and repetitive.",
+                "evidence": "Concepts like admin drag, follow-up burden, workflow fit, and privacy stance recur across values, behavior, problem context, and decision policy with limited new information."
+              },
+              {
+                "dimension": "decision_policy_consistency",
+                "severity": "low",
+                "issue": "Decision policy is mostly consistent, with one tension that should be clarified.",
+                "evidence": "Sam is described as fast in decision speed while also needing social proof, manager approval, and visible trials. This can work if fast applies to narrow pilot decisions and slow applies to team-wide rollout, but that distinction should be made explicit."
+              },
+              {
+                "dimension": "genericity",
+                "severity": "medium",
+                "issue": "The persona is stronger than a generic marketing persona, but still contains generic professional-language scaffolding.",
+                "evidence": "MBTI/zodiac fields add little predictive value, and several phrases could fit many operations personas unless grounded with more specific behaviors, examples, or local constraints."
+              }
+            ],
+            "revision_hints": [
+              "Add 2 to 4 concrete Penang or regional operating-context details that affect workflow or trust, such as common communication norms, device usage patterns, procurement frictions, or bilingual document handling.",
+              "Clarify the fast-decision trait by separating pilot adoption from broader rollout: fast for trying a bounded workflow, slower for recommending team adoption after manager review.",
+              "Replace at least 3 repeated abstract phrases like 'admin burden' or 'workflow fit' with one concrete recurring incident, for example a missed follow-up reconstructed from WhatsApp and spreadsheets at end of day.",
+              "Give one specific reason Sam uses both English and Mandarin in work or home life so language is behaviorally grounded rather than decorative.",
+              "Add one non-identity-based lived example of privacy sensitivity, such as reluctance to paste stakeholder names into new tools until deletion/export controls are verified.",
+              "Remove or down-rank low-signal fields like MBTI and zodiac unless they are used nowhere in decision generation, because they increase template feel without improving prediction.",
+              "Populate one or two currently empty sections that matter for behavior generation, especially product_reaction_rules or objection_language_style, so downstream simulations have sharper response patterns."
+            ],
+            "rationale": "This persona is a solid privacy-sensitive operations persona with credible task pressure, bounded-trial behavior, and strong decision-policy alignment. Its biggest strengths are workflow realism and a defensible privacy posture. Its main weaknesses are template residue, limited local grounding, and slight tokenization risk from stacking multiple diversity markers without enough lived specificity. With clearer distinction between pilot versus rollout decisions and a few concrete contextual details, it would become more behaviorally plausible and less generic.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:11:59+00:00",
+            "plausibility_score_normalized": 7.4,
+            "stereotype_risk_score_normalized": 3.8,
+            "panel_fit_score_normalized": 8.6
+          }
+        },
+        {
+          "persona_id": "su_0004",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 49.7,
+          "judge": {
+            "verdict": "usable_with_revisions",
+            "plausibility_score": 7,
+            "stereotype_risk_score": 4,
+            "panel_fit_score": 5,
+            "findings": [
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "message": "Core work and decision behavior is internally consistent: fragmented coordination work, high switching cost, committee-slow buying, and preference for low-maintenance tools reinforce each other."
+              },
+              {
+                "area": "local_grounding",
+                "severity": "medium",
+                "message": "Taipei grounding is thin. 'WhatsApp groups' is a weak fit for this locale and makes the persona feel globally templated rather than locally observed."
+              },
+              {
+                "area": "panel_role_fit",
+                "severity": "high",
+                "message": "The 'inclusion' panel role is underpowered. Inclusion concerns are mostly generic ('respectful language', 'not assume one type of user') rather than tied to concrete situations where inclusion meaningfully changes his evaluation."
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "medium",
+                "message": "Risk is not overtly harmful, but the combination of 'responsible/careful/privacy-aware East Asian knowledge worker in a multi-generational home' can read as culturally flattened because it lacks countervailing specifics and lived nuance."
+              },
+              {
+                "area": "genericity",
+                "severity": "medium",
+                "message": "MBTI, zodiac, and broad values add template texture more than predictive value. They make the persona look generated unless supported by concrete behavioral evidence."
+              },
+              {
+                "area": "auditability",
+                "severity": "low",
+                "message": "The 'narrative' field is serialized as a Python-style string rather than structured JSON, which weakens downstream auditability and reuse."
+              },
+              {
+                "area": "decision_policy_consistency",
+                "severity": "low",
+                "message": "Decision policy is mostly coherent with the rest of the profile; proof requirements, budget influence, and rejection triggers align with the stated workflow and authority constraints."
+              }
+            ],
+            "revision_hints": [
+              {
+                "target": "panel_role_fit",
+                "hint": "Add 2-3 concrete inclusion scenarios from his work, such as coordinating across mixed language confidence, accommodating lower digital literacy among participants, or rejecting workflows that exclude less confident users."
+              },
+              {
+                "target": "local_grounding",
+                "hint": "Replace generic channel references with Taiwan-plausible ones and add one or two locale-specific workflow details, for example LINE, bilingual documentation habits, or local coordination norms."
+              },
+              {
+                "target": "stereotype_risk",
+                "hint": "Add one individualized trait that cuts against the default 'cautious reliable coordinator' mold, such as a specific exception case where he adopts quickly or a domain-specific quirk in how he evaluates trust."
+              },
+              {
+                "target": "behavioral_realism",
+                "hint": "Show one recent purchase or adoption story with trigger, comparison set, objection, and outcome. Concrete past behavior will make future decision predictions less generic."
+              },
+              {
+                "target": "signal_quality",
+                "hint": "Remove or demote MBTI and zodiac unless they are empirically used in downstream generation. Replace them with observed habits, objection phrases, and actual tradeoff thresholds."
+              },
+              {
+                "target": "data_quality",
+                "hint": "Store the narrative as structured JSON fields, not a quoted Python-like dictionary string."
+              }
+            ],
+            "rationale": "This persona is directionally plausible and its decision logic is more coherent than many synthetic profiles, but it is only moderately strong for an inclusion panel. The strongest parts are the workflow, switching-cost, and proof-threshold mechanics. The weakest parts are the thin local grounding, template-like personality markers, and the fact that inclusion is expressed as generic sensitivity rather than concrete evaluation behavior. It is usable for lightweight product-validation scenarios after revision, but not yet strong enough as a differentiated inclusion-panel judge.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:12:49+00:00",
+            "plausibility_score_normalized": 7.0,
+            "stereotype_risk_score_normalized": 4.0,
+            "panel_fit_score_normalized": 5.0
+          }
+        },
+        {
+          "persona_id": "su_0005",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 30.1,
+          "judge": {
+            "verdict": "revise",
+            "plausibility_score": 6.8,
+            "stereotype_risk_score": 4.1,
+            "panel_fit_score": 3.4,
+            "findings": [
+              {
+                "dimension": "plausibility",
+                "severity": "medium",
+                "issue": "The core workstyle and buying behavior are believable for an experienced communications manager, but the profile reads more like a generic B2B workflow-software evaluator than a locally grounded person.",
+                "evidence": "Most concrete detail is about follow-up, admin drag, onboarding, ROI, and manager approval; local daily context, sector context, and lived specifics are thin."
+              },
+              {
+                "dimension": "stereotype_risk",
+                "severity": "medium",
+                "issue": "Several identity markers appear assembled rather than behaviorally integrated.",
+                "evidence": "Age 62, non-binary, regional Kuching, English/Malay, and Patel surname are all individually plausible, but the profile does little to show how these factors actually shape decisions beyond a generic preference for respectful language."
+              },
+              {
+                "dimension": "panel_role_fit",
+                "severity": "high",
+                "issue": "The persona is weakly matched to the stated panel role of political_risk.",
+                "evidence": "The profile lacks concrete exposure to politically sensitive work such as public affairs, crisis communications, government relations, election-period caution, regulatory signaling, reputational escalation, or cross-stakeholder risk handling."
+              },
+              {
+                "dimension": "narrative_coherence",
+                "severity": "medium",
+                "issue": "The narrative is internally consistent but overly templated and repetitive.",
+                "evidence": "Multiple sections restate the same themes: scattered tools, follow-up reliability, privacy caution, peer proof, and manager review. Many schema sections are empty, which makes the persona feel scaffolded rather than fully authored."
+              },
+              {
+                "dimension": "decision_policy_consistency",
+                "severity": "low",
+                "issue": "The adoption logic is coherent for workflow tooling, but it does not clearly connect to political-risk judgment behavior.",
+                "evidence": "Rejection triggers and proof requirements consistently emphasize bounded rollout, clear ROI, and accountability, yet they do not specify what political content, actors, or scenarios would trigger heightened scrutiny."
+              },
+              {
+                "dimension": "genericness",
+                "severity": "high",
+                "issue": "The persona is too generic for high-signal simulation use.",
+                "evidence": "Traits like 'responsible teammate', 'careful buyer', 'reduce admin drag', and 'protect bandwidth' are common across many SaaS personas and do not strongly distinguish this synthetic user from adjacent operator profiles."
+              }
+            ],
+            "revision_hints": [
+              "Tie the panel role to a real political-risk-relevant operating context, such as maritime services dealing with licensing, local government relations, public tender visibility, or reputational sensitivity around public statements.",
+              "Replace some generic productivity language with 3 to 5 concrete recurring situations Casey actually navigates, for example clearing public-facing statements, handling sensitive stakeholder messages, or deciding whether a tool can be used during a regulatory or media flare-up.",
+              "Either justify the non-binary identity with realistic implications for trust, disclosure, workplace navigation, or product-language sensitivity in this locale and age cohort, or remove it to avoid a token-feeling attribute.",
+              "Add local grounding details that affect behavior: device habits in Kuching, language switching by audience, which channels are used for internal coordination versus external stakeholders, and what counts as credible peer proof locally.",
+              "Define political-risk-specific decision rules, such as how Casey reacts to tools that classify sentiment, store sensitive correspondence, generate public-facing text, or blur internal and external communications.",
+              "Trim low-signal template traits like MBTI and zodiac unless they measurably influence behavior; use the space for concrete habits, objections, and escalation thresholds.",
+              "Fill a small number of currently empty schema areas that matter most for simulation quality, especially local_grounding_layer, panel_role_profile, objection_language_style, and sensitive_scenario_reactions."
+            ],
+            "rationale": "This persona is usable as a general workflow-software evaluator, and its decision policy is mostly coherent. The main weakness is panel-role mismatch: 'political_risk' is asserted more than demonstrated. The profile also carries some tokenization risk because several identity dimensions are present without enough lived-behavior linkage. To improve research value, make the persona less like a polished universal SaaS buyer and more like a specific communications operator whose political sensitivity, local context, and risk heuristics change what they trust, reject, and adopt.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:13:19+00:00",
+            "plausibility_score_normalized": 6.8,
+            "stereotype_risk_score_normalized": 4.1,
+            "panel_fit_score_normalized": 3.4
+          }
+        },
+        {
+          "persona_id": "su_0006",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 43.6,
+          "judge": {
+            "verdict": "usable_with_revisions",
+            "plausibility_score": 7.3,
+            "stereotype_risk_score": 3.4,
+            "panel_fit_score": 6.6,
+            "findings": [
+              {
+                "area": "decision_policy_consistency",
+                "severity": "low",
+                "assessment": "strong",
+                "detail": "The adoption logic, rejection triggers, and narrative are internally aligned. He consistently values predictability, low setup burden, peer proof, and manager-approval-ready evidence."
+              },
+              {
+                "area": "panel_role_fit",
+                "severity": "medium",
+                "assessment": "mixed",
+                "detail": "The persona fits a low-tech panel only if 'low-tech' means low configuration confidence rather than low digital usage. Smartphone-first behavior, digital-first payments, tool-heavy work, and high documentation discipline otherwise make the label feel underspecified."
+              },
+              {
+                "area": "local_grounding",
+                "severity": "medium",
+                "assessment": "weak",
+                "detail": "Some details feel weakly grounded for Taiwan operations work. 'WhatsApp groups' is less convincing than LINE for this context, and the profile relies more on generic operational language than locally specific habits or channels."
+              },
+              {
+                "area": "narrative_coherence",
+                "severity": "low",
+                "assessment": "mostly strong",
+                "detail": "Living with parents, high caregiving load, medium budget flexibility, and aversion to setup-heavy tools form a coherent time-scarcity story. The work-home pressure link is believable and decision-relevant."
+              },
+              {
+                "area": "genericity",
+                "severity": "medium",
+                "assessment": "present",
+                "detail": "Several sections read like template residue rather than observed human texture, for example 'taiwan knowledge work context' and repeated abstract phrases about workflow trade-offs. Many optional schema sections are empty, which makes the persona feel scaffolded rather than fully lived-in."
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "medium",
+                "assessment": "contained but real",
+                "detail": "Risk is not high, but the stack of 'Asian son living with parents + caregiving burden + cautious buyer + low tech' can flatten into a familiar trope unless differentiated with more specific behaviors, preferences, and exceptions."
+              }
+            ],
+            "revision_hints": [
+              {
+                "priority": "high",
+                "hint": "Clarify what 'low_tech' means behaviorally. For example: comfortable with messaging, spreadsheets, and payments on mobile, but avoids multi-step configuration, integrations, and desktop-style setup."
+              },
+              {
+                "priority": "high",
+                "hint": "Strengthen Taiwan grounding by replacing generic channels with more plausible ones for this context, such as LINE-based coordination, and add one or two locally credible workflow details."
+              },
+              {
+                "priority": "high",
+                "hint": "Add one concrete past tool adoption story: what he tried, where it failed, and what exact failure caused reversion. This will make the decision policy more testable and less generic."
+              },
+              {
+                "priority": "medium",
+                "hint": "Differentiate him beyond burden and caution. Add a few specific non-work routines, media habits, or social ties that influence trust and discovery without turning them into stereotypes."
+              },
+              {
+                "priority": "medium",
+                "hint": "Reduce template language and convert abstract phrases into observable behavior, such as exact phrases he would use when rejecting a tool or the first thing he checks in a trial."
+              },
+              {
+                "priority": "medium",
+                "hint": "Explain why documentation discipline is high despite low digital literacy ceiling. For example: he is meticulous with checklists and notes, but uncomfortable when tools require custom setup or system redesign."
+              }
+            ],
+            "rationale": {
+              "summary": "This persona is usable for pre-validation because its workflow pressures, trust logic, and adoption barriers are coherent and product-relevant. The main weaknesses are panel-label ambiguity, generic template phrasing, and thin local grounding.",
+              "plausibility": "Moderately high. The household setup, caregiving pressure, smartphone-first coordination, and caution toward workflow disruption are believable together.",
+              "stereotype_risk": "Low to moderate. The persona avoids overt caricature, but several burden-related attributes are stacked in a way that needs more individuating detail to avoid trope-like reading.",
+              "panel_fit": "Moderate. He can fit a low-tech panel if the panel is defined by low setup confidence and low appetite for configuration, not by low overall exposure to digital tools.",
+              "narrative_coherence": "Strong overall. The same pressures appear consistently across biography, behavior, and decision policy.",
+              "decision_policy_consistency": "Strong. The must-haves, nonstarters, and proof requirements all match the stated pains and operating environment."
+            },
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:14:03+00:00",
+            "plausibility_score_normalized": 7.3,
+            "stereotype_risk_score_normalized": 3.4,
+            "panel_fit_score_normalized": 6.6
+          }
+        },
+        {
+          "persona_id": "su_0007",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 35.7,
+          "judge": {
+            "verdict": "pass_with_revisions",
+            "plausibility_score": 78,
+            "stereotype_risk_score": 28,
+            "panel_fit_score": 74,
+            "findings": [
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "issue": "The economic picture is mostly believable but not fully tightened. A \"budget_constrained\" panel role sits next to \"income_level: middle\" and \"price_sensitivity: low\", which can be plausible, but the persona needs a clearer explanation that waste-avoidance and approval friction matter more than absolute affordability.",
+                "evidence": [
+                  "budget_flexibility is low",
+                  "subscription_tolerance is low",
+                  "price_sensitivity is low",
+                  "income_level is middle"
+                ]
+              },
+              {
+                "area": "panel_role_fit",
+                "severity": "medium",
+                "issue": "The persona fits a constrained operator/buyer profile, but the work context is still too generic. The field-service role is named, yet the operational environment, team structure, and specific coordination tasks are underspecified, making the persona read partly like a general productivity buyer.",
+                "evidence": [
+                  "occupation is field service coordinator",
+                  "pain points center on generic follow-up and scattered context",
+                  "no clear service domain such as facilities, telecom, medical equipment, or home services"
+                ]
+              },
+              {
+                "area": "narrative_coherence",
+                "severity": "low",
+                "issue": "The daily routine, trust logic, and adoption pattern are coherent. The strongest remaining gap is the caregiving load: it influences behavior throughout the narrative but is never grounded in a concrete, non-invasive form, so it risks feeling inserted rather than observed.",
+                "evidence": [
+                  "caregiving_load is high",
+                  "family_story says high caregiving load mostly shows up as family coordination outside work hours",
+                  "no concrete recurring obligation is described"
+                ]
+              },
+              {
+                "area": "decision_policy_consistency",
+                "severity": "low",
+                "issue": "The decision policy is internally consistent overall. Fast decision speed, peer-signal trust, visible-trial proof, and manager approval dependence all align. Minor tension remains between \"decision_speed: fast\" and the amount of diligence implied by privacy, ROI, and handoff checks, though this can be resolved by framing him as a fast pre-screener rather than a fast final adopter.",
+                "evidence": [
+                  "decision_speed is fast",
+                  "manager approval is required",
+                  "trust requires concrete workflows and visible trial"
+                ]
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "low",
+                "issue": "The persona mostly avoids identity-based shortcuts, but a few fields feel template-like rather than behaviorally grounded. MBTI and zodiac add little explanatory value and make the profile more generic without improving prediction quality.",
+                "evidence": [
+                  "mbti is ISTJ",
+                  "zodiac is Leo",
+                  "core behaviors are already explained better by workflow and incentive constraints"
+                ]
+              },
+              {
+                "area": "genericness",
+                "severity": "medium",
+                "issue": "Several sections are richly written, but some key realism layers are empty and the pain-point language repeats common SaaS tropes. That weakens distinctiveness and makes the persona easier to confuse with many other time-poor operations personas.",
+                "evidence": [
+                  "canonical_biography is empty",
+                  "domain_fit is empty",
+                  "product_reaction_rules is empty",
+                  "active pain points include common phrases like too many tools and manual follow-up"
+                ]
+              }
+            ],
+            "revision_hints": [
+              "Clarify why he is budget constrained despite middle income and low cash-flow volatility. For example: recurring spend is scrutinized because manager approval is required and household obligations reduce tolerance for wasted subscriptions, not because he is choosing the absolute cheapest option.",
+              "Add one concrete field-service setting and workflow. Example: coordinating 12 HVAC technicians across WhatsApp, customer calls, and a shared spreadsheet for same-day schedule changes. This will improve panel-role fit and make objections more product-predictive.",
+              "Ground the caregiving load in one realistic recurring obligation without overexposing sensitive details. Example: evening coordination for a parent’s appointments or school pickup backup for a younger relative. That keeps the pressure real without making identity deterministic.",
+              "Replace or de-emphasize MBTI and zodiac in downstream use. If kept, mark them explicitly as non-predictive metadata and ensure no behavior logic depends on them.",
+              "Add 2 to 3 role-specific failure modes and adoption tests. Example: missed technician handoff, duplicate customer follow-up, or inability to confirm job status from mobile during commute. This would strengthen realism beyond generic productivity friction.",
+              "Fill at least one currently empty behavioral layer such as product_reaction_rules or domain_fit with concrete acceptance and rejection patterns tied to manager approval, mobile use, and partial-team rollout.",
+              "Tighten the decision-speed wording to: fast to shortlist, slower to fully adopt. That better matches the existing trust and approval logic.",
+              "Introduce one or two local details only if they affect behavior, such as preference for WhatsApp-based coordination or sensitivity to English-heavy jargon in vendor onboarding. Avoid decorative cultural markers that do not change decisions."
+            ],
+            "rationale": "This is a solid synthetic persona with good internal alignment around workflow pressure, trial requirements, manager approval, and smartphone-first behavior. It is more plausible than a generic marketing persona because it links constraints to observable adoption behavior. The main weakness is not contradiction but under-specification: the field-service context is still thin, some descriptive layers are template-like, and the budget-constrained role needs a sharper causal explanation. Stereotype risk is relatively low because identity traits are not used as shortcuts for behavior, but generic personality metadata and vague caregiving context slightly reduce rigor.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:14:38+00:00",
+            "plausibility_score_normalized": 7.8,
+            "stereotype_risk_score_normalized": 2.8,
+            "panel_fit_score_normalized": 7.4
+          }
+        },
+        {
+          "persona_id": "su_0008",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 31.9,
+          "judge": {
+            "verdict": "usable_with_revisions",
+            "plausibility_score": 7.8,
+            "stereotype_risk_score": 2.6,
+            "panel_fit_score": 7.1,
+            "findings": [
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "observation": "The persona is broadly believable for a Singapore-based customer success manager, and several tensions are reconciled well, especially low schedule pressure versus high workflow urgency. The weakest point is the combination of single parent, low caregiving load, fast decision speed, and protected bandwidth, which is explained but still feels slightly engineered rather than naturally evidenced."
+              },
+              {
+                "area": "panel_role_fit",
+                "severity": "medium",
+                "observation": "The stated extreme-user logic is only partially convincing. Morgan reads more like a high-signal pragmatic early evaluator than a truly extreme user. The profile is unusual in its combination of automation openness, smartphone-first workflow, proof sensitivity, and privacy scrutiny, but the narrative does not show strong enough edge-case behaviors or unusually intense pain to fully earn the extreme-user label."
+              },
+              {
+                "area": "narrative_coherence",
+                "severity": "low",
+                "observation": "The narrative is internally coherent and the adoption story, workflow pain, and proof requirements align well. The strongest coherence point is the repeated focus on reducing follow-up leakage without forcing a full workflow reset."
+              },
+              {
+                "area": "decision_policy_consistency",
+                "severity": "low",
+                "observation": "Decision rules are mostly consistent across the profile, decision policy, and response style. Low switching cost, preference for coexistence with current tools, and demand for first-week value all fit together. No major behavioral contradiction is visible."
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "low",
+                "observation": "The persona avoids obvious demographic stereotyping. Non-binary identity, bilingual ability, and Singapore context are not used as deterministic explanations for product behavior. Risk remains low but not zero because some cultural texture is generic and several identity-linked attributes are present without much grounded lived detail."
+              },
+              {
+                "area": "genericness",
+                "severity": "medium",
+                "observation": "Some sections feel template-derived rather than observed-like, especially MBTI, zodiac, metaphysical_profile, and many empty schema blocks. These do not strengthen behavioral realism and make the persona feel more assembled than discovered."
+              },
+              {
+                "area": "evidence_quality",
+                "severity": "medium",
+                "observation": "The profile contains many well-phrased claims but limited concrete anchors such as team size, child age, account load, manager review cadence, or an example of a recent software decision. That limits auditability and weakens confidence that the behavior would generalize beyond polished narrative."
+              }
+            ],
+            "revision_hints": [
+              "Replace or remove low-signal trait fields such as MBTI and zodiac unless they are explicitly used in controlled experiments; they currently add noise without improving prediction.",
+              "Strengthen extreme-user fit by adding 2-3 concrete edge behaviors, such as unusually fast pilot setup, unusually high experimentation rate, unusually strong privacy gating, or a documented pattern of rejecting tools after very short real-work trials.",
+              "Add one specific recent software evaluation episode with trigger, workflow tested, objection raised internally, and adoption or rejection outcome. This would make the decision policy more falsifiable.",
+              "Ground the single-parent plus low-caregiving-load claim with a concrete operational detail, such as school schedule stability, nearby support, or co-parenting structure, so the bandwidth logic feels observed rather than conveniently reconciled.",
+              "Add concrete work-context anchors like team size, number of active accounts, volume of daily follow-ups, and how often mobile recovery actually matters. These will improve plausibility and product-reaction usefulness.",
+              "Tighten the income and cash-flow story by distinguishing household cash-flow volatility from department budget scrutiny more explicitly; right now the explanation works, but it still risks sounding post-hoc.",
+              "Prune empty schema sections or mark them intentionally unfilled. Leaving many empty domains visible makes the persona look mechanically expanded and weakens narrative credibility.",
+              "If the panel truly needs extreme users, sharpen the consequence of failure. For example, show that missed follow-up has outsized reputational or revenue impact for Morgan compared with a typical customer success manager."
+            ],
+            "rationale": "This persona is above average in coherence and product-evaluation usefulness, with low stereotype risk and a mostly consistent decision policy. Its main weakness is not contradiction but overconstruction: it contains many polished, compatible claims and too little hard behavioral grounding. The profile is credible enough for synthetic concept or prototype evaluation, but it is better classified as a pragmatic high-signal evaluator than a clearly extreme user unless stronger edge-case evidence is added.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:15:10+00:00",
+            "plausibility_score_normalized": 7.8,
+            "stereotype_risk_score_normalized": 2.6,
+            "panel_fit_score_normalized": 7.1
+          }
+        }
+      ],
+      "average_plausibility_score": 16.24,
+      "average_stereotype_risk_score": 6.62,
+      "average_panel_fit_score": 15.24,
+      "average_validation_issue_count": 0,
+      "verdict_distribution": {
+        "pass_with_revisions": 2,
+        "revise": 1,
+        "usable_with_revisions": 4,
+        "usable_with_targeted_revision": 1
+      },
+      "average_plausibility_score_normalized": 7.46,
+      "average_stereotype_risk_score_normalized": 3.48,
+      "average_panel_fit_score_normalized": 6.91
+    },
+    "agnes": {
+      "persona_count": 8,
+      "personas": [
+        {
+          "persona_id": "su_0001",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 41.3,
+          "judge": {
+            "verdict": "usable_with_revisions",
+            "plausibility_score": 7.2,
+            "stereotype_risk_score": 4.1,
+            "panel_fit_score": 6.8,
+            "findings": [
+              {
+                "category": "plausibility",
+                "severity": "medium",
+                "finding": "The core behavior model is credible: cautious trial-first adoption, fragmented admin work, caregiving pressure, and sensitivity to setup burden all align well with a small-business owner operating repeatable but brittle workflows.",
+                "evidence": [
+                  "decision_policy matches problem_context and behavior_profile",
+                  "economic constraints and proof threshold are internally consistent",
+                  "narrative reinforces the same adoption logic without major contradiction"
+                ]
+              },
+              {
+                "category": "plausibility",
+                "severity": "medium",
+                "finding": "Several details feel template-driven rather than observed, which weakens realism.",
+                "evidence": [
+                  "MBTI and zodiac add taxonomy noise but no behavioral signal",
+                  "phrases like 'regional sea service ops context' and 'early adult small business builder' read like schema labels, not lived biography",
+                  "many schema sections are left empty, making the persona feel partially assembled rather than fully grounded"
+                ]
+              },
+              {
+                "category": "narrative_coherence",
+                "severity": "medium",
+                "finding": "There are a few under-explained combinations that are possible but need grounding.",
+                "evidence": [
+                  "single + high caregiving load is plausible, but the specific caregiving relationship is not explained",
+                  "small business owner + employment_stability='contract_based' is ambiguous without stating whether income depends on recurring client contracts",
+                  "upper_middle income + renting + multi-generational household is plausible in context, but the tradeoff is not made explicit"
+                ]
+              },
+              {
+                "category": "stereotype_risk",
+                "severity": "medium",
+                "finding": "Risk is moderate rather than high: the persona avoids overt caricature, but some regional markers are doing too much work and could collapse into a generic 'SEA WhatsApp small-business owner' pattern.",
+                "evidence": [
+                  "name, language, location, WhatsApp groups, and social-proof behavior are all plausible individually",
+                  "the persona relies heavily on common regional-business cues without enough idiosyncratic local texture",
+                  "role-based motivations are stronger than demographic stereotypes, which keeps risk contained"
+                ]
+              },
+              {
+                "category": "panel_fit",
+                "severity": "medium",
+                "finding": "Fit to a 'mainstream' panel is only partial. This persona fits a cautious owner-operator SMB segment better than a broad mainstream population frame.",
+                "evidence": [
+                  "owner_decider status narrows the role materially",
+                  "small-business workflow maturity and contract-based operations make him more specialized than generic mainstream users",
+                  "if the panel is 'mainstream SMB decision-makers' the fit improves substantially"
+                ]
+              },
+              {
+                "category": "decision_policy_consistency",
+                "severity": "low",
+                "finding": "Decision rules are one of the strongest parts of the persona.",
+                "evidence": [
+                  "trust requirements, rejection triggers, and proof requirements all match the stated fears and workflow constraints",
+                  "willingness to pay is bounded by visible ROI, which is repeated consistently across sections",
+                  "response_style is compatible with the persona's deliberate and practical evaluation style"
+                ]
+              },
+              {
+                "category": "quality_flag",
+                "severity": "low",
+                "finding": "There is a minor rendering artifact and some over-explicit metadata that reduce polish.",
+                "evidence": [
+                  "the narrative contains an encoding artifact in 'doesnât'",
+                  "audit and generation metadata are useful for governance but should not substitute for human-like specificity"
+                ]
+              }
+            ],
+            "revision_hints": [
+              "Replace MBTI and zodiac with 2-3 observable behavioral cues, such as how he compares vendors, what makes him abandon a trial, and how he handles interrupted work blocks.",
+              "State the actual business type, approximate team size, and client pattern. For example: marine equipment servicing, 3 staff, repeat contract clients, high message volume from coordinators and customers.",
+              "Explain the caregiving load concretely: who he helps, when it interrupts work, and how often it compresses admin time. This will make the tradeoffs feel earned rather than generic.",
+              "Clarify why 'employment_stability' is 'contract_based' for an owner. If revenue depends on a few recurring contracts, say that directly.",
+              "Either relabel the panel role from 'mainstream' to a mainstream SMB-operator segment, or broaden the persona so the role is less niche.",
+              "Add 1-2 Kuching-specific but non-stereotyped details, such as local customer communication rhythms, service-area travel constraints, or language-switching in business interactions.",
+              "Remove empty schema sections from runtime personas or populate only the ones that materially affect product reactions. Large blank sections signal scaffold more than human realism.",
+              "Tighten the biography language so it sounds less like a generated taxonomy. Replace labels like 'regional sea service ops context' with plain-life descriptions.",
+              "Fix the encoding artifact in the narrative and keep the final prose at the same specificity level as the best sections of the profile."
+            ],
+            "rationale": "This persona is usable for product-evaluation simulation because its decision policy is coherent, its pain points are concrete, and its trust/adoption logic is stable across sections. The main weaknesses are not logical contradictions but over-templating: too many schema-shaped labels, too little specific local and business grounding, and a panel-role label that is broader than the actual niche represented. Stereotype risk is controlled but not trivial because several common regional markers are bundled together without enough individualized texture. Overall, it is a solid draft for a cautious SMB operator persona, but it needs sharper grounding and a cleaner panel definition to be high-confidence.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:15:52+00:00",
+            "plausibility_score_normalized": 7.2,
+            "stereotype_risk_score_normalized": 4.1,
+            "panel_fit_score_normalized": 6.8
+          }
+        },
+        {
+          "persona_id": "su_0002",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 51.1,
+          "judge": {
+            "verdict": "usable_with_revisions",
+            "plausibility_score": 7,
+            "stereotype_risk_score": 4,
+            "panel_fit_score": 8,
+            "findings": [
+              "Panel-role fit is strong: the persona consistently asks for proof, peer validation, trialability, and low-risk billing, which matches a skeptic evaluator.",
+              "Core workflow behavior is coherent: high schedule pressure, high caregiving load, app fatigue, privacy concern, and deliberate adoption combine into a believable anti-complexity decision style.",
+              "Economic and employment details are under-specified. 'Operations manager', 'variable employment stability', 'high cash-flow volatility', 'manager approval dependence', and 'solo-operation workflow' imply different work arrangements and need one concrete setup.",
+              "Family timing is plausible but under-grounded. A 55-year-old single parent of an 8-10 year old in Hong Kong is possible, but without a short backstory it can read as randomly assembled rather than lived-in.",
+              "The non-binary identity is not itself implausible, but it is weakly integrated. Because identity_labeling_comfort is low and public_expression_risk_aversion is medium, the profile should clarify whether this identity is privately held, selectively disclosed, or relevant to product trust reactions.",
+              "Some details feel template-generated rather than locale-specific, especially 'works offline or with spotty internet' for an urban-core Hong Kong operator and repeated generic pains like 'tool fatigue' and 'manual follow-up'.",
+              "Several realism-critical schema sections are empty, including local grounding, objection language, daily micro-behaviors, product reaction rules, and contradiction mapping. That weakens narrative specificity and decision-policy reliability."
+            ],
+            "revision_hints": [
+              "Pick one employment model and make the economics fit it. Example: 'operations manager at a 12-person logistics firm with discretionary tool evaluation but final sign-off from the owner' or 'independent operations consultant buying for their own practice'.",
+              "Add one concrete reason for being a late single parent, such as divorce, late parenthood, or kinship caregiving. One sentence is enough to remove the assembled-attributes feel.",
+              "Replace generic trust requirements with Hong Kong SMB-specific proof cues: WhatsApp-heavy workflows, bilingual client communication, data residency questions, invoice predictability, and handoff to a boss or owner for approval.",
+              "Clarify how non-binary identity shows up in context. If it rarely affects software buying, keep it minimal; if it affects trust or inclusion reactions, add one concrete example of language or form design that would trigger friction.",
+              "Remove or justify weakly grounded details like 'offline or with spotty internet'. If the real issue is mobile-first work, fragmented messaging, or cross-device continuity, state that directly.",
+              "Fill at least five empty realism fields with observable behavior: one daily workaround, one objection phrase, one peer source, one recent buying decision, and one concrete cancellation concern.",
+              "Add one explicit contradiction rule to preserve coherence, for example: 'Will accept a slightly higher flat monthly fee if setup is under 30 minutes and export/delete controls are obvious.'"
+            ],
+            "rationale": "This persona is directionally strong for a skeptic panel member because the decision policy, proof threshold, privacy posture, and anti-complexity bias align well. The main weakness is not overt stereotype risk but assembly risk: multiple demographic, work, and identity attributes are plausible individually yet not fully tied together by a specific operating context. Tightening the employment model, local grounding, and a few lived details would materially improve plausibility and make downstream simulated objections more reliable.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:16:43+00:00",
+            "plausibility_score_normalized": 7.0,
+            "stereotype_risk_score_normalized": 4.0,
+            "panel_fit_score_normalized": 8.0
+          }
+        },
+        {
+          "persona_id": "su_0003",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 88.6,
+          "judge": {
+            "verdict": "pass_with_revisions",
+            "plausibility_score": 78,
+            "stereotype_risk_score": 34,
+            "panel_fit_score": 88,
+            "findings": [
+              {
+                "dimension": "panel_role_fit",
+                "severity": "low",
+                "issue": "Strong fit for a privacy-sensitive panel role.",
+                "evidence": "High privacy concern, low risk tolerance, plain-language data handling requirements, unnecessary-permission rejection triggers, and preference for bounded trials all align with privacy-sensitive behavior."
+              },
+              {
+                "dimension": "plausibility",
+                "severity": "medium",
+                "issue": "The operational core is believable, but several attributes feel assembled rather than lived-in.",
+                "evidence": "Program coordination, fragmented follow-up, peer validation, and audit-trail concerns are coherent. But the combined stack of non-binary identity, multigenerational living, postgraduate education, owner-occupier status, bilingualism, high bias awareness, and privacy sensitivity is presented without enough causal detail tying it together."
+              },
+              {
+                "dimension": "narrative_coherence",
+                "severity": "medium",
+                "issue": "Some biography elements are too generic or underspecified to support strong behavioral simulation.",
+                "evidence": "Phrases like 'regional sea service ops context', 'mid career operator phase', and 'guardian of process integrity' sound template-generated. The persona needs more concrete domain and household detail to feel behaviorally grounded."
+              },
+              {
+                "dimension": "decision_policy_consistency",
+                "severity": "medium",
+                "issue": "There is a mild tension between 'decision_speed: fast' and a cautious, proof-seeking adoption style.",
+                "evidence": "The persona can plausibly make fast initial screens but slow final approvals. That distinction is not stated clearly, so the current policy risks inconsistent downstream responses."
+              },
+              {
+                "dimension": "stereotype_risk",
+                "severity": "medium",
+                "issue": "Identity and inclusion signals may be over-signaled relative to the rest of the life story.",
+                "evidence": "The profile says Sam is non-binary, highly discrimination-aware, and uncomfortable with identity labeling, but provides little lived context for how those factors shape product evaluation beyond generic respectful-language expectations. That can read as checkbox diversity rather than grounded variation."
+              },
+              {
+                "dimension": "genericity",
+                "severity": "medium",
+                "issue": "Several sections rely on polished abstract language instead of observable behavior.",
+                "evidence": "Values, fears, and aspirations are mostly plausible, but many are interchangeable with other cautious B2B operators. Empty schema sections and the encoding artifact in the narrative also weaken quality discipline."
+              }
+            ],
+            "revision_hints": [
+              "Clarify the work setting. Specify what kind of programs Sam coordinates, what sensitive data is handled, and which tools are currently mandatory versus optional.",
+              "Turn 'fast decision speed' into a two-stage rule: fast to reject obvious misfits, slower to approve after a short trial and internal budget justification.",
+              "Ground the household story. Explain whether living with parents is primarily caregiving, financial pragmatism, cultural norm, or shared property, and reconcile that with 'owner-occupier' status.",
+              "Replace generic identity labels with one or two concrete incidents that show privacy sensitivity in action, such as refusing a tool after unclear retention terms or after seeing excessive permission prompts.",
+              "Reduce template markers unless they are behaviorally used. MBTI, zodiac, and broad phrases like 'guardian of process integrity' add little predictive value and can be removed or deprioritized.",
+              "Add local texture carefully. Mention one realistic Penang or regional workflow detail, procurement norm, or communication habit to improve realism without leaning on caricature.",
+              "Fix data hygiene issues, including the encoding artifact in the narrative and the large number of empty schema sections that make the persona look unfinished.",
+              "Show how non-binary identity matters only where it actually changes product reactions, such as sensitivity to form fields, salutations, or exclusionary copy, instead of making it a broad symbolic trait."
+            ],
+            "rationale": "This persona is usable for early-stage simulation because its core adoption logic is coherent: Sam is a busy operator who is privacy-sensitive, trial-oriented, and resistant to tools that increase workflow complexity. That gives the profile decent predictive value for concept evaluation around trust, onboarding friction, and data handling. The main weakness is not contradiction so much as over-templating. Too many traits are stated in polished abstract form, and several identity and biography elements are not yet connected through concrete lived experience. The result is a persona that fits the panel well but still needs sharper grounding to improve plausibility and reduce stereotype risk.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:18:11+00:00",
+            "plausibility_score_normalized": 7.8,
+            "stereotype_risk_score_normalized": 3.4,
+            "panel_fit_score_normalized": 8.8
+          }
+        },
+        {
+          "persona_id": "su_0004",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 46.4,
+          "judge": {
+            "verdict": "needs_revision",
+            "plausibility_score": 72,
+            "stereotype_risk_score": 34,
+            "panel_fit_score": 61,
+            "findings": [
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "note": "Most constraints align: smartphone-first, careful subscriptions, high switching cost, committee-slow adoption, and dummy-data trials form a believable B2B workflow pattern."
+              },
+              {
+                "area": "genericness",
+                "severity": "high",
+                "note": "Large portions read like a polished SaaS buyer template rather than a specific human. Phrases like 'reduce admin drag', 'protect energy', 'clear before-and-after value', and 'shelfware' are generic and repeated across sections."
+              },
+              {
+                "area": "panel_role_fit",
+                "severity": "high",
+                "note": "The inclusion panel role is only lightly supported. The persona notices exclusionary onboarding and neutral examples, but there is little evidence of concrete inclusion-driven behavior, responsibilities, or tradeoffs that would make this person a strong inclusion judge."
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "medium",
+                "note": "Risk is not severe, but the Taiwan plus multigenerational household plus practical/cautious framing can collapse into an over-neat 'careful Asian knowledge worker' stereotype if reused broadly without more idiosyncratic detail."
+              },
+              {
+                "area": "locale_grounding",
+                "severity": "medium",
+                "note": "Some local texture is thin or slightly off. Using WhatsApp groups as a primary social/work channel in Taipei is less locally grounded than expected and makes the profile feel globally templated."
+              },
+              {
+                "area": "decision_policy_consistency",
+                "severity": "low",
+                "note": "Decision policy is mostly consistent, but 'proof_threshold: light_demo' sits a bit uneasily beside high switching cost, manager approval dependence, committee-slow decisions, and internal review needs. The current version can be read as wanting more than a light proof bar."
+              },
+              {
+                "area": "narrative_coherence",
+                "severity": "low",
+                "note": "The story is coherent overall, but there is an encoding artifact in the narrative text and some duplicated concepts across story, behavior, and policy layers."
+              }
+            ],
+            "revision_hints": [
+              "Make the inclusion role concrete: add 2-3 observed behaviors or past incidents showing how Ethan notices exclusion, advocates for lower-complexity onboarding, or screens tools for accessibility and language inclusiveness.",
+              "Replace generic buyer-language with specific routines: name the exact kind of programs he coordinates, who he follows up with, what a missed handoff looks like, and what 'admin drag' means in his week.",
+              "Strengthen Taiwan grounding with realistic channel and work-context details such as the messaging stack, meeting norms, procurement habits, or bilingual work situations common in Taipei knowledge-work environments.",
+              "Clarify the proof bar: either raise it from 'light demo' to something like 'short pilot with export/privacy checks' or explain why a light demo is enough despite slow committee approval and high switching costs.",
+              "Add one or two idiosyncratic, non-optimizing details that are not directly about product adoption, such as a concrete household routine, commuting pattern, or a personal quirk in how he keeps track of commitments.",
+              "Trim duplicated abstractions across values, behavior, problem context, and decision policy so the persona sounds less generated and more like one person with a recognizable operating style.",
+              "Fix the encoding artifact and remove empty schema sections from the evaluable profile view, because they make the persona look mechanically assembled rather than narratively complete."
+            ],
+            "rationale": "This persona is directionally credible and internally coherent, but it is not yet strong enough as an inclusion-panel judge. The operational constraints, trust logic, and adoption pathway line up well, which supports plausibility. The main weakness is that the profile relies heavily on polished B2B persona language and only lightly grounds the inclusion role in lived behaviors or decision rules. Stereotype risk is moderate rather than high: the issue is not overt bias, but a tendency toward tidy, culture-linked caution and family-responsibility cues without enough individuating detail. With stronger local grounding, more concrete inclusion behaviors, and less template-like phrasing, this could become a solid panel-fit persona.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:18:58+00:00",
+            "plausibility_score_normalized": 7.2,
+            "stereotype_risk_score_normalized": 3.4,
+            "panel_fit_score_normalized": 6.1
+          }
+        },
+        {
+          "persona_id": "su_0005",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 33.3,
+          "judge": {
+            "verdict": "needs_revision",
+            "plausibility_score": 7,
+            "stereotype_risk_score": 4,
+            "panel_fit_score": 3,
+            "findings": [
+              {
+                "dimension": "plausibility",
+                "severity": "medium",
+                "issue": "The day-to-day workflow, purchase caution, and admin-burden concerns are believable for a late-career communications manager in a regional service economy.",
+                "evidence": [
+                  "consistent constraints around cash-flow volatility, approval chain, and switching cost",
+                  "specific adoption thresholds such as a 14-day trial and monthly subscription audit"
+                ]
+              },
+              {
+                "dimension": "panel_role_fit",
+                "severity": "high",
+                "issue": "The persona does not read like a strong fit for a political_risk panel role.",
+                "evidence": [
+                  "almost all motivations, pains, and success metrics are framed around generic productivity software adoption",
+                  "there is no clear connection to political-risk monitoring, policy interpretation, stakeholder escalation, reputational exposure, or scenario assessment responsibilities",
+                  "role-specific fields such as panel_role_profile and domain_fit are empty"
+                ]
+              },
+              {
+                "dimension": "narrative_coherence",
+                "severity": "medium",
+                "issue": "The narrative is internally coherent, but it is heavily template-shaped and leaves important identity-to-context links underspecified.",
+                "evidence": [
+                  "non-binary, age 62, Kuching, communications manager can be plausible, but the profile does not explain how this identity context meaningfully shapes workplace behavior or external communication risk",
+                  "many profile sections are empty, so the persona feels partially instantiated rather than fully grounded"
+                ]
+              },
+              {
+                "dimension": "stereotype_risk",
+                "severity": "medium",
+                "issue": "Risk is not extreme, but there is some tokenistic stacking risk because multiple identity markers are present without enough local or social grounding.",
+                "evidence": [
+                  "gender identity appears mostly decorative rather than behaviorally connected",
+                  "regional SEA context is referenced in broad terms like 'regional sea service ops' without concrete local texture"
+                ]
+              },
+              {
+                "dimension": "decision_policy_consistency",
+                "severity": "low",
+                "issue": "Decision rules are mostly consistent with the rest of the persona.",
+                "evidence": [
+                  "proof requirements, rejection triggers, and approval-chain behavior match the stated fears and workflow constraints",
+                  "success metric and onboarding friction are aligned with the stated preference for bounded-risk adoption"
+                ]
+              },
+              {
+                "dimension": "genericity",
+                "severity": "high",
+                "issue": "The persona is somewhat generic and could fit many cautious mid-senior B2B buyers, not specifically this panel role.",
+                "evidence": [
+                  "common phrases like 'too many tools', 'manual follow-up', and 'protect focus time' are plausible but non-distinctive",
+                  "the core behavioral model is SaaS-buyer generic rather than political-risk specific"
+                ]
+              }
+            ],
+            "revision_hints": [
+              "Rewrite the role around actual political-risk work: what signals Casey monitors, what decisions they influence, and what consequences follow from missing a political or regulatory change.",
+              "Replace generic productivity pain points with domain-native pains such as tracking permit changes, election-related disruption, sanctions exposure, protest risk, misinformation spillover, or client escalation timelines.",
+              "Explain why a 62-year-old non-binary communications manager in Kuching is in this panel and how that background affects information trust, public-expression caution, and stakeholder management. One or two concrete sentences are enough.",
+              "Fill role-specific behavior fields such as domain_fit, panel_role_profile, product_reaction_rules, and local_grounding_layer so the persona has observable domain logic instead of template placeholders.",
+              "Add 2-3 concrete information sources tied to political-risk work, for example local business associations, ministry updates, industry WhatsApp groups, or regional press monitoring habits.",
+              "Make the success metric domain-specific. Instead of only reducing follow-up time, define value in terms of earlier risk detection, fewer missed escalations, clearer stakeholder briefings, or faster internal review.",
+              "Remove or tighten generic template language. Keep only details that change predicted decisions.",
+              "Fix text-encoding artifacts in the narrative so the profile does not look mechanically generated or poorly serialized."
+            ],
+            "rationale": "This persona is reasonably plausible as a cautious, operationally minded communications manager, and its decision policy is mostly coherent. The main weakness is panel-role fit: it behaves like a generic workflow-software buyer rather than a political-risk participant. Stereotype risk is moderate rather than high, but the combination of identity markers and regional context needs more grounded explanation to avoid feeling decorative. Overall: usable as a generic B2B operations persona, not yet strong enough as a political_risk panel persona.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:19:31+00:00",
+            "plausibility_score_normalized": 7.0,
+            "stereotype_risk_score_normalized": 4.0,
+            "panel_fit_score_normalized": 3.0
+          }
+        },
+        {
+          "persona_id": "su_0006",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 32.1,
+          "judge": {
+            "verdict": "pass_with_revisions",
+            "plausibility_score": 7.1,
+            "stereotype_risk_score": 4.2,
+            "panel_fit_score": 7.4,
+            "findings": [
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "issue": "The core work and household setup are believable, but several details read as template-generated rather than observed from a real person.",
+                "evidence": [
+                  "Phrases like 'taiwan knowledge work context' and 'mid career operator phase' sound schema-derived, not autobiographical.",
+                  "Large parts of the profile repeat seed labels almost verbatim instead of adding grounded specifics."
+                ]
+              },
+              {
+                "area": "local_grounding",
+                "severity": "high",
+                "issue": "Some Taiwan-specific behavior cues are weak or mismatched.",
+                "evidence": [
+                  "WhatsApp is listed as immediate team communication, but LINE would usually be the more plausible default in Taiwan.",
+                  "The name 'Jason Lim' is possible, but it feels less locally anchored for a Mandarin-only Kaohsiung profile than the rest of the persona suggests."
+                ]
+              },
+              {
+                "area": "panel_role_fit",
+                "severity": "medium",
+                "issue": "The 'low_tech' role fit is directionally correct, but the persona sometimes reads as overloaded and cautious rather than distinctly low-tech.",
+                "evidence": [
+                  "Tool-heavy workflow, high documentation discipline, LinkedIn usage, and digital-first payments can coexist with low tech, but they need clearer explanation of where the literacy ceiling actually appears.",
+                  "Current blockers focus on trust and workload more than concrete low-tech failure modes such as setup confusion, terminology overload, or feature discoverability problems."
+                ]
+              },
+              {
+                "area": "narrative_coherence",
+                "severity": "medium",
+                "issue": "The persona stacks many friction factors at once, which risks making him feel engineered to reject products.",
+                "evidence": [
+                  "High caregiving load, high switching cost, high cash-flow volatility, manager approval needed, committee-slow decisions, negative manager feedback, and low digital literacy all compound in one profile.",
+                  "This is still possible, but without a few balancing strengths it can feel optimized for objection generation."
+                ]
+              },
+              {
+                "area": "decision_policy_consistency",
+                "severity": "low",
+                "issue": "The decision logic is mostly coherent and internally stable.",
+                "evidence": [
+                  "Preference for peer proof, low-risk trials, manager-ready materials, and minimal migration all align with the stated fears and workflow.",
+                  "Rejection triggers are consistent with the stated switching costs and trust threshold."
+                ]
+              },
+              {
+                "area": "genericness",
+                "severity": "medium",
+                "issue": "The persona is useful but partially generic.",
+                "evidence": [
+                  "Many motivations are common SaaS-evaluation defaults: reduce admin, avoid complexity, need ROI, want peer proof.",
+                  "Missing concrete domain texture such as what field service is being coordinated, which reports matter, what devices are used on the job, and what specific follow-ups get missed."
+                ]
+              }
+            ],
+            "revision_hints": [
+              "Replace generic platform language with concrete Taiwan-grounded details, especially communication tools, approval norms, and work routines.",
+              "Swap WhatsApp for LINE unless there is a specific reason this team uses WhatsApp, and explain that reason if kept.",
+              "Clarify what 'low_tech' means behaviorally: for example, comfortable with messaging and payments but easily derailed by multi-step setup, dashboard sprawl, settings complexity, or migration tasks.",
+              "Add one or two domain-specific realities for the field service coordinator role, such as dispatch changes, technician handoffs, service logs, invoice follow-up, or customer rescheduling.",
+              "Reduce template phrasing in the life story and rewrite it in more natural human language.",
+              "Add at least one balancing competence signal so the persona does not read as purely constrained, such as being excellent at memory for client context, strong paper-note habits, or reliable escalation judgment.",
+              "If keeping the name, add a brief reason it fits the locale; otherwise consider a more locally typical Taiwan Mandarin profile name for stronger grounding.",
+              "Introduce one concrete recent incident that demonstrates the adoption rule, such as trialing a scheduling app and abandoning it after setup burden outweighed first-week value."
+            ],
+            "rationale": "This persona is broadly plausible and its decision policy is coherent, so it is usable for early simulation. The main weakness is not contradiction but synthetic texture: too much seed-echoing, weak local grounding, and a somewhat over-concentrated bundle of constraints. It fits the low-tech panel reasonably well, but it needs more concrete Taiwan-specific behavior and sharper definition of the actual literacy ceiling to avoid becoming a generic cautious-operator archetype.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:20:03+00:00",
+            "plausibility_score_normalized": 7.1,
+            "stereotype_risk_score_normalized": 4.2,
+            "panel_fit_score_normalized": 7.4
+          }
+        },
+        {
+          "persona_id": "su_0007",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 56.1,
+          "judge": {
+            "verdict": "pass_with_revisions",
+            "plausibility_score": 7,
+            "stereotype_risk_score": 3,
+            "panel_fit_score": 7,
+            "findings": [
+              {
+                "dimension": "plausibility",
+                "severity": "medium",
+                "finding": "The operational workflow, approval gates, and trial-based adoption logic are believable for a mid-career field service coordinator, but the stated 'high caregiving load' is under-specified and reads more like an inserted pressure source than a grounded life constraint.",
+                "evidence": [
+                  "single, living with roommates",
+                  "high caregiving_load",
+                  "evenings/weekends fragmented by caregiving",
+                  "no concrete care recipient or recurring obligation named"
+                ]
+              },
+              {
+                "dimension": "panel_role_fit",
+                "severity": "medium",
+                "finding": "The persona only partially fits the 'budget_constrained' panel role because the financial story is internally blurry. He is framed as cost cautious and low-flexibility, but also marked as 'price_sensitivity: low' and 'cash_flow_volatility: low' with middle income.",
+                "evidence": [
+                  "panel_role=budget_constrained",
+                  "budget_flexibility=low",
+                  "willingness_to_pay=low",
+                  "price_sensitivity=low",
+                  "disposable_income=middle",
+                  "cash_flow_volatility=low"
+                ]
+              },
+              {
+                "dimension": "narrative_coherence",
+                "severity": "low",
+                "finding": "The narrative is mostly coherent and action-oriented, but several sections repeat the same themes: admin drag, privacy caution, peer proof, and subscription creep. This makes the persona feel slightly templated rather than observed.",
+                "evidence": [
+                  "same objections repeated across values, behavior_profile, problem_context, and decision_policy",
+                  "multiple sections restate ROI/privacy/off-ramp needs with limited new texture"
+                ]
+              },
+              {
+                "dimension": "decision_policy_consistency",
+                "severity": "medium",
+                "finding": "Most decision rules are consistent, but there is one policy tension: he prefers longer onboarding if it guarantees stability, while also rejecting setup that creates extra admin burden or requires IT involvement. That trade-off needs a clearer boundary.",
+                "evidence": [
+                  "trade_off: prefers slightly longer onboarding if it guarantees long-term stability",
+                  "rejection_trigger: extra admin burden during setup or migration",
+                  "trust_requirement: low-friction onboarding that does not require IT involvement"
+                ]
+              },
+              {
+                "dimension": "stereotype_risk",
+                "severity": "low_to_medium",
+                "finding": "Risk is relatively low because the persona is constraint-driven rather than identity-reduced, but some cues lean on generic 'Singapore SMB operator' shorthand. The bilingual switching rule, financial caution framing, and WhatsApp trust pattern are plausible, yet currently feel somewhat stock if not tied to specific situations.",
+                "evidence": [
+                  "'switches to Mandarin when discussing family logistics'",
+                  "'practical decisions and financial caution in a singapore smb context'",
+                  "'WhatsApp group consensus checks'"
+                ]
+              },
+              {
+                "dimension": "genericity",
+                "severity": "medium",
+                "finding": "A few attributes add taxonomy without improving predictive power. MBTI, zodiac, and metaphysical flavor are generic persona scaffolding unless they drive behavior in test scenarios.",
+                "evidence": [
+                  "mbti=ISTJ",
+                  "zodiac=Leo",
+                  "metaphysical_profile included but explicitly non-decisional"
+                ]
+              },
+              {
+                "dimension": "quality_hygiene",
+                "severity": "low",
+                "finding": "There are encoding artifacts and many empty schema sections, which reduce polish and can weaken downstream trust in the persona artifact even if the core logic is sound.",
+                "evidence": [
+                  "text artifacts like '7â10' and 'Singaporeâs'",
+                  "many empty objects such as canonical_biography, domain_fit, pricing_logic, local_grounding_layer"
+                ]
+              }
+            ],
+            "revision_hints": [
+              "Make the budget constraint causal, not just descriptive. Add one or two concrete fixed obligations such as remittances, eldercare expenses, medical support, or irregular household contributions so 'middle income' still leads to low flexibility.",
+              "Clarify the caregiving load with a specific pattern: who depends on him, how often, and how that changes his evaluation windows or tolerance for onboarding friction.",
+              "Resolve the price logic by distinguishing 'not always cheapest' from 'highly value-disciplined.' If he will pay when ROI is proven, say that directly instead of leaving 'price_sensitivity: low' unexplained.",
+              "Define the onboarding boundary precisely: for example, he accepts a 60-90 minute guided setup if no data migration or IT ticket is required, but rejects multi-day rollout work.",
+              "Replace generic identity tags like MBTI and zodiac unless they are used in reaction rules. Use observed behaviors instead, such as checklist habits, escalation style, or how he handles near-miss incidents.",
+              "Ground bilingual behavior situationally rather than culturally. For example, specify whether Mandarin appears in family WhatsApp threads, older-family coordination, or certain vendor conversations.",
+              "Reduce repetition by assigning each section a job: values for motivations, behavior_profile for signals and channels, decision_policy for explicit adoption thresholds.",
+              "Fix text encoding artifacts and either populate or remove empty schema sections so the artifact feels deliberate rather than partially generated."
+            ],
+            "rationale": {
+              "score_scale": "0-10; higher is better except stereotype_risk_score, where higher means more risk.",
+              "summary": "This is a reasonably strong synthetic persona: it has clear adoption logic, believable operational constraints, and good product-testing relevance. The main weaknesses are unresolved budget mechanics, a few template-like identity markers, and mild reliance on generic locale/culture shorthand. With tighter causal grounding and less scaffolding, it would be a stronger panel candidate."
+            },
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:20:59+00:00",
+            "plausibility_score_normalized": 7.0,
+            "stereotype_risk_score_normalized": 3.0,
+            "panel_fit_score_normalized": 7.0
+          }
+        },
+        {
+          "persona_id": "su_0008",
+          "validation_issue_count": 0,
+          "judge_elapsed_seconds": 35.3,
+          "judge": {
+            "verdict": "needs_revision",
+            "plausibility_score": 6,
+            "stereotype_risk_score": 3,
+            "panel_fit_score": 5,
+            "findings": [
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "issue": "The combination of single parent, low caregiving load, and low schedule pressure is possible but under-explained, so it reads more like template balancing than observed life trade-offs.",
+                "evidence": [
+                  "family_story says single parenthood shapes time and risk tolerance",
+                  "seed sets caregiving_load to low",
+                  "seed sets schedule_pressure to low"
+                ],
+                "impact": "Reduces behavioral realism because the daily constraints do not fully match the household setup."
+              },
+              {
+                "area": "plausibility",
+                "severity": "medium",
+                "issue": "Stable employment, upper-middle income, owner-occupier status, and high cash-flow volatility can coexist, but the mechanism is unclear.",
+                "evidence": [
+                  "employment_stability is stable",
+                  "income_level is upper_middle",
+                  "housing_status is owner-occupier",
+                  "cash_flow_volatility is high"
+                ],
+                "impact": "Makes economic behavior feel partially schematic rather than causally grounded."
+              },
+              {
+                "area": "panel_role_fit",
+                "severity": "high",
+                "issue": "The persona does not yet read as a clear extreme user. Most traits describe a fairly common digitally capable operations buyer rather than someone at the edge of behavior, constraints, or adoption patterns.",
+                "evidence": [
+                  "high digital literacy and smartphone-first are common in the target segment",
+                  "pain points and buying logic are broadly generic SaaS-buyer patterns",
+                  "narrative does not show unusually intense workflow complexity, unusually strong privacy constraints, or unusually early/late adoption behavior"
+                ],
+                "impact": "Weakens usefulness for an extreme_user panel because the persona may not surface edge-case reactions."
+              },
+              {
+                "area": "narrative_coherence",
+                "severity": "low",
+                "issue": "The narrative is coherent, but several phrases are polished and generic rather than behaviorally specific.",
+                "evidence": [
+                  "phrases like 'protect personal bandwidth' and 'reduce admin drag' are broadly reusable across many personas",
+                  "daily routine and objections are plausible but not anchored to distinctive concrete habits or local context"
+                ],
+                "impact": "Limits discriminative value when comparing this persona against adjacent panel members."
+              },
+              {
+                "area": "decision_policy_consistency",
+                "severity": "medium",
+                "issue": "The decision policy is mostly consistent, but 'tries new tools early if the workflow gain is obvious' sits slightly uneasily with case-study requirements, manager approval dependence, and high price sensitivity.",
+                "evidence": [
+                  "adoption_style says tries new tools early",
+                  "proof_threshold says case_studies_required",
+                  "manager_approval_dependence is high",
+                  "price_sensitivity is high"
+                ],
+                "impact": "Creates ambiguity about whether Morgan is an early trier or a cautious validator."
+              },
+              {
+                "area": "stereotype_risk",
+                "severity": "low",
+                "issue": "Direct stereotype risk is relatively low, but identity markers are thinly integrated. Non-binary identity, bilingualism, and Singapore grounding are mostly labels rather than drivers of situated behavior.",
+                "evidence": [
+                  "gender is non-binary but reaction rules and identity language are empty",
+                  "language is English and Mandarin but work or home language switching is not described",
+                  "Singapore context appears mainly as locale naming, not concrete institutional or cultural constraints"
+                ],
+                "impact": "Avoids overt stereotyping, but still feels generic and somewhat checkbox-like."
+              }
+            ],
+            "revision_hints": [
+              "Explain why caregiving load is low despite single parenthood. For example: reliable childcare from grandparents, co-parenting arrangement, school bus routine, or outsourced after-school care.",
+              "Make cash-flow volatility concrete. Specify whether it comes from mortgage obligations, support payments, extended-family obligations, variable bonuses, or department budget freezes rather than implying general instability.",
+              "Strengthen the extreme_user role by choosing one edge: unusually high client-message volume, unusually strict privacy review, unusually fast tool trials, or unusually fragmented multi-app workflow. Then reflect that edge across pain points, objections, and narrative.",
+              "Replace generic value phrases with observable behaviors. Example: 'keeps a pinned WhatsApp note of follow-ups and copies action items into a Friday spreadsheet review' is stronger than 'reduce admin drag.'",
+              "Resolve the adoption tension by clarifying the policy: either Morgan trials quickly in low-risk sandboxes but delays paid rollout until proof exists, or Morgan is broadly cautious and not truly an early trier.",
+              "Add Singapore-specific grounding that affects decisions, such as HDB/condo context, reliance on WhatsApp for SMB coordination, sensitivity to regional data-hosting, or manager approval norms in local SMEs.",
+              "Either remove MBTI and zodiac or keep them clearly non-operative. They add little evidence value and can make the persona feel templated.",
+              "Populate at least one currently empty behavioral module, such as workflow_adoption_model, product_reaction_rules, or objection_language_style, so downstream simulations have sharper decision cues."
+            ],
+            "rationale": "This persona is directionally credible and internally readable, with a sensible workflow-centric buying logic and low overt stereotype risk. The main weakness is not offensive stereotyping but genericity: the profile combines many plausible SaaS-buyer traits without enough causal detail to make Morgan feel like a distinct human or a true extreme_user. The strongest improvement would be to sharpen one edge-case behavior, explain the household and cash-flow mechanics more concretely, and make the adoption policy more explicit.",
+            "provider": "codex",
+            "profile": "chatgpt-5.4-high",
+            "model": "gpt-5.4",
+            "prompt_version": "persona-judge/v1",
+            "generated_at": "2026-06-25T13:21:34+00:00",
+            "plausibility_score_normalized": 6.0,
+            "stereotype_risk_score_normalized": 3.0,
+            "panel_fit_score_normalized": 5.0
+          }
+        }
+      ],
+      "average_plausibility_score": 23.91,
+      "average_stereotype_risk_score": 11.29,
+      "average_panel_fit_score": 23.27,
+      "average_validation_issue_count": 0,
+      "verdict_distribution": {
+        "needs_revision": 3,
+        "pass_with_revisions": 3,
+        "usable_with_revisions": 2
+      },
+      "average_plausibility_score_normalized": 7.04,
+      "average_stereotype_risk_score_normalized": 3.64,
+      "average_panel_fit_score_normalized": 6.51
+    },
+    "deltas_agnes_minus_codex": {
+      "average_plausibility_score": 7.67,
+      "average_stereotype_risk_score": 4.67,
+      "average_panel_fit_score": 8.03,
+      "average_validation_issue_count": 0
+    },
+    "deltas_agnes_minus_codex_normalized": {
+      "average_plausibility_score": -0.42,
+      "average_stereotype_risk_score": 0.16,
+      "average_panel_fit_score": -0.4
+    },
+    "score_normalization_note": "Judge outputs mixed 0-10 and 0-100 scales. Scores above 10 were normalized by dividing by 10 before aggregation."
+  }
+}

@@ -69,6 +69,93 @@ from ai_validation_swarm.validation.runner import run_validation
 from ai_validation_swarm.domain.models import PanelSpec
 
 
+PERSONA_LLM_BACKENDS = ["template", "openai", "agnes", "codex"]
+PERSONA_ENRICH_BACKENDS = ["openai", "agnes", "codex"]
+LIVE_LLM_BACKENDS = ["agnes", "openai", "codex", "codex-sdk"]
+LIVE_CHAT_BACKENDS = ["mock", "agnes", "openai", "codex", "codex-sdk"]
+AGNES_DEFAULT_BASE_URL = "https://apihub.agnes-ai.com/v1"
+AGNES_DEFAULT_MODEL = "agnes-2.0-flash"
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[3]
+
+
+def _load_repo_runtime_defaults() -> dict[str, object]:
+    path = _repo_root() / "configs" / "runtime_defaults.json"
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _repo_default_choice(key: str, *, fallback: str, allowed: list[str]) -> str:
+    payload = _load_repo_runtime_defaults()
+    value = str(payload.get(key, "")).strip()
+    return value if value in allowed else fallback
+
+
+def _repo_default_text(key: str) -> str | None:
+    payload = _load_repo_runtime_defaults()
+    value = str(payload.get(key, "")).strip()
+    return value or None
+
+
+def _default_live_backend() -> str:
+    return _repo_default_choice("live_backend", fallback="codex", allowed=LIVE_LLM_BACKENDS)
+
+
+def _default_live_model() -> str | None:
+    return _repo_default_text("live_model")
+
+
+def _default_persona_enrich_backend() -> str:
+    return _repo_default_choice("persona_enrich_backend", fallback="codex", allowed=PERSONA_ENRICH_BACKENDS)
+
+
+def _default_persona_compare_candidate_backend() -> str:
+    return _repo_default_choice(
+        "persona_compare_candidate_backend",
+        fallback=_default_persona_enrich_backend(),
+        allowed=PERSONA_ENRICH_BACKENDS,
+    )
+
+
+def _load_live_llm_config(backend: str, *, timeout_default: int | None = None):
+    from ai_validation_swarm.providers.openai_client import load_openai_provider_config
+
+    if backend == "codex":
+        return load_openai_provider_config(
+            prefer_codex_auth=True,
+            force_transport="codex_cli",
+            timeout_default=timeout_default,
+        )
+    if backend == "codex-sdk":
+        return load_openai_provider_config(
+            prefer_codex_auth=True,
+            force_transport="codex_sdk_node",
+            timeout_default=timeout_default,
+        )
+    if backend == "agnes":
+        return load_openai_provider_config(
+            force_transport="powershell_webrequest",
+            force_provider_name="agnes",
+            force_api_key_env="AGNES_API_KEY",
+            default_model=AGNES_DEFAULT_MODEL,
+            default_profile=AGNES_DEFAULT_MODEL,
+            default_api_base=AGNES_DEFAULT_BASE_URL,
+            timeout_default=timeout_default,
+        )
+    return load_openai_provider_config(timeout_default=timeout_default)
+
+
+def _load_persona_llm_config(backend: str):
+    return _load_live_llm_config(backend)
+
+
 def _build_conversation_provider(
     backend: str,
     *,
@@ -77,16 +164,11 @@ def _build_conversation_provider(
     debug_writer=None,
 ):
     from ai_validation_swarm.conversation.providers import MockConversationProvider, OpenAIConversationProvider
-    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
+    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
 
     if backend == "mock":
         return MockConversationProvider()
-    if backend == "codex":
-        config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_cli")
-    elif backend == "codex-sdk":
-        config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_sdk_node")
-    else:
-        config = load_openai_provider_config()
+    config = _load_live_llm_config(backend)
     if model:
         config.model = model
     if reasoning_effort:
@@ -102,14 +184,9 @@ def _build_facilitator_provider(
     debug_writer=None,
 ):
     from ai_validation_swarm.facilitator.providers import OpenAIFacilitatorProvider
-    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
+    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
 
-    if backend == "codex":
-        config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_cli")
-    elif backend == "codex-sdk":
-        config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_sdk_node")
-    else:
-        config = load_openai_provider_config()
+    config = _load_live_llm_config(backend)
     if model:
         config.model = model
     if reasoning_effort:
@@ -135,23 +212,18 @@ def _build_persona_generation_components(args: argparse.Namespace) -> tuple[obje
         return None, None
 
     from ai_validation_swarm.personas.llm import OpenAIPersonaEnricher, OpenAIPersonaJudge
-    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
+    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
 
-    if backend == "codex":
-        config = load_openai_provider_config(prefer_codex_auth=True, force_transport="codex_cli")
-    else:
-        config = load_openai_provider_config()
+    config = _load_persona_llm_config(backend)
     setattr(args, "_resolved_openai_config", config)
     client = OpenAIResponsesClient(config)
-    enricher = OpenAIPersonaEnricher(client, config) if backend in {"openai", "codex"} else None
+    enricher = OpenAIPersonaEnricher(client, config) if backend in {"openai", "agnes", "codex"} else None
     judge = OpenAIPersonaJudge(client, config) if judge_enabled else None
     return enricher, judge
 
 
 def _load_openai_runtime_config():
-    from ai_validation_swarm.providers.openai_client import load_openai_provider_config
-
-    return load_openai_provider_config()
+    return _load_live_llm_config(_default_live_backend())
 
 
 def _build_codex_probe_components():
@@ -268,7 +340,7 @@ def _build_parser() -> argparse.ArgumentParser:
     generate_cmd.add_argument("--count", type=int, default=50)
     generate_cmd.add_argument("--seed", type=int, default=11)
     generate_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
-    generate_cmd.add_argument("--backend", choices=["template", "openai", "codex"], default="template")
+    generate_cmd.add_argument("--backend", choices=PERSONA_LLM_BACKENDS, default="template")
     generate_cmd.add_argument("--judge-personas", action="store_true")
 
     list_cmd = subparsers.add_parser("list-personas")
@@ -352,7 +424,7 @@ def _build_parser() -> argparse.ArgumentParser:
     generate_v3_2_cmd.add_argument("--section", action="append", dest="enabled_sections")
     generate_v3_2_cmd.add_argument("--seed-offset", type=int, default=11)
     generate_v3_2_cmd.add_argument("--max-attempts", type=int, default=3)
-    generate_v3_2_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
+    generate_v3_2_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
     generate_v3_2_cmd.add_argument("--brief-dir", type=Path)
     generate_v3_2_cmd.add_argument("--section-batch-size", type=int, default=0)
     generate_v3_2_cmd.add_argument("--debug-progress", action="store_true")
@@ -367,7 +439,7 @@ def _build_parser() -> argparse.ArgumentParser:
     generate_v3_3_cmd.add_argument("--section", action="append", dest="enabled_sections")
     generate_v3_3_cmd.add_argument("--seed-offset", type=int, default=11)
     generate_v3_3_cmd.add_argument("--max-attempts", type=int, default=3)
-    generate_v3_3_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
+    generate_v3_3_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
     generate_v3_3_cmd.add_argument("--brief-dir", type=Path)
     generate_v3_3_cmd.add_argument("--repair-batch-size", type=int, default=1)
     generate_v3_3_cmd.add_argument("--debug-progress", action="store_true")
@@ -378,7 +450,7 @@ def _build_parser() -> argparse.ArgumentParser:
     generate_v5_cmd = subparsers.add_parser("generate-v5-persona")
     generate_v5_cmd.add_argument("--persona-id", required=True)
     generate_v5_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
-    generate_v5_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
+    generate_v5_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
     generate_v5_cmd.add_argument("--guide-file", type=Path)
     generate_v5_cmd.add_argument("--fixed", action="append", default=[], metavar="KEY=VALUE")
     generate_v5_cmd.add_argument("--prefer", action="append", default=[], metavar="KEY=VALUE")
@@ -404,7 +476,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     generate_v5_panel_cmd.add_argument("--starting-id", type=int, default=1201)
     generate_v5_panel_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas"))
-    generate_v5_panel_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex-sdk")
+    generate_v5_panel_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
     generate_v5_panel_cmd.add_argument("--random-seed", type=int)
     generate_v5_panel_cmd.add_argument("--max-transport-attempts", type=int, default=2)
     generate_v5_panel_cmd.add_argument("--debug-progress", action="store_true")
@@ -453,7 +525,7 @@ def _build_parser() -> argparse.ArgumentParser:
     enrich_cmd = subparsers.add_parser("enrich-personas")
     enrich_cmd.add_argument("--input-dir", type=Path, default=Path("data/personas"))
     enrich_cmd.add_argument("--output-dir", type=Path, default=Path("data/personas_llm"))
-    enrich_cmd.add_argument("--backend", choices=["openai", "codex"], default="codex")
+    enrich_cmd.add_argument("--backend", choices=PERSONA_ENRICH_BACKENDS, default=_default_persona_enrich_backend())
     enrich_cmd.add_argument("--judge-personas", action="store_true")
     enrich_cmd.add_argument("--limit", type=int)
     enrich_cmd.add_argument("--target-count", type=int)
@@ -500,12 +572,30 @@ def _build_parser() -> argparse.ArgumentParser:
     compare_cmd.add_argument("--candidate", type=Path, required=True)
     compare_cmd.add_argument("--output", type=Path)
 
+    compare_persona_quality_cmd = subparsers.add_parser("compare-persona-quality")
+    compare_persona_quality_cmd.add_argument("--baseline-backend", choices=PERSONA_ENRICH_BACKENDS, default="codex")
+    compare_persona_quality_cmd.add_argument(
+        "--candidate-backend",
+        choices=PERSONA_ENRICH_BACKENDS,
+        default=_default_persona_compare_candidate_backend(),
+    )
+    compare_persona_quality_cmd.add_argument("--judge-backend", choices=PERSONA_ENRICH_BACKENDS, default="codex")
+    compare_persona_quality_cmd.add_argument("--seed", action="append", dest="seeds", type=int)
+    compare_persona_quality_cmd.add_argument("--output-dir", type=Path, default=Path("experiments"))
+    compare_persona_quality_cmd.add_argument("--experiment-id", default="")
+    compare_persona_quality_cmd.add_argument("--baseline-label", default="")
+    compare_persona_quality_cmd.add_argument("--candidate-label", default="")
+    compare_persona_quality_cmd.add_argument("--judge-label", default="")
+    compare_persona_quality_cmd.add_argument("--max-baseline-retries", type=int, default=1)
+    compare_persona_quality_cmd.add_argument("--max-candidate-retries", type=int, default=3)
+    compare_persona_quality_cmd.add_argument("--pause-seconds", type=float, default=6.0)
+
     chat_cmd = subparsers.add_parser("chat-with-persona")
     chat_cmd.add_argument("--persona-id")
     chat_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     chat_cmd.add_argument("--session-dir", type=Path, default=Path("conversations"))
     chat_cmd.add_argument("--resume", dest="session_id")
-    chat_cmd.add_argument("--backend", choices=["mock", "codex", "codex-sdk", "openai"], default="mock")
+    chat_cmd.add_argument("--backend", choices=LIVE_CHAT_BACKENDS, default="mock")
     chat_cmd.add_argument("--model")
     chat_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"])
     chat_cmd.add_argument("--friction-mode", choices=["off", "light", "natural", "high"], default="off")
@@ -514,7 +604,7 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd = subparsers.add_parser("run-facilitated-interview")
     interview_cmd.add_argument("--persona-id", required=True)
     interview_cmd.add_argument("--research-goal", required=True)
-    interview_cmd.add_argument("--interview-mode", choices=["explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
+    interview_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     interview_cmd.add_argument("--hypothesis", default="")
     interview_cmd.add_argument("--product-context", default="")
     interview_cmd.add_argument("--concept-protocol", default="")
@@ -522,8 +612,8 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd.add_argument("--language", default="Traditional Chinese")
     interview_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     interview_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
-    interview_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
-    interview_cmd.add_argument("--model", default="gpt-5.4")
+    interview_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
+    interview_cmd.add_argument("--model", default=_default_live_model())
     interview_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     interview_cmd.add_argument("--max-turns", type=int)
     interview_cmd.add_argument("--soft-turn-limit", type=int)
@@ -536,7 +626,7 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--persona-id")
     observer_cmd.add_argument("--resume", dest="interview_id")
     observer_cmd.add_argument("--research-goal")
-    observer_cmd.add_argument("--interview-mode", choices=["explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
+    observer_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     observer_cmd.add_argument("--hypothesis", default="")
     observer_cmd.add_argument("--product-context", default="")
     observer_cmd.add_argument("--concept-protocol", default="")
@@ -544,8 +634,8 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--language", default="Traditional Chinese")
     observer_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     observer_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
-    observer_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
-    observer_cmd.add_argument("--model", default="gpt-5.4")
+    observer_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
+    observer_cmd.add_argument("--model", default=_default_live_model())
     observer_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     observer_cmd.add_argument("--max-turns", type=int)
     observer_cmd.add_argument("--soft-turn-limit", type=int)
@@ -566,8 +656,8 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_generic_cmd.add_argument("--core-assumption-count", type=int, default=8)
     concept_panel_generic_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     concept_panel_generic_cmd.add_argument("--output-dir", type=Path, default=Path("experiments"))
-    concept_panel_generic_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
-    concept_panel_generic_cmd.add_argument("--model", default="gpt-5.4")
+    concept_panel_generic_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
+    concept_panel_generic_cmd.add_argument("--model", default=_default_live_model())
     concept_panel_generic_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     concept_panel_generic_cmd.add_argument("--max-turns", type=int)
     concept_panel_generic_cmd.add_argument("--soft-turn-limit", type=int)
@@ -579,8 +669,8 @@ def _build_parser() -> argparse.ArgumentParser:
     concept_panel_cmd = subparsers.add_parser("run-followup-copilot-panel")
     concept_panel_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     concept_panel_cmd.add_argument("--output-dir", type=Path, default=Path("experiments"))
-    concept_panel_cmd.add_argument("--backend", choices=["codex", "codex-sdk", "openai"], default="codex")
-    concept_panel_cmd.add_argument("--model", default="gpt-5.4")
+    concept_panel_cmd.add_argument("--backend", choices=LIVE_LLM_BACKENDS, default=_default_live_backend())
+    concept_panel_cmd.add_argument("--model", default=_default_live_model())
     concept_panel_cmd.add_argument("--reasoning-effort", choices=["low", "medium", "high"], default="medium")
     concept_panel_cmd.add_argument("--max-turns", type=int)
     concept_panel_cmd.add_argument("--soft-turn-limit", type=int)
@@ -630,15 +720,16 @@ def _build_parser() -> argparse.ArgumentParser:
 def _cmd_generate(args: argparse.Namespace) -> int:
     ensure_dir(args.output_dir)
     enricher, judge = _build_persona_generation_components(args)
+    openai_config = getattr(args, "_resolved_openai_config", None)
     personas = generate_personas(count=args.count, random_seed=args.seed, enricher=enricher, judge=judge)
     for persona in personas:
         save_persona(persona, args.output_dir)
     backend_note = "template"
     if enricher is not None:
-        backend_note = "codex-enriched" if args.backend == "codex" else "openai-enriched"
+        provider_note = "codex" if args.backend == "codex" else getattr(openai_config, "provider_name", args.backend)
+        backend_note = f"{provider_note}-enriched"
     if judge is not None:
         backend_note = f"{backend_note}+judge"
-    openai_config = getattr(args, "_resolved_openai_config", None)
     auth_note = ""
     if openai_config is not None:
         auth_note = f" auth_source={openai_config.auth_source}"
@@ -889,20 +980,9 @@ def _cmd_generate_v3_1_2_persona(args: argparse.Namespace) -> int:
 
 
 def _cmd_generate_v3_2_persona(args: argparse.Namespace) -> int:
-    from ai_validation_swarm.providers.openai_client import (
-        OpenAIResponsesClient,
-        load_openai_provider_config,
-    )
+    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
 
-    uses_codex_auth = args.backend in {"codex", "codex-sdk"}
-    forced_transport = {
-        "codex": "codex_cli",
-        "codex-sdk": "codex_sdk_node",
-    }.get(args.backend)
-    config = load_openai_provider_config(
-        prefer_codex_auth=uses_codex_auth,
-        force_transport=forced_transport,
-    )
+    config = _load_live_llm_config(args.backend)
     if args.backend == "codex" and config.transport == "codex_cli" and config.codex_cli_output_mode == "auto":
         config.codex_cli_output_mode = "direct"
     progress_writer = (lambda message: print(message, flush=True)) if args.debug_progress else None
@@ -985,20 +1065,9 @@ def _cmd_validate_personas_v3_2(args: argparse.Namespace) -> int:
 
 
 def _cmd_generate_v3_3_persona(args: argparse.Namespace) -> int:
-    from ai_validation_swarm.providers.openai_client import (
-        OpenAIResponsesClient,
-        load_openai_provider_config,
-    )
+    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
 
-    uses_codex_auth = args.backend in {"codex", "codex-sdk"}
-    forced_transport = {
-        "codex": "codex_cli",
-        "codex-sdk": "codex_sdk_node",
-    }.get(args.backend)
-    config = load_openai_provider_config(
-        prefer_codex_auth=uses_codex_auth,
-        force_transport=forced_transport,
-    )
+    config = _load_live_llm_config(args.backend)
     progress_writer = (lambda message: print(message, flush=True)) if args.debug_progress else None
     client = OpenAIResponsesClient(config, debug_writer=progress_writer)
     if progress_writer is not None:
@@ -1108,16 +1177,10 @@ def _build_v5_adapter_components(
     persona_id: str,
     progress_writer,
 ):
-    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient, load_openai_provider_config
+    from ai_validation_swarm.providers.openai_client import OpenAIResponsesClient
 
-    uses_codex_auth = backend in {"codex", "codex-sdk"}
-    forced_transport = {"codex": "codex_cli", "codex-sdk": "codex_sdk_node"}.get(backend)
-    config = load_openai_provider_config(
-        prefer_codex_auth=uses_codex_auth,
-        force_transport=forced_transport,
-        timeout_default=360,
-    )
-    transport_log = output_dir / persona_id / "v5" / "llm_transport.log"
+    config = _load_live_llm_config(backend, timeout_default=360)
+    transport_log = output_dir / persona_id / "v5_1" / "llm_transport.log"
     ensure_dir(transport_log.parent)
 
     def transport_writer(message: str) -> None:
@@ -1239,7 +1302,7 @@ def _cmd_validate_personas_v5(args: argparse.Namespace) -> int:
     reports = []
     if args.data_dir.exists():
         for persona_root in sorted(path for path in args.data_dir.iterdir() if path.is_dir()):
-            folder = persona_root / "v5"
+            folder = persona_root / "v5_1"
             if folder.exists():
                 reports.append((persona_root.name, validate_v5_persona_folder(folder)))
     if not reports:
@@ -1495,6 +1558,7 @@ def _cmd_enrich_personas(args: argparse.Namespace) -> int:
         "max_stall_rounds": args.max_stall_rounds,
         "max_persona_failures": args.max_persona_failures,
         "workers": args.workers,
+        "provider_name": getattr(openai_config, "provider_name", ""),
         "auth_source": getattr(openai_config, "auth_source", ""),
         "transport": getattr(openai_config, "transport", ""),
     }
@@ -1628,6 +1692,32 @@ def _cmd_compare_evaluations(args: argparse.Namespace) -> int:
     )
     if args.output is not None:
         print(f"Comparison written to {args.output}")
+    return 0
+
+
+def _cmd_compare_persona_quality(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.evaluation.persona_quality_compare import run_persona_quality_compare
+
+    report = run_persona_quality_compare(
+        seeds=args.seeds or [101, 202, 303],
+        output_root=args.output_dir,
+        experiment_id=args.experiment_id,
+        baseline_backend=args.baseline_backend,
+        candidate_backend=args.candidate_backend,
+        judge_backend=args.judge_backend,
+        baseline_label=args.baseline_label,
+        candidate_label=args.candidate_label,
+        judge_label=args.judge_label,
+        max_baseline_retries=args.max_baseline_retries,
+        max_candidate_retries=args.max_candidate_retries,
+        pause_seconds=args.pause_seconds,
+    )
+    print(
+        f"Persona quality compare completed: seeds={len(report['seeds'])}, "
+        f"baseline={report['setup']['baseline_label']}, "
+        f"candidate={report['setup']['candidate_label']}. "
+        f"Report: {report['output_paths']['report_json']}"
+    )
     return 0
 
 
@@ -1772,12 +1862,18 @@ def _print_observer_state(session) -> None:
         if hypotheses:
             print("Root-cause hypotheses:")
             for item in hypotheses:
-                print(_console_safe(f"- [{item.get('confidence', '')}] {item.get('hypothesis', '')}"))
+                if isinstance(item, dict):
+                    print(_console_safe(f"- [{item.get('confidence', '')}] {item.get('hypothesis', '')}"))
+                else:
+                    print(_console_safe(f"- {str(item)}"))
         evidence = pending.get("evidence_updates", [])
         if evidence:
             print("Evidence updates:")
             for item in evidence:
-                print(_console_safe(f"- {item.get('evidence_type', '')}: {item.get('claim', '')}"))
+                if isinstance(item, dict):
+                    print(_console_safe(f"- {item.get('evidence_type', '')}: {item.get('claim', '')}"))
+                else:
+                    print(_console_safe(f"- {str(item)}"))
 
 
 def _apply_observer_action(runtime, interview_id: str, action: str):
@@ -2111,6 +2207,7 @@ def main(argv: list[str] | None = None) -> int:
         "export-report": _cmd_export,
         "run-evaluation": _cmd_run_evaluation,
         "compare-evaluations": _cmd_compare_evaluations,
+        "compare-persona-quality": _cmd_compare_persona_quality,
         "chat-with-persona": _cmd_chat_with_persona,
         "run-facilitated-interview": _cmd_run_facilitated_interview,
         "observe-facilitated-interview": _cmd_observe_facilitated_interview,

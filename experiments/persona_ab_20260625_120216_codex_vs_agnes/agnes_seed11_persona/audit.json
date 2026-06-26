@@ -1,0 +1,100 @@
+{
+  "skill_version": "v1",
+  "seed": {
+    "seed_id": "seed_0001",
+    "panel_role": "mainstream",
+    "age_band": "45-54",
+    "location_type": "suburban",
+    "household_structure": "multi-generational household",
+    "occupation_band": "program_management",
+    "income_band": "upper_middle",
+    "education_band": "postgraduate",
+    "language": [
+      "Cantonese",
+      "English"
+    ],
+    "device_environment": "multi-device",
+    "payment_environment": "digital-first",
+    "schedule_pressure": "high",
+    "budget_flexibility": "high",
+    "caregiving_load": "low",
+    "trust_threshold": "needs_social_proof",
+    "switching_cost_level": "medium",
+    "privacy_risk_tolerance": "medium",
+    "digital_literacy_ceiling": "medium",
+    "locale_pack": "hong_kong_smb",
+    "occupation_title": "program manager",
+    "life_stage": "mid_career_operator",
+    "purchase_authority_type": "team_budget_influencer",
+    "employment_stability": "contract_based",
+    "workflow_maturity": "tool_heavy",
+    "decision_speed": "fast",
+    "proof_threshold": "light_demo",
+    "cash_flow_volatility": "high"
+  },
+  "decision_policy": {
+    "adoption_style": "adopts when the payoff is concrete and the risk feels bounded. Prefers incremental changes over disruptive ones. Will trial a tool if it integrates easily with existing workflows (e.g., WhatsApp, Gmail).",
+    "trust_requirements": [
+      "clear before-and-after value demonstrated in a relevant scenario",
+      "low-friction onboarding that doesn't require extensive training",
+      "transparent data usage policies",
+      "responsive customer support for quick issue resolution"
+    ],
+    "rejection_triggers": [
+      "extra admin burden during setup or maintenance",
+      "vague claims without proof or case studies",
+      "another tool that adds one more dashboard without replacing existing work",
+      "complex pricing structures",
+      "poor mobile experience"
+    ],
+    "proof_requirements": [
+      "specific examples from similar users in program management",
+      "a short trial workflow that solves one immediate pain point",
+      "evidence that the workflow can survive internal review and comparison",
+      "testimonials from trusted peers"
+    ]
+  },
+  "response_style": {
+    "articulation_level": "medium. Communicates clearly and concisely, avoiding unnecessary fluff. Uses bullet points or structured lists when explaining complex issues.",
+    "directness": "medium. Polite but firm. Will ask direct questions if value is unclear. Avoids aggressive confrontation but does not shy away from pointing out flaws.",
+    "detail_tendency": "medium. Provides sufficient detail to be understood but omits irrelevant background. Focuses on actionable information.",
+    "tone": "Professional, pragmatic, and slightly cautious. Values efficiency and respect for time. Uses both Cantonese and English appropriately depending on the audience."
+  },
+  "audit": {
+    "persona_generation_method": "deterministic_seed_plus_agnes_enrichment_v1",
+    "evidence_grade": "synthetic_llm_enriched",
+    "source_basis": [
+      "panel_frame",
+      "seed_constraints",
+      "trait_catalogs",
+      "template_enrichment"
+    ],
+    "stereotype_risk_score": 3,
+    "synthetic_only_disclaimer": "Synthetic persona for AI pre-validation only.",
+    "do_not_use_for": [
+      "employment screening",
+      "credit or insurance decisions",
+      "medical guidance",
+      "legal guidance",
+      "discriminatory targeting"
+    ],
+    "last_audited_at": "2026-06-25",
+    "persona_version": "v1",
+    "diversity_dimensions": [
+      "panel_role",
+      "locale_pack",
+      "life_stage",
+      "purchase_authority_type",
+      "workflow_maturity",
+      "cash_flow_volatility"
+    ],
+    "llm_enrichment": {
+      "provider": "agnes",
+      "profile": "agnes-2.0-flash",
+      "model": "agnes-2.0-flash",
+      "prompt_version": "persona-enrichment/v1",
+      "generated_at": "2026-06-25T03:58:49+00:00",
+      "rationale": "This enrichment preserves all fixed anchors (age, location, occupation, household structure, etc.) while adding depth to the psychological and operational reality of the persona. It introduces realistic tensions: the conflict between tool-heavy workflows and the desire for simplicity, the impact of contract-based income on purchasing caution, and the cultural nuance of a bilingual, multi-generational household. The added details on social risk, privacy concerns, and specific frustrations provide a richer context for validating products that need to balance functionality with trust and ease of use. The narrative ties these elements together to form a coherent picture of a busy, responsible professional seeking stability and clarity."
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "overall_quality_score": 4,
+  "score_label": "warn",
+  "dimension_scores": {
+    "question_construction": 5,
+    "coverage_management": 5,
+    "synthesis_rigor": 4,
+    "concept_validation_protocol_adherence": 5
+  },
+  "findings": [
+    {
+      "severity": "low",
+      "category": "synthesis_boundaries",
+      "description": "Synthesis proposes specific design implications (e.g., 'product should allow pending state', 'separate outward transparency from internal verification') before the concept has been introduced or tested. While logically derived from behavior, these cross into speculative product design and should be explicitly labeled as post-concept hypotheses rather than current insights.",
+      "reference": "SYNTHESIS.key_insights"
+    },
+    {
+      "severity": "low",
+      "category": "operational_continuity",
+      "description": "Coverage status correctly flags missing `trust_boundary`, `repeat_use_condition`, and `service_embedding`. The facilitator trace does not log a concrete plan for probing these post-concept-introduction, creating a minor continuity gap for the next run.",
+      "reference": "COVERAGE_STATUS.missing, FACILITATOR_TRACE"
+    }
+  ],
+  "improvement_hints": {
+    "next_interview_focus": [
+      "Introduce the concept neutrally only after `concept_intro_allowed` flips to true. Immediately probe trust boundaries (data sharing limits, family/partner visibility), repeat-use triggers (specific friction points that would cause abandonment vs continued reliance), and service embedding (how it slots into the existing MTR/app/notes batch workflow)."
+    ],
+    "coverage_gap_actions": [
+      "Ask directly: 'What information would you absolutely refuse to share with anyone else?' 'Under what exact circumstance would you delete this tool after trying it?' 'How would you expect this to sit alongside your current month-end spreadsheet or notes app?'"
+    ],
+    "prompt_adjustments": [
+      "Enforce a strict 'no design implication until concept-tested' rule in synthesis. Add a mandatory checkpoint in the facilitator prompt to explicitly defer concept introduction until prerequisites (pressure, defensible_vs_uncertain) are satisfied, preventing premature product framing."
+    ],
+    "turn_budget_guidance": "Current 7-turn soft/hard limit is optimal for the pre-concept phase. Expand to 10-12 turns only after concept introduction to accommodate trial simulation, retention questioning, pricing calibration, and disconfirmation probes."
+  },
+  "hypothesis_judge_alignment": "pass",
+  "methodology_notes": "Protocol adherence is strong: concept introduction was correctly deferred due to missing prerequisites, and the facilitator maintained behavioral grounding through threshold, contrast, and missing-evidence probes. Synthesis appropriately flags unknowns for pricing/retention and preserves weak problem evidence. Low-severity notes on speculative design implications do not violate core methodology but warrant tighter bounding in future runs.",
+  "strengths": [],
+  "required_improvements": [
+    "Review the transcript and synthesis manually before treating this run as calibrated evidence."
+  ],
+  "scores": {
+    "neutrality": 3,
+    "probing_quality": 3,
+    "conversation_naturalness": 3,
+    "evidence_discipline": 3,
+    "causal_rigor": 3,
+    "hypothesis_validation_rigor": 3,
+    "synthesis_fidelity": 3,
+    "overall": 3
+  },
+  "checks": {
+    "leading_question_risk": "warn",
+    "repetition_risk": "warn",
+    "premature_root_cause_risk": "warn",
+    "mechanical_five_whys_risk": "warn",
+    "evidence_reference_quality": "warn",
+    "synthesis_overreach_risk": "warn",
+    "conversation_naturalness": "warn",
+    "persona_over_structuring_risk": "warn",
+    "interviewer_jargon_risk": "warn",
+    "domain_fit_alignment": "warn",
+    "hypothesis_confirmation_bias_risk": "warn",
+    "hypothesis_judge_alignment": "warn"
+  },
+  "human_review_needed": true,
+  "synthetic_only_disclaimer": "Synthetic pre-validation only; not human market evidence.",
+  "overall_verdict": "warn"
+}
