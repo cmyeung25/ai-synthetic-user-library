@@ -13,6 +13,11 @@
 - Treat current outputs as simulated evidence while the system is being calibrated toward replacement-grade reliability.
 - Keep safety, compliance, and high-stakes review boundaries explicit.
 
+## Skill Routing Rule
+
+- Always use [$platform-development-chief](C:\Users\user\.codex\skills\platform-development-chief\SKILL.md) for this repository when making platform-level roadmap, backlog, milestone, status, prioritization, or capability-sequencing decisions.
+- If the task also involves system architecture, module boundaries, API contracts, worker design, persistence, deployment, or observability, also consult [$platform-system-architect](C:\Users\user\.codex\skills\platform-system-architect\SKILL.md) in the same turn.
+
 ## Mandatory Alignment Check Before Any Work
 
 Before starting a task, confirm:

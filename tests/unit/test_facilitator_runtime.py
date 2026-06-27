@@ -2,7 +2,10 @@ import tempfile
 import unittest
 import io
 import json
+import base64
+import sqlite3
 from contextlib import redirect_stderr
+from contextlib import closing
 from pathlib import Path
 import sys
 
@@ -24,6 +27,149 @@ from ai_validation_swarm.facilitator.runtime import FacilitatedInterviewRuntime
 from ai_validation_swarm.personas.generator import generate_personas
 from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig, OpenAIProviderError
 from ai_validation_swarm.storage.files import read_json, save_persona
+
+
+_PNG_1X1 = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO6p8s8AAAAASUVORK5CYII="
+)
+
+
+def _write_png(path: Path) -> Path:
+    path.write_bytes(_PNG_1X1)
+    return path
+
+
+def _write_flow_bundle(root: Path) -> Path:
+    bundle = root / "prototype-flow"
+    bundle.mkdir(parents=True, exist_ok=True)
+    _write_png(bundle / "01_start.png")
+    _write_png(bundle / "02_review.png")
+    _write_png(bundle / "03_confirm.png")
+    return bundle
+
+
+def _write_observed_action_trace(path: Path) -> Path:
+    path.write_text(
+        json.dumps(
+            {
+                "trace_version": "observed-action-trace/v1",
+                "trace_label": "prototype-review-replay",
+                "task_outcome": "partial_success",
+                "summary": "The participant reviewed the summary, opened supporting evidence, and stopped at the permission request.",
+                "first_error": "The permission scope felt too broad before value was proven.",
+                "drop_off_point": "permission request modal",
+                "completion_notes": "The task ended before the final confirmation step.",
+                "missing_signals": [
+                    "No dwell-time telemetry was captured.",
+                    "No cursor path was captured.",
+                ],
+                "actions": [
+                    {
+                        "step": 1,
+                        "action": "open_summary",
+                        "target": "summary panel",
+                        "screen": "review workspace",
+                        "result": "success",
+                        "note": "Started with the top-line recommendation.",
+                    },
+                    {
+                        "step": 2,
+                        "action": "open_evidence",
+                        "target": "evidence drawer",
+                        "screen": "review workspace",
+                        "result": "success",
+                    },
+                    {
+                        "step": 3,
+                        "action": "dismiss_flow",
+                        "target": "permission request modal",
+                        "screen": "permission modal",
+                        "result": "stopped",
+                        "note": "Broad access concern blocked completion.",
+                    },
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_clickable_prototype_manifest(path: Path) -> Path:
+    path.write_text(
+        json.dumps(
+            {
+                "prototype_label": "Evidence Review Clickable Prototype",
+                "trace_label": "clickable-prototype-task-loop",
+                "start_screen": "review_workspace",
+                "screens": [
+                    {
+                        "id": "review_workspace",
+                        "label": "Review Workspace",
+                        "actions": [
+                            {
+                                "id": "open_summary",
+                                "action": "open_summary",
+                                "target": "summary panel",
+                                "next_screen": "review_workspace",
+                                "result": "success",
+                            },
+                            {
+                                "id": "open_evidence",
+                                "action": "open_evidence",
+                                "target": "evidence drawer",
+                                "next_screen": "evidence_drawer",
+                                "result": "success",
+                            },
+                        ],
+                    },
+                    {
+                        "id": "evidence_drawer",
+                        "label": "Evidence Drawer",
+                        "actions": [
+                            {
+                                "id": "request_permission",
+                                "action": "request_permission",
+                                "target": "permission request modal",
+                                "next_screen": "permission_modal",
+                                "result": "stopped",
+                                "note": "Permission scope felt too broad before value was proven.",
+                                "terminal": True,
+                            }
+                        ],
+                    },
+                    {
+                        "id": "permission_modal",
+                        "label": "Permission Modal",
+                        "actions": [
+                            {
+                                "id": "close_modal",
+                                "action": "close_modal",
+                                "target": "permission request modal",
+                                "next_screen": "review_workspace",
+                                "result": "backtrack",
+                            }
+                        ],
+                    },
+                ],
+                "task_script": [
+                    "open_summary",
+                    {"action_id": "open_evidence", "note": "Inspect supporting evidence before acting."},
+                    {"action_id": "request_permission", "expect_result": "stopped"},
+                ],
+                "missing_signals": [
+                    "No dwell-time telemetry was captured.",
+                    "No cursor path was captured.",
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
 
 
 class RecordedLLMFacilitator:
@@ -183,6 +329,72 @@ class RecordedLLMFacilitator:
             "evidence_gaps": ["No payment behavior."],
             "synthetic_only_disclaimer": "Synthetic pre-validation only.",
         }, "facilitator-thread-1")
+
+    def synthesize_prototype(self, **kwargs):
+        self.calls.append(("synthesize_prototype", kwargs))
+        return ({
+            "stimulus_interpretation": {
+                "summary": "The participant reads the screen as a guided review workspace.",
+                "supporting_quotes": [{"quote": "I would look for the summary first.", "evidence_ref": "exchange_1.persona"}],
+                "interpretation_breakdowns": ["The participant is unsure whether the system is analyzing or merely displaying imported material."],
+                "trust_signals": ["Traceable evidence links would increase trust."],
+            },
+            "task_journey": {
+                "first_action_expectations": ["Open the evidence summary before changing anything."],
+                "expected_path": ["Read summary", "check linked evidence", "decide whether to act"],
+                "setup_confusions": ["Unclear whether source material must be cleaned before upload."],
+                "likely_drop_off_points": ["The participant would stop if the system asks for broad permissions too early."],
+                "task_success_signals": ["A concrete, inspectable recommendation tied to evidence."],
+            },
+            "behavioral_evidence_boundary": {
+                "evidence_level": "task_guided_self_report",
+                "observed_action_available": False,
+                "what_was_observed": ["Stimulus interpretation and expected task path were discussed."],
+                "missing_observed_signals": ["No real clicks or task traces were recorded."],
+            },
+            "assumption_validation": [{
+                "assumption": "The participant will understand the workspace immediately.",
+                "status": "weakened",
+                "evidence_refs": ["exchange_1.persona", "exchange_2.persona"],
+                "rationale": "The participant could describe the page, but still held key interpretation uncertainty.",
+            }],
+            "key_insights": [
+                "Because the participant looks for evidence traceability first, they would inspect links before acting, unless trust is already established. This means the prototype should foreground evidence lineage.",
+                "Because setup expectations are still ambiguous, the participant would delay serious use, unless import and cleanup requirements become obvious. This means the prototype should make preparation cost legible.",
+                "Because broad access feels risky, the participant would stop early, unless the prototype explains permission scope before asking for it. This means the prototype should narrow permissions and explain why they are needed.",
+            ],
+            "next_experiment": "Run the same task with a real screenshot and record the actual first click.",
+            "evidence_gaps": ["No observed action trace was collected."],
+            "synthetic_only_disclaimer": "Synthetic prototype-validation evidence only; not human usability proof.",
+        }, "facilitator-thread-1")
+
+    def review_image_stimulus(self, **kwargs):
+        self.calls.append(("review_image_stimulus", kwargs))
+        return ({
+            "summary": "The screen appears to be an evidence review workspace with a summary panel and linked detail areas.",
+            "visible_elements": ["summary section", "linked evidence references", "recommendation area"],
+            "primary_action_candidates": ["read the summary", "open the linked evidence"],
+            "interpretation_risks": ["It is not fully clear whether the page is recommending action or only organizing inputs."],
+            "trust_risks": ["Source boundaries may remain unclear without explicit provenance."],
+            "missing_context": ["The import or preparation requirement is not visible."],
+            "task_relevance": "The screen plausibly supports reviewing one recommendation before taking action.",
+            "evidence_boundary": "Static image review only. No click or navigation trace is available.",
+        }, "stimulus-review-thread-1")
+
+    def review_flow_stimulus(self, **kwargs):
+        self.calls.append(("review_flow_stimulus", kwargs))
+        return ({
+            "summary": "The flow appears to move from summary to evidence inspection to a decision checkpoint.",
+            "screen_sequence": ["start summary", "review evidence", "confirm action"],
+            "primary_action_candidates": ["read the summary", "inspect evidence", "decide whether to act"],
+            "transition_confusions": ["The handoff from review to final decision may feel abrupt."],
+            "setup_burdens": ["The flow does not show what preparation is needed before the first screen."],
+            "likely_drop_off_points": ["The participant may stop if the recommendation still feels under-explained by the final screen."],
+            "trust_risks": ["Trust depends on whether evidence lineage remains visible across screens."],
+            "missing_context": ["The source-import step remains off-screen."],
+            "task_relevance": "The flow plausibly supports reviewing one recommendation through to a decision checkpoint.",
+            "evidence_boundary": "Multi-screen flow review only. No click, navigation timing, or completion trace is available.",
+        }, "facilitator-flow-thread-1")
 
 
 class RecordedLLMPersona:
@@ -777,6 +989,223 @@ class AdoptionBarrierValidationPersona:
         })()
 
 
+class PrototypeValidationFacilitator:
+    provider_name = "prototype-validation"
+    model_name = "prototype-validation/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="stimulus_interpretation",
+                probing_strategy="stimulus_interpretation_probe",
+                decision_rationale="Start by learning what the participant thinks the screen is doing.",
+                message_to_persona="Looking at this prototype, what do you think it is trying to help you do?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["How are they reading the stimulus?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="prototype-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="first_action_expectation",
+                probing_strategy="first_action_probe",
+                decision_rationale="Prototype validation needs the expected first move.",
+                message_to_persona="If you were doing that task now, what would you try first?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What is their first action expectation?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="prototype-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="task_path_expectation",
+                probing_strategy="task_path_probe",
+                decision_rationale="Reconstruct the expected task path before judging the interface.",
+                message_to_persona="After that first step, how would you expect the rest of the task to unfold?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What path do they expect through the prototype?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="prototype-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="setup_confusion",
+                probing_strategy="setup_confusion_probe",
+                decision_rationale="Surface onboarding or input ambiguity early.",
+                message_to_persona="Where would setup or required input start feeling unclear here?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What setup ambiguity appears before task value?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="prototype-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="trust_boundary",
+                probing_strategy="trust_boundary_probe",
+                decision_rationale="Prototype use still depends on trust during the task.",
+                message_to_persona="What would make you trust or distrust this enough to use it for a real decision?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What trust threshold exists inside the task?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="prototype-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="breakdown_or_dropoff",
+                probing_strategy="dropoff_probe",
+                decision_rationale="Capture the first real hesitation or abandonment point.",
+                message_to_persona="Where would you hesitate or stop if this were a real attempt?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What is the most likely drop-off point?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="prototype-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="task_completion_signal",
+                probing_strategy="completion_signal_probe",
+                decision_rationale="Need the participant's definition of task success.",
+                message_to_persona="What result would tell you that the task actually worked here?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What success signal would they rely on?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="prototype-thread-1",
+            ),
+        ]
+
+    def next_turn(self, **kwargs):
+        self.calls.append(("next_turn", kwargs))
+        return self.decisions.pop(0)
+
+    def synthesize_prototype(self, **kwargs):
+        self.calls.append(("synthesize_prototype", kwargs))
+        return ({
+            "stimulus_interpretation": {
+                "summary": "The participant sees the screen as an evidence review workspace, but not yet a fully trusted decision tool.",
+                "supporting_quotes": [{"quote": "I would look for the summary first.", "evidence_ref": "exchange_1.persona"}],
+                "interpretation_breakdowns": ["It is unclear whether the workspace is suggesting action or just organizing evidence."],
+                "trust_signals": ["Linked evidence and visible source boundaries would increase trust."],
+            },
+            "task_journey": {
+                "first_action_expectations": ["Read the summary before changing anything."],
+                "expected_path": ["Read the summary", "check the linked evidence", "decide whether to act"],
+                "setup_confusions": ["The participant is unsure how much cleanup is needed before import."],
+                "likely_drop_off_points": ["They would stop if permissions become broad before value is visible."],
+                "task_success_signals": ["A clear recommendation backed by inspectable evidence."],
+            },
+            "behavioral_evidence_boundary": {
+                "evidence_level": "task_guided_self_report",
+                "observed_action_available": False,
+                "what_was_observed": ["Stimulus interpretation and expected task path were discussed."],
+                "missing_observed_signals": ["No actual clicks or backtracking were observed."],
+            },
+            "assumption_validation": [{
+                "assumption": "The participant will immediately understand what the workspace is doing.",
+                "status": "weakened",
+                "evidence_refs": ["exchange_1.persona", "exchange_3.persona"],
+                "rationale": "They can read the page directionally, but still expect ambiguity in how the task unfolds.",
+            }],
+            "key_insights": [
+                "Because the participant looks for traceable evidence first, they would inspect the summary before acting, unless trust is already earned. This means the prototype should foreground evidence lineage.",
+                "Because setup expectations are still unclear, the participant would delay serious use, unless input requirements become obvious. This means the prototype should make preparation cost legible.",
+                "Because broad permissions feel risky before value appears, the participant would stop early, unless access scope stays narrow and explicit. This means the prototype should explain permission scope before asking for it.",
+            ],
+            "next_experiment": "Replay the same task against a real screenshot and capture the actual first click and first hesitation.",
+            "evidence_gaps": ["No observed action trace was collected."],
+            "synthetic_only_disclaimer": "Synthetic prototype-validation evidence only; not human usability proof.",
+        }, "prototype-thread-1")
+
+    def review_image_stimulus(self, **kwargs):
+        self.calls.append(("review_image_stimulus", kwargs))
+        return ({
+            "summary": "The static screen looks like a review workspace that pairs a recommendation with inspectable evidence.",
+            "visible_elements": ["summary area", "evidence links", "recommendation output"],
+            "primary_action_candidates": ["read the summary", "inspect a linked source"],
+            "interpretation_risks": ["It may be unclear whether the output is advisory or final."],
+            "trust_risks": ["Trust depends on whether source lineage is visible."],
+            "missing_context": ["The preparation or import step is not visible."],
+            "task_relevance": "The screen appears relevant to reviewing a recommendation before acting on it.",
+            "evidence_boundary": "Static image review only. No click or navigation trace is available.",
+        }, "prototype-stimulus-thread-1")
+
+    def review_flow_stimulus(self, **kwargs):
+        self.calls.append(("review_flow_stimulus", kwargs))
+        return ({
+            "summary": "The flow looks like a guided review sequence from summary to evidence to decision.",
+            "screen_sequence": ["screen 1 summary", "screen 2 evidence review", "screen 3 action checkpoint"],
+            "primary_action_candidates": ["scan the summary", "open the evidence", "make a decision"],
+            "transition_confusions": ["The move into the final checkpoint may feel too sudden without explicit status feedback."],
+            "setup_burdens": ["The flow still hides the preparation or import requirement."],
+            "likely_drop_off_points": ["Confidence may break before the final decision if the evidence remains too abstract."],
+            "trust_risks": ["Trust depends on visible provenance across screens."],
+            "missing_context": ["No screen shows where the input data came from."],
+            "task_relevance": "The flow appears relevant to reviewing one recommendation before action.",
+            "evidence_boundary": "Multi-screen flow review only. No click, navigation timing, or completion trace is available.",
+        }, "prototype-flow-thread-1")
+
+
+class PrototypeValidationPersona:
+    provider_name = "prototype-validation"
+    model_name = "prototype-validation-persona/v1"
+
+    def __init__(self):
+        self.responses = [
+            "It looks like a workspace that summarizes evidence and then points me toward what I should review next.",
+            "I would open the summary first before I trusted any recommendation.",
+            "After that I would inspect the linked evidence, then decide whether the recommendation actually changes anything.",
+            "I am not sure whether I need to clean up or tag the source material before this starts being useful.",
+            "I would trust it more if I could see exactly where each claim came from and what it might be missing.",
+            "I would stop if it asked for broad permissions before showing me anything concrete.",
+            "I would count it as working only if the recommendation is specific enough that I can act or deliberately ignore it.",
+        ]
+
+    def respond(self, **kwargs):
+        return ChatResult(
+            reply=self.responses.pop(0),
+            intent_level="unclear",
+            confidence="high",
+            provider_session_id="prototype-persona-thread-1",
+        )
+
+    def generate_persona_driver_trace(self, **kwargs):
+        return type("TraceResult", (), {
+            "payload": {
+                "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+                "surface_read": {
+                    "what_the_persona_explicitly_said": [
+                        "They would inspect the summary and linked evidence before acting.",
+                    ],
+                    "what_they_seemed_to_optimize_for": "Inspectability before task commitment.",
+                    "what_stayed_implicit": [
+                        "How much prior tool disappointment raised their demand for evidence traceability.",
+                    ],
+                },
+                "likely_drivers": [{
+                    "driver": "Trust comes from inspectable evidence before action",
+                    "driver_type": "trust_pattern",
+                    "why_it_matters_here": "The participant wants a recommendation, but only after they can inspect where it came from.",
+                    "evidence_refs": ["exchange_2.persona", "exchange_3.persona", "exchange_5.persona"],
+                    "profile_source_refs": ["values.core_values"],
+                    "confidence": "medium",
+                    "observed_vs_inferred": "mixed",
+                }],
+                "unspoken_constraints": [],
+                "value_tensions": [],
+                "missed_follow_up_questions": [],
+            },
+            "provider_session_id": "prototype-trace-thread-1",
+        })()
+
+
 class ConceptGateFacilitator:
     provider_name = "concept-gate"
     model_name = "concept-gate/v1"
@@ -843,6 +1272,7 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             )
 
             session = read_json(output / "interview.json")
+            run_contract = read_json(output / "run_contract.json")
             self.assertEqual(session["status"], "completed")
             self.assertEqual(session["interview_mode"], "explore_root_cause")
             self.assertEqual(session["facilitator_prompt_version"], "facilitator-interview/v2")
@@ -859,6 +1289,7 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertEqual(session["exchanges"][1]["probing_strategy"], "adaptive_five_whys")
             self.assertEqual(observed[0][1], "Tell me about the last trip you had to reorganize after plans changed.")
             self.assertTrue((output / "facilitator_trace.json").exists())
+            self.assertTrue((output / "run_contract.json").exists())
             self.assertTrue((output / "insight_report.json").exists())
             self.assertTrue((output / "persona_driver_trace.json").exists())
             self.assertTrue((output / "persona_driver_trace.md").exists())
@@ -867,6 +1298,19 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertEqual(driver_trace["likely_drivers"][0]["driver_type"], "decision_style")
             self.assertEqual(session["persona_driver_trace_provider_session_id"], "persona-trace-thread-1")
             self.assertEqual(session["persona_driver_trace_prompt_version"], "persona-driver-trace/v1")
+            self.assertEqual(run_contract["request"]["run_kind"], "facilitated_interview")
+            self.assertEqual(run_contract["request"]["entrypoint"], "run-facilitated-interview")
+            self.assertEqual(run_contract["request"]["persona_id"], persona.profile.synthetic_user_id)
+            self.assertEqual(run_contract["result"]["status"], "completed")
+            self.assertIn("insight_report.json", run_contract["result"]["artifact_paths"])
+            metadata_db = root / "interviews" / "metadata.sqlite3"
+            self.assertTrue(metadata_db.exists())
+            with closing(sqlite3.connect(metadata_db)) as connection:
+                run_row = connection.execute(
+                    "SELECT run_kind, interview_mode, status FROM run_records WHERE run_id = ?",
+                    (session["interview_id"],),
+                ).fetchone()
+            self.assertEqual(run_row, ("facilitated_interview", "explore_root_cause", "completed"))
 
             all_facilitator_inputs = "\n".join(str(call[1]) for call in facilitator.calls)
             self.assertNotIn("PERSONA RESEARCH KERNEL", all_facilitator_inputs)
@@ -913,6 +1357,33 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertIn(hypothesis, combined)
             synthesis_call = next(call for call in provider.calls if call[0] == "synthesize")
             self.assertIn("INDEPENDENT HYPOTHESIS EVIDENCE JUDGMENT", synthesis_call[1]["user_prompt"])
+
+    def test_prototype_validation_requires_task_and_stimulus_contract(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=78)[0]
+            save_persona(persona, root / "personas")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=RecordedLLMFacilitator(),
+                persona_provider=RecordedLLMPersona(),
+            )
+            with self.assertRaisesRegex(ValueError, "requires a non-empty prototype_task"):
+                runtime.run(
+                    persona_id=persona.profile.synthetic_user_id,
+                    research_goal="Validate a prototype task.",
+                    interview_mode="prototype_validation",
+                    stimulus_type="image",
+                    stimulus_artifact="prototype-review-screen-v1.png",
+                )
+            with self.assertRaisesRegex(ValueError, "requires a stimulus_artifact or product_context"):
+                runtime.run(
+                    persona_id=persona.profile.synthetic_user_id,
+                    research_goal="Validate a prototype task.",
+                    interview_mode="prototype_validation",
+                    prototype_task="Review one recommendation and decide whether to act on it.",
+                )
 
     def test_pain_point_discovery_is_first_class_runtime_mode(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1037,6 +1508,197 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             )
             self.assertIn("Interview mode: adoption_barrier_validation", (output / "transcript.md").read_text(encoding="utf-8"))
             self.assertTrue((output / "insight_report.json").exists())
+
+    def test_prototype_validation_uses_prototype_synthesis_contract(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=77)[0]
+            save_persona(persona, root / "personas")
+            provider = PrototypeValidationFacilitator()
+            artifact = _write_png(root / "prototype-review-screen-v1.png")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=provider,
+                persona_provider=PrototypeValidationPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the evidence-review prototype supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A workspace that summarizes evidence and links back to the source material.",
+                stimulus_type="image",
+                stimulus_artifact=str(artifact),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+                soft_turn_limit=7,
+                hard_turn_limit=8,
+            )
+
+            session = read_json(output / "interview.json")
+            report = read_json(output / "insight_report.json")
+            self.assertEqual(session["interview_mode"], "prototype_validation")
+            self.assertEqual(session["synthesis_prompt_version"], "prototype-synthesis/v1")
+            self.assertEqual(session["stimulus_type"], "image")
+            self.assertEqual(session["stimulus_artifact"], str(artifact))
+            self.assertEqual(session["prototype_task"], "Review one recommendation and decide whether to act on it.")
+            self.assertTrue(session["coverage_status"]["coverage_complete"])
+            self.assertFalse(report["behavioral_evidence_boundary"]["observed_action_available"])
+            self.assertEqual(report["behavioral_evidence_boundary"]["evidence_level"], "task_guided_self_report")
+            self.assertTrue(any(call[0] == "synthesize_prototype" for call in provider.calls))
+            self.assertTrue(any(call[0] == "review_image_stimulus" for call in provider.calls))
+            next_turn_call = next(call for call in provider.calls if call[0] == "next_turn")
+            self.assertIn("STIMULUS TYPE:\nimage", next_turn_call[1]["user_prompt"])
+            self.assertIn("PROTOTYPE TASK:\nReview one recommendation and decide whether to act on it.", next_turn_call[1]["user_prompt"])
+            self.assertTrue(session["stimulus_artifact_snapshot"].endswith(".png"))
+            self.assertIn("summary", session["stimulus_analysis"])
+            self.assertTrue((output / "stimulus_analysis.json").exists())
+            self.assertIn("Evidence Boundary", (output / "insights.md").read_text(encoding="utf-8"))
+
+    def test_prototype_validation_flow_stimulus_review_is_first_class_runtime_surface(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=79)[0]
+            save_persona(persona, root / "personas")
+            provider = PrototypeValidationFacilitator()
+            flow_bundle = _write_flow_bundle(root)
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=provider,
+                persona_provider=PrototypeValidationPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the multi-screen prototype flow supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A workflow that summarizes evidence, lets the user inspect it, and then decide whether to act.",
+                stimulus_type="flow",
+                stimulus_artifact=str(flow_bundle),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+                soft_turn_limit=7,
+                hard_turn_limit=8,
+            )
+
+            session = read_json(output / "interview.json")
+            self.assertEqual(session["stimulus_type"], "flow")
+            self.assertTrue(any(call[0] == "review_flow_stimulus" for call in provider.calls))
+            self.assertTrue(session["stimulus_artifact_snapshot"].endswith("flow_bundle"))
+            self.assertEqual(session["stimulus_analysis"]["analysis_type"], "flow")
+            self.assertEqual(session["stimulus_analysis"]["screen_count"], 3)
+            self.assertTrue((output / "stimulus_analysis.json").exists())
+            insights_text = (output / "insights.md").read_text(encoding="utf-8")
+            self.assertIn("Stimulus Review", insights_text)
+            self.assertIn("Transition confusion", insights_text)
+
+    def test_prototype_validation_observed_action_trace_is_promoted_to_first_class_evidence(self):
+        class ObservedTracePrototypeFacilitator(PrototypeValidationFacilitator):
+            pass
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=81)[0]
+            save_persona(persona, root / "personas")
+            provider = ObservedTracePrototypeFacilitator()
+            trace_artifact = _write_observed_action_trace(root / "prototype-observed-trace.json")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=provider,
+                persona_provider=PrototypeValidationPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the clickable prototype supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A clickable workspace that summarizes evidence, reveals source detail, and asks for permission before final action.",
+                stimulus_type="clickable",
+                stimulus_artifact=str(trace_artifact),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+                soft_turn_limit=7,
+                hard_turn_limit=8,
+            )
+
+            session = read_json(output / "interview.json")
+            report = read_json(output / "insight_report.json")
+            next_turn_call = next(call for call in provider.calls if call[0] == "next_turn")
+            synthesis_call = next(call for call in provider.calls if call[0] == "synthesize_prototype")
+            transcript_text = (output / "transcript.md").read_text(encoding="utf-8")
+            insights_text = (output / "insights.md").read_text(encoding="utf-8")
+
+            self.assertEqual(session["stimulus_type"], "clickable")
+            self.assertTrue(session["stimulus_artifact_snapshot"].endswith(".json"))
+            self.assertIn("actions", session["observed_action_trace"])
+            self.assertTrue((output / "observed_action_trace.json").exists())
+            self.assertIn("OBSERVED ACTION TRACE", next_turn_call[1]["user_prompt"])
+            self.assertIn("permission request modal", synthesis_call[1]["user_prompt"])
+            self.assertEqual(report["behavioral_evidence_boundary"]["evidence_level"], "observed_action_trace")
+            self.assertTrue(report["behavioral_evidence_boundary"]["observed_action_available"])
+            self.assertTrue(
+                any("Observed action trace captured 3 action(s)" in item for item in report["behavioral_evidence_boundary"]["what_was_observed"])
+            )
+            self.assertTrue(
+                any("No dwell-time telemetry was captured." in item for item in report["behavioral_evidence_boundary"]["missing_observed_signals"])
+            )
+            self.assertIn("Observed Action Trace", transcript_text)
+            self.assertIn("Observed Action Trace", insights_text)
+            self.assertTrue(
+                any(
+                    "application-supplied artifacts, not live human usability proof" in item
+                    for item in report["evidence_gaps"]
+                )
+            )
+            self.assertFalse(any(call[0] == "review_image_stimulus" for call in provider.calls))
+            self.assertFalse(any(call[0] == "review_flow_stimulus" for call in provider.calls))
+
+    def test_prototype_validation_clickable_manifest_executes_task_loop_and_captures_trace(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=83)[0]
+            save_persona(persona, root / "personas")
+            provider = PrototypeValidationFacilitator()
+            manifest = _write_clickable_prototype_manifest(root / "prototype-clickable-manifest.json")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=provider,
+                persona_provider=PrototypeValidationPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the clickable prototype supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A clickable workspace that summarizes evidence, reveals source detail, and asks for permission before final action.",
+                stimulus_type="clickable",
+                stimulus_artifact=str(manifest),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+                soft_turn_limit=7,
+                hard_turn_limit=8,
+            )
+
+            session = read_json(output / "interview.json")
+            report = read_json(output / "insight_report.json")
+            analysis = read_json(output / "stimulus_analysis.json")
+            transcript_text = (output / "transcript.md").read_text(encoding="utf-8")
+            insights_text = (output / "insights.md").read_text(encoding="utf-8")
+
+            self.assertEqual(session["stimulus_type"], "clickable")
+            self.assertEqual(session["stimulus_analysis"]["analysis_type"], "clickable_manifest")
+            self.assertEqual(session["stimulus_analysis"]["task_step_count"], 3)
+            self.assertEqual(session["observed_action_trace"]["task_outcome"], "partial_success")
+            self.assertEqual(len(session["observed_action_trace"]["actions"]), 3)
+            self.assertTrue((output / "observed_action_trace.json").exists())
+            self.assertTrue((output / "stimulus_analysis.json").exists())
+            self.assertEqual(analysis["analysis_type"], "clickable_manifest")
+            self.assertEqual(report["behavioral_evidence_boundary"]["evidence_level"], "observed_action_trace")
+            self.assertTrue(report["behavioral_evidence_boundary"]["observed_action_available"])
+            self.assertTrue(
+                any("Executed 3 scripted action(s)" in item for item in report["behavioral_evidence_boundary"]["what_was_observed"])
+            )
+            self.assertIn("CLICKABLE PROTOTYPE EXECUTION CONTEXT", next(call[1]["user_prompt"] for call in provider.calls if call[0] == "next_turn"))
+            self.assertIn("Observed Action Trace", transcript_text)
+            self.assertIn("Visited screen: Evidence Drawer", insights_text)
+            self.assertFalse(any(call[0] == "review_image_stimulus" for call in provider.calls))
+            self.assertFalse(any(call[0] == "review_flow_stimulus" for call in provider.calls))
 
     def test_concept_validation_uses_concept_synthesis_contract(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1330,6 +1992,112 @@ class FacilitatorRuntimeTest(unittest.TestCase):
         )
         self.assertTrue(session.coverage_status["adoption_intro_allowed"])
         self.assertEqual(session.coverage_status["depth_requirements"], [])
+        self.assertTrue(FacilitatedInterviewRuntime._should_finalize_after_exchange(session))
+        self.assertEqual(session.stop_reason, "soft_turn_limit_with_required_coverage_met")
+
+    def test_prototype_validation_coverage_tracks_stimulus_and_task_fields(self):
+        session = InterviewSession.from_dict({
+            "interview_id": "prototype-coverage",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Validate a prototype task.",
+            "product_context": "A research workspace prototype.",
+            "stimulus_type": "image",
+            "stimulus_artifact": "prototype-review-screen-v1.png",
+            "prototype_task": "Review one recommendation and decide whether to act on it.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "prototype-synthesis/v1",
+            "interview_mode": "prototype_validation",
+            "soft_turn_limit": 7,
+            "hard_turn_limit": 9,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Looking at this prototype, what do you think it is trying to help you do?",
+                    "persona_response": "It looks like an evidence review workspace.",
+                    "facilitator_phase": "stimulus_interpretation",
+                    "probing_strategy": "stimulus_interpretation_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "If you were doing that task now, what would you try first?",
+                    "persona_response": "I would open the summary first.",
+                    "facilitator_phase": "first_action_expectation",
+                    "probing_strategy": "first_action_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 3,
+                    "facilitator_question": "After that first step, how would you expect the rest of the task to unfold?",
+                    "persona_response": "I would read the linked evidence before acting.",
+                    "facilitator_phase": "task_path_expectation",
+                    "probing_strategy": "task_path_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 4,
+                    "facilitator_question": "Where would setup or required input start feeling unclear here?",
+                    "persona_response": "I am not sure how much cleanup is needed before import.",
+                    "facilitator_phase": "setup_confusion",
+                    "probing_strategy": "setup_confusion_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 5,
+                    "facilitator_question": "What would make you trust or distrust this enough to use it for a real decision?",
+                    "persona_response": "I need to see where each claim came from.",
+                    "facilitator_phase": "trust_boundary",
+                    "probing_strategy": "trust_boundary_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 6,
+                    "facilitator_question": "Where would you hesitate or stop if this were a real attempt?",
+                    "persona_response": "I would stop if permissions became broad too early.",
+                    "facilitator_phase": "breakdown_or_dropoff",
+                    "probing_strategy": "dropoff_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 7,
+                    "facilitator_question": "What result would tell you that the task actually worked here?",
+                    "persona_response": "A specific recommendation tied to evidence.",
+                    "facilitator_phase": "task_completion_signal",
+                    "probing_strategy": "completion_signal_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+
+        FacilitatedInterviewRuntime._update_coverage_status(session)
+
+        self.assertTrue(session.coverage_status["coverage_complete"])
+        self.assertEqual(session.coverage_status["missing"], [])
+        self.assertEqual(
+            session.coverage_status["requirements"],
+            [
+                "stimulus_interpretation",
+                "first_action_expectation",
+                "task_path_expectation",
+                "setup_confusion",
+                "trust_boundary",
+                "breakdown_or_dropoff",
+                "task_completion_signal",
+            ],
+        )
         self.assertTrue(FacilitatedInterviewRuntime._should_finalize_after_exchange(session))
         self.assertEqual(session.stop_reason, "soft_turn_limit_with_required_coverage_met")
 
@@ -2026,6 +2794,92 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "rejected_by_adoption_barrier_gate",
         )
 
+    def test_prototype_validation_rejects_premature_closure_before_required_fields_are_met(self):
+        revised_decision = FacilitatorDecision(
+            interview_phase="trust_boundary",
+            probing_strategy="trust_boundary_probe",
+            decision_rationale="Need trust evidence before closing the prototype run.",
+            message_to_persona="What would make you trust or distrust this enough to use it for a real decision?",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=False,
+            end_reason="",
+        )
+        provider = ConceptGateFacilitator(revised_decision)
+        runtime = FacilitatedInterviewRuntime(
+            data_dir=ROOT / "data" / "personas",
+            session_dir=ROOT / "interviews",
+            facilitator_provider=provider,
+            persona_provider=RecordedLLMPersona(),
+        )
+        session = InterviewSession.from_dict({
+            "interview_id": "prototype-gate-session",
+            "persona_id": "su_fixture",
+            "persona_name": "Fixture",
+            "research_goal": "Validate a prototype task.",
+            "product_context": "A research workspace prototype.",
+            "stimulus_type": "image",
+            "stimulus_artifact": "prototype-review-screen-v1.png",
+            "prototype_task": "Review one recommendation and decide whether to act on it.",
+            "output_language": "Traditional Chinese",
+            "facilitator_provider": "fixture",
+            "facilitator_model": "fixture",
+            "persona_provider": "fixture",
+            "persona_model": "fixture",
+            "facilitator_prompt_version": "facilitator-interview/v2",
+            "synthesis_prompt_version": "prototype-synthesis/v1",
+            "interview_mode": "prototype_validation",
+            "soft_turn_limit": 7,
+            "hard_turn_limit": 9,
+            "exchanges": [
+                {
+                    "exchange_id": 1,
+                    "facilitator_question": "Looking at this prototype, what do you think it is trying to help you do?",
+                    "persona_response": "It looks like an evidence review workspace.",
+                    "facilitator_phase": "stimulus_interpretation",
+                    "probing_strategy": "stimulus_interpretation_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+                {
+                    "exchange_id": 2,
+                    "facilitator_question": "If you were doing that task now, what would you try first?",
+                    "persona_response": "I would open the summary first.",
+                    "facilitator_phase": "first_action_expectation",
+                    "probing_strategy": "first_action_probe",
+                    "question_evidence_basis": "hypothetical",
+                    "question_evidence_target": "context",
+                },
+            ],
+        })
+        decision = FacilitatorDecision(
+            interview_phase="closure",
+            probing_strategy="evidence_sufficiency",
+            decision_rationale="End after the main prototype interpretation.",
+            message_to_persona="",
+            evidence_updates=[],
+            root_cause_hypotheses=[],
+            open_questions=[],
+            should_end=True,
+            end_reason="Enough detail collected.",
+            question_evidence_basis="clarification",
+            question_evidence_target="context",
+        )
+
+        revised = runtime._revise_non_episodic_validation_question(session, decision, "SYSTEM")
+
+        self.assertIs(revised, revised_decision)
+        self.assertEqual(len(provider.calls), 1)
+        self.assertIn("PROTOTYPE VALIDATION GATE", provider.calls[0]["user_prompt"])
+        self.assertIn("task_path_expectation", provider.calls[0]["user_prompt"])
+        self.assertIn("setup_confusion", provider.calls[0]["user_prompt"])
+        self.assertIn("breakdown_or_dropoff", provider.calls[0]["user_prompt"])
+        self.assertEqual(
+            session.facilitator_decisions[-1]["decision_status"],
+            "rejected_by_prototype_validation_gate",
+        )
+
     def test_human_approved_learning_rules_are_recorded_and_injected(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -2360,6 +3214,74 @@ class FacilitatorRuntimeTest(unittest.TestCase):
         self.assertEqual(payload["next_experiment"], "Run a concierge trial.")
         self.assertGreaterEqual(len(payload["key_insights"]), 3)
 
+    def test_prototype_synthesis_normalizes_partial_payload_and_downgrades_observed_action(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="node_https",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                return {
+                    "behavioral_evidence_boundary": {
+                        "evidence_level": "observed_action_trace",
+                        "observed_action_available": False,
+                    },
+                    "key_insights": ["The participant wants evidence traceability before action."],
+                }
+
+        payload, _ = OpenAIFacilitatorProvider(StubClient()).synthesize_prototype(
+            system_prompt="skill",
+            user_prompt="report",
+        )
+
+        self.assertIn("stimulus_interpretation", payload)
+        self.assertIn("task_journey", payload)
+        self.assertEqual(payload["behavioral_evidence_boundary"]["evidence_level"], "task_guided_self_report")
+        self.assertFalse(payload["behavioral_evidence_boundary"]["observed_action_available"])
+        self.assertGreaterEqual(len(payload["key_insights"]), 3)
+        self.assertTrue(payload["synthetic_only_disclaimer"])
+
+    def test_prototype_synthesis_preserves_observed_action_boundary_when_available(self):
+        class StubClient:
+            config = OpenAIProviderConfig(
+                api_key="fixture",
+                model="agnes-2.0-flash",
+                provider_name="agnes",
+                transport="node_https",
+            )
+            last_transport_metadata = {}
+
+            def create_json_response(self, **kwargs):
+                return {
+                    "behavioral_evidence_boundary": {
+                        "evidence_level": "observed_action_trace",
+                        "observed_action_available": True,
+                        "what_was_observed": ["Recorded backtracking before the permission boundary."],
+                        "missing_observed_signals": ["No dwell-time telemetry was captured."],
+                    },
+                    "key_insights": ["The participant backed out once the permission scope widened."],
+                }
+
+        payload, _ = OpenAIFacilitatorProvider(StubClient()).synthesize_prototype(
+            system_prompt="skill",
+            user_prompt="report",
+        )
+
+        self.assertEqual(payload["behavioral_evidence_boundary"]["evidence_level"], "observed_action_trace")
+        self.assertTrue(payload["behavioral_evidence_boundary"]["observed_action_available"])
+        self.assertNotIn("No observed action trace was collected.", payload["evidence_gaps"])
+        self.assertIn("No dwell-time telemetry was captured.", payload["behavioral_evidence_boundary"]["missing_observed_signals"])
+        self.assertTrue(
+            any(
+                "application-supplied trace" in item
+                for item in payload["key_insights"]
+            )
+        )
+
     def test_quality_evaluation_normalizes_partial_agnes_payload(self):
         class StubClient:
             config = OpenAIProviderConfig(
@@ -2578,6 +3500,19 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "--interview-mode", "adoption_barrier_validation",
         ])
         self.assertEqual(parsed.interview_mode, "adoption_barrier_validation")
+
+        parsed = parser.parse_args([
+            "run-facilitated-interview",
+            "--persona-id", "su_0001",
+            "--research-goal", "Validate a prototype",
+            "--interview-mode", "prototype_validation",
+            "--stimulus-type", "image",
+            "--stimulus-artifact", "prototype-review-screen-v1.png",
+            "--prototype-task", "Review one recommendation and decide whether to act on it.",
+        ])
+        self.assertEqual(parsed.interview_mode, "prototype_validation")
+        self.assertEqual(parsed.stimulus_type, "image")
+        self.assertEqual(parsed.prototype_task, "Review one recommendation and decide whether to act on it.")
 
         parsed = parser.parse_args([
             "run-facilitated-interview",

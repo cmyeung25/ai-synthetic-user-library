@@ -5,6 +5,7 @@ import os
 import subprocess
 import base64
 import http.client
+import mimetypes
 import re
 import shutil
 import tempfile
@@ -626,6 +627,55 @@ def extract_chat_completion_text(payload: dict[str, Any]) -> str:
     return ""
 
 
+def image_file_to_data_url(path: str | Path) -> str:
+    file_path = Path(path)
+    try:
+        raw = file_path.read_bytes()
+    except OSError as exc:
+        raise OpenAIProviderError(f"Image stimulus file could not be read: {file_path}") from exc
+    mime_type, _ = mimetypes.guess_type(str(file_path))
+    if not mime_type or not mime_type.startswith("image/"):
+        raise OpenAIProviderError(
+            f"Unsupported image stimulus file type for '{file_path}'. Use a standard image extension such as .png, .jpg, or .webp."
+        )
+    encoded = base64.b64encode(raw).decode("ascii")
+    return f"data:{mime_type};base64,{encoded}"
+
+
+def _input_items_are_text_only(input_items: list[dict[str, Any]]) -> bool:
+    for item in input_items:
+        if not isinstance(item, dict):
+            return False
+        content_items = item.get("content")
+        if not isinstance(content_items, list):
+            return False
+        for content_item in content_items:
+            if not isinstance(content_item, dict):
+                return False
+            if content_item.get("type") != "input_text":
+                return False
+            if not isinstance(content_item.get("text"), str):
+                return False
+    return True
+
+
+def _text_prompt_from_input_items(input_items: list[dict[str, Any]], role: str) -> str:
+    collected: list[str] = []
+    for item in input_items:
+        if not isinstance(item, dict) or item.get("role") != role:
+            continue
+        content_items = item.get("content")
+        if not isinstance(content_items, list):
+            continue
+        for content_item in content_items:
+            if not isinstance(content_item, dict):
+                continue
+            text = content_item.get("text")
+            if content_item.get("type") == "input_text" and isinstance(text, str) and text.strip():
+                collected.append(text.strip())
+    return "\n\n".join(collected).strip()
+
+
 def decode_codex_json_payload(payload_b64: str) -> dict[str, Any]:
     candidate = "".join(payload_b64.split()).strip()
     if not candidate:
@@ -780,11 +830,10 @@ class OpenAIResponsesClient:
             return self._create_chat_completion_via_powershell(body)
         return self._create_chat_completion_via_python(body)
 
-    def create_json_response(
+    def create_json_response_from_input_items(
         self,
         *,
-        system_prompt: str,
-        user_prompt: str,
+        input_items: list[dict[str, Any]],
         output_schema: dict[str, Any] | None = None,
         codex_session_id: str | None = None,
         persist_codex_session: bool = False,
@@ -792,46 +841,46 @@ class OpenAIResponsesClient:
     ) -> dict[str, Any]:
         self.last_transport_metadata = {}
         self._debug(
-            f"[llm] create_json_response transport={self.config.transport} model={self.config.model} "
+            f"[llm] create_json_response_from_input_items transport={self.config.transport} model={self.config.model} "
             f"reasoning={self.config.model_reasoning_effort} persist_session={persist_codex_session}"
         )
+        if self.config.transport in {"codex_cli", "codex_sdk_node"}:
+            if not _input_items_are_text_only(input_items):
+                raise OpenAIProviderError(
+                    "Multimodal inputs are not supported for codex transports. "
+                    "Use python_urllib, node_https, or powershell_webrequest with a direct API key for image stimulus review."
+                )
+            system_prompt = _text_prompt_from_input_items(input_items, "system")
+            user_prompt = _text_prompt_from_input_items(input_items, "user")
+            return self.create_json_response(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                output_schema=output_schema,
+                codex_session_id=codex_session_id,
+                persist_codex_session=persist_codex_session,
+                use_transport_output_schema=use_transport_output_schema,
+            )
+
         body = {
             "model": self.config.model,
-            "input": [
-                {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
-                {"role": "user", "content": [{"type": "input_text", "text": user_prompt}]},
-            ],
+            "input": input_items,
         }
         body = self._maybe_attach_agnes_chat_template_kwargs(body)
-        if self.config.transport == "codex_cli":
-            return self._create_response_via_codex_cli(
-                system_prompt=system_prompt,
-                user_prompt=user_prompt,
-                output_schema=output_schema or {"type": "object"},
-                codex_session_id=codex_session_id,
-                persist_session=persist_codex_session,
-            )
-        if self.config.transport == "codex_sdk_node":
-            return self._create_response_via_codex_sdk(
-                system_prompt=system_prompt,
-                user_prompt=user_prompt,
-                output_schema=(output_schema or {"type": "object"}) if use_transport_output_schema else None,
-            )
         try:
             payload = self._run_with_agnes_transport_retry(
                 operation="responses",
                 request=lambda: self._create_responses_payload_via_transport(body),
             )
         except OpenAIProviderError as exc:
-            if not self._should_use_chat_completions_fallback(exc):
+            if not _input_items_are_text_only(input_items) or not self._should_use_chat_completions_fallback(exc):
                 raise
             self._debug(
                 f"[llm] responses_api_failed provider={self.config.provider_name} transport={self.config.transport} "
                 f"error={exc}; retrying via chat_completions"
             )
             payload = self._create_response_via_chat_completions(
-                system_prompt=system_prompt,
-                user_prompt=user_prompt,
+                system_prompt=_text_prompt_from_input_items(input_items, "system"),
+                user_prompt=_text_prompt_from_input_items(input_items, "user"),
             )
         usage = _find_usage_in_jsonish(payload)
         if usage is not None:
@@ -842,6 +891,51 @@ class OpenAIResponsesClient:
         if not output_text and self.last_transport_metadata.get("fallback_transport") == "chat_completions":
             output_text = extract_chat_completion_text(payload)
         return extract_json_object(output_text)
+
+    def create_json_response(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        output_schema: dict[str, Any] | None = None,
+        codex_session_id: str | None = None,
+        persist_codex_session: bool = False,
+        use_transport_output_schema: bool = True,
+    ) -> dict[str, Any]:
+        if self.config.transport == "codex_cli":
+            self.last_transport_metadata = {}
+            self._debug(
+                f"[llm] create_json_response transport={self.config.transport} model={self.config.model} "
+                f"reasoning={self.config.model_reasoning_effort} persist_session={persist_codex_session}"
+            )
+            return self._create_response_via_codex_cli(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                output_schema=output_schema or {"type": "object"},
+                codex_session_id=codex_session_id,
+                persist_session=persist_codex_session,
+            )
+        if self.config.transport == "codex_sdk_node":
+            self.last_transport_metadata = {}
+            self._debug(
+                f"[llm] create_json_response transport={self.config.transport} model={self.config.model} "
+                f"reasoning={self.config.model_reasoning_effort} persist_session={persist_codex_session}"
+            )
+            return self._create_response_via_codex_sdk(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                output_schema=(output_schema or {"type": "object"}) if use_transport_output_schema else None,
+            )
+        return self.create_json_response_from_input_items(
+            input_items=[
+                {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
+                {"role": "user", "content": [{"type": "input_text", "text": user_prompt}]},
+            ],
+            output_schema=output_schema,
+            codex_session_id=codex_session_id,
+            persist_codex_session=persist_codex_session,
+            use_transport_output_schema=use_transport_output_schema,
+        )
 
     def create_text_response(
         self,

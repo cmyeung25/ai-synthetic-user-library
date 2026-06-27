@@ -256,6 +256,38 @@ ai-validation-swarm run-facilitated-interview `
   --backend agnes
 ```
 
+Use `prototype_validation` when you have a concrete prototype stimulus and one task, and you need a disciplined prototype-validation contract that separates task-guided self-report from real observed action:
+
+```powershell
+ai-validation-swarm run-facilitated-interview `
+  --persona-id su_0002 `
+  --interview-mode prototype_validation `
+  --research-goal "Validate whether the prototype supports a concrete review task" `
+  --product-context "A workspace that summarizes evidence and links back to source material" `
+  --stimulus-type image `
+  --stimulus-artifact .\prototype-review-screen-v1.png `
+  --prototype-task "Review one recommendation and decide whether to act on it" `
+  --backend agnes
+```
+
+When `--stimulus-type image` is used, `--stimulus-artifact` must point to a real local image file. The runtime snapshots that file into the interview artifacts and generates a structured static-image review before the interview starts.
+
+For `--stimulus-type flow`, point `--stimulus-artifact` at either:
+
+- a directory of ordered screen images such as `01_start.png`, `02_review.png`, `03_confirm.png`; or
+- a JSON manifest with a `screens` list that names each screen path in order.
+
+The runtime snapshots the flow assets and generates a structured multi-screen flow review before the interview starts.
+
+For `--stimulus-type clickable`, `--stimulus-artifact` can point to either:
+
+- a JSON clickable prototype manifest with `screens` plus `task_script`, which the runtime executes through the native stimulus executor before the interview starts; or
+- a JSON observed action trace artifact supplied by the prototype or application layer.
+
+For `--stimulus-type live_app`, `--stimulus-artifact` currently accepts a JSON observed action trace artifact supplied by the application layer.
+
+In both cases, the runtime snapshots the JSON, writes `observed_action_trace.json`, and upgrades the prototype evidence boundary to `observed_action_trace` when real actions are present.
+
 ```powershell
 ai-validation-swarm run-facilitated-interview `
   --persona-id su_0002 `
@@ -265,7 +297,31 @@ ai-validation-swarm run-facilitated-interview `
   --backend agnes
 ```
 
-The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, and `persona_driver_trace.md` so the team can inspect both the observed answers and the likely values, memories, or constraints sitting behind them. Current outputs should still be treated as synthetic evidence, not human market proof, while the platform is being calibrated toward replacement-grade reliability.
+```powershell
+ai-validation-swarm run-facilitated-interview `
+  --persona-id su_0002 `
+  --interview-mode prototype_validation `
+  --research-goal "Validate whether the prototype flow supports a concrete review task" `
+  --product-context "A workflow that summarizes evidence, lets the user inspect it, and then decide whether to act" `
+  --stimulus-type flow `
+  --stimulus-artifact .\prototype-flow\ `
+  --prototype-task "Review one recommendation and decide whether to act on it" `
+  --backend agnes
+```
+
+```powershell
+ai-validation-swarm run-facilitated-interview `
+  --persona-id su_0002 `
+  --interview-mode prototype_validation `
+  --research-goal "Validate whether the clickable prototype supports a concrete review task" `
+  --product-context "A clickable workspace that summarizes evidence, shows source detail, and asks for permission before action" `
+  --stimulus-type clickable `
+  --stimulus-artifact .\prototype-clickable-manifest.json `
+  --prototype-task "Review one recommendation and decide whether to act on it" `
+  --backend agnes
+```
+
+The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. The current `prototype_validation` mode now supports static image review, multi-screen flow review, scripted clickable task execution, and application-supplied observed action traces with an explicit evidence boundary. Live-app execution is still a later expansion. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, `persona_driver_trace.md`, and, for prototype runs, `stimulus_analysis.json` and/or `observed_action_trace.json` plus snapshotted copies of the reviewed assets. Current outputs should still be treated as synthetic evidence, not human market proof, while the platform is being calibrated toward replacement-grade reliability.
 
 ### Observer-controlled interview
 
@@ -291,6 +347,23 @@ Observer sessions add `observer_events.json`, `quality_evaluation.json`, `qualit
 - `configs/markets/*.json`
 - `schemas/market-distribution.schema.json`
 - `schemas/tenant-workspace.schema.json`
+
+## Local SaaS runtime
+
+The repository now includes a local authenticated SaaS-style runtime on top of the same domain pipeline:
+
+- `bootstrap-saas-workspace`
+- `serve-saas-api`
+- `run-saas-worker`
+- `purge-saas-expired-artifacts`
+
+The local runtime stores workspace, billing, API token, and validation-job lifecycle state in `saas_runtime/saas_runtime.sqlite3`, keeps run artifacts under `saas_runtime/workspaces/{workspace_id}/runs/`, and exposes:
+
+- `POST /api/v1/validation-jobs`
+- `GET /api/v1/validation-jobs`
+- `GET /api/v1/validation-jobs/{job_id}`
+
+This surface is still local-first and engineering-oriented, but it means authenticated API ingress, queued job execution, workspace isolation, billing gates, plan limits, and retention purge now exist as real repository behavior rather than design-only contracts.
 
 ## Bundled Python runtime
 

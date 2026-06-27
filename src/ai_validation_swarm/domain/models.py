@@ -156,6 +156,42 @@ class PanelSpec:
 
 
 @dataclass(slots=True)
+class ObservedActionTraceAction:
+    step: int
+    action: str
+    target: str
+    screen: str = ""
+    result: str = "unspecified_result"
+    note: str = ""
+    timestamp_ms: int | None = None
+    duration_ms: int | None = None
+    raw_metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class ObservedActionTrace:
+    trace_version: str
+    trace_label: str
+    task_outcome: str
+    summary: str
+    actions: list[ObservedActionTraceAction]
+    observed_summary: list[str] = field(default_factory=list)
+    missing_signals: list[str] = field(default_factory=list)
+    first_error: str = ""
+    drop_off_point: str = ""
+    completion_notes: str = ""
+    artifact_sha256: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = asdict(self)
+        payload["actions"] = [action.to_dict() for action in self.actions]
+        return payload
+
+
+@dataclass(slots=True)
 class PersonaResponse:
     synthetic_user_id: str
     panel_role: str

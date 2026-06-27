@@ -19,6 +19,7 @@ from ai_validation_swarm.reporting.archive import update_run_archive_index
 from ai_validation_swarm.reporting.artifacts import build_archive_index_entry, build_report_payload
 from ai_validation_swarm.reporting.markdown import render_failure_report, render_report
 from ai_validation_swarm.reporting.summary import build_summary
+from ai_validation_swarm.saas.run_contract import build_validation_run_contract, write_shared_run_contract
 from ai_validation_swarm.sampling.engine import sample_personas
 from ai_validation_swarm.storage.files import ensure_dir, load_personas, write_json
 
@@ -519,6 +520,26 @@ def run_validation(
     )
     run_payload = run_manifest.to_dict()
     write_json(run_dir / "run.json", run_payload)
+    write_shared_run_contract(
+        run_dir / "run_contract.json",
+        build_validation_run_contract(
+            run_id=run_id,
+            brief_id=brief.brief_id,
+            panel_spec=panel_spec,
+            created_at=started_at,
+            started_at=started_at,
+            status=run_status,
+            output_path=run_dir,
+            artifact_paths=artifact_paths + ["run_contract.json"],
+            selected_persona_ids=[persona.profile.synthetic_user_id for persona in selected_personas],
+            successful_response_count=successful_response_count,
+            failed_response_count=failed_response_count,
+            error_count=len(error_records),
+            provider_name=provider.__class__.__name__,
+            model_name=provider.model_version,
+            finished_at=run_payload["finished_at"],
+        ),
+    )
     update_run_archive_index(
         run_root / "index.json",
         build_archive_index_entry(

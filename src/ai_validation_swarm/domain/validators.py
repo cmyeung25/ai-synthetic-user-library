@@ -5,7 +5,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from ai_validation_swarm.domain.models import FounderBrief, PanelSpec
+from ai_validation_swarm.domain.models import (
+    FounderBrief,
+    ObservedActionTrace,
+    ObservedActionTraceAction,
+    PanelSpec,
+)
 
 FOUNDER_BRIEF_REQUIRED_FIELDS = {
     "brief_id",
@@ -79,6 +84,46 @@ def _optional_string_list(payload: dict[str, Any], key: str, issues: list[str]) 
             issues.append(f"'{key}[{index}]' must not be empty.")
             continue
         normalized.append(stripped)
+    return normalized
+
+
+def _optional_non_negative_int(
+    payload: dict[str, Any],
+    key: str,
+    issues: list[str],
+    *,
+    aliases: tuple[str, ...] = (),
+) -> int | None:
+    candidates = (key,) + aliases
+    raw = None
+    found = False
+    for candidate in candidates:
+        if candidate in payload:
+            raw = payload[candidate]
+            found = True
+            break
+    if not found or raw is None or raw == "":
+        return None
+    if not isinstance(raw, int) or isinstance(raw, bool):
+        issues.append(f"'{key}' must be a non-negative integer when provided.")
+        return None
+    if raw < 0:
+        issues.append(f"'{key}' must be a non-negative integer when provided.")
+        return None
+    return raw
+
+
+def _normalize_string_list_from_raw(raw: Any) -> list[str]:
+    if isinstance(raw, str):
+        stripped = raw.strip()
+        return [stripped] if stripped else []
+    if not isinstance(raw, list):
+        return []
+    normalized: list[str] = []
+    for item in raw:
+        stripped = str(item).strip()
+        if stripped:
+            normalized.append(stripped)
     return normalized
 
 
@@ -176,4 +221,87 @@ def validate_panel_spec(panel_spec: PanelSpec, *, allowed_panel_types: set[str] 
         random_seed=panel_spec.random_seed,
         filters=panel_spec.filters,
         preset_name=panel_spec.preset_name.strip() if isinstance(panel_spec.preset_name, str) else "",
+    )
+
+
+def validate_observed_action_trace_payload(payload: Any, *, default_label: str = "observed-action-trace") -> ObservedActionTrace:
+    payload = _expect_dict(payload, "Observed action trace")
+    issues: list[str] = []
+
+    raw_actions = payload.get("actions", payload.get("events", []))
+    if not isinstance(raw_actions, list):
+        raise InputValidationError(["Observed action trace requires an 'actions' array."])
+    if not raw_actions:
+        raise InputValidationError(["Observed action trace requires at least one action."])
+
+    actions: list[ObservedActionTraceAction] = []
+    for index, item in enumerate(raw_actions, start=1):
+        if not isinstance(item, dict):
+            issues.append(f"'actions[{index - 1}]' must be an object.")
+            continue
+        step = item.get("step", index)
+        if not isinstance(step, int) or isinstance(step, bool) or step <= 0:
+            issues.append(f"'actions[{index - 1}].step' must be a positive integer when provided.")
+            step = index
+        action = str(item.get("action", item.get("type", ""))).strip() or "unspecified_action"
+        target = str(item.get("target", item.get("element", ""))).strip() or "unspecified_target"
+        raw_metadata = {
+            key: value for key, value in item.items()
+            if key not in {
+                "step",
+                "action",
+                "type",
+                "target",
+                "element",
+                "screen",
+                "view",
+                "result",
+                "outcome",
+                "note",
+                "detail",
+                "timestamp_ms",
+                "ts_ms",
+                "duration_ms",
+                "elapsed_ms",
+            }
+        }
+        actions.append(
+            ObservedActionTraceAction(
+                step=step,
+                action=action,
+                target=target,
+                screen=str(item.get("screen", item.get("view", ""))).strip(),
+                result=str(item.get("result", item.get("outcome", ""))).strip() or "unspecified_result",
+                note=str(item.get("note", item.get("detail", ""))).strip(),
+                timestamp_ms=_optional_non_negative_int(item, "timestamp_ms", issues, aliases=("ts_ms",)),
+                duration_ms=_optional_non_negative_int(item, "duration_ms", issues, aliases=("elapsed_ms",)),
+                raw_metadata=raw_metadata,
+            )
+        )
+
+    if not actions:
+        issues.append("Observed action trace requires at least one valid action object.")
+
+    observed_summary = _normalize_string_list_from_raw(payload.get("observed_summary", payload.get("what_was_observed", [])))
+    if not observed_summary and actions:
+        observed_summary = [
+            f"Recorded {len(actions)} action(s) against the prototype or interface.",
+            f"First action: {actions[0].action} on {actions[0].target}.",
+        ]
+    missing_signals = _normalize_string_list_from_raw(payload.get("missing_signals", payload.get("missing_observed_signals", [])))
+
+    if issues:
+        raise InputValidationError(issues)
+
+    return ObservedActionTrace(
+        trace_version=str(payload.get("trace_version", "observed-action-trace/v1")).strip() or "observed-action-trace/v1",
+        trace_label=str(payload.get("trace_label", default_label)).strip() or default_label,
+        task_outcome=str(payload.get("task_outcome", payload.get("outcome", "unknown"))).strip() or "unknown",
+        summary=str(payload.get("summary", "")).strip(),
+        actions=actions,
+        observed_summary=observed_summary,
+        missing_signals=missing_signals,
+        first_error=str(payload.get("first_error", "")).strip(),
+        drop_off_point=str(payload.get("drop_off_point", "")).strip(),
+        completion_notes=str(payload.get("completion_notes", "")).strip(),
     )

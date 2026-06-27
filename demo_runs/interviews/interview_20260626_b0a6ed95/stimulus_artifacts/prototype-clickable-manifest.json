@@ -1,0 +1,70 @@
+{
+  "prototype_label": "Evidence Review Clickable Prototype",
+  "trace_label": "clickable-prototype-task-loop",
+  "start_screen": "review_workspace",
+  "screens": [
+    {
+      "id": "review_workspace",
+      "label": "Review Workspace",
+      "actions": [
+        {
+          "id": "open_summary",
+          "action": "open_summary",
+          "target": "summary panel",
+          "next_screen": "review_workspace",
+          "result": "success"
+        },
+        {
+          "id": "open_evidence",
+          "action": "open_evidence",
+          "target": "evidence drawer",
+          "next_screen": "evidence_drawer",
+          "result": "success"
+        }
+      ]
+    },
+    {
+      "id": "evidence_drawer",
+      "label": "Evidence Drawer",
+      "actions": [
+        {
+          "id": "request_permission",
+          "action": "request_permission",
+          "target": "permission request modal",
+          "next_screen": "permission_modal",
+          "result": "stopped",
+          "note": "Permission scope felt too broad before value was proven.",
+          "terminal": true
+        }
+      ]
+    },
+    {
+      "id": "permission_modal",
+      "label": "Permission Modal",
+      "actions": [
+        {
+          "id": "close_modal",
+          "action": "close_modal",
+          "target": "permission request modal",
+          "next_screen": "review_workspace",
+          "result": "backtrack"
+        }
+      ]
+    }
+  ],
+  "task_script": [
+    "open_summary",
+    {
+      "action_id": "open_evidence",
+      "note": "Inspect supporting evidence before acting."
+    },
+    {
+      "action_id": "request_permission",
+      "expect_result": "stopped"
+    }
+  ],
+  "missing_signals": [
+    "No dwell-time telemetry was captured.",
+    "No cursor path was captured."
+  ]
+}

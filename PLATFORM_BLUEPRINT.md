@@ -232,12 +232,13 @@ Primary output:
 
 - concept evaluation workflows
 - hypothesis-oriented interview discipline
+- prototype-validation mode contract with static image review, flow review, and browser-independent clickable task execution, but without live-interface execution yet
 - synthetic panel reporting
 
 ### What Is Not Yet Proven
 
 - full discovery-stage coverage
-- prototype behavior validation
+- live-interface prototype behavior validation beyond scripted clickable manifests
 - action-grounded adoption prediction
 
 ## 8. Platform Sequencing Principle
@@ -283,13 +284,11 @@ Build order should follow:
 
 The fastest path toward a stronger platform is:
 
-1. define the formal evidence contract for `prototype_validation`
+1. extend the implemented clickable executor boundary from scripted manifests to browser-driven prototype execution
 
-2. implement `image_stimulus_review` before attempting live interface simulation
+2. add a normalized executor adapter before driver-specific browser or app automation expansion
 
-3. add flow-based stimulus review before attempting full interactive simulation
-
-4. add observed behavior outputs only after the stimulus layer is stable
+3. add live app execution only after clickable prototype behavior is proven
 
 This keeps the platform aligned with its real bottleneck:
 

@@ -10,6 +10,7 @@ if str(SRC) not in sys.path:
 from ai_validation_swarm.domain.models import PanelSpec
 from ai_validation_swarm.domain.validators import (
     InputValidationError,
+    validate_observed_action_trace_payload,
     validate_founder_brief_payload,
     validate_panel_spec,
 )
@@ -64,6 +65,44 @@ class InputValidationTest(unittest.TestCase):
         self.assertIn("'sample_size' must be greater than 0", message)
         self.assertIn("'random_seed' must be 0 or greater", message)
         self.assertIn("Sampling filter 'location_type[1]' must be a non-empty string", message)
+
+    def test_validate_observed_action_trace_payload_normalizes_actions(self) -> None:
+        trace = validate_observed_action_trace_payload(
+            {
+                "trace_label": "clickable-review-run",
+                "task_outcome": "partial_success",
+                "actions": [
+                    {
+                        "step": 3,
+                        "type": "open_evidence",
+                        "element": "evidence drawer",
+                        "view": "review workspace",
+                        "outcome": "success",
+                        "detail": "Opened the supporting evidence first.",
+                        "timestamp_ms": 1200,
+                        "elapsed_ms": 450,
+                        "pointer": "primary",
+                    }
+                ],
+                "missing_observed_signals": ["No cursor heatmap was captured."],
+            }
+        )
+
+        self.assertEqual(trace.trace_label, "clickable-review-run")
+        self.assertEqual(trace.actions[0].action, "open_evidence")
+        self.assertEqual(trace.actions[0].target, "evidence drawer")
+        self.assertEqual(trace.actions[0].screen, "review workspace")
+        self.assertEqual(trace.actions[0].result, "success")
+        self.assertEqual(trace.actions[0].timestamp_ms, 1200)
+        self.assertEqual(trace.actions[0].duration_ms, 450)
+        self.assertEqual(trace.actions[0].raw_metadata["pointer"], "primary")
+        self.assertEqual(trace.missing_signals, ["No cursor heatmap was captured."])
+
+    def test_validate_observed_action_trace_payload_rejects_invalid_action_array(self) -> None:
+        with self.assertRaises(InputValidationError) as context:
+            validate_observed_action_trace_payload({"actions": ["not-an-object"]})
+
+        self.assertIn("'actions[0]' must be an object.", str(context.exception))
 
 
 if __name__ == "__main__":

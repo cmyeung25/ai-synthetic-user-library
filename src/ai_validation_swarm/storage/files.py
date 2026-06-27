@@ -5,10 +5,11 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from ai_validation_swarm.domain.models import PersonaSeed, PersonaSkill, SyntheticUser
+from ai_validation_swarm.domain.models import PersonaSeed, PersonaSkill, SyntheticUser, utc_now_iso
 from ai_validation_swarm.personas.schema_v5_1 import LEGACY_V5_SCHEMA_VERSION, upgrade_profile_payload_to_v5_1
 from ai_validation_swarm.personas.seed_coherence import occupation_title_for_band
 from ai_validation_swarm.personas.validator import ensure_valid_persona_artifact
+from ai_validation_swarm.saas.metadata_store import persist_persona_metadata
 
 
 def ensure_dir(path: Path) -> None:
@@ -27,6 +28,45 @@ def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _read_optional_json(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    payload = read_json(path)
+    return payload if isinstance(payload, dict) else None
+
+
+def index_saved_persona_folder(base_dir: Path, folder: Path, *, active: bool = True) -> Path:
+    persona = load_persona(folder)
+    now = utc_now_iso()
+    persist_persona_metadata(
+        index_root=base_dir,
+        persona=persona,
+        artifact_root=folder,
+        profile_json_path=folder / "profile.json",
+        audit_json_path=folder / "audit.json",
+        narrative_path=folder / "persona.md",
+        created_at=now,
+        updated_at=now,
+        active=active,
+        duplicate_report_payload=_read_optional_json(folder / "duplicate_report.json"),
+        quality_report_payload=_read_optional_json(folder / "quality_report.json"),
+    )
+    return folder
+
+
+def rebuild_persona_metadata_index(base_dir: Path) -> int:
+    if not base_dir.exists():
+        return 0
+    indexed = 0
+    for folder in sorted(base_dir.iterdir()):
+        if not folder.is_dir() or folder.name.startswith((".", "_")):
+            continue
+        version_folder = resolve_persona_version_folder(folder)
+        index_saved_persona_folder(base_dir, version_folder)
+        indexed += 1
+    return indexed
+
+
 def save_persona(persona: PersonaSkill, base_dir: Path) -> Path:
     ensure_valid_persona_artifact(persona)
     folder = base_dir / persona.profile.synthetic_user_id
@@ -34,6 +74,7 @@ def save_persona(persona: PersonaSkill, base_dir: Path) -> Path:
     write_json(folder / "profile.json", persona.profile.to_dict())
     write_json(folder / "audit.json", persona.to_audit_payload())
     (folder / "persona.md").write_text(persona.narrative, encoding="utf-8")
+    index_saved_persona_folder(base_dir, folder)
     return folder
 
 

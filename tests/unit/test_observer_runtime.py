@@ -1,6 +1,10 @@
 import tempfile
 import unittest
+import base64
+import json
+import sqlite3
 from pathlib import Path
+from contextlib import closing
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,6 +23,141 @@ from ai_validation_swarm.facilitator.providers import (
 from ai_validation_swarm.observer.runtime import ObserverControlledInterviewRuntime
 from ai_validation_swarm.personas.generator import generate_personas
 from ai_validation_swarm.storage.files import read_json, save_persona
+
+
+_PNG_1X1 = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO6p8s8AAAAASUVORK5CYII="
+)
+
+
+def _write_png(path: Path) -> Path:
+    path.write_bytes(_PNG_1X1)
+    return path
+
+
+def _write_flow_bundle(root: Path) -> Path:
+    bundle = root / "prototype-flow"
+    bundle.mkdir(parents=True, exist_ok=True)
+    _write_png(bundle / "01_start.png")
+    _write_png(bundle / "02_review.png")
+    _write_png(bundle / "03_confirm.png")
+    return bundle
+
+
+def _write_observed_action_trace(path: Path) -> Path:
+    path.write_text(
+        json.dumps(
+            {
+                "trace_version": "observed-action-trace/v1",
+                "trace_label": "observer-prototype-replay",
+                "task_outcome": "partial_success",
+                "summary": "The participant reviewed the recommendation and then backed out at the permission checkpoint.",
+                "first_error": "The permission request expanded too early.",
+                "drop_off_point": "permission checkpoint",
+                "completion_notes": "The final action was not completed.",
+                "missing_signals": ["No pause timing was captured."],
+                "actions": [
+                    {
+                        "step": 1,
+                        "action": "scan_summary",
+                        "target": "summary card",
+                        "screen": "workspace",
+                        "result": "success",
+                    },
+                    {
+                        "step": 2,
+                        "action": "open_evidence",
+                        "target": "evidence drawer",
+                        "screen": "workspace",
+                        "result": "success",
+                    },
+                    {
+                        "step": 3,
+                        "action": "close_modal",
+                        "target": "permission checkpoint",
+                        "screen": "permission modal",
+                        "result": "stopped",
+                    },
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_clickable_prototype_manifest(path: Path) -> Path:
+    path.write_text(
+        json.dumps(
+            {
+                "prototype_label": "Observer Clickable Prototype",
+                "trace_label": "observer-clickable-task-loop",
+                "start_screen": "review_workspace",
+                "screens": [
+                    {
+                        "id": "review_workspace",
+                        "label": "Review Workspace",
+                        "actions": [
+                            {
+                                "id": "open_summary",
+                                "action": "open_summary",
+                                "target": "summary card",
+                                "next_screen": "review_workspace",
+                                "result": "success",
+                            },
+                            {
+                                "id": "open_evidence",
+                                "action": "open_evidence",
+                                "target": "evidence drawer",
+                                "next_screen": "evidence_drawer",
+                                "result": "success",
+                            },
+                        ],
+                    },
+                    {
+                        "id": "evidence_drawer",
+                        "label": "Evidence Drawer",
+                        "actions": [
+                            {
+                                "id": "request_permission",
+                                "action": "request_permission",
+                                "target": "permission checkpoint",
+                                "next_screen": "permission_checkpoint",
+                                "result": "stopped",
+                                "note": "Permission request expanded too early.",
+                                "terminal": True,
+                            }
+                        ],
+                    },
+                    {
+                        "id": "permission_checkpoint",
+                        "label": "Permission Checkpoint",
+                        "actions": [
+                            {
+                                "id": "close_modal",
+                                "action": "close_modal",
+                                "target": "permission checkpoint",
+                                "next_screen": "review_workspace",
+                                "result": "backtrack",
+                            }
+                        ],
+                    },
+                ],
+                "task_script": [
+                    "open_summary",
+                    "open_evidence",
+                    {"action_id": "request_permission", "expect_result": "stopped"},
+                ],
+                "missing_signals": ["No pause timing was captured."],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
 
 
 def decision(question, phase, strategy, session_id="fac-thread", *, should_end=False):
@@ -219,6 +358,38 @@ class ObserverFacilitatorFixture:
     def synthesize_concept(self, **kwargs):
         self.calls.append(kwargs)
         return synthesis_payload(), "fac-thread"
+
+    def synthesize_prototype(self, **kwargs):
+        self.calls.append(kwargs)
+        return synthesis_payload(), "fac-thread"
+
+    def review_image_stimulus(self, **kwargs):
+        self.calls.append(kwargs)
+        return ({
+            "summary": "The static screen looks like a review workspace with a summary and evidence links.",
+            "visible_elements": ["summary section", "evidence links", "recommendation area"],
+            "primary_action_candidates": ["read the summary", "inspect the evidence"],
+            "interpretation_risks": ["It may be unclear whether the output is advisory or final."],
+            "trust_risks": ["Trust depends on visible source lineage."],
+            "missing_context": ["The import or setup requirement is not visible."],
+            "task_relevance": "The screen appears relevant to reviewing one recommendation before action.",
+            "evidence_boundary": "Static image review only. No click or navigation trace is available.",
+        }, "observer-stimulus-thread")
+
+    def review_flow_stimulus(self, **kwargs):
+        self.calls.append(kwargs)
+        return ({
+            "summary": "The flow appears to move from summary to evidence inspection to an action checkpoint.",
+            "screen_sequence": ["screen 1 summary", "screen 2 evidence review", "screen 3 action checkpoint"],
+            "primary_action_candidates": ["read the summary", "inspect the evidence", "decide whether to act"],
+            "transition_confusions": ["The shift into the final checkpoint may feel abrupt."],
+            "setup_burdens": ["The preparation step is still off-screen."],
+            "likely_drop_off_points": ["Confidence may break before the final action if provenance remains unclear."],
+            "trust_risks": ["Trust depends on visible source lineage across the flow."],
+            "missing_context": ["The flow does not show where the underlying evidence came from."],
+            "task_relevance": "The flow appears relevant to reviewing one recommendation before action.",
+            "evidence_boundary": "Multi-screen flow review only. No click, navigation timing, or completion trace is available.",
+        }, "observer-flow-thread")
 
 
 class ObserverPersonaFixture:
@@ -713,6 +884,154 @@ class ObserverRuntimeTest(unittest.TestCase):
             self.assertIn("INTERVIEW MODE:\nadoption_barrier_validation", facilitator.calls[0]["user_prompt"])
             quality_context = runtime._quality_user_prompt(session)
             self.assertIn("INTERVIEW MODE:\nadoption_barrier_validation", quality_context)
+
+    def test_observed_prototype_validation_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            artifact = _write_png(root / "prototype-review-screen-v1.png")
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the prototype supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A workspace that summarizes evidence and links back to the source material.",
+                stimulus_type="image",
+                stimulus_artifact=str(artifact),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+            )
+            self.assertEqual(session.interview_mode, "prototype_validation")
+            self.assertEqual(session.stimulus_type, "image")
+            next_turn_call = next(call for call in facilitator.calls if "user_prompt" in call and "INTERVIEW MODE:\nprototype_validation" in call["user_prompt"])
+            self.assertIn("INTERVIEW MODE:\nprototype_validation", next_turn_call["user_prompt"])
+            self.assertIn("STIMULUS TYPE:\nimage", next_turn_call["user_prompt"])
+            self.assertIn("PROTOTYPE TASK:\nReview one recommendation and decide whether to act on it.", next_turn_call["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("INTERVIEW MODE:\nprototype_validation", quality_context)
+            self.assertIn(f"STIMULUS ARTIFACT:\n{artifact}", quality_context)
+            self.assertTrue(session.stimulus_artifact_snapshot.endswith(".png"))
+            self.assertIn("summary", session.stimulus_analysis)
+            run_contract = read_json((root / "interviews" / session.interview_id) / "run_contract.json")
+            self.assertEqual(run_contract["request"]["run_kind"], "observer_controlled_interview")
+            self.assertEqual(run_contract["request"]["entrypoint"], "observe-facilitated-interview")
+            self.assertEqual(run_contract["request"]["prototype_task"], "Review one recommendation and decide whether to act on it.")
+            self.assertEqual(run_contract["result"]["status"], session.status)
+            metadata_db = root / "interviews" / "metadata.sqlite3"
+            self.assertTrue(metadata_db.exists())
+            with closing(sqlite3.connect(metadata_db)) as connection:
+                run_row = connection.execute(
+                    "SELECT run_kind, interview_mode, status FROM run_records WHERE run_id = ?",
+                    (session.interview_id,),
+                ).fetchone()
+            self.assertEqual(run_row, ("observer_controlled_interview", "prototype_validation", session.status))
+
+    def test_observed_flow_prototype_validation_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            flow_bundle = _write_flow_bundle(root)
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the prototype flow supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A workflow that summarizes evidence, lets the user inspect it, and then decide whether to act.",
+                stimulus_type="flow",
+                stimulus_artifact=str(flow_bundle),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+            )
+            self.assertEqual(session.interview_mode, "prototype_validation")
+            self.assertEqual(session.stimulus_type, "flow")
+            next_turn_call = next(call for call in facilitator.calls if "user_prompt" in call and "INTERVIEW MODE:\nprototype_validation" in call["user_prompt"])
+            self.assertIn("STIMULUS TYPE:\nflow", next_turn_call["user_prompt"])
+            self.assertIn("MULTI-SCREEN FLOW STIMULUS REVIEW", next_turn_call["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("STIMULUS TYPE:\nflow", quality_context)
+            self.assertTrue(session.stimulus_artifact_snapshot.endswith("flow_bundle"))
+            self.assertEqual(session.stimulus_analysis["analysis_type"], "flow")
+            self.assertEqual(session.stimulus_analysis["screen_count"], 3)
+
+    def test_observed_clickable_trace_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            trace_artifact = _write_observed_action_trace(root / "observer-clickable-trace.json")
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the clickable prototype supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A clickable workspace that summarizes evidence, shows source detail, and asks for permission before action.",
+                stimulus_type="clickable",
+                stimulus_artifact=str(trace_artifact),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+            )
+            self.assertEqual(session.interview_mode, "prototype_validation")
+            self.assertEqual(session.stimulus_type, "clickable")
+            self.assertTrue(session.stimulus_artifact_snapshot.endswith(".json"))
+            self.assertEqual(len(session.observed_action_trace["actions"]), 3)
+            next_turn_call = next(call for call in facilitator.calls if "user_prompt" in call and "INTERVIEW MODE:\nprototype_validation" in call["user_prompt"])
+            self.assertIn("OBSERVED ACTION TRACE", next_turn_call["user_prompt"])
+            self.assertIn("permission checkpoint", next_turn_call["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("OBSERVED ACTION TRACE", quality_context)
+            self.assertIn("STIMULUS TYPE:\nclickable", quality_context)
+
+    def test_observed_clickable_manifest_executes_task_loop_before_interview(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            manifest = _write_clickable_prototype_manifest(root / "observer-clickable-manifest.json")
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the clickable prototype supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A clickable workspace that summarizes evidence, shows source detail, and asks for permission before action.",
+                stimulus_type="clickable",
+                stimulus_artifact=str(manifest),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+            )
+            self.assertEqual(session.interview_mode, "prototype_validation")
+            self.assertEqual(session.stimulus_type, "clickable")
+            self.assertEqual(session.stimulus_analysis["analysis_type"], "clickable_manifest")
+            self.assertEqual(session.stimulus_analysis["task_step_count"], 3)
+            self.assertEqual(session.observed_action_trace["task_outcome"], "partial_success")
+            self.assertEqual(len(session.observed_action_trace["actions"]), 3)
+            next_turn_call = next(call for call in facilitator.calls if "user_prompt" in call and "INTERVIEW MODE:\nprototype_validation" in call["user_prompt"])
+            self.assertIn("CLICKABLE PROTOTYPE EXECUTION CONTEXT", next_turn_call["user_prompt"])
+            self.assertIn("permission checkpoint", next_turn_call["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("CLICKABLE PROTOTYPE EXECUTION CONTEXT", quality_context)
+            self.assertIn("OBSERVED ACTION TRACE", quality_context)
 
     def test_observed_decision_reconstruction_reaches_facilitator_and_quality_context(self):
         with tempfile.TemporaryDirectory() as tmp:

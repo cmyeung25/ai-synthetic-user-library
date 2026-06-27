@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import shutil
 import uuid
 from pathlib import Path
 from typing import Any, Callable
@@ -13,11 +15,18 @@ from ai_validation_swarm.conversation.runtime import (
     resolve_persona_folder,
 )
 from ai_validation_swarm.domain.models import utc_now_iso
+from ai_validation_swarm.domain.validators import InputValidationError, validate_observed_action_trace_payload
 from ai_validation_swarm.facilitator.concept_protocols import load_concept_protocol
 from ai_validation_swarm.facilitator.learning import build_approved_facilitator_learning_prompt_fragment
 from ai_validation_swarm.facilitator.models import FacilitatorDecision, InterviewExchange, InterviewSession
 from ai_validation_swarm.facilitator.optimism import attach_over_optimism_risks
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
+from ai_validation_swarm.facilitator.stimulus_executor import (
+    SCRIPTED_CLICKABLE_EXECUTOR_VERSION,
+    ScriptedClickablePrototypeExecutor,
+    StimulusExecutor,
+)
+from ai_validation_swarm.saas.run_contract import build_interview_run_contract, write_shared_run_contract
 from ai_validation_swarm.storage.files import ensure_dir, load_persona, write_json, write_markdown
 
 
@@ -25,6 +34,10 @@ FACILITATOR_PROMPT_VERSION = "facilitator-interview/v2"
 SYNTHESIS_PROMPT_VERSION = "facilitator-synthesis/v2"
 HYPOTHESIS_EVIDENCE_JUDGE_PROMPT_VERSION = "hypothesis-evidence-judge/v1"
 CONCEPT_SYNTHESIS_PROMPT_VERSION = "concept-synthesis/v1"
+PROTOTYPE_SYNTHESIS_PROMPT_VERSION = "prototype-synthesis/v1"
+IMAGE_STIMULUS_REVIEW_PROMPT_VERSION = "stimulus-image-review/v1"
+FLOW_STIMULUS_REVIEW_PROMPT_VERSION = "stimulus-flow-review/v1"
+OBSERVED_ACTION_TRACE_VERSION = "observed-action-trace/v1"
 
 CONCEPT_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "recent_behaviour",
@@ -57,6 +70,15 @@ ADOPTION_BARRIER_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "reversibility",
     "workflow_burden",
 )
+PROTOTYPE_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "stimulus_interpretation",
+    "first_action_expectation",
+    "task_path_expectation",
+    "setup_confusion",
+    "trust_boundary",
+    "breakdown_or_dropoff",
+    "task_completion_signal",
+)
 DECISION_RECONSTRUCTION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "recent_real_decision",
     "missing_evidence",
@@ -84,6 +106,13 @@ CONCEPT_INTRO_PREREQUISITES: tuple[str, ...] = (
     "defensible_vs_uncertain",
     "decision_change",
 )
+PROTOTYPE_STIMULUS_TYPES: tuple[str, ...] = (
+    "text_concept",
+    "image",
+    "flow",
+    "clickable",
+    "live_app",
+)
 
 
 def _read(path: Path) -> str:
@@ -106,6 +135,7 @@ class FacilitatedInterviewRuntime:
         progress_writer: Callable[[str], None] | None = None,
         approved_learning_rules_path: Path | None = None,
         max_approved_learning_rules: int = 5,
+        stimulus_executors: list[StimulusExecutor] | None = None,
     ) -> None:
         self.data_dir = data_dir
         self.session_dir = session_dir
@@ -115,6 +145,7 @@ class FacilitatedInterviewRuntime:
         self.progress_writer = progress_writer
         self.approved_learning_rules_path = approved_learning_rules_path
         self.max_approved_learning_rules = max_approved_learning_rules
+        self.stimulus_executors = list(stimulus_executors or [ScriptedClickablePrototypeExecutor()])
 
     def _progress(self, message: str) -> None:
         if self.progress_writer is not None:
@@ -130,6 +161,9 @@ class FacilitatedInterviewRuntime:
         product_context: str = "",
         concept_protocol: str = "",
         concept_label: str = "",
+        stimulus_type: str = "",
+        stimulus_artifact: str = "",
+        prototype_task: str = "",
         output_language: str = "Traditional Chinese",
         max_turns: int = 10,
         soft_turn_limit: int | None = None,
@@ -143,7 +177,14 @@ class FacilitatedInterviewRuntime:
             soft_turn_limit=soft_turn_limit,
             hard_turn_limit=hard_turn_limit,
         )
-        mode = self._validate_interview_brief(interview_mode, hypothesis)
+        mode, resolved_stimulus_type = self._validate_interview_brief(
+            interview_mode,
+            hypothesis,
+            product_context=product_context,
+            stimulus_type=stimulus_type,
+            stimulus_artifact=stimulus_artifact,
+            prototype_task=prototype_task,
+        )
         concept = load_concept_protocol(concept_protocol, label=concept_label) if mode == "concept_validation" else None
 
         persona_folder = resolve_persona_folder(self.data_dir, persona_id)
@@ -152,6 +193,14 @@ class FacilitatedInterviewRuntime:
         interview_id = f"interview_{utc_now_iso()[:10].replace('-', '')}_{uuid.uuid4().hex[:8]}"
         interview_folder = self.session_dir / interview_id
         ensure_dir(interview_folder)
+        prepared_stimulus = self._prepare_stimulus_context(
+            interview_folder=interview_folder,
+            interview_mode=mode,
+            product_context=product_context.strip(),
+            stimulus_type=resolved_stimulus_type,
+            stimulus_artifact=stimulus_artifact.strip(),
+            prototype_task=prototype_task.strip(),
+        )
 
         persona_runtime = ConversationRuntime(
             data_dir=self.data_dir,
@@ -172,10 +221,20 @@ class FacilitatedInterviewRuntime:
             persona_model=self.persona_provider.model_name,
             facilitator_prompt_version=FACILITATOR_PROMPT_VERSION,
             synthesis_prompt_version=(
-                CONCEPT_SYNTHESIS_PROMPT_VERSION if mode == "concept_validation" else SYNTHESIS_PROMPT_VERSION
+                CONCEPT_SYNTHESIS_PROMPT_VERSION if mode == "concept_validation"
+                else PROTOTYPE_SYNTHESIS_PROMPT_VERSION if mode == "prototype_validation"
+                else SYNTHESIS_PROMPT_VERSION
             ),
             concept_protocol_version=concept.identifier if concept else "",
             concept_label=concept.label if concept else "",
+            stimulus_type=resolved_stimulus_type,
+            stimulus_artifact=prepared_stimulus["stimulus_artifact"],
+            stimulus_artifact_snapshot=prepared_stimulus["stimulus_artifact_snapshot"],
+            stimulus_analysis_prompt_version=prepared_stimulus["stimulus_analysis_prompt_version"],
+            stimulus_analysis_provider_session_id=prepared_stimulus["stimulus_analysis_provider_session_id"],
+            stimulus_analysis=prepared_stimulus["stimulus_analysis"],
+            observed_action_trace=prepared_stimulus["observed_action_trace"],
+            prototype_task=prototype_task.strip(),
             hypothesis_evidence_judge_prompt_version=HYPOTHESIS_EVIDENCE_JUDGE_PROMPT_VERSION,
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
@@ -270,6 +329,12 @@ class FacilitatedInterviewRuntime:
                 user_prompt=self._synthesis_user_prompt(session),
                 provider_session_id=session.facilitator_provider_session_id,
             )
+        elif session.interview_mode == "prototype_validation":
+            synthesis, facilitator_session_id = self.facilitator_provider.synthesize_prototype(
+                system_prompt=self._synthesis_system_prompt("prototype_validation"),
+                user_prompt=self._synthesis_user_prompt(session),
+                provider_session_id=session.facilitator_provider_session_id,
+            )
         else:
             synthesis, facilitator_session_id = self.facilitator_provider.synthesize(
                 system_prompt=self._synthesis_system_prompt(session.interview_mode),
@@ -277,6 +342,7 @@ class FacilitatedInterviewRuntime:
                 provider_session_id=session.facilitator_provider_session_id,
             )
         self._enforce_synthesis_evidence_scope(session, synthesis)
+        self._enforce_prototype_evidence_boundary(session, synthesis)
         session.facilitator_provider_session_id = facilitator_session_id
         persona_runtime.close(persona_session)
         conversation_realism = self._persona_conversation_realism(interview_folder, session)
@@ -346,6 +412,8 @@ class FacilitatedInterviewRuntime:
     def _coverage_requirements(interview_mode: str) -> tuple[str, ...]:
         if interview_mode == "concept_validation":
             return CONCEPT_VALIDATION_COVERAGE_REQUIREMENTS
+        if interview_mode == "prototype_validation":
+            return PROTOTYPE_VALIDATION_COVERAGE_REQUIREMENTS
         if interview_mode == "adoption_barrier_validation":
             return ADOPTION_BARRIER_VALIDATION_COVERAGE_REQUIREMENTS
         if interview_mode == "decision_reconstruction":
@@ -814,6 +882,46 @@ class FacilitatedInterviewRuntime:
         )
 
     @staticmethod
+    def _prototype_validation_gap_instruction(gap: str) -> tuple[str, str]:
+        mapping = {
+            "stimulus_interpretation": (
+                "stimulus_interpretation",
+                "Ask what they think this prototype, screen, or flow is doing before testing preference or value.",
+            ),
+            "first_action_expectation": (
+                "first_action_expectation",
+                "Ask what they would try first or where they would click, tap, or look first for the task.",
+            ),
+            "task_path_expectation": (
+                "task_path_expectation",
+                "Ask how they expect the task to unfold step by step from the current stimulus.",
+            ),
+            "setup_confusion": (
+                "setup_confusion",
+                "Ask where setup, onboarding, permissions, or required input would likely confuse or slow them down.",
+            ),
+            "trust_boundary": (
+                "trust_boundary",
+                "Ask what would make the prototype feel safe or unsafe enough to rely on during the task.",
+            ),
+            "breakdown_or_dropoff": (
+                "breakdown_or_dropoff",
+                "Ask where they would hesitate, back out, or stop if this were a real task attempt.",
+            ),
+            "task_completion_signal": (
+                "task_completion_signal",
+                "Ask what result would tell them the task actually worked or was completed correctly.",
+            ),
+        }
+        return mapping.get(
+            gap,
+            (
+                "prototype_probe",
+                "Ask one short prototype-specific task question that fills the highest-value missing coverage gap.",
+            ),
+        )
+
+    @staticmethod
     def _depth_probe_flags(
         *,
         question: str,
@@ -939,10 +1047,26 @@ class FacilitatedInterviewRuntime:
                 covered["frequency"] = True
             if "concept_reaction" in covered and ("concept" in labels or "scenario" in labels or "reaction" in labels or "fit" in labels):
                 covered["concept_reaction"] = True
+            if "stimulus_interpretation" in covered and (
+                "stimulus" in labels or "interpret" in labels or "understand" in labels or "comprehension" in labels
+            ):
+                covered["stimulus_interpretation"] = True
+            if "first_action_expectation" in covered and (
+                "first_action" in labels or "first_step" in labels or "first_click" in labels
+            ):
+                covered["first_action_expectation"] = True
+            if "task_path_expectation" in covered and (
+                "task_path" in labels or "journey" in labels or "sequence" in labels or "path" in labels
+            ):
+                covered["task_path_expectation"] = True
             if "setup_burden" in covered and (
                 "setup" in labels or "activation" in labels or "onboard" in labels or "install" in labels
             ):
                 covered["setup_burden"] = True
+            if "setup_confusion" in covered and (
+                "setup" in labels or "activation" in labels or "onboard" in labels or "confusion" in labels
+            ):
+                covered["setup_confusion"] = True
             if "permission_boundary" in covered and (
                 "permission" in labels or "approval" in labels or "access" in labels or "sign_off" in labels
             ):
@@ -970,6 +1094,15 @@ class FacilitatedInterviewRuntime:
                 or "integration" in labels or "extra_step" in labels
             ):
                 covered["workflow_burden"] = True
+            if "breakdown_or_dropoff" in covered and (
+                "drop" in labels or "breakdown" in labels or "hesitation" in labels or "abandon" in labels
+                or "confusion" in labels or "failure" in labels
+            ):
+                covered["breakdown_or_dropoff"] = True
+            if "task_completion_signal" in covered and (
+                "completion" in labels or "success" in labels or "done" in labels or "finished" in labels
+            ):
+                covered["task_completion_signal"] = True
             if "service_embedding" in covered and (
                 "embed" in labels or "journey" in labels or "channel" in labels or "placement" in labels
                 or "workflow" in labels or "rm" in labels
@@ -1153,6 +1286,31 @@ class FacilitatedInterviewRuntime:
                 user_prompt=correction,
                 provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
             )
+        if session.interview_mode == "prototype_validation":
+            self._update_coverage_status(session)
+            missing = list(session.coverage_status.get("missing", []))
+            if not decision.should_end or not missing:
+                return decision
+            next_gap = missing[0]
+            phase_hint, gap_instruction = self._prototype_validation_gap_instruction(next_gap)
+            rejected = decision.to_dict()
+            rejected["question_evidence_basis"] = basis
+            rejected["decision_status"] = "rejected_by_prototype_validation_gate"
+            session.facilitator_decisions.append(rejected)
+            correction = (
+                "PROTOTYPE VALIDATION GATE: Do not end yet. This mode must cover stimulus interpretation, first action, "
+                "task path expectation, setup confusion, trust boundary, breakdown or drop-off risk, and the task "
+                "completion signal. Do not collapse this into generic concept appeal or adoption intent. "
+                f"Missing items: {', '.join(missing) or '(none listed)'}. "
+                f"Ask one short prototype-task question next. Use a phase or strategy label like '{phase_hint}' so the "
+                f"runtime can audit the gap. {gap_instruction}\n\n"
+                f"TRANSCRIPT:\n{self._plain_transcript(session)}"
+            )
+            return self.facilitator_provider.next_turn(
+                system_prompt=system_prompt,
+                user_prompt=correction,
+                provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
+            )
         if session.interview_mode == "decision_reconstruction":
             self._update_coverage_status(session)
             missing = list(session.coverage_status.get("missing", []))
@@ -1288,10 +1446,22 @@ class FacilitatedInterviewRuntime:
         prompt_path = (
             root / "src" / "ai_validation_swarm" / "prompts" / "concept-synthesis" / "v1.md"
             if interview_mode == "concept_validation"
+            else root / "src" / "ai_validation_swarm" / "prompts" / "prototype-synthesis" / "v1.md"
+            if interview_mode == "prototype_validation"
             else root / "src" / "ai_validation_swarm" / "prompts" / "facilitator-synthesis" / "v2.md"
         )
         prompt = _read(prompt_path)
         return f"{prompt}\n\nFACILITATOR SKILL:\n{skill}"
+
+    @staticmethod
+    def _stimulus_review_system_prompt() -> str:
+        root = _repo_root()
+        return _read(root / "src" / "ai_validation_swarm" / "prompts" / "stimulus-image-review" / "v1.md")
+
+    @staticmethod
+    def _flow_stimulus_review_system_prompt() -> str:
+        root = _repo_root()
+        return _read(root / "src" / "ai_validation_swarm" / "prompts" / "stimulus-flow-review" / "v1.md")
 
     @staticmethod
     def _hypothesis_evidence_judge_system_prompt() -> str:
@@ -1334,6 +1504,7 @@ class FacilitatedInterviewRuntime:
             f"HYPOTHESIS TO TEST:\n{session.hypothesis or '(none; discover causes from evidence)'}\n\n"
             f"RESEARCH GOAL:\n{session.research_goal}\n\n"
             f"DISCLOSED PRODUCT CONTEXT:\n{session.product_context or '(none; remain in problem discovery)'}\n\n"
+            f"{FacilitatedInterviewRuntime._stimulus_prompt_block(session)}"
             f"OUTPUT LANGUAGE:\n{session.output_language}\n\n"
             f"CONCEPT LABEL:\n{session.concept_label or '(none)'}\n\n"
             f"TURN POLICY:\nsoft={session.soft_turn_limit}, hard={session.hard_turn_limit}\n\n"
@@ -1353,6 +1524,7 @@ class FacilitatedInterviewRuntime:
             f"HYPOTHESIS TO TEST: {session.hypothesis or '(none)'}\n"
             f"OUTPUT LANGUAGE: {session.output_language}\n\n"
             f"CONCEPT LABEL: {session.concept_label or '(none)'}\n\n"
+            f"{FacilitatedInterviewRuntime._stimulus_prompt_block(session)}"
             "COVERAGE STATUS:\n"
             f"{json.dumps(session.coverage_status, ensure_ascii=False, separators=(',', ':'))}\n\n"
             "DEPTH-FIRST RULE:\n"
@@ -1372,6 +1544,7 @@ class FacilitatedInterviewRuntime:
             f"HYPOTHESIS TO TEST:\n{session.hypothesis or '(none)'}\n\n"
             f"RESEARCH GOAL:\n{session.research_goal}\n\n"
             f"DISCLOSED PRODUCT CONTEXT:\n{session.product_context or '(none)'}\n\n"
+            f"{FacilitatedInterviewRuntime._stimulus_prompt_block(session)}"
             f"OUTPUT LANGUAGE:\n{session.output_language}\n\n"
             f"CONCEPT LABEL:\n{session.concept_label or '(none)'}\n\n"
             f"STOP REASON:\n{session.stop_reason or 'facilitator decision'}\n\n"
@@ -1403,9 +1576,89 @@ class FacilitatedInterviewRuntime:
             lines.append(f"exchange_{exchange.exchange_id}.persona: {exchange.persona_response}")
         return "\n".join(lines)
 
+    @staticmethod
+    def _stimulus_prompt_block(session: InterviewSession) -> str:
+        sections = [
+            f"STIMULUS TYPE:\n{session.stimulus_type or '(none)'}\n\n"
+            f"STIMULUS ARTIFACT:\n{session.stimulus_artifact or '(none)'}\n\n"
+            f"STIMULUS ARTIFACT SNAPSHOT:\n{session.stimulus_artifact_snapshot or '(none)'}\n\n"
+            f"PROTOTYPE TASK:\n{session.prototype_task or '(none)'}\n\n"
+        ]
+        if session.observed_action_trace:
+            trace = session.observed_action_trace
+            actions = trace.get("actions", [])
+            action_lines = []
+            if isinstance(actions, list):
+                for action in actions[:8]:
+                    if not isinstance(action, dict):
+                        continue
+                    action_lines.append(
+                        f"- Step {action.get('step', '?')}: {action.get('action', 'unknown')} -> "
+                        f"{action.get('target', '(unspecified)')} [{action.get('result', 'unknown')}]"
+                    )
+                if len(actions) > 8:
+                    action_lines.append(f"- Additional observed actions omitted: {len(actions) - 8}")
+            sections.append(
+                "OBSERVED ACTION TRACE (application-supplied runtime evidence):\n"
+                f"- Trace label: {trace.get('trace_label', '') or '(none)'}\n"
+                f"- Trace version: {trace.get('trace_version', '') or '(none)'}\n"
+                f"- Task outcome: {trace.get('task_outcome', '') or '(unknown)'}\n"
+                f"- Summary: {trace.get('summary', '') or '(none)'}\n"
+                f"- First error: {trace.get('first_error', '') or '(none)'}\n"
+                f"- Drop-off point: {trace.get('drop_off_point', '') or '(none)'}\n"
+                f"- Completion notes: {trace.get('completion_notes', '') or '(none)'}\n"
+                f"- Artifact sha256: {trace.get('artifact_sha256', '') or '(none)'}\n"
+                f"{chr(10).join(action_lines) or '- No normalized actions were available.'}\n\n"
+            )
+        if session.stimulus_analysis:
+            analysis = session.stimulus_analysis
+            analysis_type = str(analysis.get("analysis_type", session.stimulus_type or "stimulus")).strip()
+            if analysis_type == "flow":
+                sections.append(
+                    "MULTI-SCREEN FLOW STIMULUS REVIEW (application-supplied context, not participant evidence):\n"
+                    f"- Summary: {analysis.get('summary', '')}\n"
+                    f"- Screen sequence: {', '.join(analysis.get('screen_sequence', [])) or '(none)'}\n"
+                    f"- Primary action candidates: {', '.join(analysis.get('primary_action_candidates', [])) or '(none)'}\n"
+                    f"- Transition confusions: {', '.join(analysis.get('transition_confusions', [])) or '(none)'}\n"
+                    f"- Setup burdens: {', '.join(analysis.get('setup_burdens', [])) or '(none)'}\n"
+                    f"- Likely drop-off points: {', '.join(analysis.get('likely_drop_off_points', [])) or '(none)'}\n"
+                    f"- Trust risks: {', '.join(analysis.get('trust_risks', [])) or '(none)'}\n"
+                    f"- Missing context: {', '.join(analysis.get('missing_context', [])) or '(none)'}\n"
+                    f"- Task relevance: {analysis.get('task_relevance', '')}\n"
+                    f"- Evidence boundary: {analysis.get('evidence_boundary', '')}\n\n"
+                )
+            elif analysis_type == "clickable_manifest":
+                sections.append(
+                    "CLICKABLE PROTOTYPE EXECUTION CONTEXT (application-executed manifest task loop, not human session evidence):\n"
+                    f"- Summary: {analysis.get('summary', '')}\n"
+                    f"- Prototype label: {analysis.get('prototype_label', '')}\n"
+                    f"- Screen count: {analysis.get('screen_count', 0)}\n"
+                    f"- Task step count: {analysis.get('task_step_count', 0)}\n"
+                    f"- Start screen: {analysis.get('start_screen', '')}\n"
+                    f"- Visited screens: {', '.join(analysis.get('visited_screens', [])) or '(none)'}\n"
+                    f"- Evidence boundary: {analysis.get('evidence_boundary', '')}\n\n"
+                )
+            else:
+                sections.append(
+                    "STATIC IMAGE STIMULUS REVIEW (application-supplied context, not participant evidence):\n"
+                    f"- Summary: {analysis.get('summary', '')}\n"
+                    f"- Visible elements: {', '.join(analysis.get('visible_elements', [])) or '(none)'}\n"
+                    f"- Primary action candidates: {', '.join(analysis.get('primary_action_candidates', [])) or '(none)'}\n"
+                    f"- Interpretation risks: {', '.join(analysis.get('interpretation_risks', [])) or '(none)'}\n"
+                    f"- Trust risks: {', '.join(analysis.get('trust_risks', [])) or '(none)'}\n"
+                    f"- Missing context: {', '.join(analysis.get('missing_context', [])) or '(none)'}\n"
+                    f"- Task relevance: {analysis.get('task_relevance', '')}\n"
+                    f"- Evidence boundary: {analysis.get('evidence_boundary', '')}\n\n"
+                )
+        return "".join(sections)
+
     def _save(self, session: InterviewSession, folder: Path) -> None:
         write_json(folder / "interview.json", session.to_dict())
         write_json(folder / "facilitator_trace.json", session.facilitator_decisions)
+        if session.stimulus_analysis:
+            write_json(folder / "stimulus_analysis.json", session.stimulus_analysis)
+        if session.observed_action_trace:
+            write_json(folder / "observed_action_trace.json", session.observed_action_trace)
         if session.persona_driver_trace:
             write_json(folder / "persona_driver_trace.json", session.persona_driver_trace)
             write_markdown(
@@ -1413,25 +1666,380 @@ class FacilitatedInterviewRuntime:
                 self._render_persona_driver_trace(session),
             )
         write_markdown(folder / "transcript.md", self._render_transcript(session))
+        artifact_paths = ["interview.json", "facilitator_trace.json", "transcript.md", "run_contract.json"]
+        if session.stimulus_analysis:
+            artifact_paths.append("stimulus_analysis.json")
+        if session.observed_action_trace:
+            artifact_paths.append("observed_action_trace.json")
+        if session.hypothesis_evidence_judgment:
+            artifact_paths.append("hypothesis_evidence_judgment.json")
+        if session.insight_report:
+            artifact_paths.extend(["insight_report.json", "insights.md"])
+        if session.persona_driver_trace:
+            artifact_paths.extend(["persona_driver_trace.json", "persona_driver_trace.md"])
+        run_kind = "observer_controlled_interview" if session.quality_provider else "facilitated_interview"
+        write_shared_run_contract(
+            folder / "run_contract.json",
+            build_interview_run_contract(
+                session,
+                output_path=folder,
+                artifact_paths=artifact_paths,
+                run_kind=run_kind,
+            ),
+        )
 
     @staticmethod
-    def _validate_interview_brief(interview_mode: str, hypothesis: str) -> str:
+    def _validate_interview_brief(
+        interview_mode: str,
+        hypothesis: str,
+        *,
+        product_context: str = "",
+        stimulus_type: str = "",
+        stimulus_artifact: str = "",
+        prototype_task: str = "",
+    ) -> tuple[str, str]:
         mode = interview_mode.strip() or "explore_root_cause"
+        resolved_stimulus_type = ""
         if mode not in {
             "pain_point_discovery",
             "adoption_barrier_validation",
+            "prototype_validation",
             "decision_reconstruction",
             "explore_root_cause",
             "validate_hypothesis",
             "concept_validation",
         }:
             raise ValueError(
-                "interview_mode must be pain_point_discovery, adoption_barrier_validation, decision_reconstruction, "
-                "explore_root_cause, validate_hypothesis, or concept_validation."
+                "interview_mode must be pain_point_discovery, adoption_barrier_validation, prototype_validation, "
+                "decision_reconstruction, explore_root_cause, validate_hypothesis, or concept_validation."
             )
         if mode == "validate_hypothesis" and not hypothesis.strip():
             raise ValueError("validate_hypothesis mode requires a non-empty hypothesis.")
-        return mode
+        if mode == "prototype_validation":
+            resolved_stimulus_type = stimulus_type.strip() or "text_concept"
+            if resolved_stimulus_type not in PROTOTYPE_STIMULUS_TYPES:
+                raise ValueError(
+                    "prototype_validation mode requires stimulus_type to be one of: "
+                    + ", ".join(PROTOTYPE_STIMULUS_TYPES)
+                    + "."
+                )
+            if not prototype_task.strip():
+                raise ValueError("prototype_validation mode requires a non-empty prototype_task.")
+            if not stimulus_artifact.strip() and not product_context.strip():
+                raise ValueError(
+                    "prototype_validation mode requires a stimulus_artifact or product_context describing the prototype stimulus."
+                )
+            if resolved_stimulus_type == "image":
+                if not stimulus_artifact.strip():
+                    raise ValueError("prototype_validation mode with stimulus_type=image requires a non-empty stimulus_artifact path.")
+                FacilitatedInterviewRuntime._resolve_image_stimulus_artifact(stimulus_artifact.strip())
+            if resolved_stimulus_type == "flow":
+                if not stimulus_artifact.strip():
+                    raise ValueError("prototype_validation mode with stimulus_type=flow requires a non-empty stimulus_artifact path.")
+                FacilitatedInterviewRuntime._resolve_flow_stimulus_artifact_bundle(stimulus_artifact.strip())
+        return mode, resolved_stimulus_type
+
+    def _prepare_stimulus_context(
+        self,
+        *,
+        interview_folder: Path,
+        interview_mode: str,
+        product_context: str,
+        stimulus_type: str,
+        stimulus_artifact: str,
+        prototype_task: str,
+    ) -> dict[str, Any]:
+        prepared = {
+            "stimulus_artifact": stimulus_artifact,
+            "stimulus_artifact_snapshot": "",
+            "stimulus_analysis_prompt_version": "",
+            "stimulus_analysis_provider_session_id": "",
+            "stimulus_analysis": {},
+            "observed_action_trace": {},
+        }
+        if interview_mode != "prototype_validation":
+            return prepared
+        if stimulus_type == "image":
+            source_path = self._resolve_image_stimulus_artifact(stimulus_artifact)
+            snapshot_path = self._snapshot_stimulus_artifact(source_path, interview_folder)
+            self._progress(f"analyzing_image_stimulus artifact={source_path.name}")
+            analysis, provider_session_id = self.facilitator_provider.review_image_stimulus(
+                system_prompt=self._stimulus_review_system_prompt(),
+                user_prompt=self._stimulus_review_user_prompt(
+                    product_context=product_context,
+                    prototype_task=prototype_task,
+                    stimulus_artifact=stimulus_artifact,
+                ),
+                image_path=str(snapshot_path),
+            )
+            analysis = dict(analysis)
+            analysis["analysis_type"] = "image"
+            analysis["artifact_filename"] = source_path.name
+            analysis["artifact_sha256"] = self._file_sha256(snapshot_path)
+            prepared["stimulus_artifact_snapshot"] = str(snapshot_path)
+            prepared["stimulus_analysis_prompt_version"] = IMAGE_STIMULUS_REVIEW_PROMPT_VERSION
+            prepared["stimulus_analysis_provider_session_id"] = provider_session_id
+            prepared["stimulus_analysis"] = analysis
+        elif stimulus_type == "flow":
+            bundle = self._resolve_flow_stimulus_artifact_bundle(stimulus_artifact)
+            snapshot_dir, snapshot_screens = self._snapshot_flow_stimulus_artifacts(bundle, interview_folder)
+            self._progress(f"analyzing_flow_stimulus screens={len(snapshot_screens)}")
+            analysis, provider_session_id = self.facilitator_provider.review_flow_stimulus(
+                system_prompt=self._flow_stimulus_review_system_prompt(),
+                user_prompt=self._flow_stimulus_review_user_prompt(
+                    product_context=product_context,
+                    prototype_task=prototype_task,
+                    stimulus_artifact=stimulus_artifact,
+                    screens=snapshot_screens,
+                ),
+                screens=snapshot_screens,
+            )
+            analysis = dict(analysis)
+            analysis["analysis_type"] = "flow"
+            analysis["screen_count"] = len(snapshot_screens)
+            analysis["screens"] = [
+                {
+                    "sequence": screen["sequence"],
+                    "label": screen["label"],
+                    "snapshot_path": screen["path"],
+                    "sha256": self._file_sha256(Path(screen["path"])),
+                }
+                for screen in snapshot_screens
+            ]
+            prepared["stimulus_artifact_snapshot"] = str(snapshot_dir)
+            prepared["stimulus_analysis_prompt_version"] = FLOW_STIMULUS_REVIEW_PROMPT_VERSION
+            prepared["stimulus_analysis_provider_session_id"] = provider_session_id
+            prepared["stimulus_analysis"] = analysis
+        elif stimulus_type in {"clickable", "live_app"} and stimulus_artifact.strip():
+            trace_path = self._resolve_json_stimulus_artifact(stimulus_artifact)
+            snapshot_path = self._snapshot_stimulus_artifact(trace_path, interview_folder)
+            payload = self._load_json_stimulus_payload(snapshot_path)
+            prepared["stimulus_artifact_snapshot"] = str(snapshot_path)
+            execution = self._execute_stimulus_artifact(
+                stimulus_type=stimulus_type,
+                artifact_path=snapshot_path,
+                payload=payload,
+                prototype_task=prototype_task,
+            )
+            if execution is not None:
+                prepared["stimulus_analysis_prompt_version"] = execution.get(
+                    "stimulus_analysis_prompt_version",
+                    SCRIPTED_CLICKABLE_EXECUTOR_VERSION,
+                )
+                prepared["stimulus_analysis_provider_session_id"] = execution.get(
+                    "stimulus_analysis_provider_session_id", ""
+                )
+                prepared["stimulus_analysis"] = execution.get("stimulus_analysis", {})
+                prepared["observed_action_trace"] = execution["observed_action_trace"]
+            else:
+                prepared["stimulus_analysis_prompt_version"] = OBSERVED_ACTION_TRACE_VERSION
+                prepared["observed_action_trace"] = self._load_observed_action_trace(snapshot_path)
+        return prepared
+
+    @staticmethod
+    def _stimulus_review_user_prompt(
+        *,
+        product_context: str,
+        prototype_task: str,
+        stimulus_artifact: str,
+    ) -> str:
+        return (
+            f"PRODUCT CONTEXT:\n{product_context or '(none)'}\n\n"
+            f"PROTOTYPE TASK:\n{prototype_task or '(none)'}\n\n"
+            f"STIMULUS ARTIFACT LABEL:\n{stimulus_artifact or '(none)'}\n\n"
+            "Inspect the supplied static prototype image and summarize the visible screen, the most likely primary actions, "
+            "the main interpretation risks, trust or clarity risks, and any missing context that could block the task."
+        )
+
+    @staticmethod
+    def _flow_stimulus_review_user_prompt(
+        *,
+        product_context: str,
+        prototype_task: str,
+        stimulus_artifact: str,
+        screens: list[dict[str, str]],
+    ) -> str:
+        screen_list = "\n".join(
+            f"- Screen {screen['sequence']}: {screen['label']}"
+            for screen in screens
+        ) or "(none)"
+        return (
+            f"PRODUCT CONTEXT:\n{product_context or '(none)'}\n\n"
+            f"PROTOTYPE TASK:\n{prototype_task or '(none)'}\n\n"
+            f"STIMULUS ARTIFACT LABEL:\n{stimulus_artifact or '(none)'}\n\n"
+            f"FLOW SCREENS:\n{screen_list}\n\n"
+            "Inspect the supplied multi-screen prototype flow in order. Summarize what task path the flow appears to support, "
+            "where transitions become unclear, what setup burden is hidden across screens, and where trust or drop-off risk appears."
+        )
+
+    @staticmethod
+    def _resolve_image_stimulus_artifact(stimulus_artifact: str) -> Path:
+        raw = stimulus_artifact.strip()
+        candidate = Path(raw)
+        candidates = [candidate]
+        if not candidate.is_absolute():
+            candidates.append(_repo_root() / candidate)
+        for item in candidates:
+            resolved = item.expanduser()
+            if resolved.exists() and resolved.is_file():
+                return resolved.resolve()
+        raise ValueError(f"Image stimulus artifact was not found or is not a file: {stimulus_artifact}")
+
+    @staticmethod
+    def _resolve_flow_stimulus_artifact_bundle(stimulus_artifact: str) -> list[dict[str, Any]]:
+        raw = stimulus_artifact.strip()
+        candidate = Path(raw)
+        candidates = [candidate]
+        if not candidate.is_absolute():
+            candidates.append(_repo_root() / candidate)
+        resolved_path: Path | None = None
+        for item in candidates:
+            resolved = item.expanduser()
+            if resolved.exists():
+                resolved_path = resolved.resolve()
+                break
+        if resolved_path is None:
+            raise ValueError(f"Flow stimulus artifact was not found: {stimulus_artifact}")
+        if resolved_path.is_dir():
+            screens = sorted(
+                path for path in resolved_path.iterdir()
+                if path.is_file() and path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif"}
+            )
+            if not screens:
+                raise ValueError(f"Flow stimulus artifact directory does not contain supported image files: {stimulus_artifact}")
+            return [
+                {"source_path": path, "label": path.stem, "sequence": index}
+                for index, path in enumerate(screens, start=1)
+            ]
+        if resolved_path.is_file() and resolved_path.suffix.lower() == ".json":
+            try:
+                payload = json.loads(resolved_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise ValueError(f"Flow stimulus manifest is invalid JSON: {stimulus_artifact}") from exc
+            screens_payload = payload.get("screens", payload) if isinstance(payload, dict) else payload
+            if not isinstance(screens_payload, list) or not screens_payload:
+                raise ValueError("Flow stimulus manifest must contain a non-empty screens list.")
+            bundle: list[dict[str, Any]] = []
+            for index, item in enumerate(screens_payload, start=1):
+                if isinstance(item, str):
+                    relative_path = item.strip()
+                    label = Path(relative_path).stem
+                elif isinstance(item, dict):
+                    relative_path = str(item.get("path", "")).strip()
+                    label = str(item.get("label", "")).strip() or Path(relative_path).stem
+                else:
+                    raise ValueError("Flow stimulus manifest screens must be strings or objects.")
+                if not relative_path:
+                    raise ValueError("Flow stimulus manifest screens require a non-empty path.")
+                screen_path = (resolved_path.parent / relative_path).resolve()
+                if not screen_path.exists() or not screen_path.is_file():
+                    raise ValueError(f"Flow stimulus screen was not found: {screen_path}")
+                bundle.append({"source_path": screen_path, "label": label, "sequence": index})
+            return bundle
+        raise ValueError(
+            "Flow stimulus artifact must be either a directory of ordered image screens or a JSON manifest."
+        )
+
+    @staticmethod
+    def _resolve_json_stimulus_artifact(stimulus_artifact: str) -> Path:
+        raw = stimulus_artifact.strip()
+        candidate = Path(raw)
+        candidates = [candidate]
+        if not candidate.is_absolute():
+            candidates.append(_repo_root() / candidate)
+        for item in candidates:
+            resolved = item.expanduser()
+            if resolved.exists() and resolved.is_file() and resolved.suffix.lower() == ".json":
+                return resolved.resolve()
+        raise ValueError(
+            "Stimulus JSON artifact was not found, is not a file, or is not a JSON file: "
+            f"{stimulus_artifact}"
+        )
+
+    @staticmethod
+    def _load_json_stimulus_payload(path: Path) -> dict[str, Any]:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"Stimulus JSON artifact is invalid JSON: {path}") from exc
+        if not isinstance(payload, dict):
+            raise ValueError("Stimulus JSON artifact must contain a top-level JSON object.")
+        return payload
+
+    def _execute_stimulus_artifact(
+        self,
+        *,
+        stimulus_type: str,
+        artifact_path: Path,
+        payload: dict[str, Any],
+        prototype_task: str,
+    ) -> dict[str, Any] | None:
+        for executor in self.stimulus_executors:
+            if executor.can_execute(stimulus_type=stimulus_type, payload=payload, artifact_path=artifact_path):
+                self._progress(
+                    f"executing_{stimulus_type}_stimulus executor={executor.executor_id} artifact={artifact_path.name}"
+                )
+                return executor.execute(
+                    artifact_path=artifact_path,
+                    payload=payload,
+                    prototype_task=prototype_task,
+                )
+        return None
+
+    @staticmethod
+    def _load_observed_action_trace(path: Path) -> dict[str, Any]:
+        payload = FacilitatedInterviewRuntime._load_json_stimulus_payload(path)
+        try:
+            trace = validate_observed_action_trace_payload(payload, default_label=path.stem)
+        except InputValidationError as exc:
+            raise ValueError(str(exc)) from exc
+        normalized = trace.to_dict()
+        normalized["artifact_sha256"] = FacilitatedInterviewRuntime._file_sha256(path)
+        if not normalized.get("trace_version"):
+            normalized["trace_version"] = OBSERVED_ACTION_TRACE_VERSION
+        return normalized
+
+    @staticmethod
+    def _snapshot_stimulus_artifact(source_path: Path, interview_folder: Path) -> Path:
+        target_dir = interview_folder / "stimulus_artifacts"
+        ensure_dir(target_dir)
+        target_path = target_dir / source_path.name
+        if target_path.exists():
+            stem = source_path.stem
+            suffix = source_path.suffix
+            target_path = target_dir / f"{stem}-{uuid.uuid4().hex[:6]}{suffix}"
+        shutil.copyfile(source_path, target_path)
+        return target_path
+
+    @staticmethod
+    def _snapshot_flow_stimulus_artifacts(
+        bundle: list[dict[str, Any]],
+        interview_folder: Path,
+    ) -> tuple[Path, list[dict[str, str]]]:
+        target_dir = interview_folder / "stimulus_artifacts" / "flow_bundle"
+        ensure_dir(target_dir)
+        snapshots: list[dict[str, str]] = []
+        for item in bundle:
+            source_path = Path(item["source_path"])
+            sequence = int(item["sequence"])
+            label = str(item["label"]).strip() or source_path.stem
+            filename = f"{sequence:02d}_{source_path.name}"
+            target_path = target_dir / filename
+            shutil.copyfile(source_path, target_path)
+            snapshots.append(
+                {
+                    "sequence": str(sequence),
+                    "label": label,
+                    "path": str(target_path),
+                }
+            )
+        return target_dir, snapshots
+
+    @staticmethod
+    def _file_sha256(path: Path) -> str:
+        digest = hashlib.sha256()
+        digest.update(path.read_bytes())
+        return digest.hexdigest()
 
     @staticmethod
     def _render_persona_driver_trace(session: InterviewSession) -> str:
@@ -1531,6 +2139,91 @@ class FacilitatedInterviewRuntime:
                 alternative["basis"] = "general_claim"
 
     @staticmethod
+    def _enforce_prototype_evidence_boundary(session: InterviewSession, synthesis: dict[str, Any]) -> None:
+        if session.interview_mode != "prototype_validation":
+            return
+        boundary = synthesis.get("behavioral_evidence_boundary")
+        if not isinstance(boundary, dict):
+            boundary = {}
+            synthesis["behavioral_evidence_boundary"] = boundary
+        trace = session.observed_action_trace if isinstance(session.observed_action_trace, dict) else {}
+        actions = trace.get("actions", [])
+        observed_trace_available = isinstance(actions, list) and bool(actions)
+        boundary["observed_action_available"] = observed_trace_available
+
+        observed = boundary.get("what_was_observed")
+        if not isinstance(observed, list):
+            observed = []
+        missing = boundary.get("missing_observed_signals")
+        if not isinstance(missing, list):
+            missing = []
+
+        no_trace_note = "No observed action trace was collected from the prototype or interface."
+        self_report_note = (
+            f"Stimulus type was {session.stimulus_type or 'unspecified'} and this run collected task-guided "
+            "self-report rather than recorded actions."
+        )
+        contradictory_no_trace_notes = {
+            no_trace_note,
+            "No observed action trace was collected.",
+            "No real clicks or task traces were recorded.",
+            "No actual clicks or backtracking were observed.",
+        }
+        if observed_trace_available:
+            boundary["evidence_level"] = "observed_action_trace"
+            observed_notes = [
+                f"Observed action trace captured {len(actions)} action(s) for a {session.stimulus_type or 'prototype'} stimulus.",
+            ]
+            for note in trace.get("observed_summary", []):
+                if isinstance(note, str) and note.strip():
+                    observed_notes.append(note.strip())
+            if trace.get("summary"):
+                observed_notes.append(f"Trace summary: {trace['summary']}")
+            if trace.get("task_outcome"):
+                observed_notes.append(f"Task outcome: {trace['task_outcome']}")
+            if trace.get("first_error"):
+                observed_notes.append(f"First error: {trace['first_error']}")
+            if trace.get("drop_off_point"):
+                observed_notes.append(f"Drop-off point: {trace['drop_off_point']}")
+            for action in actions[:5]:
+                if not isinstance(action, dict):
+                    continue
+                observed_notes.append(
+                    f"Step {action.get('step', '?')}: {action.get('action', 'unknown')} -> "
+                    f"{action.get('target', '(unspecified)')} [{action.get('result', 'unknown')}]"
+                )
+            for note in observed_notes:
+                if note not in observed:
+                    observed.append(note)
+            missing = [item for item in missing if item not in contradictory_no_trace_notes]
+            for signal in trace.get("missing_signals", []):
+                if signal not in missing:
+                    missing.append(signal)
+        else:
+            if boundary.get("evidence_level") == "observed_action_trace":
+                boundary["evidence_level"] = "task_guided_self_report"
+            if not boundary.get("evidence_level"):
+                boundary["evidence_level"] = "task_guided_self_report"
+            if no_trace_note not in missing:
+                missing.append(no_trace_note)
+            if self_report_note not in observed:
+                observed.append(self_report_note)
+        boundary["missing_observed_signals"] = missing
+        boundary["what_was_observed"] = observed
+        gaps = synthesis.get("evidence_gaps")
+        if not isinstance(gaps, list):
+            gaps = []
+            synthesis["evidence_gaps"] = gaps
+        without_trace_gap = "Prototype-validation findings here are simulated expectations, not observed action traces."
+        with_trace_gap = "Observed action traces here are application-supplied artifacts, not live human usability proof."
+        gaps = [
+            item for item in gaps
+            if item not in contradictory_no_trace_notes and item != without_trace_gap and item != with_trace_gap
+        ]
+        gaps.append(with_trace_gap if observed_trace_available else without_trace_gap)
+        synthesis["evidence_gaps"] = gaps
+
+    @staticmethod
     def _render_transcript(session: InterviewSession) -> str:
         lines = [
             f"# Facilitated Interview: {session.persona_name}", "",
@@ -1538,12 +2231,80 @@ class FacilitatedInterviewRuntime:
             f"Interview mode: {session.interview_mode}",
             *( [f"Hypothesis: {session.hypothesis}"] if session.hypothesis else [] ),
             *( [f"Concept: {session.concept_label}"] if session.concept_label else [] ),
+            *( [f"Stimulus type: {session.stimulus_type}"] if session.stimulus_type else [] ),
+            *( [f"Stimulus artifact: {session.stimulus_artifact}"] if session.stimulus_artifact else [] ),
+            *( [f"Stimulus artifact snapshot: {session.stimulus_artifact_snapshot}"] if session.stimulus_artifact_snapshot else [] ),
+            *( [f"Prototype task: {session.prototype_task}"] if session.prototype_task else [] ),
             "",
             f"Research goal: {session.research_goal}", "",
             f"Turn policy: soft {session.soft_turn_limit}, hard {session.hard_turn_limit}",
             *( [f"Coverage complete: {session.coverage_status.get('coverage_complete', False)}"] if session.coverage_status else [] ),
             "",
         ]
+        if session.stimulus_analysis:
+            analysis_type = str(session.stimulus_analysis.get("analysis_type", session.stimulus_type or "stimulus")).strip()
+            lines.extend([
+                "## Stimulus Review", "",
+                f"- Summary: {session.stimulus_analysis.get('summary', '')}",
+                f"- Primary action candidates: {', '.join(session.stimulus_analysis.get('primary_action_candidates', [])) or '(none)'}",
+                f"- Trust risks: {', '.join(session.stimulus_analysis.get('trust_risks', [])) or '(none)'}",
+                f"- Missing context: {', '.join(session.stimulus_analysis.get('missing_context', [])) or '(none)'}",
+                f"- Task relevance: {session.stimulus_analysis.get('task_relevance', '')}",
+                f"- Evidence boundary: {session.stimulus_analysis.get('evidence_boundary', '')}",
+                "",
+            ])
+            if analysis_type == "flow":
+                lines.extend([
+                    f"- Screen sequence: {', '.join(session.stimulus_analysis.get('screen_sequence', [])) or '(none)'}",
+                    f"- Transition confusions: {', '.join(session.stimulus_analysis.get('transition_confusions', [])) or '(none)'}",
+                    f"- Setup burdens: {', '.join(session.stimulus_analysis.get('setup_burdens', [])) or '(none)'}",
+                    f"- Likely drop-off points: {', '.join(session.stimulus_analysis.get('likely_drop_off_points', [])) or '(none)'}",
+                    "",
+                ])
+            elif analysis_type == "clickable_manifest":
+                lines.extend([
+                    f"- Prototype label: {session.stimulus_analysis.get('prototype_label', '')}",
+                    f"- Screen count: {session.stimulus_analysis.get('screen_count', 0)}",
+                    f"- Task step count: {session.stimulus_analysis.get('task_step_count', 0)}",
+                    f"- Start screen: {session.stimulus_analysis.get('start_screen', '')}",
+                    f"- Visited screens: {', '.join(session.stimulus_analysis.get('visited_screens', [])) or '(none)'}",
+                    f"- Evidence boundary: {session.stimulus_analysis.get('evidence_boundary', '')}",
+                    "",
+                ])
+            else:
+                lines.extend([
+                    f"- Visible elements: {', '.join(session.stimulus_analysis.get('visible_elements', [])) or '(none)'}",
+                    f"- Interpretation risks: {', '.join(session.stimulus_analysis.get('interpretation_risks', [])) or '(none)'}",
+                    "",
+                ])
+        if session.observed_action_trace:
+            trace = session.observed_action_trace
+            actions = trace.get("actions", [])
+            lines.extend([
+                "## Observed Action Trace",
+                "",
+                f"- Trace label: {trace.get('trace_label', '') or '(none)'}",
+                f"- Trace version: {trace.get('trace_version', '') or '(none)'}",
+                f"- Task outcome: {trace.get('task_outcome', '') or '(unknown)'}",
+                f"- Summary: {trace.get('summary', '') or '(none)'}",
+                f"- First error: {trace.get('first_error', '') or '(none)'}",
+                f"- Drop-off point: {trace.get('drop_off_point', '') or '(none)'}",
+                f"- Completion notes: {trace.get('completion_notes', '') or '(none)'}",
+                "",
+            ])
+            if isinstance(actions, list):
+                for action in actions[:8]:
+                    if not isinstance(action, dict):
+                        continue
+                    lines.append(
+                        f"- Step {action.get('step', '?')}: {action.get('action', 'unknown')} -> "
+                        f"{action.get('target', '(unspecified)')} [{action.get('result', 'unknown')}]"
+                    )
+                if len(actions) > 8:
+                    lines.append(f"- Additional observed actions omitted: {len(actions) - 8}")
+            for item in trace.get("missing_signals", []):
+                lines.append(f"- Missing observed signal: {item}")
+            lines.append("")
         for exchange in session.exchanges:
             lines.extend([
                 f"## Exchange {exchange.exchange_id}", "",
@@ -1559,6 +2320,8 @@ class FacilitatedInterviewRuntime:
         report = session.insight_report
         if session.interview_mode == "concept_validation":
             return FacilitatedInterviewRuntime._render_concept_insights(session)
+        if session.interview_mode == "prototype_validation":
+            return FacilitatedInterviewRuntime._render_prototype_insights(session)
         lines = [
             f"# Interview Insights: {session.persona_name}", "",
             f"> {report.get('synthetic_only_disclaimer', session.synthetic_only_disclaimer)}", "",
@@ -1629,4 +2392,130 @@ class FacilitatedInterviewRuntime:
         if not risks:
             lines.append("- No explicit over-optimism risks were generated.")
         lines.extend(["", "## Next Experiment", "", str(report.get("next_experiment", ""))])
+        return "\n".join(lines).rstrip() + "\n"
+
+    @staticmethod
+    def _render_prototype_insights(session: InterviewSession) -> str:
+        report = session.insight_report
+        interpretation = report.get("stimulus_interpretation", {})
+        journey = report.get("task_journey", {})
+        boundary = report.get("behavioral_evidence_boundary", {})
+        stimulus_label = session.stimulus_artifact or session.concept_label or "Prototype Validation"
+        lines = [
+            f"# {stimulus_label} Interview: {session.persona_name}", "",
+            f"> {report.get('synthetic_only_disclaimer', session.synthetic_only_disclaimer)}", "",
+            "## Stimulus Context", "",
+            f"- Type: {session.stimulus_type or 'unknown'}",
+            f"- Artifact: {session.stimulus_artifact or 'undisclosed'}",
+            f"- Snapshot: {session.stimulus_artifact_snapshot or 'undisclosed'}",
+            f"- Task: {session.prototype_task or 'undisclosed'}",
+        ]
+        if session.stimulus_analysis:
+            analysis_type = str(session.stimulus_analysis.get("analysis_type", session.stimulus_type or "stimulus")).strip()
+            lines.extend([
+                "",
+                "## Stimulus Review",
+                "",
+                f"- Summary: {session.stimulus_analysis.get('summary', '')}",
+            ])
+            for item in session.stimulus_analysis.get("primary_action_candidates", []):
+                lines.append(f"- Primary action candidate: {item}")
+            for item in session.stimulus_analysis.get("trust_risks", []):
+                lines.append(f"- Trust risk: {item}")
+            for item in session.stimulus_analysis.get("missing_context", []):
+                lines.append(f"- Missing context: {item}")
+            if analysis_type == "flow":
+                for item in session.stimulus_analysis.get("screen_sequence", []):
+                    lines.append(f"- Screen sequence: {item}")
+                for item in session.stimulus_analysis.get("transition_confusions", []):
+                    lines.append(f"- Transition confusion: {item}")
+                for item in session.stimulus_analysis.get("setup_burdens", []):
+                    lines.append(f"- Setup burden: {item}")
+                for item in session.stimulus_analysis.get("likely_drop_off_points", []):
+                    lines.append(f"- Likely drop-off point: {item}")
+            elif analysis_type == "clickable_manifest":
+                lines.append(f"- Prototype label: {session.stimulus_analysis.get('prototype_label', '')}")
+                lines.append(f"- Screen count: {session.stimulus_analysis.get('screen_count', 0)}")
+                lines.append(f"- Task step count: {session.stimulus_analysis.get('task_step_count', 0)}")
+                lines.append(f"- Start screen: {session.stimulus_analysis.get('start_screen', '')}")
+                for item in session.stimulus_analysis.get("visited_screens", []):
+                    lines.append(f"- Visited screen: {item}")
+                lines.append(f"- Evidence boundary: {session.stimulus_analysis.get('evidence_boundary', '')}")
+            else:
+                for item in session.stimulus_analysis.get("visible_elements", []):
+                    lines.append(f"- Visible element: {item}")
+                for item in session.stimulus_analysis.get("interpretation_risks", []):
+                    lines.append(f"- Interpretation risk: {item}")
+        if session.observed_action_trace:
+            trace = session.observed_action_trace
+            actions = trace.get("actions", [])
+            lines.extend([
+                "",
+                "## Observed Action Trace",
+                "",
+                f"- Trace label: {trace.get('trace_label', '') or '(none)'}",
+                f"- Trace version: {trace.get('trace_version', '') or '(none)'}",
+                f"- Task outcome: {trace.get('task_outcome', '') or '(unknown)'}",
+                f"- Summary: {trace.get('summary', '') or '(none)'}",
+                f"- First error: {trace.get('first_error', '') or '(none)'}",
+                f"- Drop-off point: {trace.get('drop_off_point', '') or '(none)'}",
+                f"- Completion notes: {trace.get('completion_notes', '') or '(none)'}",
+            ])
+            if isinstance(actions, list):
+                for action in actions[:8]:
+                    if not isinstance(action, dict):
+                        continue
+                    lines.append(
+                        f"- Step {action.get('step', '?')}: {action.get('action', 'unknown')} -> "
+                        f"{action.get('target', '(unspecified)')} [{action.get('result', 'unknown')}]"
+                    )
+                if len(actions) > 8:
+                    lines.append(f"- Additional observed actions omitted: {len(actions) - 8}")
+            for item in trace.get("missing_signals", []):
+                lines.append(f"- Missing observed signal: {item}")
+        lines.extend([
+            "",
+            "## Stimulus Interpretation", "",
+            f"- Summary: {interpretation.get('summary', '')}",
+        ])
+        for quote in interpretation.get("supporting_quotes", []):
+            lines.append(f"- \"{quote.get('quote', '')}\" ({quote.get('evidence_ref', '')})")
+        for item in interpretation.get("interpretation_breakdowns", []):
+            lines.append(f"- Breakdown: {item}")
+        for item in interpretation.get("trust_signals", []):
+            lines.append(f"- Trust signal: {item}")
+        lines.extend(["", "## Task Journey", ""])
+        for item in journey.get("first_action_expectations", []):
+            lines.append(f"- First action: {item}")
+        for item in journey.get("expected_path", []):
+            lines.append(f"- Expected path: {item}")
+        for item in journey.get("setup_confusions", []):
+            lines.append(f"- Setup confusion: {item}")
+        for item in journey.get("likely_drop_off_points", []):
+            lines.append(f"- Drop-off: {item}")
+        for item in journey.get("task_success_signals", []):
+            lines.append(f"- Success signal: {item}")
+        lines.extend(["", "## Evidence Boundary", ""])
+        lines.append(f"- Evidence level: {boundary.get('evidence_level', 'unknown')}")
+        lines.append(f"- Observed action available: {boundary.get('observed_action_available', False)}")
+        for item in boundary.get("what_was_observed", []):
+            lines.append(f"- Observed: {item}")
+        for item in boundary.get("missing_observed_signals", []):
+            lines.append(f"- Missing observed signal: {item}")
+        lines.extend(["", "## Assumption Validation", ""])
+        for item in report.get("assumption_validation", []):
+            lines.append(f"- [{item.get('status', 'unknown')}] {item.get('assumption', '')}")
+        lines.extend(["", "## Key Insights", ""])
+        for item in report.get("key_insights", []):
+            lines.append(f"- {item}")
+        lines.extend(["", "## Potential Over-Optimism Risks", ""])
+        risks = report.get("potential_over_optimism_risks", [])
+        for item in risks:
+            lines.append(f"- {item}")
+        if not risks:
+            lines.append("- No explicit over-optimism risks were generated.")
+        lines.extend(["", "## Next Experiment", "", str(report.get("next_experiment", ""))])
+        lines.extend(["", "## Evidence Gaps", ""])
+        for item in report.get("evidence_gaps", []):
+            lines.append(f"- {item}")
         return "\n".join(lines).rstrip() + "\n"

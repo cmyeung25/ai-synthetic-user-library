@@ -1,6 +1,6 @@
 metadata:
   schema_version: v2
-  last_updated: 2026-06-26
+  last_updated: 2026-06-27
   owner: platform-development-chief
   source_documents:
     - AGENTS.md
@@ -10,8 +10,8 @@ metadata:
     - README.md
 
 current_platform_state:
-  current_stage: milestone_7_facilitated_interview_runtime
-  strategic_focus: define the prototype-validation contract before expanding the fuller stimulus layer
+  current_stage: backend_foundation_complete_workspace_ui_readiness_next
+  strategic_focus: use the completed backend foundation while closing the remaining evidence-query gap and moving the operator workflow toward workspace UI readiness
   proven_capabilities:
     - reusable persona generation
     - structured synthetic interviews
@@ -19,14 +19,90 @@ current_platform_state:
     - panel synthesis
     - conversation realism scoring
     - over-optimism warnings
+    - static image stimulus review for prototype validation
+    - multi-screen flow stimulus review for prototype validation
+    - application-supplied observed action trace contract and synthesis for prototype validation
+    - manifest-backed clickable prototype task execution with platform-captured observed action traces
+    - shared run contract artifacts across validation runs, facilitated interviews, observer-controlled interviews, and concept panels
+    - SQLite-first metadata projection for runs, interviews, personas, and artifact paths while preserving JSON and filesystem artifacts as the primary record
+    - relational persona selection indexes with trait provenance and similarity edges while keeping full persona profiles in JSON artifacts
+    - authenticated workspace-scoped API ingress for queued validation jobs
+    - queue-backed local worker runtime for validation job execution beyond one-shot CLI runs
+    - enforced workspace role gates, billing gates, plan quotas, path isolation, and retention-driven artifact purge
   not_yet_proven:
     - complete discovery-stage coverage
-    - prototype behavior validation
-    - action-grounded adoption prediction
+    - live-interface behavior validation beyond scripted clickable manifests
+    - action-grounded adoption prediction across repeated interface runs
   next_moves:
-    - define interview_mode.prototype_validation contract
-    - implement stimulus.image_stimulus_review
-    - add observed_action evidence outputs
+    - finish evidence query index and replay as the last backend-foundation gap before broader productization
+    - start the workspace shell, run submission UI, and queue-status views on top of the shared runtime
+    - add workspace evidence browsing, replay affordances, and richer worker observability before broader tenant-admin expansion
+    - add browser-driven clickable execution only after the query and replay surface can keep observed evidence auditable
+    - review whether MongoDB document storage or a graph projection is warranted only after the implemented selection index hits repeated similarity or diversity traversal bottlenecks
+
+agile_tracking:
+  estimation_scale:
+    - 1
+    - 2
+    - 3
+    - 5
+    - 8
+    - 13
+  estimation_policy: story point rollups are backfilled first for active and upcoming strategic scopes; previously completed milestones may remain status-only unless deeper retrospective sizing is needed
+  active_milestone:
+    id: milestone.workspace_ui_readiness
+    task_count_total: 6
+    task_count_completed: 0
+    story_points_total: 22
+    story_points_completed: 0
+    story_points_remaining: 22
+    completion_pct: 0.0
+  active_epic:
+    id: workstream.system_architecture_upgrade
+    task_count_total: 7
+    task_count_completed: 6
+    story_points_total: 29
+    story_points_completed: 26
+    story_points_remaining: 3
+    completion_pct: 89.7
+
+productization_layers:
+  - id: layer.saas_readiness_backend_foundation
+    title: SaaS Readiness (backend foundation)
+    status: implemented
+    linked_milestone: milestone.saas_readiness
+    task_count_total: 8
+    task_count_completed: 8
+    story_points_total: 32
+    story_points_completed: 32
+    story_points_remaining: 0
+    completion_pct: 100.0
+
+  - id: layer.workspace_ui_readiness
+    title: Workspace UI Readiness
+    status: planned
+    linked_milestone: milestone.workspace_ui_readiness
+    depends_on:
+      - story.system_architecture_upgrade.evidence_query_index_and_replay
+    task_count_total: 6
+    task_count_completed: 0
+    story_points_total: 22
+    story_points_completed: 0
+    story_points_remaining: 22
+    completion_pct: 0.0
+
+  - id: layer.full_saas_product_surface
+    title: Full SaaS Product Surface
+    status: planned
+    linked_milestone: milestone.full_saas_product_surface
+    depends_on:
+      - milestone.workspace_ui_readiness
+    task_count_total: 6
+    task_count_completed: 0
+    story_points_total: 24
+    story_points_completed: 0
+    story_points_remaining: 24
+    completion_pct: 0.0
 
 capabilities:
   - id: interview_mode.pain_point_discovery
@@ -108,7 +184,7 @@ capabilities:
 
   - id: interview_mode.prototype_validation
     type: interview_mode
-    status: planned
+    status: implemented
     priority: P0
     research_stage: prototype_validation
     improves:
@@ -116,10 +192,15 @@ capabilities:
       - evidence_quality
     bottleneck: the platform cannot claim interface-level validation until it can handle stimuli and observed behavior
     evidence:
-      - listed as planned in DEVELOPMENT_ROADMAP.md
-      - platform blueprint marks prototype behavior validation as not yet proven
-    remaining_gap: no formal contract for stimuli, action traces, or synthesis boundaries exists
-    next_step: define the input, evidence, and output contract before implementation
+      - supported as an explicit interview_mode in src/ai_validation_swarm/cli/main.py
+      - covered by runtime coverage requirements and prototype-validation gate rules in src/ai_validation_swarm/facilitator/runtime.py
+      - backed by a dedicated prototype synthesis contract in src/ai_validation_swarm/facilitator/providers.py and prompts/prototype-synthesis/v1.md
+      - now snapshots real image and flow artifacts, runs structured stimulus review, and injects stimulus analysis into facilitated and observer-controlled runtimes
+      - now accepts application-supplied clickable and live-app observed action trace artifacts, normalizes them through shared validators, and upgrades prototype evidence outputs to observed_action_trace when real actions are supplied
+      - now executes scripted clickable prototype manifests through a native stimulus executor adapter before the interview starts, producing platform-captured observed_action_trace artifacts
+      - verified by unit tests for facilitator and observer runtimes
+    remaining_gap: the mode now supports static image review, flow review, application-supplied action traces, and scripted clickable task execution, but it still lacks browser-driven and live-app execution beyond manifest-backed prototypes
+    next_step: extend the executor boundary to browser-driven clickable prototypes and later live-app surfaces
 
   - id: interview_mode.adoption_barrier_validation
     type: interview_mode
@@ -167,7 +248,7 @@ capabilities:
 
   - id: stimulus.image_stimulus_review
     type: prototype_capability
-    status: planned
+    status: implemented
     priority: P0
     research_stage: prototype_validation
     improves:
@@ -175,14 +256,22 @@ capabilities:
       - evidence_quality
     bottleneck: prototype work needs a first stimulus layer before live interactive behavior simulation
     evidence:
-      - listed as the first prototype validation capability in DEVELOPMENT_ROADMAP.md
-      - explicitly recommended next in PLATFORM_BLUEPRINT.md
-    remaining_gap: no image-based stimulus contract exists yet
-    next_step: implement static image upload and interpretation-friction synthesis
+      - real local image artifacts are required, snapshotted into interview artifacts, and hashed for auditability in src/ai_validation_swarm/facilitator/runtime.py
+      - structured static-image review is generated through the facilitator provider schema in src/ai_validation_swarm/facilitator/providers.py
+      - facilitator, observer, transcript, and insight artifacts now include the derived stimulus review context
+      - verified by unit tests for facilitator, observer, and OpenAI client transports
+    task_count_total: 1
+    task_count_completed: 1
+    story_points_total: 5
+    story_points_completed: 5
+    story_points_remaining: 0
+    completion_pct: 100.0
+    remaining_gap: this is still a static-screen layer and does not yet cover multi-screen flow comprehension or observed actions
+    next_step: sequence directly into flow stimulus review
 
   - id: stimulus.flow_stimulus_review
     type: prototype_capability
-    status: planned
+    status: implemented
     priority: P1
     research_stage: prototype_validation
     improves:
@@ -190,13 +279,22 @@ capabilities:
       - scalable_research_throughput
     bottleneck: image review alone cannot cover multi-step comprehension breakdown
     evidence:
-      - listed as planned in DEVELOPMENT_ROADMAP.md
-    remaining_gap: depends on a stable image stimulus layer first
-    next_step: sequence after image stimulus support is stable
+      - real flow artifacts can now be supplied as ordered image directories or JSON manifests in src/ai_validation_swarm/facilitator/runtime.py
+      - multi-screen flow review is generated through the facilitator provider schema in src/ai_validation_swarm/facilitator/providers.py
+      - facilitator, observer, transcript, and insight artifacts now include multi-screen transition confusion, setup burden, and likely drop-off context
+      - verified by unit tests for facilitator, observer, and OpenAI client transports
+    task_count_total: 1
+    task_count_completed: 1
+    story_points_total: 5
+    story_points_completed: 5
+    story_points_remaining: 0
+    completion_pct: 100.0
+    remaining_gap: this is still a pre-action flow-reading layer and does not yet capture misclicks, backtracking, or completion behavior
+    next_step: sequence directly into clickable prototype validation
 
   - id: stimulus.interactive_prototype_validation
     type: prototype_capability
-    status: planned
+    status: implemented
     priority: P1
     research_stage: prototype_validation
     improves:
@@ -204,10 +302,18 @@ capabilities:
       - evidence_quality
     bottleneck: action-grounded evidence needs a clickable task loop, not just stated reaction
     evidence:
-      - listed as planned in DEVELOPMENT_ROADMAP.md
-      - platform blueprint marks prototype behavior validation as not yet proven
-    remaining_gap: depends on stimulus support and action-trace design
-    next_step: sequence after image and flow review contracts are stable
+      - clickable and live-app stimulus types are accepted in src/ai_validation_swarm/cli/main.py and src/ai_validation_swarm/facilitator/runtime.py
+      - application-supplied observed action traces are normalized through src/ai_validation_swarm/domain/validators.py and persisted into interview artifacts
+      - prototype synthesis, transcript, and insight outputs now distinguish observed_action_trace from task-guided self-report when real actions are supplied
+      - scripted clickable prototype manifests are now executed through src/ai_validation_swarm/facilitator/stimulus_executor.py, producing task-loop traces before synthesis
+    task_count_total: 3
+    task_count_completed: 3
+    story_points_total: 8
+    story_points_completed: 8
+    story_points_remaining: 0
+    completion_pct: 100.0
+    remaining_gap: later upgrades should broaden the executor from scripted manifests to browser-driven prototypes, but the current clickable task loop exists as usable platform surface
+    next_step: keep the executor boundary stable while adding richer drivers later
 
   - id: stimulus.live_app_task_simulation
     type: prototype_capability
@@ -220,6 +326,12 @@ capabilities:
     bottleneck: live product simulation is valuable, but premature before simpler prototype layers are stable
     evidence:
       - listed as planned in DEVELOPMENT_ROADMAP.md
+    task_count_total: 3
+    task_count_completed: 0
+    story_points_total: 8
+    story_points_completed: 0
+    story_points_remaining: 8
+    completion_pct: 0.0
     remaining_gap: depends on full stimulus and behavior layers
     next_step: defer until earlier prototype layers are proven
 
@@ -260,38 +372,351 @@ milestones:
       - documented in DEVELOPMENT_ROADMAP.md as Milestone 6 implemented
 
   - id: milestone.facilitated_interview_runtime
-    status: in_progress
+    status: implemented
     evidence:
-      - documented in DEVELOPMENT_ROADMAP.md as Milestone 7 in progress
-    remaining_gap:
-      - missing prototype_validation
-      - missing stimulus-aware and action-aware runtime
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 7 implemented
 
   - id: milestone.prototype_validation_layer
-    status: planned
+    status: implemented
     evidence:
-      - documented in DEVELOPMENT_ROADMAP.md as Milestone 8 planned
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 8 implemented
+      - facilitator and observer runtimes now support image review, flow review, scripted clickable task execution, action-trace capture, and observed-behavior synthesis with unit coverage
+    task_count_total: 5
+    task_count_completed: 5
+    story_points_total: 26
+    story_points_completed: 26
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.prototype_validation_layer.image_stimulus_review
+        title: static image stimulus review
+        status: implemented
+        story_points: 5
+        evidence:
+          - repository supports real image artifact snapshotting and structured image review
+      - id: story.prototype_validation_layer.flow_stimulus_review
+        title: multi-screen flow stimulus review
+        status: implemented
+        story_points: 5
+        evidence:
+          - repository supports ordered flow artifacts and structured transition-friction review
+      - id: story.prototype_validation_layer.interactive_prototype_task_loop
+        title: clickable prototype task loop
+        status: implemented
+        story_points: 8
+        evidence:
+          - scripted clickable prototype manifests are now executed through src/ai_validation_swarm/facilitator/stimulus_executor.py before the interview begins
+          - facilitator and observer prototype-validation tests now cover clickable task-loop execution
+      - id: story.prototype_validation_layer.action_trace_capture
+        title: action trace capture
+        status: implemented
+        story_points: 5
+        evidence:
+          - shared observed action trace schema and validation now exist in src/ai_validation_swarm/domain/models.py and src/ai_validation_swarm/domain/validators.py
+          - clickable and live-app prototype-validation runs can now ingest application-supplied action traces and persist observed_action_trace.json artifacts
+          - scripted clickable prototype manifests now produce platform-captured first-action/path/drop-off traces through the executor adapter
+      - id: story.prototype_validation_layer.observed_behavior_synthesis
+        title: observed behavior synthesis
+        status: implemented
+        story_points: 3
+        evidence:
+          - prototype evidence boundaries, transcript output, insight markdown, over-optimism warnings, and provider normalization now stay trace-aware when observed actions are available
+    remaining_gap:
+      - live-app execution and broader browser-driven prototype capture remain future expansion beyond this milestone
 
   - id: milestone.saas_readiness
-    status: in_progress
+    status: implemented
     evidence:
-      - documented in DEVELOPMENT_ROADMAP.md as Milestone 9 in progress
-    remaining_gap:
-      - should not outpace simulation-core maturity
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 9 backend foundation implemented
+      - service decomposition, async job model, and auth/billing/privacy design are documented in SAAS_BACKEND_BLUEPRINT.md
+      - tenant entities and workspace schema contracts are documented in MULTI_TENANT_DATA_MODEL.md and schemas/tenant-workspace.schema.json
+      - persona catalog governance and market-distribution controls are documented in PERSONA_CATALOG_GOVERNANCE.md and configs/markets/*.json
+      - authenticated API ingress, queued job runtime, and tenant control enforcement now exist in src/ai_validation_swarm/saas/api.py, src/ai_validation_swarm/saas/runtime.py, and src/ai_validation_swarm/saas/job_store.py
+    task_count_total: 8
+    task_count_completed: 8
+    story_points_total: 32
+    story_points_completed: 32
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.saas_readiness.service_decomposition_blueprint
+        title: service decomposition blueprint
+        status: implemented
+        story_points: 3
+        evidence:
+          - API, workspace, orchestration, worker, billing, and audit service boundaries are documented in SAAS_BACKEND_BLUEPRINT.md
+      - id: story.saas_readiness.multi_tenant_data_contract
+        title: multi-tenant data contract
+        status: implemented
+        story_points: 5
+        evidence:
+          - tenant workspace, membership, job, billing, and catalog entities are documented in MULTI_TENANT_DATA_MODEL.md
+          - tenant workspace and market-distribution schema files exist under schemas/
+      - id: story.saas_readiness.persona_catalog_governance_contract
+        title: persona catalog governance contract
+        status: implemented
+        story_points: 3
+        evidence:
+          - governance layers, similarity controls, and market-distribution planning are documented in PERSONA_CATALOG_GOVERNANCE.md
+          - sample market configs exist under configs/markets/
+      - id: story.saas_readiness.shared_run_contract_layer
+        title: shared run contract layer
+        status: implemented
+        story_points: 3
+        evidence:
+          - src/ai_validation_swarm/saas/run_contract.py now defines the canonical shared run request/result envelope
+          - validation runs, facilitated interviews, observer-controlled interviews, and concept-panel runs now emit run_contract.json artifacts
+          - focused integration and unit coverage verifies the shared artifact across the affected run types
+      - id: story.saas_readiness.structured_metadata_persistence
+        title: structured metadata persistence
+        status: implemented
+        story_points: 5
+        evidence:
+          - src/ai_validation_swarm/saas/metadata_store.py now persists SQLite-first metadata records for runs, artifacts, and personas under metadata.sqlite3
+          - src/ai_validation_swarm/saas/run_contract.py now projects run_contract.json writes into the metadata store for validation, interview, observer, and concept-panel runs
+          - src/ai_validation_swarm/storage/files.py now projects saved persona artifacts into the same metadata layer while keeping JSON files as the canonical full record
+          - focused integration and unit coverage verifies metadata indexing for validation runs, facilitator runs, observer runs, concept panels, and persona saves
+      - id: story.saas_readiness.persona_selection_index_schema
+        title: persona selection index schema
+        status: implemented
+        story_points: 3
+        evidence:
+          - src/ai_validation_swarm/saas/metadata_store.py now persists persona_selection_records, persona_trait_assignments, and persona_similarity_edges inside metadata.sqlite3
+          - src/ai_validation_swarm/storage/files.py now indexes newly saved personas and can rebuild the selection index from an existing versioned persona library
+          - focused metadata tests verify selection traits, market tags, quality and uniqueness scores, and similarity-edge persistence
+        review_trigger: revisit whether MongoDB document storage or a graph projection is warranted only after the implemented selection index shows repeated similarity or diversity traversal bottlenecks
+      - id: story.saas_readiness.authenticated_api_and_async_runtime
+        title: authenticated API and async runtime
+        status: implemented
+        story_points: 5
+        evidence:
+          - src/ai_validation_swarm/saas/api.py now exposes authenticated POST and GET validation-job routes for workspace-scoped job submission and status retrieval
+          - src/ai_validation_swarm/saas/runtime.py now submits queued jobs and processes them through the existing validation runner with a reusable worker loop
+          - src/ai_validation_swarm/saas/job_store.py now persists validation job lifecycle state in SQLite
+          - src/ai_validation_swarm/cli/main.py now exposes bootstrap-saas-workspace, serve-saas-api, and run-saas-worker commands
+          - focused SaaS runtime tests verify API auth and queued-to-completed lifecycle behavior
+      - id: story.saas_readiness.tenant_controls_and_billing_enforcement
+        title: tenant controls and billing enforcement
+        status: implemented
+        story_points: 5
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py now blocks invalid submitter roles and inactive billing states before queue submission
+          - workspace-scoped path resolution now rejects paths that escape the tenant root, enforcing artifact isolation
+          - plan-tier daily-run and concurrent-job limits are now enforced at job submission time
+          - retention-driven artifact purge now deletes expired run directories and records artifact_deleted_at in job metadata
+          - focused SaaS runtime tests verify role, billing, quota, and workspace-boundary enforcement
+
+  - id: milestone.workspace_ui_readiness
+    status: planned
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 10 planned
+      - depends on story.system_architecture_upgrade.evidence_query_index_and_replay so workspace evidence browsing can stay auditable and replayable
+    task_count_total: 6
+    task_count_completed: 0
+    story_points_total: 22
+    story_points_completed: 0
+    story_points_remaining: 22
+    completion_pct: 0.0
+    stories:
+      - id: story.workspace_ui_readiness.workspace_shell_and_auth
+        title: workspace shell and session auth
+        status: planned
+        story_points: 3
+      - id: story.workspace_ui_readiness.validation_run_submission_console
+        title: validation and interview run submission console
+        status: planned
+        story_points: 5
+      - id: story.workspace_ui_readiness.queue_and_run_status_monitor
+        title: queue and run status monitor
+        status: planned
+        story_points: 3
+      - id: story.workspace_ui_readiness.evidence_browser_and_replay_surface
+        title: evidence browser and replay surface
+        status: planned
+        story_points: 5
+        dependency:
+          - story.system_architecture_upgrade.evidence_query_index_and_replay
+      - id: story.workspace_ui_readiness.persona_and_study_setup_surface
+        title: persona and study setup surface
+        status: planned
+        story_points: 3
+      - id: story.workspace_ui_readiness.operator_feedback_and_failure_visibility
+        title: operator feedback and failure visibility
+        status: planned
+        story_points: 3
+
+  - id: milestone.full_saas_product_surface
+    status: planned
+    evidence:
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 11 planned
+      - should begin only after workspace UI readiness proves the end-to-end operator workflow
+    task_count_total: 6
+    task_count_completed: 0
+    story_points_total: 24
+    story_points_completed: 0
+    story_points_remaining: 24
+    completion_pct: 0.0
+    stories:
+      - id: story.full_saas_product_surface.tenant_admin_and_membership_surface
+        title: tenant admin and membership surface
+        status: planned
+        story_points: 3
+      - id: story.full_saas_product_surface.billing_plan_and_quota_surface
+        title: billing plan and quota surface
+        status: planned
+        story_points: 5
+      - id: story.full_saas_product_surface.project_and_study_management_surface
+        title: project and study management surface
+        status: planned
+        story_points: 5
+      - id: story.full_saas_product_surface.audit_export_and_sharing_surface
+        title: audit export and sharing surface
+        status: planned
+        story_points: 3
+      - id: story.full_saas_product_surface.integration_and_token_surface
+        title: integration and token surface
+        status: planned
+        story_points: 5
+      - id: story.full_saas_product_surface.operator_observability_and_support_surface
+        title: operator observability and support surface
+        status: planned
+        story_points: 3
 
 active_workstreams:
   - id: workstream.complete_core_interview_modes
-    status: in_progress
+    status: implemented
     focus:
       - interview_mode.prototype_validation
-    why_now: prototype validation is now the last missing core interview mode before the facilitated interview runtime can claim full phase-1 mode coverage
+    why_now: the seven core interview modes now exist as explicit runtime surface with mode-specific coverage and synthesis boundaries
 
   - id: workstream.prototype_validation_contract
+    status: implemented
+    focus:
+      - interview_mode.prototype_validation
+      - stimulus.interactive_prototype_validation
+    why_now: the full prototype-validation contract now exists from static review through clickable task execution and trace-aware synthesis
+    task_count_total: 4
+    task_count_completed: 4
+    story_points_total: 21
+    story_points_completed: 21
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.prototype_validation_contract.image_stimulus_review
+        title: static image stimulus contract
+        status: implemented
+        story_points: 5
+      - id: story.prototype_validation_contract.flow_stimulus_review
+        title: flow stimulus contract
+        status: implemented
+        story_points: 5
+      - id: story.prototype_validation_contract.interactive_prototype_validation
+        title: clickable prototype validation
+        status: implemented
+        story_points: 8
+        evidence:
+          - clickable prototype manifests now execute through the native stimulus executor adapter before synthesis
+      - id: story.prototype_validation_contract.observed_behavior_evidence
+        title: observed behavior evidence outputs
+        status: implemented
+        story_points: 3
+        evidence:
+          - prototype synthesis now preserves observed_action_trace boundaries when real actions are supplied
+          - transcript, insights, and over-optimism outputs now stay aligned with observed trace availability
+
+  - id: workstream.live_app_expansion
+    status: planned
+    focus:
+      - stimulus.live_app_task_simulation
+    why_now: live app simulation is strategically relevant but should stay behind clickable prototype behavior validation
+    task_count_total: 3
+    task_count_completed: 0
+    story_points_total: 8
+    story_points_completed: 0
+    story_points_remaining: 8
+    completion_pct: 0.0
+    stories:
+      - id: story.live_app_expansion.session_bootstrap
+        title: live app session bootstrap
+        status: planned
+        story_points: 3
+      - id: story.live_app_expansion.action_trace_capture
+        title: live app action trace capture
+        status: planned
+        story_points: 3
+      - id: story.live_app_expansion.safety_and_boundary_controls
+        title: live app safety and evidence boundary controls
+        status: planned
+        story_points: 2
+
+  - id: workstream.system_architecture_upgrade
     status: in_progress
     focus:
       - interview_mode.prototype_validation
-      - stimulus.image_stimulus_review
-    why_now: with adoption-barrier mode landed, the next platform bottleneck is defining a stimulus-aware evidence contract before claiming prototype validation
+      - stimulus.interactive_prototype_validation
+      - stimulus.live_app_task_simulation
+    why_now: the platform now has reusable CLI and runtime modules, but it still lacks the stable application, evidence, and execution boundaries needed to add observed action traces without coupling the core engine to one wrapper surface
+    task_count_total: 7
+    task_count_completed: 6
+    story_points_total: 29
+    story_points_completed: 26
+    story_points_remaining: 3
+    completion_pct: 89.7
+    stories:
+      - id: story.system_architecture_upgrade.shared_run_contract_layer
+        title: shared run contract layer
+        status: implemented
+        story_points: 3
+        evidence:
+          - src/ai_validation_swarm/saas/run_contract.py now defines a canonical shared run request/result envelope
+          - validation runner, facilitated interview runtime, observer-controlled interview runtime, and concept-panel runs now persist run_contract.json artifacts
+          - focused tests verify the shared artifact across validation, interview, observer, and panel run paths
+      - id: story.system_architecture_upgrade.observed_action_trace_contract
+        title: observed action trace contract
+        status: implemented
+        story_points: 5
+        evidence:
+          - typed observed action trace dataclasses now exist in src/ai_validation_swarm/domain/models.py
+          - validation and normalization for action-trace payloads now exist in src/ai_validation_swarm/domain/validators.py
+          - facilitator runtime now consumes the shared trace contract instead of ad hoc local parsing
+      - id: story.system_architecture_upgrade.structured_metadata_persistence
+        title: structured metadata persistence
+        status: implemented
+        story_points: 5
+        evidence:
+          - src/ai_validation_swarm/saas/metadata_store.py now defines the SQLite-first metadata schema and persistence routines for run, artifact, and persona projection
+          - shared run contract writes now update metadata.sqlite3 automatically through src/ai_validation_swarm/saas/run_contract.py
+          - persona artifact persistence now updates metadata.sqlite3 through src/ai_validation_swarm/storage/files.py while leaving JSON artifacts as the primary record
+          - focused tests verify the metadata layer across validation, facilitator, observer, concept-panel, and persona-save flows
+      - id: story.system_architecture_upgrade.persona_selection_index_schema
+        title: persona selection index schema
+        status: implemented
+        story_points: 3
+        evidence:
+          - src/ai_validation_swarm/saas/metadata_store.py now defines relational selection metadata, trait-provenance rows, and similarity-edge persistence for persona artifacts
+          - src/ai_validation_swarm/storage/files.py now exposes a rebuild path so the SQLite selection index can be reconstructed from existing versioned persona folders
+          - focused tests verify selection metadata, market-tag indexing, and duplicate-report similarity edges against the metadata store
+        review_trigger: review whether MongoDB document storage or a graph projection is needed only after the implemented relational selection index hits repeated similarity or diversity traversal bottlenecks
+      - id: story.system_architecture_upgrade.stimulus_executor_adapter
+        title: stimulus executor adapter
+        status: implemented
+        story_points: 5
+        evidence:
+          - a native stimulus executor boundary now exists in src/ai_validation_swarm/facilitator/stimulus_executor.py
+          - facilitator runtime now routes executable clickable artifacts through the adapter before falling back to raw trace ingestion
+      - id: story.system_architecture_upgrade.evidence_query_index_and_replay
+        title: evidence query index and replay
+        status: planned
+        story_points: 3
+        remaining_gap: artifact files exist, but there is no query and replay surface built on top of structured metadata and artifact references for audit, comparison, or future workspace retrieval
+      - id: story.system_architecture_upgrade.async_job_ingress_boundary
+        title: async job ingress boundary
+        status: implemented
+        story_points: 5
+        evidence:
+          - src/ai_validation_swarm/saas/job_store.py now persists queued, running, completed, failed, and canceled validation job rows with idempotency keys and lifecycle metadata
+          - src/ai_validation_swarm/saas/runtime.py now leases queued jobs into a worker flow and hands them to the shared validation runner without duplicating research logic
+          - src/ai_validation_swarm/cli/main.py now exposes a run-saas-worker command for local async job execution
 
 blockers:
   - id: blocker.discovery_mode_gap
@@ -300,7 +725,7 @@ blockers:
 
   - id: blocker.prototype_evidence_gap
     severity: high
-    detail: the platform does not yet distinguish concept-only self-report from prototype behavior evidence through a real stimulus layer
+    detail: the platform now supports scripted clickable prototype execution, but still lacks browser-driven and live-app capture beyond manifest-backed task loops
 
   - id: blocker.adoption_prediction_gap
     severity: medium

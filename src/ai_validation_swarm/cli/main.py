@@ -567,6 +567,34 @@ def _build_parser() -> argparse.ArgumentParser:
     evaluation_cmd.add_argument("--repeat-count", type=int, default=2)
     evaluation_cmd.add_argument("--max-retries", type=int, default=1)
 
+    bootstrap_saas_cmd = subparsers.add_parser("bootstrap-saas-workspace")
+    bootstrap_saas_cmd.add_argument("--runtime-root", type=Path, default=Path("saas_runtime"))
+    bootstrap_saas_cmd.add_argument("--workspace-id", required=True)
+    bootstrap_saas_cmd.add_argument("--slug", required=True)
+    bootstrap_saas_cmd.add_argument("--display-name", required=True)
+    bootstrap_saas_cmd.add_argument("--owner-user-id", required=True)
+    bootstrap_saas_cmd.add_argument("--api-token", required=True)
+    bootstrap_saas_cmd.add_argument("--plan-tier", default="trial")
+    bootstrap_saas_cmd.add_argument("--billing-status", default="trialing")
+    bootstrap_saas_cmd.add_argument("--region-code", default="HK")
+    bootstrap_saas_cmd.add_argument("--data-residency-region", default="ap-east-1")
+    bootstrap_saas_cmd.add_argument("--retention-days", type=int)
+    bootstrap_saas_cmd.add_argument("--daily-runs", type=int)
+    bootstrap_saas_cmd.add_argument("--max-concurrent-jobs", type=int)
+
+    serve_saas_api_cmd = subparsers.add_parser("serve-saas-api")
+    serve_saas_api_cmd.add_argument("--runtime-root", type=Path, default=Path("saas_runtime"))
+    serve_saas_api_cmd.add_argument("--host", default="127.0.0.1")
+    serve_saas_api_cmd.add_argument("--port", type=int, default=8011)
+
+    saas_worker_cmd = subparsers.add_parser("run-saas-worker")
+    saas_worker_cmd.add_argument("--runtime-root", type=Path, default=Path("saas_runtime"))
+    saas_worker_cmd.add_argument("--poll-seconds", type=float, default=1.0)
+    saas_worker_cmd.add_argument("--once", action="store_true")
+
+    purge_saas_cmd = subparsers.add_parser("purge-saas-expired-artifacts")
+    purge_saas_cmd.add_argument("--runtime-root", type=Path, default=Path("saas_runtime"))
+
     compare_cmd = subparsers.add_parser("compare-evaluations")
     compare_cmd.add_argument("--baseline", type=Path, required=True)
     compare_cmd.add_argument("--candidate", type=Path, required=True)
@@ -604,11 +632,14 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd = subparsers.add_parser("run-facilitated-interview")
     interview_cmd.add_argument("--persona-id", required=True)
     interview_cmd.add_argument("--research-goal", required=True)
-    interview_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
+    interview_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "prototype_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     interview_cmd.add_argument("--hypothesis", default="")
     interview_cmd.add_argument("--product-context", default="")
     interview_cmd.add_argument("--concept-protocol", default="")
     interview_cmd.add_argument("--concept-label", default="")
+    interview_cmd.add_argument("--stimulus-type", choices=["text_concept", "image", "flow", "clickable", "live_app"], default="")
+    interview_cmd.add_argument("--stimulus-artifact", default="")
+    interview_cmd.add_argument("--prototype-task", default="")
     interview_cmd.add_argument("--language", default="Traditional Chinese")
     interview_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     interview_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
@@ -626,11 +657,14 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--persona-id")
     observer_cmd.add_argument("--resume", dest="interview_id")
     observer_cmd.add_argument("--research-goal")
-    observer_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
+    observer_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "prototype_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     observer_cmd.add_argument("--hypothesis", default="")
     observer_cmd.add_argument("--product-context", default="")
     observer_cmd.add_argument("--concept-protocol", default="")
     observer_cmd.add_argument("--concept-label", default="")
+    observer_cmd.add_argument("--stimulus-type", choices=["text_concept", "image", "flow", "clickable", "live_app"], default="")
+    observer_cmd.add_argument("--stimulus-artifact", default="")
+    observer_cmd.add_argument("--prototype-task", default="")
     observer_cmd.add_argument("--language", default="Traditional Chinese")
     observer_cmd.add_argument("--data-dir", type=Path, default=Path("data/personas"))
     observer_cmd.add_argument("--session-dir", type=Path, default=Path("interviews"))
@@ -1827,6 +1861,9 @@ def _cmd_run_facilitated_interview(args: argparse.Namespace) -> int:
         product_context=args.product_context,
         concept_protocol=args.concept_protocol,
         concept_label=args.concept_label,
+        stimulus_type=args.stimulus_type,
+        stimulus_artifact=args.stimulus_artifact,
+        prototype_task=args.prototype_task,
         output_language=args.language,
         max_turns=hard_limit,
         soft_turn_limit=soft_limit,
@@ -1941,6 +1978,9 @@ def _cmd_observe_facilitated_interview(args: argparse.Namespace) -> int:
             product_context=args.product_context,
             concept_protocol=args.concept_protocol,
             concept_label=args.concept_label,
+            stimulus_type=args.stimulus_type,
+            stimulus_artifact=args.stimulus_artifact,
+            prototype_task=args.prototype_task,
             output_language=args.language,
             max_turns=hard_limit,
             soft_turn_limit=soft_limit,
@@ -2167,6 +2207,64 @@ def _cmd_compare_facilitator_learning_effects(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_bootstrap_saas_workspace(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.saas.runtime import SaasRuntime
+
+    settings: dict[str, object] = {}
+    if args.retention_days is not None:
+        settings["artifact_retention_days"] = args.retention_days
+    if args.daily_runs is not None:
+        settings["daily_runs"] = args.daily_runs
+    if args.max_concurrent_jobs is not None:
+        settings["max_concurrent_jobs"] = args.max_concurrent_jobs
+
+    runtime = SaasRuntime(args.runtime_root)
+    result = runtime.bootstrap_workspace(
+        workspace_id=args.workspace_id,
+        slug=args.slug,
+        display_name=args.display_name,
+        owner_user_id=args.owner_user_id,
+        api_token=args.api_token,
+        plan_tier=args.plan_tier,
+        billing_status=args.billing_status,
+        region_code=args.region_code,
+        data_residency_region=args.data_residency_region,
+        settings=settings,
+    )
+    print(f"Workspace bootstrapped: {result['workspace_root']}")
+    print(f"Workspace ID: {args.workspace_id}")
+    print(f"Plan tier: {args.plan_tier}")
+    print(f"Billing status: {args.billing_status}")
+    return 0
+
+
+def _cmd_serve_saas_api(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.saas.api import serve_saas_api
+
+    serve_saas_api(args.runtime_root, host=args.host, port=args.port)
+    return 0
+
+
+def _cmd_run_saas_worker(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.saas.runtime import SaasRuntime
+
+    runtime = SaasRuntime(args.runtime_root)
+    processed = runtime.run_worker_loop(poll_seconds=args.poll_seconds, stop_after_one=bool(args.once))
+    print(f"Processed {processed} SaaS validation jobs.")
+    return 0
+
+
+def _cmd_purge_saas_expired_artifacts(args: argparse.Namespace) -> int:
+    from ai_validation_swarm.saas.runtime import SaasRuntime
+
+    runtime = SaasRuntime(args.runtime_root)
+    purged = runtime.purge_expired_run_artifacts()
+    print(f"Purged {len(purged)} expired run artifact sets.")
+    for job_id in purged:
+        print(job_id)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
@@ -2206,6 +2304,10 @@ def main(argv: list[str] | None = None) -> int:
         "audit-report": _cmd_audit,
         "export-report": _cmd_export,
         "run-evaluation": _cmd_run_evaluation,
+        "bootstrap-saas-workspace": _cmd_bootstrap_saas_workspace,
+        "serve-saas-api": _cmd_serve_saas_api,
+        "run-saas-worker": _cmd_run_saas_worker,
+        "purge-saas-expired-artifacts": _cmd_purge_saas_expired_artifacts,
         "compare-evaluations": _cmd_compare_evaluations,
         "compare-persona-quality": _cmd_compare_persona_quality,
         "chat-with-persona": _cmd_chat_with_persona,

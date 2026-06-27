@@ -1,6 +1,8 @@
 import json
+import sqlite3
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 import sys
 
@@ -78,6 +80,7 @@ class ValidationRunTest(unittest.TestCase):
             report = (archived / "report.md").read_text(encoding="utf-8")
             sampling = (archived / "sampling.json").read_text(encoding="utf-8")
             run_payload = json.loads((archived / "run.json").read_text(encoding="utf-8"))
+            run_contract = json.loads((archived / "run_contract.json").read_text(encoding="utf-8"))
             aggregation = json.loads((archived / "aggregation.json").read_text(encoding="utf-8"))
             skeptic = json.loads((archived / "skeptic.json").read_text(encoding="utf-8"))
             report_json = json.loads((archived / "report.json").read_text(encoding="utf-8"))
@@ -101,6 +104,26 @@ class ValidationRunTest(unittest.TestCase):
             self.assertEqual(report_json["report_version"], "report/v1")
             self.assertEqual(run_index["run_count"], 1)
             self.assertEqual(run_index["runs"][0]["run_id"], run_payload["run_id"])
+            self.assertEqual(run_contract["contract_version"], "shared-run-contract/v1")
+            self.assertEqual(run_contract["request"]["run_kind"], "validation_run")
+            self.assertEqual(run_contract["request"]["brief_id"], run_payload["brief_id"])
+            self.assertEqual(run_contract["result"]["primary_artifact_path"], str(archived / "run.json"))
+            self.assertIn("run_contract.json", run_contract["result"]["artifact_paths"])
+            metadata_db = run_dir / "metadata.sqlite3"
+            self.assertTrue(metadata_db.exists())
+            with closing(sqlite3.connect(metadata_db)) as connection:
+                run_row = connection.execute(
+                    "SELECT run_kind, status, primary_artifact_path FROM run_records WHERE run_id = ?",
+                    (run_payload["run_id"],),
+                ).fetchone()
+                artifact_count = connection.execute(
+                    "SELECT COUNT(*) FROM artifact_records WHERE run_id = ?",
+                    (run_payload["run_id"],),
+                ).fetchone()[0]
+            self.assertEqual(run_row[0], "validation_run")
+            self.assertEqual(run_row[1], "completed")
+            self.assertEqual(run_row[2], str(archived / "run.json"))
+            self.assertGreaterEqual(artifact_count, len(run_contract["result"]["artifact_paths"]))
 
     def test_run_validation_handles_partial_persona_failures_with_retries(self) -> None:
         personas = generate_personas(count=16, random_seed=31)

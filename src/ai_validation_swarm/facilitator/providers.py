@@ -5,7 +5,7 @@ import re
 from typing import Any, Protocol
 
 from ai_validation_swarm.facilitator.models import FacilitatorDecision
-from ai_validation_swarm.providers.openai_client import OpenAIProviderError, OpenAIResponsesClient
+from ai_validation_swarm.providers.openai_client import OpenAIProviderError, OpenAIResponsesClient, image_file_to_data_url
 
 
 EVIDENCE_ITEM_SCHEMA: dict[str, Any] = {
@@ -200,6 +200,60 @@ ASSUMPTION_RESULT_SCHEMA: dict[str, Any] = {
     },
 }
 
+IMAGE_STIMULUS_REVIEW_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "summary",
+        "visible_elements",
+        "primary_action_candidates",
+        "interpretation_risks",
+        "trust_risks",
+        "missing_context",
+        "task_relevance",
+        "evidence_boundary",
+    ],
+    "properties": {
+        "summary": {"type": "string"},
+        "visible_elements": {"type": "array", "items": {"type": "string"}},
+        "primary_action_candidates": {"type": "array", "items": {"type": "string"}},
+        "interpretation_risks": {"type": "array", "items": {"type": "string"}},
+        "trust_risks": {"type": "array", "items": {"type": "string"}},
+        "missing_context": {"type": "array", "items": {"type": "string"}},
+        "task_relevance": {"type": "string"},
+        "evidence_boundary": {"type": "string"},
+    },
+}
+
+FLOW_STIMULUS_REVIEW_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "summary",
+        "screen_sequence",
+        "primary_action_candidates",
+        "transition_confusions",
+        "setup_burdens",
+        "likely_drop_off_points",
+        "trust_risks",
+        "missing_context",
+        "task_relevance",
+        "evidence_boundary",
+    ],
+    "properties": {
+        "summary": {"type": "string"},
+        "screen_sequence": {"type": "array", "items": {"type": "string"}},
+        "primary_action_candidates": {"type": "array", "items": {"type": "string"}},
+        "transition_confusions": {"type": "array", "items": {"type": "string"}},
+        "setup_burdens": {"type": "array", "items": {"type": "string"}},
+        "likely_drop_off_points": {"type": "array", "items": {"type": "string"}},
+        "trust_risks": {"type": "array", "items": {"type": "string"}},
+        "missing_context": {"type": "array", "items": {"type": "string"}},
+        "task_relevance": {"type": "string"},
+        "evidence_boundary": {"type": "string"},
+    },
+}
+
 CONCEPT_SYNTHESIS_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -263,6 +317,73 @@ CONCEPT_SYNTHESIS_SCHEMA: dict[str, Any] = {
                 "continuation_reasons": {"type": "array", "items": {"type": "string"}},
                 "drop_off_reasons": {"type": "array", "items": {"type": "string"}},
                 "workflow_effect": {"type": "string", "enum": ["replaces_workflow", "adds_layer", "unclear"]},
+            },
+        },
+        "assumption_validation": {"type": "array", "items": ASSUMPTION_RESULT_SCHEMA},
+        "key_insights": {"type": "array", "minItems": 3, "maxItems": 5, "items": {"type": "string"}},
+        "next_experiment": {"type": "string"},
+        "evidence_gaps": {"type": "array", "items": {"type": "string"}},
+        "synthetic_only_disclaimer": {"type": "string"},
+    },
+}
+
+PROTOTYPE_SYNTHESIS_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "stimulus_interpretation",
+        "task_journey",
+        "behavioral_evidence_boundary",
+        "assumption_validation",
+        "key_insights",
+        "next_experiment",
+        "evidence_gaps",
+        "synthetic_only_disclaimer",
+    ],
+    "properties": {
+        "stimulus_interpretation": {
+            "type": "object", "additionalProperties": False,
+            "required": ["summary", "supporting_quotes", "interpretation_breakdowns", "trust_signals"],
+            "properties": {
+                "summary": {"type": "string"},
+                "supporting_quotes": {"type": "array", "items": QUOTE_SCHEMA},
+                "interpretation_breakdowns": {"type": "array", "items": {"type": "string"}},
+                "trust_signals": {"type": "array", "items": {"type": "string"}},
+            },
+        },
+        "task_journey": {
+            "type": "object", "additionalProperties": False,
+            "required": [
+                "first_action_expectations",
+                "expected_path",
+                "setup_confusions",
+                "likely_drop_off_points",
+                "task_success_signals",
+            ],
+            "properties": {
+                "first_action_expectations": {"type": "array", "items": {"type": "string"}},
+                "expected_path": {"type": "array", "items": {"type": "string"}},
+                "setup_confusions": {"type": "array", "items": {"type": "string"}},
+                "likely_drop_off_points": {"type": "array", "items": {"type": "string"}},
+                "task_success_signals": {"type": "array", "items": {"type": "string"}},
+            },
+        },
+        "behavioral_evidence_boundary": {
+            "type": "object", "additionalProperties": False,
+            "required": [
+                "evidence_level",
+                "observed_action_available",
+                "what_was_observed",
+                "missing_observed_signals",
+            ],
+            "properties": {
+                "evidence_level": {
+                    "type": "string",
+                    "enum": ["stimulus_reaction", "task_guided_self_report", "observed_action_trace"],
+                },
+                "observed_action_available": {"type": "boolean"},
+                "what_was_observed": {"type": "array", "items": {"type": "string"}},
+                "missing_observed_signals": {"type": "array", "items": {"type": "string"}},
             },
         },
         "assumption_validation": {"type": "array", "items": ASSUMPTION_RESULT_SCHEMA},
@@ -514,6 +635,18 @@ class FacilitatorProvider(Protocol):
         self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
     ) -> tuple[dict[str, Any], str]: ...
 
+    def synthesize_prototype(
+        self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
+    ) -> tuple[dict[str, Any], str]: ...
+
+    def review_image_stimulus(
+        self, *, system_prompt: str, user_prompt: str, image_path: str,
+    ) -> tuple[dict[str, Any], str]: ...
+
+    def review_flow_stimulus(
+        self, *, system_prompt: str, user_prompt: str, screens: list[dict[str, str]],
+    ) -> tuple[dict[str, Any], str]: ...
+
     def evaluate_quality(
         self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
     ) -> tuple[dict[str, Any], str]: ...
@@ -763,6 +896,152 @@ def normalize_concept_synthesis(payload: dict[str, Any]) -> dict[str, Any]:
     normalized["synthetic_only_disclaimer"] = (
         str(normalized.get("synthetic_only_disclaimer", "")).strip()
         or "Synthetic pre-validation only; not human market evidence."
+    )
+    return normalized
+
+
+def normalize_prototype_synthesis(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(payload)
+
+    interpretation = normalized.get("stimulus_interpretation")
+    if not isinstance(interpretation, dict):
+        interpretation = {}
+    normalized["stimulus_interpretation"] = {
+        "summary": str(interpretation.get("summary", "")).strip() or "Stimulus interpretation remained under-specified in this synthetic run.",
+        "supporting_quotes": _normalize_quote_items(interpretation.get("supporting_quotes")),
+        "interpretation_breakdowns": _as_string_list(interpretation.get("interpretation_breakdowns")),
+        "trust_signals": _as_string_list(interpretation.get("trust_signals")),
+    }
+
+    journey = normalized.get("task_journey")
+    if not isinstance(journey, dict):
+        journey = {}
+    normalized["task_journey"] = {
+        "first_action_expectations": _as_string_list(journey.get("first_action_expectations")),
+        "expected_path": _as_string_list(journey.get("expected_path")),
+        "setup_confusions": _as_string_list(journey.get("setup_confusions")),
+        "likely_drop_off_points": _as_string_list(journey.get("likely_drop_off_points")),
+        "task_success_signals": _as_string_list(journey.get("task_success_signals")),
+    }
+
+    boundary = normalized.get("behavioral_evidence_boundary")
+    if not isinstance(boundary, dict):
+        boundary = {}
+    evidence_level = _normalize_choice(
+        str(boundary.get("evidence_level", "")).lower(),
+        {"stimulus_reaction", "task_guided_self_report", "observed_action_trace"},
+        "task_guided_self_report",
+    )
+    observed_action_available = bool(boundary.get("observed_action_available", False))
+    if evidence_level == "observed_action_trace" and not observed_action_available:
+        evidence_level = "task_guided_self_report"
+    missing_observed = _as_string_list(boundary.get("missing_observed_signals"))
+    if not missing_observed and not observed_action_available:
+        missing_observed = [
+            "No real action trace was collected from a clickable prototype or live interface.",
+            "First-click accuracy, backtracking, and abandonment remain unobserved.",
+        ]
+    normalized["behavioral_evidence_boundary"] = {
+        "evidence_level": evidence_level,
+        "observed_action_available": observed_action_available,
+        "what_was_observed": _as_string_list(boundary.get("what_was_observed")),
+        "missing_observed_signals": missing_observed,
+    }
+
+    assumption_validation = normalized.get("assumption_validation")
+    normalized["assumption_validation"] = [
+        item for item in assumption_validation if isinstance(item, dict)
+    ] if isinstance(assumption_validation, list) else []
+
+    key_insights = _as_string_list(normalized.get("key_insights"))
+    if len(key_insights) < 3:
+        default_key_insights = (
+            [
+                "Observed task behavior now exists for this prototype run, but it is still one application-supplied trace rather than human usability proof.",
+                "The strongest prototype signals now come from where the recorded path hesitated, backtracked, or stopped, not only from what the participant said.",
+                "The next validation step should compare multiple observed traces across tasks or personas before increasing adoption confidence.",
+            ]
+            if observed_action_available
+            else [
+                "This prototype-validation run still depends on stimulus interpretation and task-guided self-report rather than observed action traces.",
+                "The strongest risks usually sit in first-action expectation, setup confusion, and where confidence breaks before task completion.",
+                "Real prototype validation still needs explicit stimuli and observed task behavior before adoption confidence should increase.",
+            ]
+        )
+        key_insights.extend(default_key_insights[: 3 - len(key_insights)])
+    normalized["key_insights"] = key_insights[:5]
+
+    gaps = _as_string_list(normalized.get("evidence_gaps"))
+    if not observed_action_available and "No observed action trace was collected." not in gaps:
+        gaps.append("No observed action trace was collected.")
+    if observed_action_available:
+        gaps = [item for item in gaps if item != "No observed action trace was collected."]
+    if "behavioral_evidence_boundary" not in payload:
+        gaps.append("behavioral_evidence_boundary remained under-specified in this synthetic run.")
+    normalized["evidence_gaps"] = list(dict.fromkeys(gaps))
+    normalized["next_experiment"] = (
+        str(normalized.get("next_experiment", "")).strip()
+        or (
+            "Run the same task again with another clickable trace and compare the first hesitation, backtracking point, and failure boundary."
+            if observed_action_available
+            else "Run the same task against a real screenshot, flow, or clickable prototype and capture the first action plus the first failure point."
+        )
+    )
+    normalized["synthetic_only_disclaimer"] = (
+        str(normalized.get("synthetic_only_disclaimer", "")).strip()
+        or "Synthetic prototype-validation evidence only; not human usability proof."
+    )
+    return normalized
+
+
+def normalize_image_stimulus_review(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = payload if isinstance(payload, dict) else {}
+    normalized["summary"] = str(normalized.get("summary", "")).strip() or "The static prototype image remained under-specified."
+    normalized["visible_elements"] = [str(item).strip() for item in _coerce_list_field(normalized, "visible_elements") if str(item).strip()]
+    normalized["primary_action_candidates"] = [
+        str(item).strip() for item in _coerce_list_field(normalized, "primary_action_candidates") if str(item).strip()
+    ]
+    normalized["interpretation_risks"] = [
+        str(item).strip() for item in _coerce_list_field(normalized, "interpretation_risks") if str(item).strip()
+    ]
+    normalized["trust_risks"] = [str(item).strip() for item in _coerce_list_field(normalized, "trust_risks") if str(item).strip()]
+    normalized["missing_context"] = [str(item).strip() for item in _coerce_list_field(normalized, "missing_context") if str(item).strip()]
+    normalized["task_relevance"] = (
+        str(normalized.get("task_relevance", "")).strip()
+        or "This review only establishes what the static screen appears to support before any participant reacts."
+    )
+    normalized["evidence_boundary"] = (
+        str(normalized.get("evidence_boundary", "")).strip()
+        or "Static image review only. No click, navigation, timing, or completion trace is available."
+    )
+    return normalized
+
+
+def normalize_flow_stimulus_review(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = payload if isinstance(payload, dict) else {}
+    normalized["summary"] = str(normalized.get("summary", "")).strip() or "The prototype flow remained under-specified."
+    normalized["screen_sequence"] = [str(item).strip() for item in _coerce_list_field(normalized, "screen_sequence") if str(item).strip()]
+    normalized["primary_action_candidates"] = [
+        str(item).strip() for item in _coerce_list_field(normalized, "primary_action_candidates") if str(item).strip()
+    ]
+    normalized["transition_confusions"] = [
+        str(item).strip() for item in _coerce_list_field(normalized, "transition_confusions") if str(item).strip()
+    ]
+    normalized["setup_burdens"] = [
+        str(item).strip() for item in _coerce_list_field(normalized, "setup_burdens") if str(item).strip()
+    ]
+    normalized["likely_drop_off_points"] = [
+        str(item).strip() for item in _coerce_list_field(normalized, "likely_drop_off_points") if str(item).strip()
+    ]
+    normalized["trust_risks"] = [str(item).strip() for item in _coerce_list_field(normalized, "trust_risks") if str(item).strip()]
+    normalized["missing_context"] = [str(item).strip() for item in _coerce_list_field(normalized, "missing_context") if str(item).strip()]
+    normalized["task_relevance"] = (
+        str(normalized.get("task_relevance", "")).strip()
+        or "This review only establishes the apparent multi-screen task flow before any participant reacts."
+    )
+    normalized["evidence_boundary"] = (
+        str(normalized.get("evidence_boundary", "")).strip()
+        or "Multi-screen flow review only. No click, navigation timing, or completion trace is available."
     )
     return normalized
 
@@ -1419,6 +1698,66 @@ class OpenAIFacilitatorProvider:
         payload = normalize_concept_synthesis(payload)
         metadata = getattr(self.client, "last_transport_metadata", {})
         return payload, str(metadata.get("codex_session_id", "")) or provider_session_id
+
+    def synthesize_prototype(
+        self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",
+    ) -> tuple[dict[str, Any], str]:
+        is_codex = self.client.config.transport == "codex_cli"
+        payload = self.client.create_json_response(
+            system_prompt=(
+                "Continue as the same independent research facilitator and produce the prototype-validation report."
+                if is_codex and provider_session_id else system_prompt
+            ),
+            user_prompt=user_prompt,
+            output_schema=PROTOTYPE_SYNTHESIS_SCHEMA,
+            codex_session_id=provider_session_id or None,
+            persist_codex_session=is_codex,
+        )
+        payload = normalize_prototype_synthesis(payload)
+        metadata = getattr(self.client, "last_transport_metadata", {})
+        return payload, str(metadata.get("codex_session_id", "")) or provider_session_id
+
+    def review_image_stimulus(
+        self, *, system_prompt: str, user_prompt: str, image_path: str,
+    ) -> tuple[dict[str, Any], str]:
+        payload = self.client.create_json_response_from_input_items(
+            input_items=[
+                {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_text", "text": user_prompt},
+                        {"type": "input_image", "image_url": image_file_to_data_url(image_path)},
+                    ],
+                },
+            ],
+            output_schema=IMAGE_STIMULUS_REVIEW_SCHEMA,
+        )
+        payload = normalize_image_stimulus_review(payload)
+        metadata = getattr(self.client, "last_transport_metadata", {})
+        return payload, str(metadata.get("codex_session_id", ""))
+
+    def review_flow_stimulus(
+        self, *, system_prompt: str, user_prompt: str, screens: list[dict[str, str]],
+    ) -> tuple[dict[str, Any], str]:
+        content: list[dict[str, str]] = [{"type": "input_text", "text": user_prompt}]
+        for index, screen in enumerate(screens, start=1):
+            label = str(screen.get("label", "")).strip() or f"screen_{index}"
+            path = str(screen.get("path", "")).strip()
+            if not path:
+                raise ValueError("Flow stimulus review requires every screen to include a path.")
+            content.append({"type": "input_text", "text": f"SCREEN {index}: {label}"})
+            content.append({"type": "input_image", "image_url": image_file_to_data_url(path)})
+        payload = self.client.create_json_response_from_input_items(
+            input_items=[
+                {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
+                {"role": "user", "content": content},
+            ],
+            output_schema=FLOW_STIMULUS_REVIEW_SCHEMA,
+        )
+        payload = normalize_flow_stimulus_review(payload)
+        metadata = getattr(self.client, "last_transport_metadata", {})
+        return payload, str(metadata.get("codex_session_id", ""))
 
     def evaluate_quality(
         self, *, system_prompt: str, user_prompt: str, provider_session_id: str = "",

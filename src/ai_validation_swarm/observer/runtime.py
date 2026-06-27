@@ -21,6 +21,7 @@ from ai_validation_swarm.facilitator.runtime import (
     FACILITATOR_PROMPT_VERSION,
     CONCEPT_SYNTHESIS_PROMPT_VERSION,
     HYPOTHESIS_EVIDENCE_JUDGE_PROMPT_VERSION,
+    PROTOTYPE_SYNTHESIS_PROMPT_VERSION,
     SYNTHESIS_PROMPT_VERSION,
     FacilitatedInterviewRuntime,
     _read,
@@ -65,6 +66,9 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         product_context: str = "",
         concept_protocol: str = "",
         concept_label: str = "",
+        stimulus_type: str = "",
+        stimulus_artifact: str = "",
+        prototype_task: str = "",
         output_language: str = "Traditional Chinese",
         max_turns: int = 10,
         soft_turn_limit: int | None = None,
@@ -78,7 +82,14 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             soft_turn_limit=soft_turn_limit,
             hard_turn_limit=hard_turn_limit,
         )
-        mode = self._validate_interview_brief(interview_mode, hypothesis)
+        mode, resolved_stimulus_type = self._validate_interview_brief(
+            interview_mode,
+            hypothesis,
+            product_context=product_context,
+            stimulus_type=stimulus_type,
+            stimulus_artifact=stimulus_artifact,
+            prototype_task=prototype_task,
+        )
         concept = load_concept_protocol(concept_protocol, label=concept_label) if mode == "concept_validation" else None
 
         persona_folder = resolve_persona_folder(self.data_dir, persona_id)
@@ -87,6 +98,14 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
         interview_id = f"observed_{utc_now_iso()[:10].replace('-', '')}_{uuid.uuid4().hex[:8]}"
         folder = self.session_dir / interview_id
         ensure_dir(folder)
+        prepared_stimulus = self._prepare_stimulus_context(
+            interview_folder=folder,
+            interview_mode=mode,
+            product_context=product_context.strip(),
+            stimulus_type=resolved_stimulus_type,
+            stimulus_artifact=stimulus_artifact.strip(),
+            prototype_task=prototype_task.strip(),
+        )
         persona_runtime = ConversationRuntime(
             data_dir=self.data_dir,
             session_dir=folder / "persona_runtime",
@@ -106,10 +125,20 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             persona_model=self.persona_provider.model_name,
             facilitator_prompt_version=FACILITATOR_PROMPT_VERSION,
             synthesis_prompt_version=(
-                CONCEPT_SYNTHESIS_PROMPT_VERSION if mode == "concept_validation" else SYNTHESIS_PROMPT_VERSION
+                CONCEPT_SYNTHESIS_PROMPT_VERSION if mode == "concept_validation"
+                else PROTOTYPE_SYNTHESIS_PROMPT_VERSION if mode == "prototype_validation"
+                else SYNTHESIS_PROMPT_VERSION
             ),
             concept_protocol_version=concept.identifier if concept else "",
             concept_label=concept.label if concept else "",
+            stimulus_type=resolved_stimulus_type,
+            stimulus_artifact=prepared_stimulus["stimulus_artifact"],
+            stimulus_artifact_snapshot=prepared_stimulus["stimulus_artifact_snapshot"],
+            stimulus_analysis_prompt_version=prepared_stimulus["stimulus_analysis_prompt_version"],
+            stimulus_analysis_provider_session_id=prepared_stimulus["stimulus_analysis_provider_session_id"],
+            stimulus_analysis=prepared_stimulus["stimulus_analysis"],
+            observed_action_trace=prepared_stimulus["observed_action_trace"],
+            prototype_task=prototype_task.strip(),
             hypothesis_evidence_judge_prompt_version=HYPOTHESIS_EVIDENCE_JUDGE_PROMPT_VERSION,
             interview_mode=mode,
             hypothesis=hypothesis.strip(),
@@ -342,6 +371,12 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
                         user_prompt=self._synthesis_user_prompt(session),
                         provider_session_id=session.facilitator_provider_session_id,
                     )
+                elif session.interview_mode == "prototype_validation":
+                    synthesis, facilitator_session_id = self.facilitator_provider.synthesize_prototype(
+                        system_prompt=self._synthesis_system_prompt("prototype_validation"),
+                        user_prompt=self._synthesis_user_prompt(session),
+                        provider_session_id=session.facilitator_provider_session_id,
+                    )
                 else:
                     synthesis, facilitator_session_id = self.facilitator_provider.synthesize(
                         system_prompt=self._synthesis_system_prompt(session.interview_mode),
@@ -352,6 +387,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
                 return self._fail(session, folder, "synthesize", exc)
             session.facilitator_provider_session_id = facilitator_session_id
             self._enforce_synthesis_evidence_scope(session, synthesis)
+            self._enforce_prototype_evidence_boundary(session, synthesis)
             synthesis = attach_over_optimism_risks(
                 synthesis,
                 conversation_realism=self._persona_conversation_realism(folder, session),
@@ -623,6 +659,7 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             f"RESEARCH GOAL:\n{session.research_goal}",
             f"PRODUCT CONTEXT:\n{session.product_context or '(none)'}",
             f"CONCEPT LABEL:\n{session.concept_label or '(none)'}",
+            FacilitatedInterviewRuntime._stimulus_prompt_block(session).rstrip(),
             f"STOP REASON:\n{session.stop_reason or '(none)'}",
             "COVERAGE STATUS:\n" + json.dumps(session.coverage_status, ensure_ascii=False, separators=(",", ":")),
             f"TRANSCRIPT:\n{FacilitatedInterviewRuntime._plain_transcript(session)}",
@@ -801,6 +838,9 @@ class ObserverControlledInterviewRuntime(FacilitatedInterviewRuntime):
             f"INTERVIEW MODE:\n{session.interview_mode}",
             f"HYPOTHESIS TO TEST:\n{session.hypothesis or '(none)'}",
             f"RESEARCH GOAL:\n{session.research_goal}",
+            f"PRODUCT CONTEXT:\n{session.product_context or '(none)'}",
+            f"CONCEPT LABEL:\n{session.concept_label or '(none)'}",
+            FacilitatedInterviewRuntime._stimulus_prompt_block(session).rstrip(),
             "COVERAGE STATUS:\n" + json.dumps(session.coverage_status, ensure_ascii=False, separators=(",", ":")),
             f"TRANSCRIPT:\n{FacilitatedInterviewRuntime._plain_transcript(session)}",
             "FACILITATOR TRACE:\n" + json.dumps(

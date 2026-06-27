@@ -1,0 +1,63 @@
+{
+  "trace_version": "observed-action-trace/v1",
+  "trace_label": "clickable-prototype-task-loop",
+  "task_outcome": "partial_success",
+  "summary": "Executed 3 scripted clickable step(s); final recorded action was request_permission on permission request modal with result=stopped. Task outcome=partial_success.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "open_summary",
+      "target": "summary panel",
+      "screen": "Review Workspace",
+      "result": "success",
+      "note": "",
+      "raw_metadata": {
+        "executor_id": "scripted-clickable-manifest",
+        "action_id": "open_summary",
+        "from_screen_id": "review_workspace",
+        "next_screen_id": "review_workspace"
+      }
+    },
+    {
+      "step": 2,
+      "action": "open_evidence",
+      "target": "evidence drawer",
+      "screen": "Review Workspace",
+      "result": "success",
+      "note": "Inspect supporting evidence before acting.",
+      "raw_metadata": {
+        "executor_id": "scripted-clickable-manifest",
+        "action_id": "open_evidence",
+        "from_screen_id": "review_workspace",
+        "next_screen_id": "evidence_drawer"
+      }
+    },
+    {
+      "step": 3,
+      "action": "request_permission",
+      "target": "permission request modal",
+      "screen": "Evidence Drawer",
+      "result": "stopped",
+      "note": "Permission scope felt too broad before value was proven.",
+      "raw_metadata": {
+        "executor_id": "scripted-clickable-manifest",
+        "action_id": "request_permission",
+        "from_screen_id": "evidence_drawer",
+        "next_screen_id": "permission_modal"
+      }
+    }
+  ],
+  "observed_summary": [
+    "Executed 3 scripted action(s) against the clickable prototype manifest.",
+    "Visited screens: Review Workspace, Evidence Drawer, Permission Modal.",
+    "Prototype task: Review one recommendation and decide whether to act on it."
+  ],
+  "missing_signals": [
+    "No dwell-time telemetry was captured.",
+    "No cursor path was captured."
+  ],
+  "first_error": "Permission scope felt too broad before value was proven.",
+  "drop_off_point": "permission request modal",
+  "completion_notes": "Task path stopped before full completion inside the scripted clickable manifest.",
+  "artifact_sha256": "6c422dee07fd0b8d6a7bb8a683b3db14103d78fbeae7df98eaf2ed7e41af2400"
+}

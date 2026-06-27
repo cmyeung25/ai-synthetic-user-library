@@ -13,6 +13,7 @@ from ai_validation_swarm.facilitator.concept_protocols import (
 from ai_validation_swarm.facilitator.optimism import derive_panel_over_optimism_risks
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.observer.runtime import ObserverControlledInterviewRuntime
+from ai_validation_swarm.saas.run_contract import build_concept_panel_run_contract, write_shared_run_contract
 from ai_validation_swarm.conversation.providers import ConversationProvider
 from ai_validation_swarm.storage.files import ensure_dir, read_json, write_json, write_markdown
 
@@ -1192,6 +1193,7 @@ def run_concept_panel(
         hard_turn_limit=hard_turn_limit,
     )
     run_id = f"concept_panel_{utc_now_iso()[:10].replace('-', '')}_{uuid.uuid4().hex[:8]}"
+    created_at = utc_now_iso()
     run_dir = output_dir / run_id
     interview_dir = run_dir / "interviews"
     ensure_dir(interview_dir)
@@ -1279,15 +1281,16 @@ def run_concept_panel(
         run_dir / "facilitator_audit_panel.md",
         _render_facilitator_audit_panel(audit_panel),
     )
-    write_json(run_dir / "manifest.json", {
+    persona_ids = [item["persona_id"] for item in interviews]
+    manifest_payload = {
         "run_id": run_id,
-        "created_at": utc_now_iso(),
+        "created_at": created_at,
         "topic_label": topic_label,
         "research_goal": research_goal,
         "product_context": product_context,
         "concept_protocol": concept_protocol,
         "concept_label": concept_label or topic_label,
-        "persona_ids": [item["persona_id"] for item in interviews],
+        "persona_ids": persona_ids,
         "core_assumption_count": core_assumption_count,
         "max_turns": resolved_hard_turn_limit,
         "soft_turn_limit": resolved_soft_turn_limit,
@@ -1295,7 +1298,42 @@ def run_concept_panel(
         "friction_mode": friction_mode,
         "language": output_language,
         "synthetic_only": True,
-    })
+    }
+    write_json(run_dir / "manifest.json", manifest_payload)
+    completed_interview_count = sum(1 for item in interviews if item.get("status") == "completed")
+    failed_interview_count = sum(1 for item in interviews if item.get("status") == "failed")
+    panel_status = "failed" if completed_interview_count == 0 and failed_interview_count > 0 else (
+        "partial_failed" if failed_interview_count > 0 else "completed"
+    )
+    write_shared_run_contract(
+        run_dir / "run_contract.json",
+        build_concept_panel_run_contract(
+            run_id=run_id,
+            created_at=created_at,
+            output_path=run_dir,
+            research_goal=research_goal,
+            product_context=product_context,
+            topic_label=topic_label,
+            concept_protocol=concept_protocol,
+            concept_label=concept_label or topic_label,
+            persona_ids=persona_ids,
+            output_language=output_language,
+            status=panel_status,
+            interview_count=len(interviews),
+            completed_interview_count=completed_interview_count,
+            failed_interview_count=failed_interview_count,
+            artifact_paths=[
+                "manifest.json",
+                "progress.json",
+                "panel_summary.json",
+                "panel_summary.md",
+                "facilitator_audit_panel.json",
+                "facilitator_audit_panel.md",
+                "run_contract.json",
+            ],
+            finished_at=utc_now_iso(),
+        ),
+    )
     return run_dir
 
 

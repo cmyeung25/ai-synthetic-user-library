@@ -56,6 +56,14 @@ class InterviewSession:
     synthesis_prompt_version: str
     concept_protocol_version: str = ""
     concept_label: str = ""
+    stimulus_type: str = ""
+    stimulus_artifact: str = ""
+    stimulus_artifact_snapshot: str = ""
+    stimulus_analysis_prompt_version: str = ""
+    stimulus_analysis_provider_session_id: str = ""
+    stimulus_analysis: dict[str, Any] = field(default_factory=dict)
+    observed_action_trace: dict[str, Any] = field(default_factory=dict)
+    prototype_task: str = ""
     interview_mode: str = "explore_root_cause"
     hypothesis: str = ""
     facilitator_provider_session_id: str = ""

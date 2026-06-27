@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sqlite3
 import tempfile
 import unittest
+from contextlib import closing
 
 import ai_validation_swarm.facilitator.concept_panel as concept_panel_module
 from ai_validation_swarm.facilitator.concept_panel import (
@@ -542,11 +544,24 @@ class ConceptPanelSummaryTests(unittest.TestCase):
             self.assertEqual(FakeRuntime.last_start_kwargs["soft_turn_limit"], 12)
             self.assertEqual(FakeRuntime.last_start_kwargs["hard_turn_limit"], 16)
             manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+            run_contract = json.loads((run_dir / "run_contract.json").read_text(encoding="utf-8"))
             summary = json.loads((run_dir / "panel_summary.json").read_text(encoding="utf-8"))
             audit_panel = json.loads((run_dir / "facilitator_audit_panel.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["soft_turn_limit"], 12)
             self.assertEqual(manifest["hard_turn_limit"], 16)
             self.assertEqual(manifest["max_turns"], 16)
+            self.assertEqual(run_contract["request"]["run_kind"], "concept_panel")
+            self.assertEqual(run_contract["request"]["entrypoint"], "run-concept-panel")
+            self.assertEqual(run_contract["result"]["status"], "completed")
+            self.assertIn("panel_summary.json", run_contract["result"]["artifact_paths"])
+            metadata_db = output_dir / "metadata.sqlite3"
+            self.assertTrue(metadata_db.exists())
+            with closing(sqlite3.connect(metadata_db)) as connection:
+                run_row = connection.execute(
+                    "SELECT run_kind, status FROM run_records WHERE run_id = ?",
+                    (manifest["run_id"],),
+                ).fetchone()
+            self.assertEqual(run_row, ("concept_panel", "completed"))
             self.assertEqual(summary["common_likely_drivers"][0]["driver"], "Needs simple proof first")
             self.assertEqual(summary["facilitator_primary_failure_modes"][0]["failure_mode"], "coverage_over_depth")
             self.assertEqual(audit_panel["distilled_carry_forward_rules"][0]["rule_id"], "linger_on_manual_verification")

@@ -61,6 +61,15 @@ def derive_over_optimism_risks(
         if evidence_strength in {"stated", "hypothetical", "unknown"}:
             risks.append("All payment and adoption signals here are still stated intention rather than observed behavior.")
         risks.append("No real prototype behavior was tested, so setup confusion, wording breakdown, and actual drop-off remain unobserved.")
+    elif interview_mode == "prototype_validation":
+        boundary = synthesis.get("behavioral_evidence_boundary", {}) if isinstance(synthesis, dict) else {}
+        observed_action_available = bool(boundary.get("observed_action_available", False)) if isinstance(boundary, dict) else False
+        if observed_action_available:
+            risks.append("Observed task behavior here comes from one application-supplied trace, not from human usability evidence or repeated runs.")
+            risks.append("One recorded task path can still miss alternative routes, recovery strategies, and variance across personas or sessions.")
+        else:
+            risks.append("Prototype-validation findings here still come from task-guided self-report rather than observed action traces.")
+            risks.append("First-click accuracy, backtracking, and actual abandonment remain unobserved until a real stimulus run captures actions.")
     else:
         risks.append("This synthesis still relies on simulated self-report rather than observed prototype behavior.")
 

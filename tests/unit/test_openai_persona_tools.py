@@ -573,6 +573,133 @@ class OpenAIPersonaToolsTest(unittest.TestCase):
         self.assertEqual(client.last_transport_metadata["usage"]["total_tokens"], 15)
         chat_mock.assert_called_once()
 
+    def test_multimodal_json_response_attaches_input_image(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            transport="python_urllib",
+        )
+        client = OpenAIResponsesClient(config)
+        captured: dict[str, object] = {}
+
+        def fake_response(body):
+            captured.update(body)
+            return {"output_text": '{"ok": true, "mode": "image"}'}
+
+        image_bytes = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO6p8s8AAAAASUVORK5CYII="
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            image_path = Path(tmp) / "stimulus.png"
+            image_path.write_bytes(image_bytes)
+            with patch.object(client, "_create_response_via_python", side_effect=fake_response):
+                result = client.create_json_response_from_input_items(
+                    input_items=[
+                        {"role": "system", "content": [{"type": "input_text", "text": "Return JSON only."}]},
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "input_text", "text": "Inspect the screenshot."},
+                                {
+                                    "type": "input_image",
+                                    "image_url": f"data:image/png;base64,{base64.b64encode(image_bytes).decode('ascii')}",
+                                },
+                            ],
+                        },
+                    ],
+                    output_schema={
+                        "type": "object",
+                        "required": ["ok", "mode"],
+                        "properties": {
+                            "ok": {"type": "boolean"},
+                            "mode": {"type": "string"},
+                        },
+                    },
+                )
+
+        self.assertEqual(result, {"ok": True, "mode": "image"})
+        self.assertEqual(captured["input"][1]["content"][1]["type"], "input_image")
+        self.assertTrue(captured["input"][1]["content"][1]["image_url"].startswith("data:image/png;base64,"))
+
+    def test_codex_transport_rejects_multimodal_json_response(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            transport="codex_cli",
+            workspace_root=str(ROOT),
+            codex_home_mode="global",
+            codex_home_path=str(ROOT),
+            codex_cli_path="codex",
+        )
+        client = OpenAIResponsesClient(config)
+
+        with self.assertRaises(OpenAIProviderError) as ctx:
+            client.create_json_response_from_input_items(
+                input_items=[
+                    {"role": "system", "content": [{"type": "input_text", "text": "Return JSON only."}]},
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "input_text", "text": "Inspect the screenshot."},
+                            {"type": "input_image", "image_url": "data:image/png;base64,abc"},
+                        ],
+                    },
+                ],
+                output_schema={"type": "object"},
+            )
+
+        self.assertIn("Multimodal inputs are not supported for codex transports", str(ctx.exception))
+
+    def test_multimodal_json_response_supports_multiple_input_images(self) -> None:
+        config = OpenAIProviderConfig(
+            api_key="test-key",
+            transport="python_urllib",
+        )
+        client = OpenAIResponsesClient(config)
+        captured: dict[str, object] = {}
+
+        def fake_response(body):
+            captured.update(body)
+            return {"output_text": '{"ok": true, "mode": "flow"}'}
+
+        image_bytes = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO6p8s8AAAAASUVORK5CYII="
+        )
+        with patch.object(client, "_create_response_via_python", side_effect=fake_response):
+            result = client.create_json_response_from_input_items(
+                input_items=[
+                    {"role": "system", "content": [{"type": "input_text", "text": "Return JSON only."}]},
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "input_text", "text": "Inspect the flow."},
+                            {
+                                "type": "input_image",
+                                "image_url": f"data:image/png;base64,{base64.b64encode(image_bytes).decode('ascii')}",
+                            },
+                            {"type": "input_text", "text": "SCREEN 2"},
+                            {
+                                "type": "input_image",
+                                "image_url": f"data:image/png;base64,{base64.b64encode(image_bytes).decode('ascii')}",
+                            },
+                        ],
+                    },
+                ],
+                output_schema={
+                    "type": "object",
+                    "required": ["ok", "mode"],
+                    "properties": {
+                        "ok": {"type": "boolean"},
+                        "mode": {"type": "string"},
+                    },
+                },
+            )
+
+        self.assertEqual(result, {"ok": True, "mode": "flow"})
+        image_items = [
+            item for item in captured["input"][1]["content"]
+            if item.get("type") == "input_image"
+        ]
+        self.assertEqual(len(image_items), 2)
+
     def test_agnes_responses_transport_retries_retryable_failure_then_succeeds(self) -> None:
         config = OpenAIProviderConfig(
             api_key="test-key",
