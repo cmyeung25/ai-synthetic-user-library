@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 10</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 10 Review</div>
+        <h1>Moss Console</h1>
+        <p>This prototype turns the completed-run evidence browser into a metadata-backed query and replay surface. The operator can search by signal, narrow by family, and jump into replay-linked evidence without falling back to folder browsing.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">Evidence Query</div>
+        <div class="nav-item">Replay</div>
+        <div class="nav-item">Artifacts</div>
+        <div class="nav-item">Comparisons</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage9/index.html">Stage 9 evidence browser</a><br>
+          <a href="../../specs/workspace_evidence_query_contract.md">Evidence query contract</a><br>
+          <a href="../workspace_ui_design_system/index.html">Design system preview</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Query Principle</div>
+        <div class="nav-note">Result review should stay evidence-first: explicit metadata, replay-linked context, and clear contract boundaries instead of a generic admin search surface.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow">Workspace UI Readiness / Evidence Query</div>
+          <h2>Metadata-backed evidence search and replay</h2>
+          <p>The run is already complete. This page is about finding the relevant evidence signal quickly and moving from query result to replay focus through one stable contract.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span>Query status</span>
+            <strong id="metric-query-status">query_ready</strong>
+          </div>
+          <div class="metric">
+            <span>Result count</span>
+            <strong id="metric-result-count">0</strong>
+          </div>
+          <div class="metric">
+            <span>Selected result</span>
+            <strong id="metric-selected-result">-</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="journey-strip" aria-label="Query progression">
+        <div class="journey-step done">
+          <strong>Run completed</strong>
+          <span>Stage 9 already exposed bounded evidence review.</span>
+        </div>
+        <div class="journey-step active">
+          <strong>Evidence queried</strong>
+          <span>Operators can search by signal and family instead of browsing sequentially.</span>
+        </div>
+        <div class="journey-step active">
+          <strong>Replay linked</strong>
+          <span>One selected result can still drive one replay focus step.</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Query controls</h3>
+            <p class="section-copy">These controls simulate how a metadata-backed evidence query surface would behave before a real backend query API is wired in.</p>
+          </div>
+          <div class="status-pill completed">query ready</div>
+        </div>
+        <div class="card-body">
+          <div class="query-shell">
+            <div class="query-row" id="query-text-row"></div>
+            <div class="path-strip" id="family-strip"></div>
+            <div class="path-strip" id="sort-strip"></div>
+            <div class="query-stat-grid" id="query-stat-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Query results and selected review</h3>
+            <p class="section-copy">Results should look like review artifacts, not like anonymous search rows. The selected result drives artifact detail and replay focus together.</p>
+          </div>
+          <div class="status-pill running" id="selected-family-pill">trace</div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="section-stack">
+              <div class="evidence-grid" id="result-grid"></div>
+            </div>
+            <div class="section-stack">
+              <div class="draft-panel">
+                <div class="inline-label">Selected result</div>
+                <div class="summary-list" id="selected-result-summary"></div>
+                <div class="artifact-row" id="selected-result-tags"></div>
+              </div>
+              <div class="draft-panel">
+                <div class="inline-label">Linked artifact detail</div>
+                <div class="event-log" id="artifact-detail-lines"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Replay-linked result focus</h3>
+            <p class="section-copy">The query layer should not break replay context. Once a result is selected, the operator should still be able to step into one replay sequence and one focused moment.</p>
+          </div>
+          <div class="status-pill queued" id="replay-pill">replay linked</div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="draft-panel">
+              <div class="inline-label">Replay sequence</div>
+              <div class="timeline" id="replay-timeline"></div>
+            </div>
+            <div class="draft-panel">
+              <div class="inline-label">Replay focus</div>
+              <div class="summary-list" id="replay-focus-summary"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Contract summary and boundary</h3>
+            <p class="section-copy">The operator still needs a compact explanation of the active query, the evidence mix in view, and the boundary that still applies while interpreting the result set.</p>
+          </div>
+          <div class="status-pill completed">contract</div>
+        </div>
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="summary-card">
+              <strong>Query summary</strong>
+              <div class="summary-list" id="query-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Result mix</strong>
+              <div class="summary-list" id="result-mix-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Selected artifact</strong>
+              <div class="summary-list" id="selected-artifact-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Run context</strong>
+              <div class="summary-list" id="run-context-summary"></div>
+            </div>
+          </div>
+
+          <div class="decision-band ready">
+            <strong>Boundary warning</strong>
+            <p class="decision-copy" id="boundary-copy"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Shared query projections</h3>
+            <p class="section-copy">The future metadata-backed implementation should be able to reuse this same query projection shape instead of inventing a different one in the API layer or the frontend shell.</p>
+          </div>
+          <div class="status-pill queued">derived</div>
+        </div>
+        <div class="card-body">
+          <div class="adapter-grid">
+            <div class="adapter-card">
+              <strong>Evidence query projection</strong>
+              <pre class="json-block" id="query-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Selected result</strong>
+              <pre class="json-block" id="selected-result-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Linked artifact</strong>
+              <pre class="json-block" id="linked-artifact-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Replay focus step</strong>
+              <pre class="json-block" id="replay-focus-json">{}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Query Sidecar</div>
+        <h3>Current query state</h3>
+        <p>The side rail should make the active query legible enough that an operator can explain what they are reviewing without opening raw metadata rows.</p>
+      </div>
+
+      <div class="stack" id="sidecar-stack"></div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong>Metadata-backed results</strong>
+          <p>Results should be query records, not hard-coded file tiles.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong>Replay survives search</strong>
+          <p>One selected result should still drive one replay focus step.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong>Boundary remains explicit</strong>
+          <p>Even search-driven review still needs the synthetic evidence boundary on screen.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Current backend reality</h4>
+        <p>This is still a local engineering prototype, but it models the query/replay surface the real workspace will need once the metadata-backed evidence index becomes callable.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    import {
+      createStage10EvidenceQueryDemoState,
+      deriveStage10EvidenceQueryBundle
+    } from "../workspace_ui_shared/workspace_ui_adapter.mjs";
+
+    const copy = {
+      firstTaskValue: "connect data",
+      questionValue: "Where do new operators hesitate during onboarding, and do they continue after the first task?",
+      desiredValue: "task-friction and continuation risk",
+      nextUpload: "request inputs",
+      nextFallback: "confirm fallback",
+      nextConfirm: "confirm queueable plan",
+      nextSaved: "resume later",
+      phaseQueued: "queued",
+      monitorAwait: "await worker progress",
+      monitorViewResults: "view results",
+      monitorInspectFailure: "inspect failure"
+    };
+
+    const queryTextRow = document.getElementById("query-text-row");
+    const familyStrip = document.getElementById("family-strip");
+    const sortStrip = document.getElementById("sort-strip");
+    const queryStatGrid = document.getElementById("query-stat-grid");
+    const resultGrid = document.getElementById("result-grid");
+    const selectedResultSummary = document.getElementById("selected-result-summary");
+    const selectedResultTags = document.getElementById("selected-result-tags");
+    const artifactDetailLines = document.getElementById("artifact-detail-lines");
+    const replayTimeline = document.getElementById("replay-timeline");
+    const replayFocusSummary = document.getElementById("replay-focus-summary");
+    const querySummary = document.getElementById("query-summary");
+    const resultMixSummary = document.getElementById("result-mix-summary");
+    const selectedArtifactSummary = document.getElementById("selected-artifact-summary");
+    const runContextSummary = document.getElementById("run-context-summary");
+    const boundaryCopy = document.getElementById("boundary-copy");
+    const metricQueryStatus = document.getElementById("metric-query-status");
+    const metricResultCount = document.getElementById("metric-result-count");
+    const metricSelectedResult = document.getElementById("metric-selected-result");
+    const selectedFamilyPill = document.getElementById("selected-family-pill");
+    const replayPill = document.getElementById("replay-pill");
+    const queryJson = document.getElementById("query-json");
+    const selectedResultJson = document.getElementById("selected-result-json");
+    const linkedArtifactJson = document.getElementById("linked-artifact-json");
+    const replayFocusJson = document.getElementById("replay-focus-json");
+    const sidecarStack = document.getElementById("sidecar-stack");
+
+    let state = {};
+
+    const queryPresets = [
+      { id: "hesitate", label: "hesitate", value: "hesitate" },
+      { id: "trust", label: "trust", value: "trust" },
+      { id: "report", label: "report", value: "report" },
+      { id: "clear", label: "clear query", value: "" }
+    ];
+
+    const sortModes = ["relevance", "newest", "family"];
+
+    function resetState() {
+      state = createStage10EvidenceQueryDemoState();
+    }
+
+    function renderRows(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "summary-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderStack(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "stack-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function recompute() {
+      const bundle = deriveStage10EvidenceQueryBundle({
+        queryState: state,
+        copy,
+        localUiState: {
+          locale: "en",
+          active_panel: "evidence_query"
+        }
+      });
+
+      const query = bundle.evidence_query;
+      const selectedResult = query.selected_result;
+      const linkedArtifact = query.linked_artifact;
+      const replayFocus = query.replay_focus_step;
+
+      metricQueryStatus.textContent = query.query_status;
+      metricResultCount.textContent = String(query.result_count);
+      metricSelectedResult.textContent = selectedResult ? selectedResult.title : "-";
+      selectedFamilyPill.className = `status-pill ${linkedArtifact && linkedArtifact.family === "output" ? "completed" : linkedArtifact && linkedArtifact.family === "trace" ? "running" : "queued"}`;
+      selectedFamilyPill.textContent = linkedArtifact ? linkedArtifact.family : "none";
+      replayPill.className = `status-pill ${query.replay_sequence.length ? "running" : "queued"}`;
+      replayPill.textContent = query.replay_sequence.length ? "replay linked" : "no replay";
+
+      queryTextRow.innerHTML = "";
+      queryPresets.forEach((preset) => {
+        const button = document.createElement("button");
+        button.className = `path-option${state.queryText === preset.value ? " active" : ""}`;
+        button.innerHTML = `<strong>${preset.label}</strong><span>${preset.value ? `Search for ${preset.value}.` : "Show every result."}</span>`;
+        button.addEventListener("click", () => {
+          state.queryText = preset.value;
+          state.selectedResultId = null;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        queryTextRow.appendChild(button);
+      });
+
+      familyStrip.innerHTML = "";
+      Object.entries(query.facet_counts).forEach(([family, count]) => {
+        const button = document.createElement("button");
+        button.className = `path-option${query.active_family === family ? " active" : ""}`;
+        button.innerHTML = `<strong>${family}</strong><span>${count} records</span>`;
+        button.addEventListener("click", () => {
+          state.activeFamily = family;
+          state.selectedResultId = null;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        familyStrip.appendChild(button);
+      });
+
+      sortStrip.innerHTML = "";
+      sortModes.forEach((mode) => {
+        const button = document.createElement("button");
+        button.className = `path-option${query.sort_by === mode ? " active" : ""}`;
+        button.innerHTML = `<strong>${mode}</strong><span>${mode === "relevance" ? "Best signal match first." : mode === "newest" ? "Newest result first." : "Group by family."}</span>`;
+        button.addEventListener("click", () => {
+          state.sortBy = mode;
+          state.selectedResultId = null;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        sortStrip.appendChild(button);
+      });
+
+      queryStatGrid.innerHTML = "";
+      [
+        ["results", query.result_count],
+        ["selected", query.selected_result_id ? 1 : 0],
+        ["replay steps", query.replay_sequence.length],
+        ["outputs", query.facet_counts.output]
+      ].forEach(([label, value]) => {
+        const stat = document.createElement("div");
+        stat.className = "query-stat";
+        stat.innerHTML = `<strong>${value}</strong><span>${label}</span>`;
+        queryStatGrid.appendChild(stat);
+      });
+
+      resultGrid.innerHTML = "";
+      query.results.forEach((result) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `evidence-card${query.selected_result_id === result.id ? " active" : ""}`;
+        card.innerHTML = `
+          <strong>${result.title}</strong>
+          <div class="evidence-meta">
+            <span>${result.family}</span>
+            <span>${result.kind}</span>
+            <span>score ${result.relevance_score}</span>
+          </div>
+          <p>${result.summary}</p>
+        `;
+        card.addEventListener("click", () => {
+          state.selectedResultId = result.id;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        resultGrid.appendChild(card);
+      });
+
+      renderRows(selectedResultSummary, selectedResult ? [
+        ["Title", selectedResult.title],
+        ["Family", selectedResult.family],
+        ["Kind", selectedResult.kind],
+        ["Path", selectedResult.artifact_path],
+        ["Score", String(selectedResult.relevance_score)]
+      ] : [["Selection", "No result selected"]]);
+
+      selectedResultTags.innerHTML = "";
+      (selectedResult?.tags || []).forEach((tag) => {
+        const chip = document.createElement("div");
+        chip.className = "artifact-chip";
+        chip.textContent = tag;
+        selectedResultTags.appendChild(chip);
+      });
+
+      artifactDetailLines.innerHTML = "";
+      (linkedArtifact?.detail_lines || []).forEach((line) => {
+        const item = document.createElement("div");
+        item.className = "event-item";
+        item.innerHTML = `<strong>Artifact detail</strong><span>${line}</span>`;
+        artifactDetailLines.appendChild(item);
+      });
+
+      replayTimeline.innerHTML = "";
+      query.replay_sequence.forEach((step) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `timeline-card${query.selected_replay_step_id === step.id ? " active" : ""}`;
+        card.innerHTML = `<h4>${step.title}</h4><p>${step.timestamp} - ${step.note}</p>`;
+        card.addEventListener("click", () => {
+          state.selectedReplayStepId = step.id;
+          recompute();
+        });
+        replayTimeline.appendChild(card);
+      });
+
+      renderRows(replayFocusSummary, replayFocus ? [
+        ["Replay step", replayFocus.title],
+        ["Timestamp", replayFocus.timestamp],
+        ["Interpretation", replayFocus.note]
+      ] : [["Replay", "No replay sequence for this result"]]);
+
+      renderRows(querySummary, [
+        ["Query text", query.query_text || "(none)"],
+        ["Family", query.active_family],
+        ["Sort", query.sort_by],
+        ["Results", String(query.result_count)]
+      ]);
+      renderRows(resultMixSummary, [
+        ["Inputs", String(query.facet_counts.input)],
+        ["Traces", String(query.facet_counts.trace)],
+        ["Analyses", String(query.facet_counts.analysis)],
+        ["Outputs", String(query.facet_counts.output)]
+      ]);
+      renderRows(selectedArtifactSummary, linkedArtifact ? [
+        ["Artifact", linkedArtifact.title],
+        ["Replay-linked", query.replay_sequence.length ? "yes" : "no"],
+        ["Summary", linkedArtifact.summary]
+      ] : [["Artifact", "No linked artifact"]]);
+      renderRows(runContextSummary, [
+        ["Run status", bundle.run_monitor.status],
+        ["Primary mode", bundle.draft.inference.primary_mode],
+        ["Boundary", "synthetic-only review"]
+      ]);
+
+      boundaryCopy.textContent = query.boundary_warning || "-";
+
+      renderStack(sidecarStack, [
+        ["Query", query.query_text || "(none)"],
+        ["Family", query.active_family],
+        ["Selected result", query.selected_result_id || "-"],
+        ["Replay step", query.selected_replay_step_id || "-"]
+      ]);
+
+      queryJson.textContent = JSON.stringify(bundle.evidence_query, null, 2);
+      selectedResultJson.textContent = JSON.stringify(selectedResult, null, 2);
+      linkedArtifactJson.textContent = JSON.stringify(linkedArtifact, null, 2);
+      replayFocusJson.textContent = JSON.stringify(replayFocus, null, 2);
+    }
+
+    resetState();
+    recompute();
+  </script>
+</body>
+</html>

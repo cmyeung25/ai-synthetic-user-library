@@ -1,0 +1,184 @@
+{
+  "report_version": "report/v1",
+  "run_id": "run_20260627_161211",
+  "brief_id": "brief_inbox_coach_v1",
+  "project_name": "Inbox Coach",
+  "generated_at": "2026-06-27T16:12:11+00:00",
+  "run_status": "completed",
+  "panel_spec": {
+    "panel_type": "mainstream",
+    "sample_size": 5,
+    "random_seed": 11,
+    "filters": {},
+    "preset_name": ""
+  },
+  "brief_overview": {
+    "problem_statement": "Independent consultants and small agencies lose follow-up tasks after client meetings and email threads.",
+    "target_market": "Solo consultants and small agencies managing multiple client conversations each week.",
+    "offered_solution": "An AI assistant that turns meeting notes and email threads into a clean action list with deadlines and follow-up suggestions.",
+    "validation_goal": "Test whether the follow-up pain feels strong enough for users to try a lightweight workflow tool.",
+    "pricing_hypothesis": "$29 monthly subscription after a 14-day trial."
+  },
+  "execution": {
+    "selected_persona_count": 1,
+    "successful_response_count": 1,
+    "failed_response_count": 0,
+    "response_coverage_pct": 100.0,
+    "failure_reasons": []
+  },
+  "scores": {
+    "problem_resonance": 4.0,
+    "solution_attractiveness": 3.0,
+    "willingness_to_pay": 3.0
+  },
+  "trigger_clusters": [
+    {
+      "trigger": "clear time savings",
+      "count": 1,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "clear time savings"
+      ]
+    }
+  ],
+  "objection_clusters": [
+    {
+      "objection": "uncertain ROI",
+      "count": 1,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "uncertain ROI"
+      ]
+    }
+  ],
+  "segment_summary": {
+    "mainstream": {
+      "count": 1,
+      "problem_resonance": 4.0,
+      "solution_attractiveness": 3.0,
+      "willingness_to_pay": 3.0,
+      "top_objections": [
+        {
+          "objection": "uncertain ROI",
+          "count": 1
+        }
+      ],
+      "top_triggers": [
+        {
+          "trigger": "clear time savings",
+          "count": 1
+        }
+      ],
+      "top_trust_concerns": [
+        {
+          "trust_concern": "I would need proof that this fits smoothly into existing habits.",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "risk_map": [
+    {
+      "category": "privacy_risk",
+      "highest_severity": "medium",
+      "finding_count": 1,
+      "affected_persona_ids": [],
+      "observations": [
+        "The concept appears to depend on personal or workflow data, so trust language and data-minimisation choices will materially affect adoption."
+      ],
+      "recommended_validation_questions": [
+        "Which minimum data fields are truly necessary for the first useful experience?"
+      ]
+    }
+  ],
+  "skeptic_review": {
+    "review_version": "skeptic-review/v1",
+    "summary": "Skeptic review focuses on weak proof, habit-change friction, pricing readiness, and value-capture gaps.",
+    "challenged_assumptions": [
+      {
+        "finding_id": "skeptic_solution_clarity",
+        "severity": "medium",
+        "title": "Solution story may still be too abstract",
+        "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+        "evidence_refs": [
+          "raw_responses",
+          "summary"
+        ],
+        "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+      },
+      {
+        "finding_id": "skeptic_roi_gap",
+        "severity": "high",
+        "title": "Messaging still leans on implied ROI",
+        "observation": "The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff.",
+        "evidence_refs": [
+          "raw_responses",
+          "objection_clusters"
+        ],
+        "recommended_validation_question": "What metric or visible output can the founder show to reduce ROI ambiguity?"
+      }
+    ]
+  },
+  "assumption_risk_map": [
+    {
+      "finding_id": "skeptic_solution_clarity",
+      "severity": "medium",
+      "title": "Solution story may still be too abstract",
+      "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+      "evidence_refs": [
+        "raw_responses",
+        "summary"
+      ],
+      "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+    },
+    {
+      "finding_id": "skeptic_roi_gap",
+      "severity": "high",
+      "title": "Messaging still leans on implied ROI",
+      "observation": "The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff.",
+      "evidence_refs": [
+        "raw_responses",
+        "objection_clusters"
+      ],
+      "recommended_validation_question": "What metric or visible output can the founder show to reduce ROI ambiguity?"
+    }
+  ],
+  "planner_steps": [
+    "Day 1: Rewrite the landing page headline around the most concrete workflow outcome rather than broad AI promise.",
+    "Day 2: Interview 3 target users about current follow-up and coordination workarounds before showing the solution.",
+    "Day 3: Show a low-fidelity concierge workflow and ask what data they would or would not share.",
+    "Day 3b: Validate a minimum-data experience and document which requested fields feel excessive.",
+    "Day 4: Test one pricing anchor with a trial-first option and capture resistance in plain language.",
+    "Day 5: Compare reactions between one likely early adopter and one skeptical buyer in the same target segment.",
+    "Day 6: Rewrite copy using the top objection and top trigger found in this run.",
+    "Day 7: Decide whether to narrow the target workflow, change the proof requirement, or delay pricing pressure."
+  ],
+  "response_index": [
+    {
+      "synthetic_user_id": "su_0001",
+      "panel_role": "mainstream",
+      "likely_objection": "uncertain ROI",
+      "what_would_make_them_try": "clear time savings",
+      "scorecard": {
+        "problem_resonance": 4,
+        "solution_attractiveness": 3,
+        "willingness_to_pay": 3
+      }
+    }
+  ],
+  "disclaimer": "This result is AI pre-validation only. It should not replace real user interviews, market tests, professional advice, or compliance review.",
+  "report_markdown_path": "report.md",
+  "report_markdown": "# Validation Report: Inbox Coach\n\n## 1. Executive Summary\nThe concept shows problem resonance at 4.0/5, solution attractiveness at 3.0/5, and willingness to pay at 3.0/5 across this synthetic panel.\n\n## 2. Concept Understanding\nProblem: Independent consultants and small agencies lose follow-up tasks after client meetings and email threads.\nSolution: An AI assistant that turns meeting notes and email threads into a clean action list with deadlines and follow-up suggestions.\n\n## 3. Target Segment Fit\nThis run selected 1 personas and received 1 successful responses.\n\n## 4. Problem Resonance Score\n4.0/5\n\n## 5. Solution Attractiveness Score\n3.0/5\n\n## 6. Willingness to Pay Signals\n3.0/5\n\n## 7. Top Buying Triggers\n- clear time savings (1 personas, 100.0%)\n\n## 8. Top Objections\n- uncertain ROI (1 personas, 100.0%)\n\n## 9. Segment-by-Segment Reaction\n- mainstream: 1 responses, problem 4.0/5, solution 3.0/5, willingness to pay 3.0/5, top objection: uncertain ROI, top trigger: clear time savings\n\n## 10. Sensitive Topic Risk\n- privacy_risk (medium): The concept appears to depend on personal or workflow data, so trust language and data-minimisation choices will materially affect adoption.\n\n## 11. Privacy / Fairness / Inclusion Risk\n- privacy_risk: The concept appears to depend on personal or workflow data, so trust language and data-minimisation choices will materially affect adoption.\n\n## 12. Assumption Risk Map\n- Solution story may still be too abstract (medium): The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove. Next question: Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?\n- Messaging still leans on implied ROI (high): The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff. Next question: What metric or visible output can the founder show to reduce ROI ambiguity?\n\n## 13. Recommended Repositioning\nLead with a specific workflow outcome and reduce broad AI claims unless proof can be shown immediately.\n\n## 14. Suggested Landing Page Message\nTurn messy follow-up into a short, reviewable action list without adding another heavy workflow.\n\n## 15. Suggested Concierge MVP\nOffer a manual or semi-manual concierge setup that proves the follow-up outcome before full automation.\n\n## 16. Suggested 7-Day No-Code Validation Plan\n- Day 1: Rewrite the landing page headline around the most concrete workflow outcome rather than broad AI promise.\n- Day 2: Interview 3 target users about current follow-up and coordination workarounds before showing the solution.\n- Day 3: Show a low-fidelity concierge workflow and ask what data they would or would not share.\n- Day 3b: Validate a minimum-data experience and document which requested fields feel excessive.\n- Day 4: Test one pricing anchor with a trial-first option and capture resistance in plain language.\n- Day 5: Compare reactions between one likely early adopter and one skeptical buyer in the same target segment.\n- Day 6: Rewrite copy using the top objection and top trigger found in this run.\n- Day 7: Decide whether to narrow the target workflow, change the proof requirement, or delay pricing pressure.\n\n## 17. Suggested Real User Interview Script\n- Walk me through the last time this problem showed up.\n- What did you do instead of buying a new tool?\n- What would you need to trust this workflow enough to try it?\n- Which part of the pitch feels too vague or too risky?\n- What would make the price feel justified in week one?\n\n## 18. What This AI Validation Cannot Prove\n- It cannot prove real willingness to buy.\n- It cannot replace real switching behaviour, retention, or trust formation.\n- It cannot replace expert review in high-stakes or regulated contexts.\n\n## 19. Disclaimer\nThis result is AI pre-validation only. It should not replace real user interviews, market tests, professional advice, or compliance review.\n\n## Response Appendix\n- su_0001: uncertain ROI; try signal: clear time savings"
+}

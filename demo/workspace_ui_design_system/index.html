@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Design System</title>
+  <link rel="stylesheet" href="./workspace-ui-base.css">
+  <link rel="stylesheet" href="./workspace-theme-moss.css" id="theme-stylesheet">
+</head>
+<body>
+  <main class="preview-shell">
+    <section class="hero-card">
+      <div class="eyebrow">Workspace UI / Design System Foundation</div>
+      <h1>Research console theme and reusable components</h1>
+      <p class="hero-copy">
+        This design-system foundation defines the reusable CSS theme for the planned workspace console:
+        dark research-ops surfaces, explicit evidence states, restrained console density, and reusable components
+        for the conversational intake path.
+      </p>
+      <div class="chip-row">
+        <div class="chip">Theme tokens</div>
+        <div class="chip">Console cards</div>
+        <div class="chip">Status states</div>
+        <div class="chip">Chat bubbles</div>
+        <div class="chip">Plan sidecar</div>
+        <div class="chip">Confirmation summary</div>
+      </div>
+      <div class="theme-strip">
+        <div class="theme-label">Theme direction</div>
+        <div class="phase-strip" aria-label="Theme variants">
+          <button class="phase-button active" data-theme="moss">Moss Console</button>
+          <button class="phase-button" data-theme="slate">Slate Lab</button>
+          <button class="phase-button" data-theme="ink">Ink Signal</button>
+        </div>
+      </div>
+      <div class="preview-note">
+        Related review artifact:
+        <a href="../workspace_ui_lowfi/index.html">open the Workspace UI low-fi prototype</a>
+      </div>
+    </section>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Theme tokens</h2>
+            <p class="section-copy">Color and surface tokens tuned for an evidence-oriented workspace rather than a marketing dashboard.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="token-grid">
+            <div class="token-card">
+              <div class="swatch bg"></div>
+              <strong>Background</strong>
+              <div class="preview-note">`--bg`</div>
+            </div>
+            <div class="token-card">
+              <div class="swatch panel"></div>
+              <strong>Primary panel</strong>
+              <div class="preview-note">`--panel`</div>
+            </div>
+            <div class="token-card">
+              <div class="swatch line"></div>
+              <strong>Line / border</strong>
+              <div class="preview-note">`--line`</div>
+            </div>
+            <div class="token-card">
+              <div class="swatch accent"></div>
+              <strong>Accent</strong>
+              <div class="preview-note">`--accent`</div>
+            </div>
+            <div class="token-card">
+              <div class="swatch accent-2"></div>
+              <strong>Positive signal</strong>
+              <div class="preview-note">`--accent-2`</div>
+            </div>
+            <div class="token-card">
+              <div class="swatch warn"></div>
+              <strong>Warning state</strong>
+              <div class="preview-note">`--warn`</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Layout rules</h2>
+            <p class="section-copy">The default shell is a quiet operations console. It should feel like a place to run studies and inspect evidence, not to admire summary cards.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul class="preview-list">
+            <li>Use a left rail for workspace location, not for decorative navigation chrome.</li>
+            <li>Keep the main canvas focused on conversational intake and run review.</li>
+            <li>Use the right rail for explicit plan, evidence boundary, and runtime constraints.</li>
+            <li>Keep dense information readable with low-radius panels, restrained motion, and strong borders.</li>
+            <li>Reserve bright accent color for action, inferred-plan emphasis, and bounded state changes.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Reusable UI parts</h2>
+            <p class="section-copy">These are the primitives the low-fi prototype already consumes.</p>
+          </div>
+        </div>
+        <div class="card-body component-grid">
+          <div class="status-pill queued">queued</div>
+          <div class="status-pill running">running</div>
+          <div class="status-pill completed">completed</div>
+          <div class="status-pill failed">failed</div>
+          <div class="chip-row">
+            <div class="chip">Mode override</div>
+            <div class="chip">Persona filters</div>
+            <div class="chip">Provider choice</div>
+          </div>
+          <div class="bubble system">I can likely run this as prototype validation. I only need one more detail before I draft the plan.</div>
+          <div class="bubble user">Use Hong Kong SMB operators and keep the first pass mainstream.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Plan sidecar pattern</h2>
+            <p class="section-copy">The right rail keeps the conversational path honest by surfacing the inferred contract and evidence boundaries.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="stack">
+            <div class="stack-row">
+              <strong>Intent</strong>
+              <span>Trust and onboarding friction review</span>
+            </div>
+            <div class="stack-row">
+              <strong>Likely mode</strong>
+              <span>prototype_validation</span>
+            </div>
+            <div class="stack-row">
+              <strong>Outputs</strong>
+              <span>report, transcript, stimulus analysis</span>
+            </div>
+          </div>
+          <div class="guardrail warn">
+            <h4>Evidence boundary</h4>
+            <p>Screenshot-based prototype review can support interpretation and inferred friction, but not true observed action evidence.</p>
+          </div>
+          <div class="guardrail ok">
+            <h4>Complexity guardrail</h4>
+            <p>Do not expose node graphs, orchestration builders, or large run forms on the default path.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Confirmation primitives</h2>
+            <p class="section-copy">Stage-4 confirmation surfaces reuse summary rows, decision bands, mapping cards, and payload blocks instead of inventing one-off page styling.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="summary-card">
+              <strong>Research goal</strong>
+              <div class="summary-list">
+                <div class="summary-row">
+                  <strong>Question</strong>
+                  <span>Will operators trust this enough to try it?</span>
+                </div>
+                <div class="summary-row">
+                  <strong>Outcome</strong>
+                  <span>Surface trust gaps and onboarding friction.</span>
+                </div>
+              </div>
+            </div>
+            <div class="summary-card">
+              <strong>Study setup</strong>
+              <div class="summary-list">
+                <div class="summary-row">
+                  <strong>Panel</strong>
+                  <span>HK SMB mainstream / 5 personas</span>
+                </div>
+                <div class="summary-row">
+                  <strong>Stimulus</strong>
+                  <span>brief plus screenshot set</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="decision-band ready">
+            <strong>Ready to confirm</strong>
+            <p class="decision-copy">This run shape fits the current static-stimulus backend subset, so the queue action can stay active.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Execution mapping</h2>
+            <p class="section-copy">The confirmation step should expose enough structure for audit and backend adaptation without forcing raw schema learning up front.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="output-grid">
+            <div class="output-card">
+              <strong>brief_path</strong>
+              <p class="scenario-note">briefs/founder-brief.json</p>
+            </div>
+            <div class="output-card">
+              <strong>panel_spec</strong>
+              <p class="scenario-note">mainstream_hk_smb:5</p>
+            </div>
+            <div class="output-card">
+              <strong>submit target</strong>
+              <p class="scenario-note">validation_job</p>
+            </div>
+            <div class="output-card">
+              <strong>confirmation gate</strong>
+              <p class="scenario-note">status == confirmed</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Remediation primitives</h2>
+            <p class="section-copy">Non-queueable drafts should route users into supplement, downgrade, or save paths through explicit next-action components.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="path-strip">
+            <button class="path-option active">
+              <strong>Supplement inputs</strong>
+              <span>Upload screenshots and answer one clarification.</span>
+            </button>
+            <button class="path-option">
+              <strong>Downgrade now</strong>
+              <span>Run a supported concept review on the current materials.</span>
+            </button>
+          </div>
+          <div class="state-chip warn">needs inputs</div>
+          <div class="remediation-card">
+            <strong>Required now</strong>
+            <div class="upload-list">
+              <div class="upload-item">
+                <strong>Screenshot set</strong>
+                <div class="path-meta">Request two or three onboarding screens.</div>
+              </div>
+              <div class="upload-item">
+                <strong>Task anchor</strong>
+                <div class="path-meta">Ask which first task matters most.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Named next actions</h2>
+            <p class="section-copy">The main button should describe what happens next rather than hiding behind a generic disabled submit control.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="cta-row">
+            <button class="action-button primary">Request missing inputs</button>
+            <button class="action-button primary">Confirm downgraded plan</button>
+            <button class="action-button secondary">Save blocked draft</button>
+          </div>
+          <div class="preview-note">
+            The remediation contract should tell the UI whether to ask a question, request an artifact, confirm a fallback, or resume later.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Single-flow progression</h2>
+            <p class="section-copy">A converged workspace screen should be able to show intake, inference, confirmation blocking, and remediation as one continuous draft journey.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="journey-strip">
+            <div class="journey-step done">
+              <strong>Intent received</strong>
+              <span>Natural-language research request plus available files.</span>
+            </div>
+            <div class="journey-step done">
+              <strong>Inference drafted</strong>
+              <span>Likely run shape and missing evidence identified.</span>
+            </div>
+            <div class="journey-step active">
+              <strong>Confirmation blocked</strong>
+              <span>Queue action withheld until the evidence boundary is supportable.</span>
+            </div>
+            <div class="journey-step active">
+              <strong>Remediation active</strong>
+              <span>The same draft offers a concrete next action.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Thread plus system work</h2>
+            <p class="section-copy">The product can keep the user-facing path conversational while still surfacing the draft-plan logic and blockers nearby.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="thread-card">
+            <strong>Conversation thread</strong>
+            <div class="chat-stream">
+              <div class="bubble user">We only have the brief and homepage copy right now.</div>
+              <div class="bubble system">I can infer a prototype-oriented goal, but I need onboarding screenshots before task-friction evidence is supportable.</div>
+            </div>
+          </div>
+          <div class="preview-note">
+            This pairing should let one screen carry both the user dialogue and the system's hidden planning work without expanding into a rigid form or workflow builder.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">State-machine controls</h2>
+            <p class="section-copy">The next prototype stage needs reusable control cards, action clusters, and event logs so draft transitions can be reviewed as product behavior, not only as screenshots.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="control-grid">
+            <div class="control-card">
+              <strong>Operator actions</strong>
+              <div class="action-cluster">
+                <button class="action-button small primary">Upload screenshots</button>
+                <button class="action-button small">Answer first task</button>
+                <button class="action-button small">Choose fallback</button>
+              </div>
+            </div>
+            <div class="log-card">
+              <strong>State transition log</strong>
+              <div class="event-log">
+                <div class="event-item">
+                  <strong>Uploaded screenshots</strong>
+                  <span>Draft blocker count dropped because prototype artifacts are now available.</span>
+                </div>
+                <div class="event-item">
+                  <strong>Answered first task</strong>
+                  <span>The draft can now move into a queueable confirmation path.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Adapter projections</h2>
+            <p class="section-copy">A real workspace shell should be able to show the conversation state, draft plan object, remediation object, and a derived UI projection side by side while they stay in sync.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="adapter-grid">
+            <div class="adapter-card">
+              <strong>Conversation state</strong>
+              <pre class="json-block">{
+  "artifacts": ["brief", "homepage-copy"]
+}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Frontend adapter</strong>
+              <pre class="json-block">{
+  "ui_phase": "blocked",
+  "primary_button": "request_artifact_upload"
+}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Evidence browser primitives</h2>
+            <p class="section-copy">Completed runs need an audit-friendly evidence surface that can filter artifacts, preserve replay context, and keep review grounded in explicit artifact metadata.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="evidence-grid">
+            <div class="evidence-card active">
+              <strong>Observed action trace</strong>
+              <div class="evidence-meta">
+                <span>trace</span>
+                <span>replay</span>
+              </div>
+              <p>Structured task-path trace with one hesitation loop before completion.</p>
+            </div>
+            <div class="evidence-card">
+              <strong>Stimulus analysis</strong>
+              <div class="evidence-meta">
+                <span>analysis</span>
+                <span>screen-level</span>
+              </div>
+              <p>Screen-level wording and trust-burden interpretation linked back to the reviewed assets.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Replay-linked review</h2>
+            <p class="section-copy">A selected evidence artifact should be able to point the operator back to one replay sequence or review step instead of leaving trace interpretation detached from the rest of the workspace.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <div class="timeline-card active">
+              <h4>Connect-data hesitation</h4>
+              <p>Backtracking begins after the participant becomes uncertain about reversibility.</p>
+            </div>
+            <div class="timeline-card">
+              <h4>Task completion</h4>
+              <p>Completion follows once the interface surfaces a safer path forward.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Evidence query primitives</h2>
+            <p class="section-copy">The next workspace stage needs a metadata-backed search surface so completed runs can be queried by signal, artifact family, and replay-linked evidence rather than only browsed sequentially.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="query-shell">
+            <div class="query-row">
+              <div class="query-pill">query: hesitate</div>
+              <div class="query-pill">family: trace</div>
+              <div class="query-pill">sort: relevance</div>
+            </div>
+            <div class="query-stat-grid">
+              <div class="query-stat">
+                <strong>6</strong>
+                <span>all artifacts</span>
+              </div>
+              <div class="query-stat">
+                <strong>1</strong>
+                <span>trace result</span>
+              </div>
+              <div class="query-stat">
+                <strong>2</strong>
+                <span>output artifacts</span>
+              </div>
+              <div class="query-stat">
+                <strong>1</strong>
+                <span>selected replay path</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Result-card review</h2>
+            <p class="section-copy">Result cards should still feel like evidence review, not like a generic admin table. The operator should be able to move from result summary into one selected replay focus or linked artifact path.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="evidence-grid">
+            <div class="evidence-card active">
+              <strong>Observed action trace</strong>
+              <div class="evidence-meta">
+                <span>trace</span>
+                <span>relevance 3</span>
+              </div>
+              <p>Backtracking appears before the connect-data task completes.</p>
+            </div>
+            <div class="evidence-card">
+              <strong>Run report</strong>
+              <div class="evidence-meta">
+                <span>output</span>
+                <span>relevance 1</span>
+              </div>
+              <p>Continuation risk remains medium until reversibility is made explicit.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Integrated shell primitives</h2>
+            <p class="section-copy">Stage-11 shell work needs reusable layouts that can carry conversation, operator actions, runtime bridge detail, and shell metrics on one page.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="workspace-shell-grid">
+            <div class="workspace-shell-column">
+              <div class="draft-panel">
+                <div class="inline-label">Conversation state</div>
+                <div class="chat-stream">
+                  <div class="bubble user"><span class="message-meta">Research intent</span>Where do new operators hesitate during onboarding?</div>
+                  <div class="bubble system"><span class="message-meta">Missing evidence before confirmation</span>I still need the onboarding screenshot set and one first-task anchor.</div>
+                </div>
+              </div>
+            </div>
+            <div class="workspace-shell-column">
+              <div class="draft-panel">
+                <div class="inline-label">Shell metrics</div>
+                <div class="mini-metric-grid">
+                  <div class="mini-metric">
+                    <strong>2</strong>
+                    <span>waiting for</span>
+                  </div>
+                  <div class="mini-metric">
+                    <strong>0</strong>
+                    <span>attempts</span>
+                  </div>
+                  <div class="mini-metric">
+                    <strong>0</strong>
+                    <span>query results</span>
+                  </div>
+                  <div class="mini-metric">
+                    <strong>draft</strong>
+                    <span>run state</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Surface status cards</h2>
+            <p class="section-copy">The shell should be able to summarize which surfaces are active, done, or blocked without turning into a dense admin dashboard.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="surface-grid">
+            <div class="surface-card active">
+              <strong>conversation</strong>
+              <span>blocked</span>
+            </div>
+            <div class="surface-card">
+              <strong>monitor</strong>
+              <span>ready_to_queue</span>
+            </div>
+            <div class="surface-card blocked">
+              <strong>review</strong>
+              <span>query_pending</span>
+            </div>
+            <div class="surface-card done">
+              <strong>contract</strong>
+              <span>shared adapter</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="preview-grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Runtime bridge form primitives</h2>
+            <p class="section-copy">Stage-12 runtime bridge work needs compact connection controls and runtime path fields that still feel like part of the same research console.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="field">
+              <label>API base URL</label>
+              <input type="text" value="http://127.0.0.1:8011">
+            </div>
+            <div class="field">
+              <label>Bearer token</label>
+              <input type="text" value="token-api">
+            </div>
+            <div class="field">
+              <label>brief_path</label>
+              <input type="text" value="briefs/brief.json">
+            </div>
+            <div class="field">
+              <label>persona_dir</label>
+              <input type="text" value="personas">
+            </div>
+          </div>
+          <div class="cta-row">
+            <button class="action-button primary">submit live job</button>
+            <button class="action-button">list live jobs</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="section-title">Runtime bridge note</h2>
+            <p class="section-copy">The UI can now talk to the current validation-job API, but it should still signal that metadata-backed evidence query and replay remain a separate endpoint boundary.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="guardrail warn">
+            <h4>Runtime gap</h4>
+            <p>Live job submission, monitoring, and completed-run evidence query can now use real local API routes. Replay still depends on artifacts that carry trace-linked steps.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="section-title">Implementation use</h2>
+          <p class="section-copy">This theme file is intended to be reused by future HTML prototypes and any eventual workspace frontend shell before a framework-specific component library exists.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="preview-list">
+          <li>Use `workspace-theme.css` as the shared token and component layer for workspace-console prototypes.</li>
+          <li>Keep new pages on the same surface language unless there is a product reason to break the pattern.</li>
+          <li>Add advanced controls as extensions of this system, not as a separate visual language.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <script>
+    const themeStylesheet = document.getElementById("theme-stylesheet");
+    const themeButtons = Array.from(document.querySelectorAll("[data-theme]"));
+    const themeMap = {
+      moss: "./workspace-theme-moss.css",
+      slate: "./workspace-theme-slate.css",
+      ink: "./workspace-theme-ink.css"
+    };
+
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const theme = button.dataset.theme;
+        themeStylesheet.setAttribute("href", themeMap[theme]);
+        themeButtons.forEach((item) => {
+          item.classList.toggle("active", item === button);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

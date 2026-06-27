@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 11</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 11 Review</div>
+        <h1>Moss Console</h1>
+        <p>This prototype turns the separate Workspace UI stages into one integrated operator shell. The same page now carries conversational intake, plan confirmation, queue and run visibility, and evidence query review.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">Integrated Shell</div>
+        <div class="nav-item">Conversation</div>
+        <div class="nav-item">Run Monitor</div>
+        <div class="nav-item">Evidence Query</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage10/index.html">Stage 10 evidence query</a><br>
+          <a href="../../specs/workspace_ui_adapter_contract.md">Adapter contract</a><br>
+          <a href="../../specs/workspace_evidence_query_contract.md">Evidence query contract</a><br>
+          <a href="../workspace_ui_design_system/index.html">Design system preview</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Shell Principle</div>
+        <div class="nav-note">One operator shell should carry research intent, queueability, worker status, and evidence review without pushing the user back to filesystem browsing or separate prototype pages.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow">Workspace UI Readiness / Integrated Shell</div>
+          <h2>Single-shell operator flow</h2>
+          <p>This page models the real next boundary: one workspace shell that can move from conversational intake to evidence query review while staying grounded in the shared adapter, run-monitor, and evidence-query derivations.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span>UI phase</span>
+            <strong id="metric-ui-phase">blocked</strong>
+          </div>
+          <div class="metric">
+            <span>Run status</span>
+            <strong id="metric-run-status">ready_to_queue</strong>
+          </div>
+          <div class="metric">
+            <span>Query status</span>
+            <strong id="metric-query-status">query_pending</strong>
+          </div>
+          <div class="metric">
+            <span>Active surface</span>
+            <strong id="metric-active-surface">conversation_intake</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="journey-strip" id="stage-strip" aria-label="Integrated workspace progression"></section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Conversation, intake, and runtime bridge</h3>
+            <p class="section-copy">This is the operator-facing shell entry. Actions here should update the draft, adapter, and downstream run and review surfaces without changing pages.</p>
+          </div>
+          <div class="status-pill queued" id="shell-pill">conversation_intake</div>
+        </div>
+        <div class="card-body">
+          <div class="workspace-shell-grid">
+            <div class="workspace-shell-column">
+              <div class="draft-panel">
+                <div class="inline-label">Conversation thread</div>
+                <div class="chat-stream" id="conversation-thread"></div>
+              </div>
+
+              <div class="draft-panel">
+                <div class="inline-label">Operator actions</div>
+                <div class="cta-row" id="operator-actions"></div>
+              </div>
+            </div>
+
+            <div class="workspace-shell-column">
+              <div class="draft-panel">
+                <div class="inline-label">Current shell metrics</div>
+                <div class="mini-metric-grid" id="mini-metrics"></div>
+              </div>
+
+              <div class="draft-panel">
+                <div class="inline-label">Runtime bridge</div>
+                <div class="summary-list" id="runtime-bridge-summary"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Plan, monitor, and surface state</h3>
+            <p class="section-copy">The same shell should keep planning state legible while the run moves through queue, worker, and completed states. The operator should not need separate tools to understand where the workflow is.</p>
+          </div>
+          <div class="status-pill running" id="monitor-pill">pre_queue</div>
+        </div>
+        <div class="card-body">
+          <div class="surface-grid" id="surface-grid"></div>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <strong>Draft summary</strong>
+              <div class="summary-list" id="draft-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Adapter state</strong>
+              <div class="summary-list" id="adapter-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Run monitor</strong>
+              <div class="summary-list" id="run-monitor-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Evidence boundary</strong>
+              <div class="summary-list" id="boundary-summary"></div>
+            </div>
+          </div>
+
+          <div class="draft-panel">
+            <div class="inline-label">Run timeline</div>
+            <div class="timeline" id="run-timeline"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Evidence review inside the same shell</h3>
+            <p class="section-copy">Once the run is completed, the shell should unlock artifact review, metadata-backed evidence query, and replay-linked interpretation without changing interaction model.</p>
+          </div>
+          <div class="status-pill completed" id="review-pill">query_pending</div>
+        </div>
+        <div class="card-body">
+          <div class="query-shell">
+            <div class="query-row" id="query-preset-row"></div>
+            <div class="path-strip" id="family-strip"></div>
+            <div class="path-strip" id="sort-strip"></div>
+          </div>
+
+          <div class="analysis-grid">
+            <div class="section-stack">
+              <div class="draft-panel">
+                <div class="inline-label">Query results</div>
+                <div class="evidence-grid" id="result-grid"></div>
+                <div class="guardrail warn hidden" id="query-locked-note">
+                  <h4>Results not ready</h4>
+                  <p>The evidence query surface remains locked until the run reaches completed state.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-stack">
+              <div class="draft-panel">
+                <div class="inline-label">Selected result</div>
+                <div class="summary-list" id="selected-result-summary"></div>
+                <div class="artifact-row" id="selected-result-tags"></div>
+              </div>
+
+              <div class="draft-panel">
+                <div class="inline-label">Linked artifact detail</div>
+                <div class="event-log" id="artifact-detail-lines"></div>
+              </div>
+
+              <div class="draft-panel">
+                <div class="inline-label">Replay focus</div>
+                <div class="summary-list" id="replay-focus-summary"></div>
+                <div class="timeline" id="replay-timeline"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Shared shell projections</h3>
+            <p class="section-copy">This shell remains reviewable because its visible behavior still comes from explicit shared projections instead of page-local interpretation logic.</p>
+          </div>
+          <div class="status-pill completed">derived</div>
+        </div>
+        <div class="card-body">
+          <div class="adapter-grid">
+            <div class="adapter-card">
+              <strong>Workspace adapter</strong>
+              <pre class="json-block" id="adapter-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Run monitor</strong>
+              <pre class="json-block" id="run-monitor-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Evidence query</strong>
+              <pre class="json-block" id="query-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Workspace shell</strong>
+              <pre class="json-block" id="shell-json">{}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Shell Sidecar</div>
+        <h3>Current workspace state</h3>
+        <p>The right rail now reads like a real operator sidecar: current state, next action, and review boundary in one place.</p>
+      </div>
+
+      <div class="stack" id="sidecar-stack"></div>
+
+      <div class="decision-band warn">
+        <strong>Boundary warning</strong>
+        <p class="decision-copy" id="boundary-copy"></p>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong>One flow</strong>
+          <p>Conversation, queueing, and results now live in one shell instead of separate review pages.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong>Evidence-first review</strong>
+          <p>Completed runs unlock artifact browsing and query-driven replay instead of generic dashboard tiles.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong>Backend gap remains explicit</strong>
+          <p>This Stage 11 shell still derives query and replay locally. Later stages can attach the real backend evidence-query route, but replay depth still depends on trace-bearing artifacts.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Current backend reality</h4>
+        <p>This Stage 11 shell still derives query review locally. Later stages can now attach real validation-job ingress and metadata-backed evidence query routes from the local SaaS runtime.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    import {
+      createStage11WorkspaceShellDemoState,
+      deriveStage11WorkspaceShellBundle
+    } from "../workspace_ui_shared/workspace_ui_adapter.mjs";
+
+    const copy = {
+      firstTaskValue: "connect data",
+      questionValue: "Where do new operators hesitate during onboarding, and do they continue after the first task?",
+      desiredValue: "task-friction and continuation risk",
+      nextUpload: "request inputs",
+      nextFallback: "confirm fallback",
+      nextConfirm: "confirm queueable plan",
+      nextSaved: "resume later",
+      phaseQueued: "queued",
+      monitorAwait: "await worker progress",
+      monitorViewResults: "view results",
+      monitorInspectFailure: "inspect failure"
+    };
+
+    const stageStrip = document.getElementById("stage-strip");
+    const shellPill = document.getElementById("shell-pill");
+    const monitorPill = document.getElementById("monitor-pill");
+    const reviewPill = document.getElementById("review-pill");
+    const metricUiPhase = document.getElementById("metric-ui-phase");
+    const metricRunStatus = document.getElementById("metric-run-status");
+    const metricQueryStatus = document.getElementById("metric-query-status");
+    const metricActiveSurface = document.getElementById("metric-active-surface");
+    const conversationThread = document.getElementById("conversation-thread");
+    const operatorActions = document.getElementById("operator-actions");
+    const miniMetrics = document.getElementById("mini-metrics");
+    const runtimeBridgeSummary = document.getElementById("runtime-bridge-summary");
+    const surfaceGrid = document.getElementById("surface-grid");
+    const draftSummary = document.getElementById("draft-summary");
+    const adapterSummary = document.getElementById("adapter-summary");
+    const runMonitorSummary = document.getElementById("run-monitor-summary");
+    const boundarySummary = document.getElementById("boundary-summary");
+    const runTimeline = document.getElementById("run-timeline");
+    const queryPresetRow = document.getElementById("query-preset-row");
+    const familyStrip = document.getElementById("family-strip");
+    const sortStrip = document.getElementById("sort-strip");
+    const resultGrid = document.getElementById("result-grid");
+    const queryLockedNote = document.getElementById("query-locked-note");
+    const selectedResultSummary = document.getElementById("selected-result-summary");
+    const selectedResultTags = document.getElementById("selected-result-tags");
+    const artifactDetailLines = document.getElementById("artifact-detail-lines");
+    const replayFocusSummary = document.getElementById("replay-focus-summary");
+    const replayTimeline = document.getElementById("replay-timeline");
+    const adapterJson = document.getElementById("adapter-json");
+    const runMonitorJson = document.getElementById("run-monitor-json");
+    const queryJson = document.getElementById("query-json");
+    const shellJson = document.getElementById("shell-json");
+    const sidecarStack = document.getElementById("sidecar-stack");
+    const boundaryCopy = document.getElementById("boundary-copy");
+
+    const queryPresets = [
+      { id: "hesitate", label: "hesitate", value: "hesitate" },
+      { id: "trust", label: "trust", value: "trust" },
+      { id: "report", label: "report", value: "report" },
+      { id: "clear", label: "clear query", value: "" }
+    ];
+
+    const sortModes = ["relevance", "newest", "family"];
+
+    let state = {};
+    let eventCounter = 0;
+
+    function eventStamp() {
+      eventCounter += 1;
+      return `22:${String(32 + eventCounter).padStart(2, "0")}`;
+    }
+
+    function pushEvent(type) {
+      state.events = [{ type, at: eventStamp() }, ...(state.events || [])].slice(0, 8);
+    }
+
+    function resetState() {
+      state = createStage11WorkspaceShellDemoState();
+      eventCounter = 0;
+    }
+
+    function renderRows(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "summary-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderStack(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "stack-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function actionList(bundle) {
+      const actions = [];
+      const beforeQueue = state.lifecycle === "ready_to_queue";
+
+      actions.push({
+        label: state.hasScreenshots ? "remove screenshots" : "attach screenshots",
+        onClick: () => {
+          state.hasScreenshots = !state.hasScreenshots;
+          if (!state.hasScreenshots && state.lifecycle === "ready_to_queue" && !state.fallbackChosen) {
+            state.selectedArtifactId = null;
+          }
+          pushEvent("artifact_toggle");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: state.firstTask ? "clear first task" : "set first task",
+        onClick: () => {
+          state.firstTask = state.firstTask ? null : copy.firstTaskValue;
+          pushEvent("clarification_toggle");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: state.fallbackChosen ? "clear fallback" : "choose fallback",
+        disabled: !beforeQueue,
+        onClick: () => {
+          if (!beforeQueue) return;
+          state.fallbackChosen = !state.fallbackChosen;
+          state.savedBlocked = false;
+          pushEvent("fallback_toggle");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: state.savedBlocked ? "resume draft" : "save blocked draft",
+        disabled: !beforeQueue,
+        onClick: () => {
+          if (!beforeQueue) return;
+          state.savedBlocked = !state.savedBlocked;
+          pushEvent("save_toggle");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: "confirm plan",
+        disabled: bundle.adapter.ui_phase !== "ready_for_confirmation",
+        primary: true,
+        onClick: () => {
+          if (bundle.adapter.ui_phase !== "ready_for_confirmation") return;
+          state.lifecycle = "queued";
+          state.savedBlocked = false;
+          state.failureReason = null;
+          state.attemptCount = Math.max(state.attemptCount || 0, 1);
+          pushEvent("confirmed");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: "lease worker",
+        disabled: state.lifecycle !== "queued",
+        onClick: () => {
+          if (state.lifecycle !== "queued") return;
+          state.lifecycle = "leased";
+          pushEvent("leased");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: "start run",
+        disabled: state.lifecycle !== "leased",
+        onClick: () => {
+          if (state.lifecycle !== "leased") return;
+          state.lifecycle = "running";
+          pushEvent("running");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: "complete run",
+        disabled: !["queued", "leased", "running"].includes(state.lifecycle),
+        onClick: () => {
+          if (!["queued", "leased", "running"].includes(state.lifecycle)) return;
+          state.lifecycle = "completed";
+          state.failureReason = null;
+          state.selectedArtifactId = "artifact-trace";
+          state.selectedResultId = "query-artifact-trace";
+          state.selectedReplayStepId = "step-03";
+          pushEvent("completed");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: "fail run",
+        disabled: !["queued", "leased", "running"].includes(state.lifecycle),
+        onClick: () => {
+          if (!["queued", "leased", "running"].includes(state.lifecycle)) return;
+          state.lifecycle = "failed";
+          state.failureReason = "stimulus render timeout before trace packaging";
+          pushEvent("failed");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: "retry run",
+        disabled: state.lifecycle !== "failed",
+        onClick: () => {
+          if (state.lifecycle !== "failed") return;
+          state.lifecycle = "queued";
+          state.failureReason = null;
+          state.attemptCount = (state.attemptCount || 1) + 1;
+          pushEvent("retry");
+          recompute();
+        }
+      });
+
+      actions.push({
+        label: "reset shell",
+        onClick: () => {
+          resetState();
+          recompute();
+        }
+      });
+
+      return actions;
+    }
+
+    function recompute() {
+      const bundle = deriveStage11WorkspaceShellBundle({
+        shellState: state,
+        copy,
+        localUiState: {
+          locale: "en",
+          active_panel: "workspace_shell"
+        }
+      });
+
+      metricUiPhase.textContent = bundle.adapter.ui_phase;
+      metricRunStatus.textContent = bundle.run_monitor.status;
+      metricQueryStatus.textContent = bundle.evidence_query.query_status;
+      metricActiveSurface.textContent = bundle.workspace_shell.active_surface;
+
+      shellPill.className = `status-pill ${bundle.adapter.ui_phase === "blocked" ? "failed" : bundle.adapter.ui_phase === "ready_for_confirmation" ? "queued" : "completed"}`;
+      shellPill.textContent = bundle.workspace_shell.active_surface;
+      monitorPill.className = `status-pill ${bundle.run_monitor.status === "failed" ? "failed" : bundle.run_monitor.status === "completed" ? "completed" : bundle.run_monitor.status === "queued" || bundle.run_monitor.status === "ready_to_queue" ? "queued" : "running"}`;
+      monitorPill.textContent = bundle.run_monitor.monitor_phase;
+      reviewPill.className = `status-pill ${bundle.evidence_query.query_status === "query_ready" ? "completed" : "queued"}`;
+      reviewPill.textContent = bundle.evidence_query.query_status;
+
+      stageStrip.innerHTML = "";
+      bundle.workspace_shell.stage_strip.forEach((stage) => {
+        const card = document.createElement("div");
+        card.className = `journey-step ${stage.state === "done" ? "done" : stage.state === "active" ? "active" : ""}`;
+        card.innerHTML = `<strong>${stage.label}</strong><span>${stage.state}</span>`;
+        stageStrip.appendChild(card);
+      });
+
+      conversationThread.innerHTML = "";
+      bundle.workspace_shell.conversation_feed.forEach((entry) => {
+        const bubble = document.createElement("div");
+        bubble.className = `bubble ${entry.speaker === "user" ? "user" : "system"}`;
+        bubble.innerHTML = `<span class="message-meta">${entry.title}</span>${entry.body}`;
+        conversationThread.appendChild(bubble);
+      });
+
+      operatorActions.innerHTML = "";
+      actionList(bundle).forEach((action) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `action-button${action.primary ? " primary" : ""}${action.disabled ? " disabled" : ""}`;
+        if (action.disabled) {
+          button.setAttribute("aria-disabled", "true");
+        }
+        button.textContent = action.label;
+        button.addEventListener("click", action.onClick);
+        operatorActions.appendChild(button);
+      });
+
+      miniMetrics.innerHTML = "";
+      [
+        ["waiting for", bundle.adapter.visible_waiting_for.length],
+        ["attempts", bundle.run_monitor.attempt_count],
+        ["visible artifacts", bundle.evidence_browser.visible_count],
+        ["query results", bundle.evidence_query.result_count]
+      ].forEach(([label, value]) => {
+        const card = document.createElement("div");
+        card.className = "mini-metric";
+        card.innerHTML = `<strong>${value}</strong><span>${label}</span>`;
+        miniMetrics.appendChild(card);
+      });
+
+      renderRows(runtimeBridgeSummary, [
+        ["POST /api/v1/validation-jobs", "queue confirmed draft into worker ingress"],
+        ["GET /api/v1/validation-jobs/{job_id}", "retrieve queue and worker lifecycle"],
+        ["metadata query endpoint", "still pending beyond local prototype derivation"]
+      ]);
+
+      surfaceGrid.innerHTML = "";
+      [
+        ["conversation", bundle.workspace_shell.section_status.conversation],
+        ["monitor", bundle.workspace_shell.section_status.monitor],
+        ["browser", bundle.workspace_shell.section_status.browser],
+        ["query", bundle.workspace_shell.section_status.query]
+      ].forEach(([label, stateValue]) => {
+        const stateClass = stateValue.includes("blocked") || stateValue.includes("failed")
+          ? "blocked"
+          : stateValue.includes("completed") || stateValue.includes("ready")
+            ? "done"
+            : stateValue.includes("pending")
+              ? ""
+              : "active";
+        const card = document.createElement("div");
+        card.className = `surface-card ${stateClass}`.trim();
+        card.innerHTML = `<strong>${label}</strong><span>${stateValue}</span>`;
+        surfaceGrid.appendChild(card);
+      });
+
+      renderRows(draftSummary, [
+        ["Mode", bundle.draft.inference.primary_mode],
+        ["First task", bundle.draft.proposed_run.first_task || "not set"],
+        ["Execution", bundle.draft.proposed_run.execution_status],
+        ["Fallback", bundle.conversation.selected_fallback || "none"]
+      ]);
+
+      renderRows(adapterSummary, [
+        ["UI phase", bundle.adapter.ui_phase],
+        ["Run state", bundle.adapter.run_state],
+        ["Primary action", bundle.adapter.primary_button.label],
+        ["Waiting for", bundle.adapter.visible_waiting_for.join(", ") || "none"]
+      ]);
+
+      renderRows(runMonitorSummary, [
+        ["Status", bundle.run_monitor.status],
+        ["Worker", bundle.run_monitor.worker_id || "not leased"],
+        ["Current step", bundle.run_monitor.current_step || "none"],
+        ["Retry available", bundle.run_monitor.retry_available ? "yes" : "no"]
+      ]);
+
+      renderRows(boundarySummary, [
+        ["Allowed evidence", bundle.draft.evidence_boundary.allowed_evidence.join(", ")],
+        ["Forbidden claims", bundle.draft.evidence_boundary.forbidden_claims.join(", ")],
+        ["Boundary note", bundle.draft.evidence_boundary.boundary_note]
+      ]);
+
+      runTimeline.innerHTML = "";
+      bundle.run_monitor.timeline.forEach((step) => {
+        const card = document.createElement("div");
+        card.className = `timeline-card${step.state === "active" ? " active" : ""}`;
+        card.innerHTML = `<h4>${step.step}</h4><p>${step.state}</p>`;
+        runTimeline.appendChild(card);
+      });
+
+      queryPresetRow.innerHTML = "";
+      queryPresets.forEach((preset) => {
+        const button = document.createElement("button");
+        button.className = `path-option${state.queryText === preset.value ? " active" : ""}`;
+        button.innerHTML = `<strong>${preset.label}</strong><span>${preset.value ? `Search for ${preset.value}.` : "Show every result."}</span>`;
+        button.addEventListener("click", () => {
+          state.queryText = preset.value;
+          state.selectedResultId = null;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        queryPresetRow.appendChild(button);
+      });
+
+      familyStrip.innerHTML = "";
+      Object.entries(bundle.evidence_query.facet_counts).forEach(([family, count]) => {
+        const button = document.createElement("button");
+        button.className = `path-option${bundle.evidence_query.active_family === family ? " active" : ""}`;
+        button.innerHTML = `<strong>${family}</strong><span>${count} records</span>`;
+        button.addEventListener("click", () => {
+          state.activeFamily = family;
+          state.activeFilter = family === "all" ? "all" : family;
+          state.selectedResultId = null;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        familyStrip.appendChild(button);
+      });
+
+      sortStrip.innerHTML = "";
+      sortModes.forEach((mode) => {
+        const button = document.createElement("button");
+        button.className = `path-option${bundle.evidence_query.sort_by === mode ? " active" : ""}`;
+        button.innerHTML = `<strong>${mode}</strong><span>${mode === "relevance" ? "Best signal match first." : mode === "newest" ? "Newest result first." : "Group by family."}</span>`;
+        button.addEventListener("click", () => {
+          state.sortBy = mode;
+          state.selectedResultId = null;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        sortStrip.appendChild(button);
+      });
+
+      resultGrid.innerHTML = "";
+      if (!bundle.evidence_query.results.length) {
+        queryLockedNote.classList.remove("hidden");
+      } else {
+        queryLockedNote.classList.add("hidden");
+      }
+
+      bundle.evidence_query.results.forEach((result) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `evidence-card${bundle.evidence_query.selected_result_id === result.id ? " active" : ""}`;
+        card.innerHTML = `
+          <strong>${result.title}</strong>
+          <div class="evidence-meta">
+            <span>${result.family}</span>
+            <span>${result.kind}</span>
+            <span>score ${result.relevance_score}</span>
+          </div>
+          <p>${result.summary}</p>
+        `;
+        card.addEventListener("click", () => {
+          state.selectedResultId = result.id;
+          state.selectedArtifactId = result.artifact_id;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        resultGrid.appendChild(card);
+      });
+
+      const selectedResult = bundle.evidence_query.selected_result;
+      const linkedArtifact = bundle.evidence_query.linked_artifact;
+      const replayFocus = bundle.evidence_query.replay_focus_step;
+
+      renderRows(selectedResultSummary, selectedResult ? [
+        ["Title", selectedResult.title],
+        ["Family", selectedResult.family],
+        ["Kind", selectedResult.kind],
+        ["Path", selectedResult.artifact_path],
+        ["Score", String(selectedResult.relevance_score)]
+      ] : [["Selection", "No result selected"]]);
+
+      selectedResultTags.innerHTML = "";
+      (selectedResult?.tags || []).forEach((tag) => {
+        const chip = document.createElement("div");
+        chip.className = "artifact-chip";
+        chip.textContent = tag;
+        selectedResultTags.appendChild(chip);
+      });
+
+      artifactDetailLines.innerHTML = "";
+      (linkedArtifact?.detail_lines || []).forEach((line) => {
+        const item = document.createElement("div");
+        item.className = "event-item";
+        item.innerHTML = `<strong>Artifact detail</strong><span>${line}</span>`;
+        artifactDetailLines.appendChild(item);
+      });
+
+      renderRows(replayFocusSummary, replayFocus ? [
+        ["Replay step", replayFocus.title],
+        ["Timestamp", replayFocus.timestamp],
+        ["Interpretation", replayFocus.note]
+      ] : [["Replay", "No replay sequence for this result"]]);
+
+      replayTimeline.innerHTML = "";
+      bundle.evidence_query.replay_sequence.forEach((step) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `timeline-card${bundle.evidence_query.selected_replay_step_id === step.id ? " active" : ""}`;
+        card.innerHTML = `<h4>${step.title}</h4><p>${step.timestamp} - ${step.note}</p>`;
+        card.addEventListener("click", () => {
+          state.selectedReplayStepId = step.id;
+          recompute();
+        });
+        replayTimeline.appendChild(card);
+      });
+
+      renderStack(sidecarStack, [
+        ["Active surface", bundle.workspace_shell.active_surface],
+        ["Next action", `${bundle.workspace_shell.next_action_label} (${bundle.workspace_shell.next_action_type})`],
+        ["Waiting for", bundle.adapter.visible_waiting_for.join(", ") || "none"],
+        ["Selected result", bundle.evidence_query.selected_result_id || "-"]
+      ]);
+
+      boundaryCopy.textContent = bundle.draft.evidence_boundary.boundary_note;
+
+      adapterJson.textContent = JSON.stringify(bundle.adapter, null, 2);
+      runMonitorJson.textContent = JSON.stringify(bundle.run_monitor, null, 2);
+      queryJson.textContent = JSON.stringify(bundle.evidence_query, null, 2);
+      shellJson.textContent = JSON.stringify(bundle.workspace_shell, null, 2);
+    }
+
+    resetState();
+    recompute();
+  </script>
+</body>
+</html>

@@ -21,7 +21,7 @@ The core output is not polished narrative. The core output is `behaviorally plau
 
 At the platform level, the system should let a founder, product team, or researcher:
 
-1. select the right research mode for the question
+1. express the research question and available materials in natural language so the platform can infer the right research mode
 2. run that mode against suitable synthetic users
 3. produce evidence with clear boundaries
 4. identify what remains unproven and must still be validated with humans
@@ -148,6 +148,27 @@ Question this layer answers:
 Important rule:
 
 - `CLI` is the first execution shell, not the platform itself.
+- the default workspace product surface should gather research intent conversationally, keep internal mode taxonomy behind the scenes, and require explicit plan confirmation before execution
+
+## Product Surface Principle
+
+The default product path should minimize user learning cost.
+
+Default rules:
+
+- start with `conversational intake`, not a large configuration form
+- let users describe the research question, context, and available artifacts in natural language
+- let the system infer the likely research mode, required follow-up questions, and execution setup behind the scenes
+- do not make the primary workspace flow resemble `n8n`-style workflow builders, node graphs, or automation panels
+- do not require users to understand internal run schemas, panel contracts, or mode taxonomy before they can begin
+- keep advanced controls, mode overrides, persona filters, and structured fields in a secondary path rather than the default path
+- always present a final explicit research-plan confirmation before the run starts
+
+Why this matters:
+
+- it lowers setup friction across discovery, concept evaluation, and prototype validation
+- it preserves throughput without weakening evidence discipline
+- it keeps the platform aligned to replacing interviewer-led setup work instead of training users to operate an internal orchestration model
 
 ## 5. Evidence Model
 

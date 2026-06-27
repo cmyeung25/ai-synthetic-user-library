@@ -1,0 +1,459 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Low-Fi Prototype</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css" id="theme-stylesheet">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Low-Fi Review</div>
+        <h1>Workspace Console</h1>
+        <p>Research operations surface for synthetic-user studies. Default path is conversational intake, hidden setup complexity, and explicit plan confirmation.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">Runs Console</div>
+        <div class="nav-item">Evidence</div>
+        <div class="nav-item">Personas</div>
+        <div class="nav-item">Ops</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Review Lens</div>
+        <div class="nav-note">This prototype is for flow review, not final UI polish. It shows how one user moves from intent to execution without learning internal mode taxonomy.</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Core Rules</div>
+        <div class="nav-note">1. Conversation first<br>2. Clarify only what is missing<br>3. Hide mode complexity<br>4. Confirm plan before run<br>5. Evidence stays explicit</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow">Workspace UI Readiness / Low-Fi Prototype</div>
+          <h2>From research intent to queued run</h2>
+          <p>This screen compresses the default workspace path into four review states: conversational intake, progressive clarification, research-plan confirmation, and run/evidence review.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span>Plan Tier</span>
+            <strong>Pro</strong>
+          </div>
+          <div class="metric">
+            <span>Daily Runs</span>
+            <strong>12 / 25</strong>
+          </div>
+          <div class="metric">
+            <span>Active Jobs</span>
+            <strong>2 / 3</strong>
+          </div>
+          <div class="metric">
+            <span>Retention</span>
+            <strong>30d</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="theme-strip">
+        <div class="theme-label">Theme review in context</div>
+        <div class="phase-strip" aria-label="Theme variants">
+          <button class="phase-button active" data-theme="moss">Moss Console</button>
+          <button class="phase-button" data-theme="slate">Slate Lab</button>
+          <button class="phase-button" data-theme="ink">Ink Signal</button>
+        </div>
+      </section>
+
+      <section class="phase-strip" aria-label="Prototype states">
+        <button class="phase-button active" data-phase="intake">1. Intake</button>
+        <button class="phase-button" data-phase="clarify">2. Clarify</button>
+        <button class="phase-button" data-phase="confirm">3. Confirm</button>
+        <button class="phase-button" data-phase="review">4. Review</button>
+      </section>
+
+      <div class="card-grid">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="section-title" id="main-title">Conversational intake</h3>
+              <p class="section-copy" id="main-copy">The main canvas starts from what the team wants to learn, not from mode pickers or a large setup form.</p>
+            </div>
+            <div class="status-pill queued" id="phase-pill">Main path</div>
+          </div>
+
+          <div class="card-body">
+            <div id="phase-intake" class="phase-panel">
+              <div class="chat-stream">
+                <div class="bubble system">What are you trying to learn, and what material do you already have? You can paste a brief, drop screenshots, or describe the product question in plain language.</div>
+                <div class="bubble user">I want to know whether HK SMB operators would trust a new AI operations assistant enough to try it. I have a founder brief and three onboarding screenshots.</div>
+              </div>
+
+              <div class="prompt-box">
+                <strong>Why this is the default start</strong>
+                <p>The user does not need to choose between concept validation, adoption-barrier work, or prototype validation yet. The system will infer that behind the scenes.</p>
+              </div>
+
+              <div>
+                <div class="helper">Suggested quick additions</div>
+                <div class="quick-actions">
+                  <div class="chip">Add target segment</div>
+                  <div class="chip">Attach screenshots</div>
+                  <div class="chip">Paste current prototype URL</div>
+                  <div class="chip">Import prior run</div>
+                </div>
+              </div>
+
+              <div>
+                <div class="helper">Artifacts in scope</div>
+                <div class="artifact-row">
+                  <div class="artifact-chip">founder-brief.json</div>
+                  <div class="artifact-chip">onboarding-screen-01.png</div>
+                  <div class="artifact-chip">onboarding-screen-02.png</div>
+                  <div class="artifact-chip">onboarding-screen-03.png</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="phase-clarify" class="phase-panel hidden">
+              <div class="chat-stream">
+                <div class="bubble system">I can likely run this as prototype validation with adoption-risk focus. Before I draft the plan, I need two things: which market slice should I prioritize, and do you want trust reactions only or task friction as well?</div>
+                <div class="bubble user">Prioritize Hong Kong SMB operators with fragmented back-office workflows. Include first-session task friction if the screenshots are enough to infer it.</div>
+                <div class="bubble system">Understood. I will keep the default path narrow and only ask for one more thing if needed: do you want a five-person mainstream panel or a more skeptical panel?</div>
+              </div>
+
+              <div class="prompt-box">
+                <strong>Clarification rule</strong>
+                <p>The system asks only for missing context that materially changes mode, panel shape, or evidence quality. It does not open the full panel schema or expose internal field names.</p>
+              </div>
+
+              <div class="timeline">
+                <div class="timeline-card active">
+                  <h4>Hidden inference</h4>
+                  <p>Likely mode: prototype validation<br>Secondary lens: adoption-barrier validation<br>Stimulus maturity: static image review</p>
+                </div>
+                <div class="timeline-card">
+                  <h4>Still missing</h4>
+                  <p>Panel stance preference and whether to reuse the default HK SMB persona pool.</p>
+                </div>
+              </div>
+            </div>
+
+            <div id="phase-confirm" class="phase-panel hidden">
+              <div class="timeline">
+                <div class="timeline-card active">
+                  <h4>Final research plan</h4>
+                  <p>Run a five-person mainstream HK SMB panel against onboarding screenshots and the founder brief. Focus on first-session trust signals, setup burden, and likely abandonment risks.</p>
+                </div>
+                <div class="timeline-card">
+                  <h4>Why confirmation is explicit</h4>
+                  <p>This is where the user checks what the system inferred before a validation job is created. The product stays conversational upfront, but the execution contract becomes visible here.</p>
+                </div>
+              </div>
+
+              <table class="queue-table" aria-label="Confirmation table">
+                <tbody>
+                  <tr>
+                    <th>Inferred mode</th>
+                    <td>prototype_validation</td>
+                  </tr>
+                  <tr>
+                    <th>Panel</th>
+                    <td>mainstream / sample size 5 / HK SMB operator pool</td>
+                  </tr>
+                  <tr>
+                    <th>Evidence boundary</th>
+                    <td>stated interpretation + interpreted friction from static screenshots; no observed action trace yet</td>
+                  </tr>
+                  <tr>
+                    <th>Outputs</th>
+                    <td>report, transcript, stimulus analysis, human validation gaps, run contract</td>
+                  </tr>
+                  <tr>
+                    <th>Runtime impact</th>
+                    <td>1 queued job / pro quota available / 30-day retention</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="phase-review" class="phase-panel hidden">
+              <table class="queue-table" aria-label="Run queue">
+                <thead>
+                  <tr>
+                    <th>Status</th>
+                    <th>Run</th>
+                    <th>Focus</th>
+                    <th>Artifacts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="status-pill running">running</span></td>
+                    <td>job_20260627_0ab31d</td>
+                    <td>prototype validation / trust + drop-off</td>
+                    <td>brief, 3 screenshots</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status-pill queued">queued</span></td>
+                    <td>job_20260627_61af81</td>
+                    <td>concept validation / skeptical panel</td>
+                    <td>concept one-pager</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status-pill completed">completed</span></td>
+                    <td>job_20260626_f39ac4</td>
+                    <td>adoption barrier / follow-up replay</td>
+                    <td>prior report, persona pool</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="timeline">
+                <div class="timeline-card active">
+                  <h4>Evidence lane</h4>
+                  <p>run_contract.json -> transcript.md -> stimulus_analysis.json -> report.json -> human_validation_gap summary</p>
+                </div>
+                <div class="timeline-card">
+                  <h4>Review actions</h4>
+                  <p>Replay with a skeptical panel, inspect retention deadline, compare against prior run, or export a bounded evidence pack.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer-note">Low-fi intent: validate structure and decision flow first. Advanced controls such as explicit mode override, persona filters, and panel tuning remain available as a secondary path, not on the default canvas.</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="section-title">Live research plan</h3>
+              <p class="section-copy">This panel updates as the conversation becomes more structured. It is the bridge between conversational intake and the real run contract.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="timeline" id="plan-phase-intake">
+              <div class="timeline-card active">
+                <h4>What the system knows</h4>
+                <p>Research intent: trust and adoption risk for an AI operations assistant. Available materials: founder brief and onboarding screenshots.</p>
+              </div>
+              <div class="timeline-card">
+                <h4>What remains implicit</h4>
+                <p>Mode, panel shape, and evidence class are still hidden until enough context is gathered.</p>
+              </div>
+            </div>
+
+            <div class="timeline hidden" id="plan-phase-clarify">
+              <div class="timeline-card active">
+                <h4>Inferred setup</h4>
+                <p>Prototype validation is the likely primary mode because screenshots exist. Adoption risk remains a secondary synthesis lens.</p>
+              </div>
+              <div class="timeline-card">
+                <h4>Minimal follow-up</h4>
+                <p>Ask only for missing market slice and panel stance, not full config schema.</p>
+              </div>
+            </div>
+
+            <div class="timeline hidden" id="plan-phase-confirm">
+              <div class="timeline-card active">
+                <h4>Ready to submit</h4>
+                <p>The system now exposes the exact inferred plan so the user can confirm, correct, or open advanced controls.</p>
+              </div>
+              <div class="timeline-card">
+                <h4>Advanced path</h4>
+                <p>Optional mode override, persona filters, quota-aware sampling, and provider selection sit behind a secondary panel.</p>
+              </div>
+            </div>
+
+            <div class="timeline hidden" id="plan-phase-review">
+              <div class="timeline-card active">
+                <h4>After submit</h4>
+                <p>The workspace shifts to queue visibility, evidence retrieval, and replay actions. This is still a research console, not a generic analytics dashboard.</p>
+              </div>
+              <div class="timeline-card">
+                <h4>Why this matters</h4>
+                <p>The user can inspect why the plan ran, what evidence was produced, and where human validation is still required.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Execution Summary</div>
+        <h3>Plan sidecar</h3>
+        <p>The right rail is always explicit about evidence boundaries and operational constraints, even though the intake path stays low-friction.</p>
+      </div>
+
+      <div class="stack">
+        <div class="stack-row">
+          <strong>Intent</strong>
+          <span>Will target users trust and try this AI assistant?</span>
+        </div>
+        <div class="stack-row">
+          <strong>Likely mode</strong>
+          <span id="plan-mode">Hidden until clarified</span>
+        </div>
+        <div class="stack-row">
+          <strong>Stimulus</strong>
+          <span id="plan-stimulus">Founder brief + screenshots</span>
+        </div>
+        <div class="stack-row">
+          <strong>Panel</strong>
+          <span id="plan-panel">Undecided</span>
+        </div>
+        <div class="stack-row">
+          <strong>Outputs</strong>
+          <span id="plan-outputs">Draft plan only</span>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Evidence boundary</h4>
+        <p id="guard-evidence">Do not imply observed behavior until the system confirms the stimulus supports it. At intake time this remains unresolved.</p>
+      </div>
+
+      <div class="guardrail ok">
+        <h4>Complexity guardrail</h4>
+        <p id="guard-complexity">The default path should not expose mode selectors, workflow graphs, or raw panel schema fields.</p>
+      </div>
+
+      <div class="guardrail">
+        <h4>Operational guardrail</h4>
+        <p id="guard-ops">Quota, role, billing status, and retention remain visible before execution so the conversational path does not hide real runtime constraints.</p>
+      </div>
+
+      <div class="stack">
+        <small>Secondary path examples</small>
+        <div class="chip-row">
+          <div class="chip">Mode override</div>
+          <div class="chip">Persona filters</div>
+          <div class="chip">Provider choice</div>
+          <div class="chip">Sample size</div>
+          <div class="chip">Retention policy</div>
+        </div>
+      </div>
+
+      <div class="artifact-note">File is static and can be opened directly. No server required.</div>
+    </aside>
+  </div>
+
+  <script>
+    const phaseContent = {
+      intake: {
+        title: "Conversational intake",
+        copy: "The main canvas starts from what the team wants to learn, not from mode pickers or a large setup form.",
+        pill: "Main path",
+        pillClass: "status-pill queued",
+        mode: "Hidden until clarified",
+        stimulus: "Founder brief + screenshots",
+        panel: "Undecided",
+        outputs: "Draft plan only",
+        evidence: "Do not imply observed behavior until the system confirms the stimulus supports it. At intake time this remains unresolved."
+      },
+      clarify: {
+        title: "Progressive clarification",
+        copy: "The system narrows ambiguity with the smallest useful set of follow-up questions, instead of exposing full run configuration.",
+        pill: "Clarifying",
+        pillClass: "status-pill running",
+        mode: "prototype_validation + adoption lens",
+        stimulus: "Static screenshots / onboarding flow",
+        panel: "HK SMB mainstream or skeptical",
+        outputs: "Pending final confirmation",
+        evidence: "This path can support interpretation and inferred friction from screenshots, but still not true observed action traces."
+      },
+      confirm: {
+        title: "Research-plan confirmation",
+        copy: "Before creating a job, the user sees exactly what the system inferred, what evidence boundary applies, and which outputs will be produced.",
+        pill: "Ready",
+        pillClass: "status-pill completed",
+        mode: "prototype_validation",
+        stimulus: "Brief + 3 onboarding screenshots",
+        panel: "Mainstream / sample size 5 / HK SMB",
+        outputs: "report, transcript, stimulus analysis, run contract",
+        evidence: "Confirmation makes the evidence boundary explicit: screenshot-based prototype validation, not observed action evidence."
+      },
+      review: {
+        title: "Queue and evidence review",
+        copy: "Once submitted, the workspace shifts from setup to operational review: queue state, run detail, evidence lane, and replay options.",
+        pill: "In review",
+        pillClass: "status-pill queued",
+        mode: "prototype_validation run in progress",
+        stimulus: "Artifact set attached to job",
+        panel: "Locked from submitted contract",
+        outputs: "report, contract, replay path, human validation gaps",
+        evidence: "The evidence browser should preserve artifact paths, replayability, and explicit human validation gaps."
+      }
+    };
+
+    const phaseButtons = Array.from(document.querySelectorAll("[data-phase]"));
+    const themeButtons = Array.from(document.querySelectorAll("[data-theme]"));
+    const themeStylesheet = document.getElementById("theme-stylesheet");
+    const panels = Array.from(document.querySelectorAll(".phase-panel"));
+    const planPanels = Array.from(document.querySelectorAll('[id^="plan-phase-"]'));
+    const themeMap = {
+      moss: "../workspace_ui_design_system/workspace-theme-moss.css",
+      slate: "../workspace_ui_design_system/workspace-theme-slate.css",
+      ink: "../workspace_ui_design_system/workspace-theme-ink.css"
+    };
+
+    const titleNode = document.getElementById("main-title");
+    const copyNode = document.getElementById("main-copy");
+    const pillNode = document.getElementById("phase-pill");
+    const modeNode = document.getElementById("plan-mode");
+    const stimulusNode = document.getElementById("plan-stimulus");
+    const panelNode = document.getElementById("plan-panel");
+    const outputsNode = document.getElementById("plan-outputs");
+    const evidenceNode = document.getElementById("guard-evidence");
+
+    function setPhase(phase) {
+      phaseButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.phase === phase);
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.id !== `phase-${phase}`);
+      });
+
+      planPanels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.id !== `plan-phase-${phase}`);
+      });
+
+      const content = phaseContent[phase];
+      titleNode.textContent = content.title;
+      copyNode.textContent = content.copy;
+      pillNode.textContent = content.pill;
+      pillNode.className = content.pillClass;
+      modeNode.textContent = content.mode;
+      stimulusNode.textContent = content.stimulus;
+      panelNode.textContent = content.panel;
+      outputsNode.textContent = content.outputs;
+      evidenceNode.textContent = content.evidence;
+    }
+
+    phaseButtons.forEach((button) => {
+      button.addEventListener("click", () => setPhase(button.dataset.phase));
+    });
+
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const theme = button.dataset.theme;
+        themeStylesheet.setAttribute("href", themeMap[theme]);
+        themeButtons.forEach((item) => {
+          item.classList.toggle("active", item === button);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+

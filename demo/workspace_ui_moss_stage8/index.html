@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 8</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 8 Review</div>
+        <h1>Moss Console</h1>
+        <p>Queue and run status now live on the same workspace path as the confirmed draft. This prototype focuses on worker lifecycle, failure visibility, and retry readiness.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">Active Study</div>
+        <div class="nav-item">Queued Runs</div>
+        <div class="nav-item">Artifacts</div>
+        <div class="nav-item">Failures</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage7/index.html">Stage 7 adapter flow</a><br>
+          <a href="../../specs/workspace_ui_adapter_contract.md">Adapter contract spec</a><br>
+          <a href="../workspace_ui_design_system/index.html">Design system preview</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Monitor Principle</div>
+        <div class="nav-note">Confirmed work should move into queue, worker progress, and failure handling without forcing the operator into backend-only mental models.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow">Workspace UI Readiness / Queue Monitor</div>
+          <h2>Confirmed draft to run lifecycle</h2>
+          <p>The draft is already queueable. This page shows what the same workspace surface should expose as the job enters queue, leases a worker, runs, completes, or fails.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span>Adapter run state</span>
+            <strong id="metric-run-state">draft</strong>
+          </div>
+          <div class="metric">
+            <span>Monitor status</span>
+            <strong id="metric-monitor-status">ready_to_queue</strong>
+          </div>
+          <div class="metric">
+            <span>Primary monitor action</span>
+            <strong id="metric-monitor-action">confirm_and_queue</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="journey-strip" aria-label="Lifecycle progression">
+        <div class="journey-step done">
+          <strong>Intent captured</strong>
+          <span>Stage 7 already established the queueable draft.</span>
+        </div>
+        <div class="journey-step done">
+          <strong>Plan confirmed</strong>
+          <span>The operator can now create a real run request.</span>
+        </div>
+        <div class="journey-step active">
+          <strong>Run monitored</strong>
+          <span>Status, worker progress, and failure handling stay visible in the workspace.</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Run controls and lifecycle log</h3>
+            <p class="section-copy">Use these controls to move the same queued draft through worker lifecycle states. The monitor should stay consistent with the draft and adapter views.</p>
+          </div>
+          <div class="status-pill queued" id="run-pill">ready_to_queue</div>
+        </div>
+        <div class="card-body">
+          <div class="control-grid">
+            <div class="control-card">
+              <strong>Lifecycle actions</strong>
+              <div class="action-cluster">
+                <button class="action-button small primary" id="action-queue">Confirm and queue</button>
+                <button class="action-button small" id="action-lease">Lease worker</button>
+                <button class="action-button small" id="action-start">Start run</button>
+                <button class="action-button small" id="action-complete">Complete run</button>
+                <button class="action-button small" id="action-fail">Fail run</button>
+                <button class="action-button small" id="action-retry">Retry run</button>
+                <button class="action-button small" id="action-reset">Reset demo</button>
+              </div>
+              <div class="path-note">The same operator page should be able to inspect queue state, running state, artifacts, and failures without switching into a separate admin console.</div>
+            </div>
+            <div class="log-card">
+              <strong>Lifecycle log</strong>
+              <div class="event-log" id="event-log"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Queue and worker monitor</h3>
+            <p class="section-copy">This is the post-confirmation monitor surface. It should carry both queue metadata and worker progress in a way an operator can audit quickly.</p>
+          </div>
+          <div class="status-pill running" id="monitor-pill">worker_wait</div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div>
+              <div class="timeline" id="timeline"></div>
+            </div>
+            <div class="section-stack">
+              <div class="stack" id="monitor-stack"></div>
+              <table class="queue-table">
+                <thead>
+                  <tr>
+                    <th>Run</th>
+                    <th>Status</th>
+                    <th>Worker</th>
+                    <th>Current step</th>
+                    <th>Attempt</th>
+                  </tr>
+                </thead>
+                <tbody id="queue-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Operator-facing outcomes</h3>
+            <p class="section-copy">Artifacts, failure reasons, and next actions should stay grounded in the same run state rather than being scattered across multiple tools.</p>
+          </div>
+          <div class="status-pill completed" id="outcome-pill">review</div>
+        </div>
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="summary-card">
+              <strong>Draft summary</strong>
+              <div class="summary-list" id="draft-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Adapter summary</strong>
+              <div class="summary-list" id="adapter-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Artifacts</strong>
+              <div class="summary-list" id="artifact-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Failure and retry</strong>
+              <div class="summary-list" id="failure-summary"></div>
+            </div>
+          </div>
+
+          <div class="decision-band ready" id="outcome-band">
+            <strong id="outcome-title">Ready to queue</strong>
+            <p class="decision-copy" id="outcome-copy">The draft is confirmed enough to create a queue record. Post-queue visibility is the next operator need.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Shared state projections</h3>
+            <p class="section-copy">The run monitor should remain legible because it is still backed by explicit draft, adapter, and run-record objects.</p>
+          </div>
+          <div class="status-pill queued">derived</div>
+        </div>
+        <div class="card-body">
+          <div class="adapter-grid">
+            <div class="adapter-card">
+              <strong>Draft plan object</strong>
+              <pre class="json-block" id="draft-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Frontend adapter</strong>
+              <pre class="json-block" id="adapter-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Run record</strong>
+              <pre class="json-block" id="run-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Run monitor projection</strong>
+              <pre class="json-block" id="monitor-json">{}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Run Sidecar</div>
+        <h3>Current operator state</h3>
+        <p>The side rail should tell the operator what is happening right now, whether artifacts are ready, and what action remains possible.</p>
+      </div>
+
+      <div class="stack" id="sidecar-stack"></div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong>Same draft survives queue entry</strong>
+          <p>The operator should not lose context when the plan becomes a run.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong>Failures must stay inspectable</strong>
+          <p>Retry should be explicit and grounded in a visible failure reason.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong>Artifacts stay in the workspace</strong>
+          <p>Completed runs should expose artifact paths and review affordances inside the same console.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Current backend reality</h4>
+        <p>This is still a local engineering demo, but it models the queue and worker visibility a real workspace shell needs on top of the shared runtime.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    import {
+      createStage8MonitorDemoState,
+      deriveStage8MonitorBundle
+    } from "../workspace_ui_shared/workspace_ui_adapter.mjs";
+
+    const copy = {
+      firstTaskValue: "connect data",
+      questionValue: "Where do new operators hesitate during onboarding, and do they continue after the first task?",
+      desiredValue: "task-friction and continuation risk",
+      nextUpload: "request inputs",
+      nextFallback: "confirm fallback",
+      nextConfirm: "confirm queueable plan",
+      nextSaved: "resume later",
+      phaseQueued: "queued",
+      monitorAwait: "await worker progress",
+      monitorViewResults: "view results",
+      monitorInspectFailure: "inspect failure"
+    };
+
+    const eventLog = document.getElementById("event-log");
+    const timeline = document.getElementById("timeline");
+    const monitorStack = document.getElementById("monitor-stack");
+    const queueBody = document.getElementById("queue-body");
+    const draftSummary = document.getElementById("draft-summary");
+    const adapterSummary = document.getElementById("adapter-summary");
+    const artifactSummary = document.getElementById("artifact-summary");
+    const failureSummary = document.getElementById("failure-summary");
+    const draftJson = document.getElementById("draft-json");
+    const adapterJson = document.getElementById("adapter-json");
+    const runJson = document.getElementById("run-json");
+    const monitorJson = document.getElementById("monitor-json");
+    const sidecarStack = document.getElementById("sidecar-stack");
+    const metricRunState = document.getElementById("metric-run-state");
+    const metricMonitorStatus = document.getElementById("metric-monitor-status");
+    const metricMonitorAction = document.getElementById("metric-monitor-action");
+    const runPill = document.getElementById("run-pill");
+    const monitorPill = document.getElementById("monitor-pill");
+    const outcomePill = document.getElementById("outcome-pill");
+    const outcomeBand = document.getElementById("outcome-band");
+    const outcomeTitle = document.getElementById("outcome-title");
+    const outcomeCopy = document.getElementById("outcome-copy");
+    const actionQueue = document.getElementById("action-queue");
+    const actionLease = document.getElementById("action-lease");
+    const actionStart = document.getElementById("action-start");
+    const actionComplete = document.getElementById("action-complete");
+    const actionFail = document.getElementById("action-fail");
+    const actionRetry = document.getElementById("action-retry");
+
+    let state = {};
+
+    function resetState() {
+      state = createStage8MonitorDemoState();
+    }
+
+    function pushEvent(type, at, detail) {
+      state.events.unshift({ type, at, detail });
+      state.events = state.events.slice(0, 8);
+    }
+
+    function renderRows(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "summary-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderStack(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "stack-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderTimeline(items) {
+      timeline.innerHTML = "";
+      items.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `timeline-card${item.state === "active" ? " active" : ""}`;
+        card.innerHTML = `<h4>${item.step}</h4><p>${item.state}</p>`;
+        timeline.appendChild(card);
+      });
+    }
+
+    function renderEvents() {
+      eventLog.innerHTML = "";
+      state.events.forEach((event) => {
+        const item = document.createElement("div");
+        item.className = "event-item";
+        item.innerHTML = `<strong>${event.type}</strong><span>${event.at} - ${event.detail}</span>`;
+        eventLog.appendChild(item);
+      });
+    }
+
+    function render(bundle) {
+      const monitor = bundle.run_monitor;
+
+      metricRunState.textContent = bundle.adapter.run_state;
+      metricMonitorStatus.textContent = monitor.status;
+      metricMonitorAction.textContent = monitor.primary_action_type;
+      runPill.className = `status-pill ${monitor.pill_class}`;
+      runPill.textContent = monitor.status;
+      monitorPill.className = `status-pill ${monitor.pill_class}`;
+      monitorPill.textContent = monitor.monitor_phase;
+      outcomePill.className = `status-pill ${monitor.pill_class}`;
+      outcomePill.textContent = monitor.results_available ? "artifacts ready" : monitor.retry_available ? "retry needed" : "in progress";
+
+      renderEvents();
+      renderTimeline(monitor.timeline);
+      renderStack(monitorStack, [
+        ["Monitor phase", monitor.monitor_phase],
+        ["Queue position", monitor.queue_position ?? "-"],
+        ["Worker", monitor.worker_id || "-"],
+        ["Current step", monitor.current_step || "-"],
+        ["Attempt", String(monitor.attempt_count)]
+      ]);
+
+      queueBody.innerHTML = `
+        <tr>
+          <td>${bundle.run_record.job_id}</td>
+          <td><span class="status-pill ${monitor.pill_class}">${monitor.status}</span></td>
+          <td>${monitor.worker_id || "-"}</td>
+          <td>${monitor.current_step || "-"}</td>
+          <td>${monitor.attempt_count}</td>
+        </tr>
+      `;
+
+      renderRows(draftSummary, [
+        ["Primary mode", bundle.draft.inference.primary_mode],
+        ["Execution status", bundle.draft.proposed_run.execution_status],
+        ["First task", bundle.draft.proposed_run.first_task || "-"]
+      ]);
+      renderRows(adapterSummary, [
+        ["UI phase", bundle.adapter.ui_phase],
+        ["Run state", bundle.adapter.run_state],
+        ["Primary button", bundle.adapter.primary_button.action_type],
+        ["Waiting for", bundle.adapter.visible_waiting_for.join(", ") || "-"]
+      ]);
+      renderRows(artifactSummary, [
+        ["Artifacts ready", monitor.artifact_refs.length ? "yes" : "not yet"],
+        ["Artifact refs", monitor.artifact_refs.join(", ") || "-"]
+      ]);
+      renderRows(failureSummary, [
+        ["Failure reason", monitor.failure_reason || "-"],
+        ["Retry available", monitor.retry_available ? "yes" : "no"],
+        ["Secondary action", monitor.secondary_action_type]
+      ]);
+
+      if (monitor.status === "ready_to_queue") {
+        outcomeBand.className = "decision-band ready";
+        outcomeTitle.textContent = "Ready to queue";
+        outcomeCopy.textContent = "The draft is confirmed enough to create a queue record. Post-queue visibility is the next operator need.";
+      } else if (monitor.status === "completed") {
+        outcomeBand.className = "decision-band ready";
+        outcomeTitle.textContent = "Completed";
+        outcomeCopy.textContent = "Artifacts are ready for review inside the same workspace flow.";
+      } else if (monitor.status === "failed") {
+        outcomeBand.className = "decision-band blocked";
+        outcomeTitle.textContent = "Failed";
+        outcomeCopy.textContent = "The run stopped before artifact completion. The operator should review the visible failure reason and decide whether to retry.";
+      } else {
+        outcomeBand.className = "decision-band warn";
+        outcomeTitle.textContent = "In progress";
+        outcomeCopy.textContent = "The run is active. The operator should see queue or worker progress without leaving the workspace.";
+      }
+
+      renderStack(sidecarStack, [
+        ["Status", monitor.status],
+        ["Primary action", monitor.primary_action_type],
+        ["Secondary action", monitor.secondary_action_type],
+        ["Artifacts", monitor.artifact_refs.length ? String(monitor.artifact_refs.length) : "0"]
+      ]);
+
+      draftJson.textContent = JSON.stringify(bundle.draft, null, 2);
+      adapterJson.textContent = JSON.stringify(bundle.adapter, null, 2);
+      runJson.textContent = JSON.stringify(bundle.run_record, null, 2);
+      monitorJson.textContent = JSON.stringify(bundle.run_monitor, null, 2);
+
+      actionQueue.disabled = monitor.status !== "ready_to_queue";
+      actionLease.disabled = monitor.status !== "queued";
+      actionStart.disabled = monitor.status !== "leased";
+      actionComplete.disabled = monitor.status !== "running";
+      actionFail.disabled = monitor.status !== "running";
+      actionRetry.disabled = monitor.status !== "failed";
+    }
+
+    function recompute() {
+      render(deriveStage8MonitorBundle({
+        monitorState: state,
+        copy,
+        localUiState: {
+          locale: "en",
+          active_panel: "run_monitor"
+        }
+      }));
+    }
+
+    actionQueue.addEventListener("click", () => {
+      state.lifecycle = "queued";
+      state.attemptCount = 1;
+      state.failureReason = null;
+      pushEvent("queued", "22:13", "Confirmed draft became a queued run record.");
+      recompute();
+    });
+
+    actionLease.addEventListener("click", () => {
+      state.lifecycle = "leased";
+      pushEvent("leased", "22:14", "A worker lease was created for this run.");
+      recompute();
+    });
+
+    actionStart.addEventListener("click", () => {
+      state.lifecycle = "running";
+      pushEvent("running", "22:16", "The worker started executing the persona panel.");
+      recompute();
+    });
+
+    actionComplete.addEventListener("click", () => {
+      state.lifecycle = "completed";
+      pushEvent("completed", "22:19", "Artifacts are now available for workspace review.");
+      recompute();
+    });
+
+    actionFail.addEventListener("click", () => {
+      state.lifecycle = "failed";
+      state.failureReason = "stimulus_capture_timeout";
+      pushEvent("failed", "22:21", "The worker timed out during stimulus capture.");
+      recompute();
+    });
+
+    actionRetry.addEventListener("click", () => {
+      state.lifecycle = "queued";
+      state.attemptCount += 1;
+      state.failureReason = null;
+      pushEvent("retried", "22:23", "The operator retried the run after inspecting the failure.");
+      recompute();
+    });
+
+    document.getElementById("action-reset").addEventListener("click", () => {
+      resetState();
+      recompute();
+    });
+
+    resetState();
+    recompute();
+  </script>
+</body>
+</html>

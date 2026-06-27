@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 5</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow" id="rail-eyebrow">Stage 5 Review</div>
+        <h1>Moss Console</h1>
+        <p id="rail-copy">This prototype removes review-only scenario switching and shows the real product question: when a draft plan cannot queue, how should the system guide the operator to unblock it?</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="lang-label">Language</div>
+        <div class="phase-strip" aria-label="Language switch">
+          <button class="phase-button active" data-lang="en">EN</button>
+          <button class="phase-button" data-lang="zh">中文</button>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="workspace-label">Workspace</div>
+        <div class="nav-item active" id="nav-new-study">New Study</div>
+        <div class="nav-item" id="nav-draft-plans">Draft Plans</div>
+        <div class="nav-item" id="nav-runs">Runs</div>
+        <div class="nav-item" id="nav-evidence">Evidence</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="focus-label">Stage 5 Focus</div>
+        <div class="nav-note" id="focus-copy">The user should not see internal scenario tabs. They should see one inferred study, one blocked reason set, and one concrete next action path.</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="linked-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage4/index.html" id="link-stage4">Stage 4 confirmation prototype</a><br>
+          <a href="../workspace_ui_design_system/index.html" id="link-design">Design system preview</a><br>
+          <a href="../../specs/workspace_research_plan_contract.md" id="link-contract">Draft plan contract spec</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow" id="header-eyebrow">Workspace UI Readiness / Remediation Path</div>
+          <h2 id="header-title">Blocked draft remediation flow</h2>
+          <p id="header-copy">The operator entered one conversational research intent. The system inferred a prototype-oriented goal, but the current artifact set is not enough to support the requested evidence. Instead of ending in a dead button, the UI proposes concrete next actions.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span id="metric-theme-label">Theme</span>
+            <strong>Moss</strong>
+          </div>
+          <div class="metric">
+            <span id="metric-story-label">Flow</span>
+            <strong id="metric-story-value">Remediation</strong>
+          </div>
+          <div class="metric">
+            <span id="metric-state-label">Current state</span>
+            <strong id="metric-state-value">Blocked</strong>
+          </div>
+          <div class="metric">
+            <span id="metric-action-label">Recommended path</span>
+            <strong id="metric-action-value">Supplement</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title" id="outcome-title">Conversation outcome</h3>
+            <p class="section-copy" id="outcome-copy">This section shows the single inferred study state produced by the conversational intake, not a manual scenario chooser.</p>
+          </div>
+          <div class="status-pill failed" id="outcome-pill">blocked</div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="summary-grid">
+              <div class="summary-card">
+                <strong id="goal-title">Research goal</strong>
+                <div class="summary-list" id="goal-list"></div>
+              </div>
+              <div class="summary-card">
+                <strong id="inference-title">Inferred plan</strong>
+                <div class="summary-list" id="inference-list"></div>
+              </div>
+              <div class="summary-card">
+                <strong id="artifact-title">Current artifacts</strong>
+                <div class="summary-list" id="artifact-list"></div>
+              </div>
+              <div class="summary-card">
+                <strong id="boundary-title">Evidence gap</strong>
+                <div class="summary-list" id="boundary-list"></div>
+              </div>
+            </div>
+
+            <div class="draft-panel">
+              <div class="inline-label" id="blocker-label">Why queueing is blocked</div>
+              <div class="rule-grid" id="blocker-list"></div>
+
+              <div class="inline-label" id="next-label">Recommended next action</div>
+              <div class="decision-band warn" id="next-band">
+                <strong id="next-band-title">Request missing artifacts and one task frame</strong>
+                <p class="decision-copy" id="next-band-copy">The system should ask for the minimum additional inputs needed to support the desired prototype evidence.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title" id="remediation-title">How to unblock</h3>
+            <p class="section-copy" id="remediation-copy">When the plan is not queueable, the product should route the user into one of three concrete next-step paths: supplement, downgrade, or save as blocked draft.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="path-strip" aria-label="Remediation paths">
+            <button class="path-option active" data-path="supplement">
+              <strong id="path-supplement-title">Supplement inputs</strong>
+              <span id="path-supplement-copy">Upload missing artifacts and answer one follow-up question.</span>
+            </button>
+            <button class="path-option" data-path="downgrade">
+              <strong id="path-downgrade-title">Downgrade now</strong>
+              <span id="path-downgrade-copy">Run a supported concept review on the existing materials.</span>
+            </button>
+            <button class="path-option" data-path="save">
+              <strong id="path-save-title">Save blocked draft</strong>
+              <span id="path-save-copy">Preserve intent and come back later without forcing a weaker run.</span>
+            </button>
+          </div>
+
+          <div class="analysis-grid">
+            <div class="remediation-grid">
+              <div class="remediation-card">
+                <strong id="required-title">What the system should request</strong>
+                <div class="upload-list" id="required-list"></div>
+              </div>
+              <div class="remediation-card">
+                <strong id="prompt-title">Conversational follow-up</strong>
+                <div class="next-step-list" id="prompt-list"></div>
+              </div>
+            </div>
+
+            <div class="draft-panel">
+              <div class="inline-label" id="path-outcome-label">What this path leads to</div>
+              <div class="rule-grid" id="path-outcome-list"></div>
+
+              <div class="inline-label" id="path-state-label">Next state</div>
+              <div class="state-chip warn" id="path-state-chip">needs inputs</div>
+              <p class="path-note" id="path-state-copy">The operator stays in the same study draft, and the system opens an artifact request plus one clarification prompt.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title" id="payload-title">Draft plan remediation payload</h3>
+            <p class="section-copy" id="payload-copy">The UI needs explicit remediation data from the draft plan contract so it can guide the next step instead of only disabling the queue action.</p>
+          </div>
+          <div class="status-pill queued" id="payload-pill">not queueable</div>
+        </div>
+        <div class="card-body">
+          <div class="contract-shell">
+            <div class="tag-list" id="payload-tags"></div>
+            <pre class="json-block" id="payload-json">{
+  "draft_plan_id": "draft_plan_20260627_proto_04",
+  "remediation": {}
+}</pre>
+            <div class="confirm-footer">
+              <div class="footer-note" id="footer-note">The primary action should say what happens next: ask for inputs, confirm a fallback, or save a blocked draft.</div>
+              <div class="cta-row">
+                <button class="action-button secondary" id="secondary-action">Save blocked draft</button>
+                <button class="action-button primary" id="primary-action">Request missing inputs</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow" id="sidecar-eyebrow">Remediation Sidecar</div>
+        <h3 id="sidecar-title">Draft state summary</h3>
+        <p id="sidecar-copy">The right rail should explain what the current draft is waiting for, what can happen immediately, and what is still forbidden.</p>
+      </div>
+
+      <div class="stack">
+        <div class="stack-row">
+          <strong id="rail-status-label">Draft status</strong>
+          <span id="rail-status">blocked</span>
+        </div>
+        <div class="stack-row">
+          <strong id="rail-waiting-label">Waiting for</strong>
+          <span id="rail-waiting">screenshots and one first-task prompt</span>
+        </div>
+        <div class="stack-row">
+          <strong id="rail-after-label">After next action</strong>
+          <span id="rail-after">return to confirmation with a queueable prototype plan</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong id="check-intent-title">Intent stays intact</strong>
+          <p id="check-intent-copy">The user does not need to restart or reclassify the study by hand.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong id="check-evidence-title">Evidence target stays explicit</strong>
+          <p id="check-evidence-copy">The system preserves the stronger prototype evidence goal even while asking for more material.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong id="check-guidance-title">Guidance is concrete</strong>
+          <p id="check-guidance-copy">The next step is a named action, not a dead disabled button.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4 id="backend-title">Current backend reality</h4>
+        <p id="backend-copy">The current runtime can support the desired path only after the missing prototype artifacts are supplied. Until then, the draft should stay blocked or be intentionally downgraded.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const uiCopy = {
+      en: {
+        railEyebrow: "Stage 5 Review",
+        railCopy: "This prototype removes review-only scenario switching and shows the real product question: when a draft plan cannot queue, how should the system guide the operator to unblock it?",
+        langLabel: "Language",
+        workspaceLabel: "Workspace",
+        navNewStudy: "New Study",
+        navDraftPlans: "Draft Plans",
+        navRuns: "Runs",
+        navEvidence: "Evidence",
+        focusLabel: "Stage 5 Focus",
+        focusCopy: "The user should not see internal scenario tabs. They should see one inferred study, one blocked reason set, and one concrete next action path.",
+        linkedLabel: "Linked Artifacts",
+        linkStage4: "Stage 4 confirmation prototype",
+        linkDesign: "Design system preview",
+        linkContract: "Draft plan contract spec",
+        headerEyebrow: "Workspace UI Readiness / Remediation Path",
+        headerTitle: "Blocked draft remediation flow",
+        headerCopy: "The operator entered one conversational research intent. The system inferred a prototype-oriented goal, but the current artifact set is not enough to support the requested evidence. Instead of ending in a dead button, the UI proposes concrete next actions.",
+        metricThemeLabel: "Theme",
+        metricStoryLabel: "Flow",
+        metricStateLabel: "Current state",
+        metricActionLabel: "Recommended path",
+        metricStoryValue: "Remediation",
+        outcomeTitle: "Conversation outcome",
+        outcomeCopy: "This section shows the single inferred study state produced by the conversational intake, not a manual scenario chooser.",
+        goalTitle: "Research goal",
+        inferenceTitle: "Inferred plan",
+        artifactTitle: "Current artifacts",
+        boundaryTitle: "Evidence gap",
+        blockerLabel: "Why queueing is blocked",
+        nextLabel: "Recommended next action",
+        remediationTitle: "How to unblock",
+        remediationCopy: "When the plan is not queueable, the product should route the user into one of three concrete next-step paths: supplement, downgrade, or save as blocked draft.",
+        requiredTitle: "What the system should request",
+        promptTitle: "Conversational follow-up",
+        pathOutcomeLabel: "What this path leads to",
+        pathStateLabel: "Next state",
+        payloadTitle: "Draft plan remediation payload",
+        payloadCopy: "The UI needs explicit remediation data from the draft plan contract so it can guide the next step instead of only disabling the queue action.",
+        sidecarEyebrow: "Remediation Sidecar",
+        sidecarTitle: "Draft state summary",
+        sidecarCopy: "The right rail should explain what the current draft is waiting for, what can happen immediately, and what is still forbidden.",
+        railStatusLabel: "Draft status",
+        railWaitingLabel: "Waiting for",
+        railAfterLabel: "After next action",
+        checkIntentTitle: "Intent stays intact",
+        checkEvidenceTitle: "Evidence target stays explicit",
+        checkGuidanceTitle: "Guidance is concrete",
+        checkIntentCopy: "The user does not need to restart or reclassify the study by hand.",
+        checkEvidenceCopy: "The system preserves the stronger prototype evidence goal even while asking for more material.",
+        checkGuidanceCopy: "The next step is a named action, not a dead disabled button.",
+        backendTitle: "Current backend reality",
+        backendCopy: "The current runtime can support the desired path only after the missing prototype artifacts are supplied. Until then, the draft should stay blocked or be intentionally downgraded.",
+        pathSupplementTitle: "Supplement inputs",
+        pathSupplementCopy: "Upload missing artifacts and answer one follow-up question.",
+        pathDowngradeTitle: "Downgrade now",
+        pathDowngradeCopy: "Run a supported concept review on the existing materials.",
+        pathSaveTitle: "Save blocked draft",
+        pathSaveCopy: "Preserve intent and come back later without forcing a weaker run."
+      },
+      zh: {
+        railEyebrow: "Stage 5 檢視",
+        railCopy: "這個 prototype 移除了 review 用 scenario switching，直接處理真正產品問題：當 draft plan 不能排隊時，系統應如何引導操作員解除阻塞。",
+        langLabel: "語言",
+        workspaceLabel: "工作區",
+        navNewStudy: "新研究",
+        navDraftPlans: "草稿計劃",
+        navRuns: "執行紀錄",
+        navEvidence: "證據",
+        focusLabel: "Stage 5 重點",
+        focusCopy: "用戶不應看到內部 scenario tabs；他只應看到一個由對話推導出的研究、一組阻塞原因，以及一條具體下一步路徑。",
+        linkedLabel: "相關項目",
+        linkStage4: "Stage 4 confirmation prototype",
+        linkDesign: "Design system 預覽",
+        linkContract: "Draft plan contract 規格",
+        headerEyebrow: "Workspace UI Readiness / 補救路徑",
+        headerTitle: "Blocked draft 補救流程",
+        headerCopy: "操作員只輸入了一個 conversational research intent。系統推斷出偏 prototype 的目標，但目前材料不足以支持想要的證據類型。與其停在一個死按鈕，UI 會提出具體下一步。",
+        metricThemeLabel: "主題",
+        metricStoryLabel: "流程",
+        metricStateLabel: "目前狀態",
+        metricActionLabel: "建議路徑",
+        metricStoryValue: "補救",
+        outcomeTitle: "對話結果",
+        outcomeCopy: "這裡顯示的是由 conversational intake 推導出的單一研究狀態，不是讓用戶手動切 scenario。",
+        goalTitle: "研究目標",
+        inferenceTitle: "推斷計劃",
+        artifactTitle: "目前材料",
+        boundaryTitle: "證據缺口",
+        blockerLabel: "為何不能排隊",
+        nextLabel: "建議下一步",
+        remediationTitle: "如何解除阻塞",
+        remediationCopy: "當計劃不可排隊時，產品應把用戶導向三種具體下一步之一：補材料、即時降級、或儲存為 blocked draft。",
+        requiredTitle: "系統應要求的內容",
+        promptTitle: "對話式追問",
+        pathOutcomeLabel: "這條路徑會帶來什麼",
+        pathStateLabel: "下一個狀態",
+        payloadTitle: "Draft plan 補救 payload",
+        payloadCopy: "UI 需要從 draft plan contract 取得明確 remediation data，才能引導下一步，而不是只把 queue action 停用。",
+        sidecarEyebrow: "補救側欄",
+        sidecarTitle: "草稿狀態摘要",
+        sidecarCopy: "右側欄應說明目前 draft 正等待什麼、現在可以做什麼，以及哪些事情仍然被禁止。",
+        railStatusLabel: "草稿狀態",
+        railWaitingLabel: "等待中",
+        railAfterLabel: "下一步之後",
+        checkIntentTitle: "保留原始意圖",
+        checkEvidenceTitle: "保留證據目標",
+        checkGuidanceTitle: "指引具體",
+        checkIntentCopy: "用戶不需要手動重新開始或重新分類研究。",
+        checkEvidenceCopy: "即使系統要求更多材料，也會保留較強的 prototype evidence 目標。",
+        checkGuidanceCopy: "下一步應是一個有名字的動作，而不是死掉的 disabled button。",
+        backendTitle: "目前 backend 現實",
+        backendCopy: "只有在補上缺少的 prototype artifacts 後，當前 runtime 才能支持這條路徑。在此之前，draft 應保持 blocked，或被有意識地降級。",
+        pathSupplementTitle: "補充輸入",
+        pathSupplementCopy: "上傳缺少材料，並回答一個 follow-up 問題。",
+        pathDowngradeTitle: "立即降級",
+        pathDowngradeCopy: "用現有材料先跑一個受支援的 concept review。",
+        pathSaveTitle: "儲存 blocked draft",
+        pathSaveCopy: "保留原始意圖，之後再回來，而不是被迫做較弱的研究。"
+      }
+    };
+
+    const baseScenario = {
+      goal: {
+        en: [
+          ["Question", "Where do new operators hesitate during onboarding, and will they continue after the first task?"],
+          ["Desired evidence", "Prototype-level friction signals rather than copy-only reactions."]
+        ],
+        zh: [
+          ["問題", "新操作員在 onboarding 哪裡會猶豫，完成第一個 task 後會否繼續？"],
+          ["期望證據", "需要 prototype 層級的 friction signals，而不只是對文案的反應。"]
+        ]
+      },
+      inference: {
+        en: [
+          ["Primary mode", "prototype_validation"],
+          ["Secondary lens", "setup friction and continuation risk"],
+          ["Current execution status", "blocked pending better stimulus"]
+        ],
+        zh: [
+          ["主要模式", "prototype_validation"],
+          ["次要視角", "設定摩擦與持續使用風險"],
+          ["目前執行狀態", "等待更合適 stimulus 前屬 blocked"]
+        ]
+      },
+      artifacts: {
+        en: [
+          ["Available now", "founder brief and homepage copy"],
+          ["Missing now", "onboarding screenshots or task flow artifacts"],
+          ["Clarification still needed", "which first task matters most"]
+        ],
+        zh: [
+          ["現有材料", "founder brief 與首頁文案"],
+          ["缺少材料", "onboarding 截圖或 task flow artifacts"],
+          ["仍需澄清", "哪一個 first task 最重要"]
+        ]
+      },
+      boundary: {
+        en: [
+          ["What is missing", "Current materials do not support task-level friction claims."],
+          ["Why it matters", "Without prototype artifacts, the system would be forced into concept-only evidence."],
+          ["Risk of forcing queue", "The run would overclaim action-grounded evidence."]
+        ],
+        zh: [
+          ["缺口是什麼", "現有材料不足以支持 task-level friction claims。"],
+          ["為何重要", "如果沒有 prototype artifacts，系統只會被迫落回 concept-only evidence。"],
+          ["強行排隊風險", "run 會誇大 action-grounded evidence。"]
+        ]
+      },
+      blockers: {
+        en: [
+          ["Missing stimulus", "The draft needs at least a screenshot set or flow artifact before it can support prototype-style evidence."],
+          ["Missing task frame", "The system still needs one target onboarding task so the evidence can stay anchored."],
+          ["Boundary protection", "Queueing now would blur the line between concept interpretation and prototype friction." ]
+        ],
+        zh: [
+          ["Stimulus 缺失", "draft 至少需要一組 screenshots 或 flow artifact，才能支持 prototype-style evidence。"],
+          ["Task frame 缺失", "系統仍需要一個目標 onboarding task，讓證據保持有錨點。"],
+          ["邊界保護", "現在就排隊會模糊 concept interpretation 與 prototype friction 之間的界線。"]
+        ]
+      }
+    };
+
+    const pathContent = {
+      supplement: {
+        tone: "warn",
+        metricState: { en: "Blocked", zh: "被阻擋" },
+        metricAction: { en: "Supplement", zh: "補材料" },
+        outcomePill: { en: "blocked", zh: "被阻擋" },
+        payloadPill: { en: "needs inputs", zh: "待補輸入" },
+        bandTitle: {
+          en: "Request missing artifacts and one task frame",
+          zh: "要求補上缺少材料與一個 task frame"
+        },
+        bandCopy: {
+          en: "The system should ask for the minimum additional inputs needed to support the desired prototype evidence.",
+          zh: "系統應只要求支持目標 prototype evidence 所需的最少額外輸入。"
+        },
+        required: {
+          en: [
+            ["Upload 3 screenshots", "Ask for key onboarding steps or a short flow capture."],
+            ["Name the first task", "Capture the first meaningful task the operator should try."],
+            ["Optional helper", "Allow a staging URL only as supporting context, not as a fake live-app run."]
+          ],
+          zh: [
+            ["上傳 3 張截圖", "要求提供關鍵 onboarding 步驟或簡短 flow capture。"],
+            ["指定第一個 task", "記錄操作員應先嘗試的第一個關鍵任務。"],
+            ["可選補助", "可接受 staging URL 作為背景資料，但不能假裝是 live-app run。"]
+          ]
+        },
+        prompts: {
+          en: [
+            ["System prompt 1", "Please upload two or three screenshots of the onboarding steps you most want us to evaluate."],
+            ["System prompt 2", "Which first task should we anchor on: invite teammate, connect data, or complete setup?" ]
+          ],
+          zh: [
+            ["系統追問 1", "請上傳兩至三張你最想我們評估的 onboarding steps 截圖。"],
+            ["系統追問 2", "你希望我們以哪一個 first task 作錨點：邀請 teammate、連接資料，還是完成 setup？"]
+          ]
+        },
+        outcomes: {
+          en: [
+            ["Immediate UI action", "Open artifact upload plus one clarification prompt in the same draft."],
+            ["If completed", "Return to confirmation with a queueable prototype_validation plan."],
+            ["Why this is preferred", "It preserves the stronger evidence goal instead of prematurely downgrading the study."]
+          ],
+          zh: [
+            ["即時 UI 動作", "在同一個 draft 中打開 artifact upload 與一條 clarification prompt。"],
+            ["完成後", "回到 confirmation，並形成可排隊的 prototype_validation plan。"],
+            ["為何優先", "它保留較強的證據目標，而不是過早把研究降級。"]
+          ]
+        },
+        stateChip: { cls: "warn", en: "needs inputs", zh: "待補輸入" },
+        stateCopy: {
+          en: "Stay in the same draft, collect the missing evidence inputs, then re-run confirmation.",
+          zh: "保留在同一個 draft，收齊缺少的證據輸入後，再重新進入 confirmation。"
+        },
+        tags: {
+          en: ["supplement path", "missing artifacts", "prototype goal preserved"],
+          zh: ["補材料路徑", "材料缺失", "保留 prototype 目標"]
+        },
+        footer: {
+          en: "This is the default path when the target evidence is valid but the current materials are too weak.",
+          zh: "當目標證據本身合理，但現有材料太弱時，這應是預設路徑。"
+        },
+        actions: {
+          en: { primary: "Request missing inputs", secondary: "Save blocked draft" },
+          zh: { primary: "要求補充輸入", secondary: "儲存 blocked draft" }
+        },
+        rail: {
+          en: {
+            status: "blocked",
+            waiting: "screenshots and one first-task prompt",
+            after: "return to confirmation with a queueable prototype plan"
+          },
+          zh: {
+            status: "blocked",
+            waiting: "screenshots 與一條 first-task prompt",
+            after: "回到 confirmation，形成可排隊的 prototype plan"
+          }
+        },
+        checklist: {
+          en: {
+            intent: "The original onboarding-friction study remains intact.",
+            evidence: "The stronger prototype evidence target is still preserved.",
+            guidance: "The next step is explicit: upload and answer."
+          },
+          zh: {
+            intent: "原始 onboarding-friction 研究保持不變。",
+            evidence: "較強的 prototype evidence 目標仍然被保留。",
+            guidance: "下一步很明確：上傳並回答。"
+          }
+        },
+        backend: {
+          en: "The current runtime can execute this path once the screenshot set and task anchor are available.",
+          zh: "只要補上 screenshot set 與 task anchor，現有 runtime 就能執行這條路徑。"
+        },
+        payloadJson: `{
+  "draft_plan_id": "draft_plan_20260627_proto_04",
+  "status": "blocked",
+  "remediation": {
+    "blocking_reasons": [
+      "missing_prototype_artifacts",
+      "missing_task_anchor"
+    ],
+    "missing_inputs": [
+      "first_task_name"
+    ],
+    "required_artifacts": [
+      "onboarding_screenshot_set"
+    ],
+    "fallback_options": [
+      "downgrade_to_concept_review",
+      "save_blocked_draft"
+    ],
+    "recommended_next_action": {
+      "action_type": "request_artifact_upload_and_clarification",
+      "label": "request_missing_inputs"
+    }
+  }
+}`
+      },
+      downgrade: {
+        tone: "ready",
+        metricState: { en: "Fallback ready", zh: "降級可排隊" },
+        metricAction: { en: "Downgrade", zh: "降級" },
+        outcomePill: { en: "fallback ready", zh: "可降級" },
+        payloadPill: { en: "queueable fallback", zh: "可排隊降級版" },
+        bandTitle: {
+          en: "Offer an explicit supported fallback",
+          zh: "提供一條明確而受支援的 fallback"
+        },
+        bandCopy: {
+          en: "If the operator wants immediate output, the system can confirm a concept-oriented review on the existing materials without pretending it is prototype evidence.",
+          zh: "若操作員需要立即有輸出，系統可先確認一個以現有材料為基礎的 concept-oriented review，但不能假裝它是 prototype evidence。"
+        },
+        required: {
+          en: [
+            ["No new artifact required", "The current brief and homepage copy are enough for a concept-level pass."],
+            ["Boundary acknowledgement", "The operator must accept that the run downgrades to message and credibility evaluation."]
+          ],
+          zh: [
+            ["不需新材料", "現有 brief 與首頁文案已足夠先做 concept-level pass。"],
+            ["需接受邊界", "操作員需接受這次 run 會降級成訊息與可信度評估。"]
+          ]
+        },
+        prompts: {
+          en: [
+            ["System prompt", "Do you want to run a concept-only review now while we wait for prototype artifacts?" ]
+          ],
+          zh: [
+            ["系統追問", "在等待 prototype artifacts 期間，你是否想先做一個 concept-only review？"]
+          ]
+        },
+        outcomes: {
+          en: [
+            ["Immediate UI action", "Recast the draft into concept_evaluation with the same user question preserved."],
+            ["If confirmed", "Queue a supported concept-style run on the existing materials."],
+            ["Tradeoff", "You get immediate signal, but you lose task-friction evidence." ]
+          ],
+          zh: [
+            ["即時 UI 動作", "把同一個 draft 轉成 concept_evaluation，同時保留原始研究問題。"],
+            ["確認後", "以現有材料排隊一個受支援的 concept-style run。"],
+            ["代價", "可以即時拿到訊號，但會失去 task-friction evidence。"]
+          ]
+        },
+        stateChip: { cls: "ready", en: "fallback ready", zh: "可排隊降級版" },
+        stateCopy: {
+          en: "The draft becomes queueable, but only after the system explicitly reframes the evidence boundary.",
+          zh: "draft 會變成可排隊，但前提是系統明確重畫 evidence boundary。"
+        },
+        tags: {
+          en: ["fallback path", "queueable now", "weaker evidence"],
+          zh: ["降級路徑", "現在可排隊", "證據較弱"]
+        },
+        footer: {
+          en: "This is the escape hatch for urgency, not the default when stronger prototype evidence is still feasible.",
+          zh: "這是面向時間壓力的 escape hatch，不應取代仍可達成的較強 prototype evidence。"
+        },
+        actions: {
+          en: { primary: "Confirm downgraded plan", secondary: "Keep blocked draft" },
+          zh: { primary: "確認降級計劃", secondary: "保留 blocked draft" }
+        },
+        rail: {
+          en: {
+            status: "ready_for_confirmation",
+            waiting: "boundary acknowledgement only",
+            after: "queue a concept review on existing materials"
+          },
+          zh: {
+            status: "ready_for_confirmation",
+            waiting: "只需確認邊界",
+            after: "以現有材料排隊 concept review"
+          }
+        },
+        checklist: {
+          en: {
+            intent: "The study intent is preserved, but the execution mode is intentionally downgraded.",
+            evidence: "The UI makes the weaker evidence level explicit before queueing.",
+            guidance: "The next step is explicit: confirm the fallback."
+          },
+          zh: {
+            intent: "研究意圖被保留，但執行模式被有意識地降級。",
+            evidence: "UI 會在排隊前清楚標示較弱的證據層級。",
+            guidance: "下一步很明確：確認 fallback。"
+          }
+        },
+        backend: {
+          en: "This route is immediately compatible only because the system intentionally lowers the evidence target.",
+          zh: "這條路徑之所以可立即兼容，是因為系統有意識地降低了證據目標。"
+        },
+        payloadJson: `{
+  "draft_plan_id": "draft_plan_20260627_proto_04",
+  "status": "ready_for_confirmation",
+  "proposed_run": {
+    "primary_mode": "concept_evaluation",
+    "execution_status": "queueable_fallback"
+  },
+  "remediation": {
+    "blocking_reasons": [
+      "prototype_artifacts_missing"
+    ],
+    "fallback_options": [
+      "downgrade_to_concept_review"
+    ],
+    "recommended_next_action": {
+      "action_type": "confirm_fallback_mode",
+      "label": "confirm_downgraded_plan"
+    }
+  }
+}`
+      },
+      save: {
+        tone: "blocked",
+        metricState: { en: "Draft only", zh: "只可草稿" },
+        metricAction: { en: "Save draft", zh: "儲存草稿" },
+        outcomePill: { en: "draft only", zh: "只可草稿" },
+        payloadPill: { en: "saved blocked", zh: "已存為 blocked" },
+        bandTitle: {
+          en: "Preserve the stronger request without forcing a weaker run",
+          zh: "保留較強要求，而不強迫進入較弱的 run"
+        },
+        bandCopy: {
+          en: "If the operator cannot supplement now and does not want a downgrade, the system should preserve the draft as blocked and resumable.",
+          zh: "如果操作員現在不能補材料，也不想降級，系統應把 draft 保留為 blocked 並可稍後恢復。"
+        },
+        required: {
+          en: [
+            ["No queue action", "The draft is stored together with the missing requirements and evidence target."],
+            ["Resume hook", "The product should let the operator return later directly into the remediation state."]
+          ],
+          zh: [
+            ["不觸發 queue", "draft 會連同缺少要求與證據目標一併保存。"],
+            ["恢復入口", "產品應讓操作員之後直接回到 remediation state。"]
+          ]
+        },
+        prompts: {
+          en: [
+            ["System prompt", "Would you like us to save this blocked draft and resume once screenshots are available?" ]
+          ],
+          zh: [
+            ["系統追問", "你是否希望我們先保存這個 blocked draft，待 screenshots 齊備後再恢復？"]
+          ]
+        },
+        outcomes: {
+          en: [
+            ["Immediate UI action", "Store the blocked draft with explicit missing-input and artifact requirements."],
+            ["If resumed later", "Reopen the same draft and restart from the recommended supplement path."],
+            ["Why this matters", "It avoids accidental downgrade just because the user is missing files today." ]
+          ],
+          zh: [
+            ["即時 UI 動作", "把 blocked draft 連同缺少輸入與 artifact requirements 一起保存。"],
+            ["日後恢復時", "重新打開同一個 draft，並從建議的補材料路徑繼續。"],
+            ["為何重要", "這可避免用戶只因今天手上沒檔案，就被迫降級。"]
+          ]
+        },
+        stateChip: { cls: "blocked", en: "saved blocked draft", zh: "已存 blocked draft" },
+        stateCopy: {
+          en: "The operator leaves without losing intent, constraints, or the stronger evidence target.",
+          zh: "操作員可以離開，但不會失去研究意圖、限制條件或較強的證據目標。"
+        },
+        tags: {
+          en: ["save draft", "resume later", "no forced downgrade"],
+          zh: ["儲存草稿", "稍後恢復", "不強迫降級"]
+        },
+        footer: {
+          en: "Saving the blocked draft is better than running the wrong study shape just to produce output.",
+          zh: "把 blocked draft 存下來，總比為了有輸出而跑錯誤研究形態更好。"
+        },
+        actions: {
+          en: { primary: "Save blocked draft", secondary: "Close and return" },
+          zh: { primary: "儲存 blocked draft", secondary: "關閉並返回" }
+        },
+        rail: {
+          en: {
+            status: "blocked_saved",
+            waiting: "later artifact upload and task clarification",
+            after: "resume the same draft from remediation"
+          },
+          zh: {
+            status: "blocked_saved",
+            waiting: "之後補 artifact 與 task clarification",
+            after: "從 remediation 重新恢復同一個 draft"
+          }
+        },
+        checklist: {
+          en: {
+            intent: "The original study request remains preserved for later.",
+            evidence: "The stronger evidence target is not silently weakened.",
+            guidance: "The next step is explicit: save and resume later."
+          },
+          zh: {
+            intent: "原始研究要求會被保留，待日後再繼續。",
+            evidence: "較強的證據目標不會被默默削弱。",
+            guidance: "下一步很明確：先儲存，之後再恢復。"
+          }
+        },
+        backend: {
+          en: "This route does not need runtime support now, but it requires draft persistence plus resumable remediation metadata.",
+          zh: "這條路徑現在不需要 runtime 支援，但需要 draft persistence 與可恢復的 remediation metadata。"
+        },
+        payloadJson: `{
+  "draft_plan_id": "draft_plan_20260627_proto_04",
+  "status": "blocked",
+  "remediation": {
+    "blocking_reasons": [
+      "missing_prototype_artifacts",
+      "missing_task_anchor"
+    ],
+    "required_artifacts": [
+      "onboarding_screenshot_set"
+    ],
+    "missing_inputs": [
+      "first_task_name"
+    ],
+    "fallback_options": [
+      "downgrade_to_concept_review"
+    ],
+    "recommended_next_action": {
+      "action_type": "save_blocked_draft",
+      "label": "resume_later"
+    }
+  }
+}`
+      }
+    };
+
+    const langButtons = Array.from(document.querySelectorAll("[data-lang]"));
+    const pathButtons = Array.from(document.querySelectorAll("[data-path]"));
+    let currentLang = "en";
+    let currentPath = "supplement";
+
+    const chromeNodes = {
+      railEyebrow: document.getElementById("rail-eyebrow"),
+      railCopy: document.getElementById("rail-copy"),
+      langLabel: document.getElementById("lang-label"),
+      workspaceLabel: document.getElementById("workspace-label"),
+      navNewStudy: document.getElementById("nav-new-study"),
+      navDraftPlans: document.getElementById("nav-draft-plans"),
+      navRuns: document.getElementById("nav-runs"),
+      navEvidence: document.getElementById("nav-evidence"),
+      focusLabel: document.getElementById("focus-label"),
+      focusCopy: document.getElementById("focus-copy"),
+      linkedLabel: document.getElementById("linked-label"),
+      linkStage4: document.getElementById("link-stage4"),
+      linkDesign: document.getElementById("link-design"),
+      linkContract: document.getElementById("link-contract"),
+      headerEyebrow: document.getElementById("header-eyebrow"),
+      headerTitle: document.getElementById("header-title"),
+      headerCopy: document.getElementById("header-copy"),
+      metricThemeLabel: document.getElementById("metric-theme-label"),
+      metricStoryLabel: document.getElementById("metric-story-label"),
+      metricStateLabel: document.getElementById("metric-state-label"),
+      metricActionLabel: document.getElementById("metric-action-label"),
+      metricStoryValue: document.getElementById("metric-story-value"),
+      outcomeTitle: document.getElementById("outcome-title"),
+      outcomeCopy: document.getElementById("outcome-copy"),
+      goalTitle: document.getElementById("goal-title"),
+      inferenceTitle: document.getElementById("inference-title"),
+      artifactTitle: document.getElementById("artifact-title"),
+      boundaryTitle: document.getElementById("boundary-title"),
+      blockerLabel: document.getElementById("blocker-label"),
+      nextLabel: document.getElementById("next-label"),
+      remediationTitle: document.getElementById("remediation-title"),
+      remediationCopy: document.getElementById("remediation-copy"),
+      requiredTitle: document.getElementById("required-title"),
+      promptTitle: document.getElementById("prompt-title"),
+      pathOutcomeLabel: document.getElementById("path-outcome-label"),
+      pathStateLabel: document.getElementById("path-state-label"),
+      payloadTitle: document.getElementById("payload-title"),
+      payloadCopy: document.getElementById("payload-copy"),
+      sidecarEyebrow: document.getElementById("sidecar-eyebrow"),
+      sidecarTitle: document.getElementById("sidecar-title"),
+      sidecarCopy: document.getElementById("sidecar-copy"),
+      railStatusLabel: document.getElementById("rail-status-label"),
+      railWaitingLabel: document.getElementById("rail-waiting-label"),
+      railAfterLabel: document.getElementById("rail-after-label"),
+      checkIntentTitle: document.getElementById("check-intent-title"),
+      checkEvidenceTitle: document.getElementById("check-evidence-title"),
+      checkGuidanceTitle: document.getElementById("check-guidance-title"),
+      checkIntentCopy: document.getElementById("check-intent-copy"),
+      checkEvidenceCopy: document.getElementById("check-evidence-copy"),
+      checkGuidanceCopy: document.getElementById("check-guidance-copy"),
+      backendTitle: document.getElementById("backend-title"),
+      backendCopy: document.getElementById("backend-copy"),
+      pathSupplementTitle: document.getElementById("path-supplement-title"),
+      pathSupplementCopy: document.getElementById("path-supplement-copy"),
+      pathDowngradeTitle: document.getElementById("path-downgrade-title"),
+      pathDowngradeCopy: document.getElementById("path-downgrade-copy"),
+      pathSaveTitle: document.getElementById("path-save-title"),
+      pathSaveCopy: document.getElementById("path-save-copy")
+    };
+
+    const goalList = document.getElementById("goal-list");
+    const inferenceList = document.getElementById("inference-list");
+    const artifactList = document.getElementById("artifact-list");
+    const boundaryList = document.getElementById("boundary-list");
+    const blockerList = document.getElementById("blocker-list");
+    const requiredList = document.getElementById("required-list");
+    const promptList = document.getElementById("prompt-list");
+    const pathOutcomeList = document.getElementById("path-outcome-list");
+    const outcomePill = document.getElementById("outcome-pill");
+    const nextBand = document.getElementById("next-band");
+    const nextBandTitle = document.getElementById("next-band-title");
+    const nextBandCopy = document.getElementById("next-band-copy");
+    const pathStateChip = document.getElementById("path-state-chip");
+    const pathStateCopy = document.getElementById("path-state-copy");
+    const metricStateValue = document.getElementById("metric-state-value");
+    const metricActionValue = document.getElementById("metric-action-value");
+    const payloadPill = document.getElementById("payload-pill");
+    const payloadTags = document.getElementById("payload-tags");
+    const payloadJson = document.getElementById("payload-json");
+    const footerNote = document.getElementById("footer-note");
+    const primaryAction = document.getElementById("primary-action");
+    const secondaryAction = document.getElementById("secondary-action");
+    const railStatus = document.getElementById("rail-status");
+    const railWaiting = document.getElementById("rail-waiting");
+    const railAfter = document.getElementById("rail-after");
+
+    function renderSummaryRows(node, items) {
+      node.innerHTML = "";
+      items.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "summary-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderRuleCards(node, items) {
+      node.innerHTML = "";
+      items.forEach(([title, body]) => {
+        const card = document.createElement("div");
+        card.className = "rule-card";
+        card.innerHTML = `<strong>${title}</strong><p>${body}</p>`;
+        node.appendChild(card);
+      });
+    }
+
+    function renderNextStepItems(node, items) {
+      node.innerHTML = "";
+      items.forEach(([title, body]) => {
+        const item = document.createElement("div");
+        item.className = "next-step-item";
+        item.innerHTML = `<strong>${title}</strong><div class="path-meta">${body}</div>`;
+        node.appendChild(item);
+      });
+    }
+
+    function renderUploadItems(node, items) {
+      node.innerHTML = "";
+      items.forEach(([title, body]) => {
+        const item = document.createElement("div");
+        item.className = "upload-item";
+        item.innerHTML = `<strong>${title}</strong><div class="path-meta">${body}</div>`;
+        node.appendChild(item);
+      });
+    }
+
+    function renderTags(items) {
+      payloadTags.innerHTML = "";
+      items.forEach((label, index) => {
+        const tag = document.createElement("div");
+        tag.className = `tag ${index === 0 ? "warn" : "accent"}`;
+        tag.textContent = label;
+        payloadTags.appendChild(tag);
+      });
+    }
+
+    function applyChrome(lang) {
+      const copy = uiCopy[lang];
+      Object.entries(copy).forEach(([key, value]) => {
+        if (chromeNodes[key]) {
+          chromeNodes[key].textContent = value;
+        }
+      });
+    }
+
+    function applyBaseScenario(lang) {
+      renderSummaryRows(goalList, baseScenario.goal[lang]);
+      renderSummaryRows(inferenceList, baseScenario.inference[lang]);
+      renderSummaryRows(artifactList, baseScenario.artifacts[lang]);
+      renderSummaryRows(boundaryList, baseScenario.boundary[lang]);
+      renderRuleCards(blockerList, baseScenario.blockers[lang]);
+    }
+
+    function applyPath() {
+      const content = pathContent[currentPath];
+      const lang = currentLang;
+
+      pathButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.path === currentPath);
+      });
+
+      metricStateValue.textContent = content.metricState[lang];
+      metricActionValue.textContent = content.metricAction[lang];
+      outcomePill.textContent = content.outcomePill[lang];
+      payloadPill.textContent = content.payloadPill[lang];
+      nextBandTitle.textContent = content.bandTitle[lang];
+      nextBandCopy.textContent = content.bandCopy[lang];
+      nextBand.className = `decision-band ${content.tone}`;
+      pathStateChip.className = `state-chip ${content.stateChip.cls}`;
+      pathStateChip.textContent = content.stateChip[lang];
+      pathStateCopy.textContent = content.stateCopy[lang];
+      renderUploadItems(requiredList, content.required[lang]);
+      renderNextStepItems(promptList, content.prompts[lang]);
+      renderRuleCards(pathOutcomeList, content.outcomes[lang]);
+      renderTags(content.tags[lang]);
+      payloadJson.textContent = content.payloadJson;
+      footerNote.textContent = content.footer[lang];
+      primaryAction.textContent = content.actions[lang].primary;
+      secondaryAction.textContent = content.actions[lang].secondary;
+      railStatus.textContent = content.rail[lang].status;
+      railWaiting.textContent = content.rail[lang].waiting;
+      railAfter.textContent = content.rail[lang].after;
+      chromeNodes.checkIntentCopy.textContent = content.checklist[lang].intent;
+      chromeNodes.checkEvidenceCopy.textContent = content.checklist[lang].evidence;
+      chromeNodes.checkGuidanceCopy.textContent = content.checklist[lang].guidance;
+      chromeNodes.backendCopy.textContent = content.backend[lang];
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.setAttribute("lang", lang === "zh" ? "zh-Hant" : "en");
+      langButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.lang === lang);
+      });
+      applyChrome(lang);
+      applyBaseScenario(lang);
+      applyPath();
+    }
+
+    langButtons.forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    pathButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentPath = button.dataset.path;
+        applyPath();
+      });
+    });
+
+    setLanguage("en");
+  </script>
+</body>
+</html>

@@ -13,6 +13,7 @@ from ai_validation_swarm.domain.validators import load_and_validate_founder_brie
 from ai_validation_swarm.personas.generator import PANEL_ROLES
 from ai_validation_swarm.providers.base import BaseProvider
 from ai_validation_swarm.providers.factory import build_provider
+from ai_validation_swarm.saas.evidence_query import build_pending_evidence_query, query_run_evidence
 from ai_validation_swarm.saas import job_store
 from ai_validation_swarm.saas.models import BillingAccount, TenantWorkspace, ValidationJob, WorkspaceMember
 from ai_validation_swarm.validation.runner import run_validation
@@ -262,6 +263,145 @@ class SaasRuntime:
         if job is None or str(job["workspace_id"]) != auth.workspace_id:
             raise AuthorizationError(f"Validation job '{job_id}' is not visible in this workspace.")
         return job
+
+    def describe_workspace_session(self, auth: AuthContext) -> dict[str, Any]:
+        workspace, billing = self._workspace_and_billing(auth)
+        limits = _plan_limits(workspace.plan_tier, workspace.settings)
+        jobs = job_store.list_workspace_jobs(self.runtime_root, auth.workspace_id)
+        job_counts = {
+            "total": len(jobs),
+            "queued": sum(1 for job in jobs if str(job.get("status")) == "queued"),
+            "running": sum(1 for job in jobs if str(job.get("status")) == "running"),
+            "completed": sum(1 for job in jobs if str(job.get("status")) == "completed"),
+            "failed": sum(1 for job in jobs if str(job.get("status")) == "failed"),
+            "canceled": sum(1 for job in jobs if str(job.get("status")) == "canceled"),
+        }
+        workspace_root = _workspace_root(self.runtime_root, auth.workspace_id)
+        return {
+            "auth": auth.to_dict(),
+            "workspace": workspace.to_dict(),
+            "billing_account": billing.to_dict(),
+            "plan_limits": limits,
+            "job_counts": job_counts,
+            "paths": {
+                "workspace_root": str(workspace_root),
+                "briefs_root": str(workspace_root / "briefs"),
+                "personas_root": str(workspace_root / "personas"),
+                "runs_root": str(workspace_root / "runs"),
+            },
+            "capabilities": {
+                "validation_jobs": True,
+                "evidence_query": True,
+                "worker_runtime": True,
+                "session_auth": True,
+            },
+            "synthetic_boundary": (
+                "Synthetic evidence only. Authenticated workspace access does not change the evidence boundary."
+            ),
+        }
+
+    def describe_workspace_shell(
+        self,
+        auth: AuthContext,
+        *,
+        job_id: str = "",
+        query_text: str = "",
+        active_family: str = "all",
+        sort_by: str = "relevance",
+        selected_result_id: str = "",
+        selected_replay_step_id: str = "",
+    ) -> dict[str, Any]:
+        session = self.describe_workspace_session(auth)
+        jobs = self.list_workspace_jobs(auth)
+        selected_job = None
+
+        if job_id.strip():
+            selected_job = self.get_validation_job(auth, job_id.strip())
+        elif jobs:
+            selected_job = jobs[0]
+
+        evidence_query = (
+            self.query_workspace_evidence(
+                auth,
+                job_id=str(selected_job.get("job_id") or ""),
+                query_text=query_text,
+                active_family=active_family,
+                sort_by=sort_by,
+                selected_result_id=selected_result_id,
+                selected_replay_step_id=selected_replay_step_id,
+            )
+            if selected_job
+            else build_pending_evidence_query(
+                run_id=None,
+                query_text=query_text,
+                active_family=active_family,
+                sort_by=sort_by,
+            )
+        )
+
+        return {
+            "snapshot_version": "workspace-shell/v0-draft",
+            "session": session,
+            "jobs": jobs,
+            "selected_job_id": str(selected_job.get("job_id") or "") if selected_job else None,
+            "selected_job": selected_job,
+            "evidence_query": evidence_query,
+            "capabilities": {
+                **dict(session.get("capabilities", {})),
+                "workspace_shell_snapshot": True,
+            },
+            "runtime_sync": {
+                "poll_recommended_ms": 4000,
+                "snapshot_endpoint": "/api/v1/workspace-shell",
+            },
+            "synthetic_boundary": session.get("synthetic_boundary"),
+        }
+
+    def query_workspace_evidence(
+        self,
+        auth: AuthContext,
+        *,
+        run_id: str = "",
+        job_id: str = "",
+        query_text: str = "",
+        active_family: str = "all",
+        sort_by: str = "relevance",
+        selected_result_id: str = "",
+        selected_replay_step_id: str = "",
+    ) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        resolved_run_id = run_id.strip()
+
+        if job_id.strip():
+            job = self.get_validation_job(auth, job_id.strip())
+            metadata = dict(job.get("metadata", {}))
+            resolved_run_id = resolved_run_id or str(metadata.get("run_id") or "")
+            if not resolved_run_id:
+                output_run_path = str(job.get("output_run_path") or "")
+                if output_run_path:
+                    resolved_run_id = Path(output_run_path).name
+            if str(job.get("status")) != "completed" or not resolved_run_id:
+                return build_pending_evidence_query(
+                    run_id=resolved_run_id or None,
+                    query_text=query_text,
+                    active_family=active_family,
+                    sort_by=sort_by,
+                )
+
+        if not resolved_run_id:
+            raise ValueError("Field 'run_id' or 'job_id' is required for evidence query.")
+
+        workspace_root = _workspace_root(self.runtime_root, auth.workspace_id)
+        run_root = workspace_root / "runs"
+        return query_run_evidence(
+            run_root,
+            run_id=resolved_run_id,
+            query_text=query_text,
+            active_family=active_family,
+            sort_by=sort_by,
+            selected_result_id=selected_result_id,
+            selected_replay_step_id=selected_replay_step_id,
+        )
 
     def process_next_job(self) -> dict[str, Any] | None:
         leased = job_store.lease_next_validation_job(self.runtime_root)

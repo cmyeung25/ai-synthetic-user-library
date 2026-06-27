@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 9</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 9 Review</div>
+        <h1>Moss Console</h1>
+        <p>This prototype turns the completed run into an audit-friendly evidence browser. Operators can filter artifacts, inspect replay-linked traces, and review result boundaries without leaving the workspace.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">Completed Study</div>
+        <div class="nav-item">Evidence</div>
+        <div class="nav-item">Replay</div>
+        <div class="nav-item">Exports</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage8/index.html">Stage 8 run monitor</a><br>
+          <a href="../../specs/workspace_ui_adapter_contract.md">Adapter contract spec</a><br>
+          <a href="../workspace_ui_design_system/index.html">Design system preview</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Evidence Principle</div>
+        <div class="nav-note">The workspace should help operators review structured evidence and replay context, not send them into raw folder inspection as the default path.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow">Workspace UI Readiness / Evidence Browser</div>
+          <h2>Completed run review and replay</h2>
+          <p>This page assumes the run is complete. The focus is no longer queueing or worker state; it is evidence retrieval, replay orientation, and bounded interpretation.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span>Browser status</span>
+            <strong id="metric-browser-status">results_ready</strong>
+          </div>
+          <div class="metric">
+            <span>Visible artifacts</span>
+            <strong id="metric-visible-count">0</strong>
+          </div>
+          <div class="metric">
+            <span>Selected replay step</span>
+            <strong id="metric-replay-step">step-03</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="journey-strip" aria-label="Review progression">
+        <div class="journey-step done">
+          <strong>Run completed</strong>
+          <span>Stage 8 already carried this study into artifact-ready state.</span>
+        </div>
+        <div class="journey-step active">
+          <strong>Evidence reviewed</strong>
+          <span>Artifacts can now be filtered, inspected, and related back to replay context.</span>
+        </div>
+        <div class="journey-step active">
+          <strong>Boundary preserved</strong>
+          <span>Review stays explicit about what the evidence does and does not prove.</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Artifact filters and browser</h3>
+            <p class="section-copy">A completed workspace run should not collapse into one report blob. The operator needs to browse inputs, traces, analyses, and outputs separately when reviewing evidence.</p>
+          </div>
+          <div class="status-pill completed">results ready</div>
+        </div>
+        <div class="card-body">
+          <div class="path-strip" id="filter-strip"></div>
+          <div class="evidence-grid" id="artifact-grid"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Selected evidence and replay focus</h3>
+            <p class="section-copy">The workspace should show artifact details next to replay steps so the operator can connect trace interpretation back to the underlying evidence path.</p>
+          </div>
+          <div class="status-pill running" id="selected-family-pill">trace</div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="draft-panel">
+              <div class="inline-label">Selected artifact</div>
+              <div class="summary-list" id="artifact-detail-summary"></div>
+              <div class="artifact-row" id="artifact-tag-row"></div>
+              <div class="event-log" id="artifact-detail-lines"></div>
+            </div>
+            <div class="section-stack">
+              <div class="draft-panel">
+                <div class="inline-label">Replay sequence</div>
+                <div class="timeline" id="replay-timeline"></div>
+              </div>
+              <div class="draft-panel">
+                <div class="inline-label">Replay focus</div>
+                <div class="summary-list" id="replay-focus-summary"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Outcome summary and boundary</h3>
+            <p class="section-copy">The operator still needs a compact summary of what this run produced, what can be reviewed now, and what claims remain out of bounds.</p>
+          </div>
+          <div class="status-pill completed">audit</div>
+        </div>
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="summary-card">
+              <strong>Draft summary</strong>
+              <div class="summary-list" id="draft-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Run monitor summary</strong>
+              <div class="summary-list" id="run-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Evidence mix</strong>
+              <div class="summary-list" id="evidence-summary"></div>
+            </div>
+            <div class="summary-card">
+              <strong>Selected artifact summary</strong>
+              <div class="summary-list" id="selected-summary"></div>
+            </div>
+          </div>
+
+          <div class="decision-band ready">
+            <strong>Evidence boundary</strong>
+            <p class="decision-copy" id="boundary-copy"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Shared state projections</h3>
+            <p class="section-copy">The browser stays dependable because artifact filtering and replay focus still derive from explicit completed-run state rather than front-end-only hidden rules.</p>
+          </div>
+          <div class="status-pill queued">derived</div>
+        </div>
+        <div class="card-body">
+          <div class="adapter-grid">
+            <div class="adapter-card">
+              <strong>Run monitor</strong>
+              <pre class="json-block" id="monitor-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Evidence browser projection</strong>
+              <pre class="json-block" id="browser-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Selected artifact</strong>
+              <pre class="json-block" id="selected-json">{}</pre>
+            </div>
+            <div class="adapter-card">
+              <strong>Replay focus step</strong>
+              <pre class="json-block" id="replay-json">{}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Evidence Sidecar</div>
+        <h3>Current review context</h3>
+        <p>This side rail should help the operator understand what is selected, what can be replayed, and what remains bounded by the current evidence contract.</p>
+      </div>
+
+      <div class="stack" id="sidecar-stack"></div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong>Artifacts stay queryable</strong>
+          <p>Operators should be able to separate inputs, traces, analyses, and outputs at review time.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong>Replay stays linked</strong>
+          <p>Selected evidence should be able to point back to one concrete replay focus.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong>Boundary remains explicit</strong>
+          <p>Completed artifacts still represent bounded synthetic evidence, not human market proof.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Current backend reality</h4>
+        <p>This is still a local engineering prototype, but it models the evidence browsing and replay surface a real workspace shell will need on top of structured metadata and artifact paths.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    import {
+      createStage9EvidenceDemoState,
+      deriveStage9EvidenceBundle
+    } from "../workspace_ui_shared/workspace_ui_adapter.mjs";
+
+    const copy = {
+      firstTaskValue: "connect data",
+      questionValue: "Where do new operators hesitate during onboarding, and do they continue after the first task?",
+      desiredValue: "task-friction and continuation risk",
+      nextUpload: "request inputs",
+      nextFallback: "confirm fallback",
+      nextConfirm: "confirm queueable plan",
+      nextSaved: "resume later",
+      phaseQueued: "queued",
+      monitorAwait: "await worker progress",
+      monitorViewResults: "view results",
+      monitorInspectFailure: "inspect failure"
+    };
+
+    const filterStrip = document.getElementById("filter-strip");
+    const artifactGrid = document.getElementById("artifact-grid");
+    const artifactDetailSummary = document.getElementById("artifact-detail-summary");
+    const artifactTagRow = document.getElementById("artifact-tag-row");
+    const artifactDetailLines = document.getElementById("artifact-detail-lines");
+    const replayTimeline = document.getElementById("replay-timeline");
+    const replayFocusSummary = document.getElementById("replay-focus-summary");
+    const draftSummary = document.getElementById("draft-summary");
+    const runSummary = document.getElementById("run-summary");
+    const evidenceSummary = document.getElementById("evidence-summary");
+    const selectedSummary = document.getElementById("selected-summary");
+    const boundaryCopy = document.getElementById("boundary-copy");
+    const metricBrowserStatus = document.getElementById("metric-browser-status");
+    const metricVisibleCount = document.getElementById("metric-visible-count");
+    const metricReplayStep = document.getElementById("metric-replay-step");
+    const selectedFamilyPill = document.getElementById("selected-family-pill");
+    const monitorJson = document.getElementById("monitor-json");
+    const browserJson = document.getElementById("browser-json");
+    const selectedJson = document.getElementById("selected-json");
+    const replayJson = document.getElementById("replay-json");
+    const sidecarStack = document.getElementById("sidecar-stack");
+
+    let state = {};
+
+    function resetState() {
+      state = createStage9EvidenceDemoState();
+    }
+
+    function renderRows(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "summary-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderStack(node, rows) {
+      node.innerHTML = "";
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "stack-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function recompute() {
+      const bundle = deriveStage9EvidenceBundle({
+        evidenceState: state,
+        copy,
+        localUiState: {
+          locale: "en",
+          active_panel: "evidence_browser"
+        }
+      });
+
+      const browser = bundle.evidence_browser;
+      const selectedArtifact = browser.selected_artifact;
+      const replayFocus = browser.replay_focus_step;
+
+      metricBrowserStatus.textContent = browser.browser_status;
+      metricVisibleCount.textContent = String(browser.visible_count);
+      metricReplayStep.textContent = replayFocus ? replayFocus.id : "-";
+      selectedFamilyPill.className = `status-pill ${selectedArtifact && selectedArtifact.family === "output" ? "completed" : selectedArtifact && selectedArtifact.family === "trace" ? "running" : "queued"}`;
+      selectedFamilyPill.textContent = selectedArtifact ? selectedArtifact.family : "none";
+
+      filterStrip.innerHTML = "";
+      browser.available_filters.forEach((filter) => {
+        const button = document.createElement("button");
+        button.className = `path-option${browser.active_filter === filter ? " active" : ""}`;
+        button.innerHTML = `<strong>${filter}</strong><span>${filter === "all" ? "Show every evidence family." : `Show only ${filter} artifacts.`}</span>`;
+        button.addEventListener("click", () => {
+          state.activeFilter = filter;
+          state.selectedArtifactId = null;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        filterStrip.appendChild(button);
+      });
+
+      artifactGrid.innerHTML = "";
+      browser.visible_artifacts.forEach((artifact) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `evidence-card${browser.selected_artifact_id === artifact.id ? " active" : ""}`;
+        card.innerHTML = `
+          <strong>${artifact.title}</strong>
+          <div class="evidence-meta">
+            <span>${artifact.family}</span>
+            <span>${artifact.kind}</span>
+          </div>
+          <p>${artifact.summary}</p>
+        `;
+        card.addEventListener("click", () => {
+          state.selectedArtifactId = artifact.id;
+          state.selectedReplayStepId = null;
+          recompute();
+        });
+        artifactGrid.appendChild(card);
+      });
+
+      renderRows(artifactDetailSummary, selectedArtifact ? [
+        ["Title", selectedArtifact.title],
+        ["Family", selectedArtifact.family],
+        ["Kind", selectedArtifact.kind],
+        ["Path", selectedArtifact.artifact_path]
+      ] : [["Artifact", "No artifact selected"]]);
+
+      artifactTagRow.innerHTML = "";
+      (selectedArtifact?.tags || []).forEach((tag) => {
+        const chip = document.createElement("div");
+        chip.className = "artifact-chip";
+        chip.textContent = tag;
+        artifactTagRow.appendChild(chip);
+      });
+
+      artifactDetailLines.innerHTML = "";
+      (selectedArtifact?.detail_lines || []).forEach((line) => {
+        const item = document.createElement("div");
+        item.className = "event-item";
+        item.innerHTML = `<strong>Review note</strong><span>${line}</span>`;
+        artifactDetailLines.appendChild(item);
+      });
+
+      replayTimeline.innerHTML = "";
+      browser.replay_sequence.forEach((step) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `timeline-card${browser.selected_replay_step_id === step.id ? " active" : ""}`;
+        card.innerHTML = `<h4>${step.title}</h4><p>${step.timestamp} - ${step.note}</p>`;
+        card.addEventListener("click", () => {
+          state.selectedReplayStepId = step.id;
+          recompute();
+        });
+        replayTimeline.appendChild(card);
+      });
+
+      renderRows(replayFocusSummary, replayFocus ? [
+        ["Replay step", replayFocus.title],
+        ["Timestamp", replayFocus.timestamp],
+        ["Interpretation", replayFocus.note]
+      ] : [["Replay", "No replay sequence for this artifact"]]);
+
+      renderRows(draftSummary, [
+        ["Primary mode", bundle.draft.inference.primary_mode],
+        ["Execution status", bundle.draft.proposed_run.execution_status],
+        ["First task", bundle.draft.proposed_run.first_task || "-"]
+      ]);
+      renderRows(runSummary, [
+        ["Run status", bundle.run_monitor.status],
+        ["Current step", bundle.run_monitor.current_step || "-"],
+        ["Artifacts available", bundle.run_monitor.artifact_refs.length ? "yes" : "no"]
+      ]);
+      renderRows(evidenceSummary, [
+        ["Inputs", String(browser.artifact_count_by_family.input)],
+        ["Traces", String(browser.artifact_count_by_family.trace)],
+        ["Analyses", String(browser.artifact_count_by_family.analysis)],
+        ["Outputs", String(browser.artifact_count_by_family.output)]
+      ]);
+      renderRows(selectedSummary, selectedArtifact ? [
+        ["Selected artifact", selectedArtifact.title],
+        ["Replay-linked", browser.replay_sequence.length ? "yes" : "no"],
+        ["Summary", selectedArtifact.summary]
+      ] : [["Selection", "No artifact selected"]]);
+
+      boundaryCopy.textContent = browser.boundary_warning || "-";
+
+      renderStack(sidecarStack, [
+        ["Filter", browser.active_filter],
+        ["Selected artifact", browser.selected_artifact_id || "-"],
+        ["Replay step", browser.selected_replay_step_id || "-"],
+        ["Visible artifacts", String(browser.visible_count)]
+      ]);
+
+      monitorJson.textContent = JSON.stringify(bundle.run_monitor, null, 2);
+      browserJson.textContent = JSON.stringify(bundle.evidence_browser, null, 2);
+      selectedJson.textContent = JSON.stringify(selectedArtifact, null, 2);
+      replayJson.textContent = JSON.stringify(replayFocus, null, 2);
+    }
+
+    resetState();
+    recompute();
+  </script>
+</body>
+</html>

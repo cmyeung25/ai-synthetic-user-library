@@ -17,6 +17,7 @@ This repository currently contains:
 - fixture-driven evaluation harness with regression comparison
 - multi-turn local conversation sessions with synthetic personas
 - SaaS-readiness contracts, tenant schemas, and market-distribution configs
+- Workspace UI low-fi prototype, Moss stage-2 intake prototype, Moss stage-3 inference prototype, Moss stage-4 confirmation prototype, Moss stage-5 blocked-draft remediation prototype, Moss stage-6 converged single-page flow, Moss stage-7 state-machine adapter prototype with EN / Traditional Chinese review, Moss stage-8 queue and run status monitor prototype, Moss stage-9 evidence browser and replay prototype, Moss stage-10 metadata-backed evidence query and replay prototype, Moss stage-11 integrated operator-shell prototype, Moss stage-12 validation-job, session, and evidence-query runtime bridge prototype, Moss stage-13 product-facing workspace shell prototype, Moss stage-14 backend-driven workspace shell prototype, a shared executable workspace UI adapter, run-monitor, evidence-browser, evidence-query, and integrated-shell module plus dedicated validation-job and session runtime bridge modules, a shared shell runtime client for live session/job/evidence-query/workspace-shell orchestration, a shared shell runtime sync module for heartbeat and optional auto-refresh, a shared shell app controller module for frontend orchestration, a page-level shell frontend adapter module with Node contract tests and a stable review-surface projection, a draft workspace research plan contract spec, a dedicated workspace UI adapter contract spec, a draft workspace evidence query contract spec, a draft workspace validation-job bridge contract spec, a draft workspace session runtime contract spec, a draft workspace shell frontend adapter contract spec, a draft workspace shell app contract spec, a draft workspace shell snapshot contract spec, and reusable design-system CSS foundation with Moss, Slate, and Ink theme variants for the planned workspace console
 - basic tests
 
 ## North Star
@@ -362,8 +363,11 @@ The local runtime stores workspace, billing, API token, and validation-job lifec
 - `POST /api/v1/validation-jobs`
 - `GET /api/v1/validation-jobs`
 - `GET /api/v1/validation-jobs/{job_id}`
+- `GET /api/v1/session`
+- `GET /api/v1/evidence-query`
+- `GET /api/v1/workspace-shell`
 
-This surface is still local-first and engineering-oriented, but it means authenticated API ingress, queued job execution, workspace isolation, billing gates, plan limits, and retention purge now exist as real repository behavior rather than design-only contracts.
+This surface is still local-first and engineering-oriented, but it means authenticated workspace session loading, API ingress, queued job execution, workspace isolation, billing gates, plan limits, and retention purge now exist as real repository behavior rather than design-only contracts.
 
 ## Bundled Python runtime
 

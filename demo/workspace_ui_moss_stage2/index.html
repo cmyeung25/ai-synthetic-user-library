@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 2</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 2 Review</div>
+        <h1>Moss Console</h1>
+        <p>This prototype pushes the selected Moss direction into the next Workspace UI story: conversational intake and artifact drop.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">New Study</div>
+        <div class="nav-item">Runs</div>
+        <div class="nav-item">Evidence</div>
+        <div class="nav-item">Personas</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Review Goal</div>
+        <div class="nav-note">This page should answer one question: can a user start a study from natural language and artifacts without seeing a large setup form?</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Related Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_design_system/index.html">Design system preview</a><br>
+          <a href="../workspace_ui_lowfi/index.html">Low-fi flow prototype</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow">Workspace UI Readiness / Story Progress</div>
+          <h2>Conversational intake and artifact drop</h2>
+          <p>The selected Moss theme now carries a more detailed intake screen. This is the first default-path surface that a future workspace shell would likely expose.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span>Theme</span>
+            <strong>Moss</strong>
+          </div>
+          <div class="metric">
+            <span>Story</span>
+            <strong>5 SP</strong>
+          </div>
+          <div class="metric">
+            <span>Mode UI</span>
+            <strong>Hidden</strong>
+          </div>
+          <div class="metric">
+            <span>Confirmation</span>
+            <strong>Required</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Start from intent, not config</h3>
+            <p class="section-copy">The user writes the research question, drops artifacts, and only then sees the system draft the setup.</p>
+          </div>
+          <div class="status-pill running">in progress</div>
+        </div>
+        <div class="card-body">
+          <div class="composer-grid">
+            <div class="input-shell">
+              <div class="inline-label">Intent Composer</div>
+              <div class="input-area">
+                We want to know whether Hong Kong SMB operators would trust this AI operations assistant enough to try it in the first week. We have a founder brief, three onboarding screens, and a rough sense that setup burden may be the main adoption risk.
+              </div>
+
+              <div class="dropzone">
+                <strong>Artifacts attached</strong>
+                <p>`founder-brief.json`, `screen-01.png`, `screen-02.png`, `screen-03.png`</p>
+                <div class="chip-row">
+                  <div class="artifact-chip">Brief</div>
+                  <div class="artifact-chip">Screenshots</div>
+                  <div class="artifact-chip">Prior report</div>
+                </div>
+              </div>
+
+              <div>
+                <div class="inline-label">Suggested prompts</div>
+                <div class="chip-row">
+                  <div class="chip">Focus on trust breakdown</div>
+                  <div class="chip">Include likely drop-off</div>
+                  <div class="chip">Use skeptical panel</div>
+                  <div class="chip">Compare against prior run</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="draft-panel">
+              <div class="inline-label">System follow-up</div>
+              <div class="draft-list">
+                <div class="draft-item">
+                  <strong>Need one panel choice</strong>
+                  <p>Should the first pass use a mainstream five-person panel or a more skeptical stance?</p>
+                </div>
+                <div class="draft-item">
+                  <strong>Mode stays hidden</strong>
+                  <p>The system can infer this is likely prototype validation with adoption-risk focus. The user does not need to make that taxonomy choice here.</p>
+                </div>
+                <div class="draft-item">
+                  <strong>Advanced controls remain secondary</strong>
+                  <p>Mode override, provider choice, persona filters, and sample-size tuning remain available later, not on the default path.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="advanced-panel">
+            <div class="inline-label">Advanced path preview</div>
+            <p>This remains collapsed by default. It would contain mode override, panel filters, quota-aware sampling controls, and provider selection when the operator truly needs them.</p>
+            <div class="chip-row">
+              <div class="chip">Mode override</div>
+              <div class="chip">Persona filters</div>
+              <div class="chip">Provider</div>
+              <div class="chip">Sample size</div>
+              <div class="chip">Retention</div>
+            </div>
+          </div>
+
+          <div class="cta-row">
+            <button class="action-button primary">Draft Research Plan</button>
+            <button class="action-button">Open Advanced Controls</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">What the system would prepare next</h3>
+            <p class="section-copy">Before any real job submission, the workspace should draft the run and make the hidden assumptions explicit.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="queue-table" aria-label="Draft plan fields">
+            <tbody>
+              <tr>
+                <th>Likely mode</th>
+                <td>prototype_validation</td>
+              </tr>
+              <tr>
+                <th>Secondary lens</th>
+                <td>adoption barrier and setup friction</td>
+              </tr>
+              <tr>
+                <th>Stimulus</th>
+                <td>static onboarding screenshots plus founder brief</td>
+              </tr>
+              <tr>
+                <th>Pending clarification</th>
+                <td>mainstream vs skeptical panel stance</td>
+              </tr>
+              <tr>
+                <th>Next required step</th>
+                <td>explicit plan confirmation before queue submission</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Right Rail / Draft Plan</div>
+        <h3>Preflight sidecar</h3>
+        <p>The sidecar remains explicit about contract and runtime boundaries, even while the main path stays conversational.</p>
+      </div>
+
+      <div class="stack">
+        <div class="stack-row">
+          <strong>Research intent</strong>
+          <span>Trust, first-week trial willingness, and setup burden</span>
+        </div>
+        <div class="stack-row">
+          <strong>Likely evidence</strong>
+          <span>stated interpretation + inferred friction</span>
+        </div>
+        <div class="stack-row">
+          <strong>Still missing</strong>
+          <span>panel stance confirmation</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong>Artifact readiness</strong>
+          <p>Brief and screenshots are present, so the system can prepare a bounded prototype-validation plan.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong>Evidence guardrail</strong>
+          <p>No observed action trace is possible from screenshots alone. The plan must say that clearly at confirmation time.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong>Runtime guardrail</strong>
+          <p>Quota, billing, role, and retention checks stay visible before the final submit step.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Design-system update rule</h4>
+        <p>New primitives should enter the shared design system only when they solve repeated workspace-console patterns, not as one-off page decoration.</p>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

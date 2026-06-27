@@ -202,7 +202,7 @@ class SaasRuntimeTest(unittest.TestCase):
             brief_path, persona_dir = self._workspace_inputs(workspace_root)
             app = SaasApiApplication(runtime)
 
-            def call_app(method: str, path: str, *, token: str = "", payload: dict | None = None):
+            def call_app(method: str, path: str, *, token: str = "", payload: dict | None = None, query: str = ""):
                 body = json.dumps(payload or {}).encode("utf-8")
                 captured: dict[str, object] = {}
 
@@ -213,6 +213,7 @@ class SaasRuntimeTest(unittest.TestCase):
                 environ = {
                     "REQUEST_METHOD": method,
                     "PATH_INFO": path,
+                    "QUERY_STRING": query,
                     "CONTENT_LENGTH": str(len(body)),
                     "CONTENT_TYPE": "application/json",
                     "wsgi.input": io.BytesIO(body),
@@ -221,9 +222,53 @@ class SaasRuntimeTest(unittest.TestCase):
                 response_body = b"".join(app(environ, start_response))
                 return str(captured["status"]), json.loads(response_body.decode("utf-8"))
 
+            def call_app_raw(method: str, path: str, *, token: str = "", payload: dict | None = None, query: str = ""):
+                body = json.dumps(payload or {}).encode("utf-8")
+                captured: dict[str, object] = {}
+
+                def start_response(status: str, headers):
+                    captured["status"] = status
+                    captured["headers"] = headers
+
+                environ = {
+                    "REQUEST_METHOD": method,
+                    "PATH_INFO": path,
+                    "QUERY_STRING": query,
+                    "CONTENT_LENGTH": str(len(body)),
+                    "CONTENT_TYPE": "application/json",
+                    "wsgi.input": io.BytesIO(body),
+                    "HTTP_AUTHORIZATION": f"Bearer {token}" if token else "",
+                }
+                response_body = b"".join(app(environ, start_response))
+                return str(captured["status"]), list(captured["headers"]), response_body
+
             status, payload = call_app("GET", "/api/v1/validation-jobs")
             self.assertEqual(status, "401 Unauthorized")
             self.assertEqual(payload["error"], "unauthorized")
+
+            status, payload = call_app("GET", "/api/v1/session")
+            self.assertEqual(status, "401 Unauthorized")
+            self.assertEqual(payload["error"], "unauthorized")
+
+            status, payload = call_app("GET", "/api/v1/workspace-shell")
+            self.assertEqual(status, "401 Unauthorized")
+            self.assertEqual(payload["error"], "unauthorized")
+
+            status, headers, body = call_app_raw("OPTIONS", "/api/v1/validation-jobs")
+            self.assertEqual(status, "204 No Content")
+            self.assertEqual(body, b"")
+            header_map = {name: value for name, value in headers}
+            self.assertEqual(header_map["Access-Control-Allow-Origin"], "*")
+            self.assertIn("Authorization", header_map["Access-Control-Allow-Headers"])
+            self.assertIn("OPTIONS", header_map["Access-Control-Allow-Methods"])
+
+            status, headers, body = call_app_raw("OPTIONS", "/api/v1/session")
+            self.assertEqual(status, "204 No Content")
+            self.assertEqual(body, b"")
+
+            status, headers, body = call_app_raw("OPTIONS", "/api/v1/workspace-shell")
+            self.assertEqual(status, "204 No Content")
+            self.assertEqual(body, b"")
 
             status, payload = call_app(
                 "POST",
@@ -244,10 +289,69 @@ class SaasRuntimeTest(unittest.TestCase):
             status, payload = call_app("GET", f"/api/v1/validation-jobs/{job_id}", token="token-api")
             self.assertEqual(status, "200 OK")
             self.assertEqual(payload["job"]["status"], "completed")
+            run_id = payload["job"]["metadata"]["run_id"]
 
             status, payload = call_app("GET", "/api/v1/validation-jobs", token="token-api")
             self.assertEqual(status, "200 OK")
             self.assertEqual(len(payload["jobs"]), 1)
+
+            status, payload = call_app("GET", "/api/v1/session", token="token-api")
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["session"]["auth"]["workspace_id"], "ws_api")
+            self.assertEqual(payload["session"]["auth"]["role"], "owner")
+            self.assertEqual(payload["session"]["workspace"]["plan_tier"], "pro")
+            self.assertEqual(payload["session"]["billing_account"]["status"], "active")
+            self.assertEqual(payload["session"]["plan_limits"]["daily_runs"], 25)
+            self.assertEqual(payload["session"]["job_counts"]["total"], 1)
+            self.assertTrue(payload["session"]["capabilities"]["session_auth"])
+            self.assertIn("synthetic", payload["session"]["synthetic_boundary"].lower())
+
+            status, payload = call_app(
+                "GET",
+                "/api/v1/workspace-shell",
+                token="token-api",
+                query="query_text=hesitate&active_family=all&sort_by=relevance",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["snapshot"]["snapshot_version"], "workspace-shell/v0-draft")
+            self.assertEqual(payload["snapshot"]["session"]["auth"]["workspace_id"], "ws_api")
+            self.assertEqual(payload["snapshot"]["selected_job_id"], job_id)
+            self.assertEqual(payload["snapshot"]["selected_job"]["job_id"], job_id)
+            self.assertEqual(payload["snapshot"]["evidence_query"]["query_status"], "query_ready")
+            self.assertTrue(payload["snapshot"]["capabilities"]["workspace_shell_snapshot"])
+            self.assertEqual(payload["snapshot"]["runtime_sync"]["snapshot_endpoint"], "/api/v1/workspace-shell")
+
+            status, payload = call_app(
+                "GET",
+                "/api/v1/evidence-query",
+                token="token-api",
+                query=f"run_id={run_id}&query_text=report&active_family=output&sort_by=relevance",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["query"]["query_status"], "query_ready")
+            self.assertGreaterEqual(payload["query"]["result_count"], 1)
+            self.assertEqual(payload["query"]["active_family"], "output")
+            self.assertEqual(payload["query"]["results"][0]["family"], "output")
+            self.assertIn("synthetic", payload["query"]["boundary_warning"].lower())
+
+            pending_job = runtime.submit_validation_job(
+                runtime.authenticate("token-api"),
+                ValidationJobRequest(
+                    brief_path=str(brief_path.relative_to(workspace_root)),
+                    persona_dir=str(persona_dir.relative_to(workspace_root)),
+                    panel_spec=PanelSpec(panel_type="mainstream", sample_size=1, random_seed=17),
+                    provider_name="mock",
+                ),
+            )
+            status, payload = call_app(
+                "GET",
+                "/api/v1/evidence-query",
+                token="token-api",
+                query=f"job_id={pending_job['job_id']}",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["query"]["query_status"], "query_pending")
+            self.assertEqual(payload["query"]["result_count"], 0)
 
 
 if __name__ == "__main__":

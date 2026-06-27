@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 4</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow" id="rail-eyebrow">Stage 4 Review</div>
+        <h1>Moss Console</h1>
+        <p id="rail-copy">This prototype turns the draft plan into a confirmation surface that makes execution readiness, evidence boundaries, and backend limits explicit before queueing.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="lang-label">Language</div>
+        <div class="phase-strip" aria-label="Language switch">
+          <button class="phase-button active" data-lang="en">EN</button>
+          <button class="phase-button" data-lang="zh">中文</button>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="workspace-label">Workspace</div>
+        <div class="nav-item active" id="nav-new-study">New Study</div>
+        <div class="nav-item" id="nav-draft-plans">Draft Plans</div>
+        <div class="nav-item" id="nav-runs">Runs</div>
+        <div class="nav-item" id="nav-evidence">Evidence</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="focus-label">Stage 4 Focus</div>
+        <div class="nav-note" id="focus-copy">This page should answer whether the inferred plan is ready to queue, what remains blocked, and what the operator is explicitly agreeing to.</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label" id="linked-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage3/index.html" id="link-stage3">Stage 3 inference prototype</a><br>
+          <a href="../workspace_ui_design_system/index.html" id="link-design">Design system preview</a><br>
+          <a href="../../specs/workspace_research_plan_contract.md" id="link-contract">Draft plan contract spec</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow" id="header-eyebrow">Workspace UI Readiness / Story Progress</div>
+          <h2 id="header-title">Research plan confirmation surface</h2>
+          <p id="header-copy">The system now exposes the exact study shape, evidence boundary, submit state, and remaining assumptions before the operator queues any run.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span id="metric-theme-label">Theme</span>
+            <strong>Moss</strong>
+          </div>
+          <div class="metric">
+            <span id="metric-story-label">Story</span>
+            <strong>3 SP</strong>
+          </div>
+          <div class="metric">
+            <span id="metric-surface-label">Surface</span>
+            <strong id="metric-surface-value">Stage 4</strong>
+          </div>
+          <div class="metric">
+            <span id="metric-state-label">Submit state</span>
+            <strong id="metric-state-value">Ready subset</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="phase-strip" aria-label="Scenario review" id="scenario-strip">
+        <button class="phase-button active" data-scenario="trust_proto">Trust + screenshots</button>
+        <button class="phase-button" data-scenario="concept_copy">Concept copy only</button>
+        <button class="phase-button" data-scenario="live_flow">Live URL request</button>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title" id="confirm-title">Confirmation sheet</h3>
+            <p class="section-copy" id="confirm-copy">This is the operator-facing checkpoint that turns an inferred plan into an explicit execution decision.</p>
+          </div>
+          <div class="status-pill completed" id="scenario-pill">ready</div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="summary-grid">
+              <div class="summary-card">
+                <strong id="goal-title">Research goal</strong>
+                <div class="summary-list" id="goal-list"></div>
+              </div>
+              <div class="summary-card">
+                <strong id="plan-title">Inferred plan</strong>
+                <div class="summary-list" id="plan-list"></div>
+              </div>
+              <div class="summary-card">
+                <strong id="setup-title">Study setup</strong>
+                <div class="summary-list" id="setup-list"></div>
+              </div>
+              <div class="summary-card">
+                <strong id="boundary-title">Evidence boundary</strong>
+                <div class="summary-list" id="boundary-list"></div>
+              </div>
+            </div>
+
+            <div class="draft-panel">
+              <div class="inline-label" id="gate-label">Submission gate</div>
+              <div class="decision-band ready" id="decision-band">
+                <strong id="decision-title">Ready to confirm</strong>
+                <p class="decision-copy" id="decision-copy">All required clarifications are closed, and this study can map into the current backend subset.</p>
+              </div>
+
+              <div class="rule-grid" id="blocker-list"></div>
+
+              <div class="inline-label" id="conditions-label">Operator is confirming</div>
+              <div class="rule-grid" id="condition-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title" id="before-title">Before queueing</h3>
+            <p class="section-copy" id="before-copy">The confirmation surface should preserve unresolved assumptions instead of hiding them inside internal state.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="advanced-panel">
+              <div class="inline-label" id="assumptions-label">Unresolved assumptions</div>
+              <div class="rule-grid" id="assumption-list"></div>
+            </div>
+            <div class="draft-panel">
+              <div class="inline-label" id="mapping-label">Backend mapping view</div>
+              <div class="output-grid" id="mapping-grid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title" id="payload-title">Confirmation payload preview</h3>
+            <p class="section-copy" id="payload-copy">The UI submits an explicit confirmation snapshot, not just a loose button click on top of hidden state.</p>
+          </div>
+          <div class="status-pill queued" id="payload-pill">pending</div>
+        </div>
+        <div class="card-body">
+          <div class="contract-shell">
+            <div class="tag-list" id="payload-tags"></div>
+            <pre class="json-block" id="payload-json">{
+  "draft_plan_id": "draft_plan_20260627_proto_01",
+  "confirmation": {},
+  "execution_adapter": {}
+}</pre>
+            <div class="confirm-footer">
+              <div class="footer-note" id="footer-note">The primary action should stay disabled whenever the contract is still blocked or the requested evidence exceeds the current runtime.</div>
+              <div class="cta-row">
+                <button class="action-button secondary" id="secondary-action">Save draft</button>
+                <button class="action-button primary" id="primary-action">Confirm and queue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow" id="sidecar-eyebrow">Confirmation Sidecar</div>
+        <h3 id="sidecar-title">Pre-submit summary</h3>
+        <p id="sidecar-copy">The side rail keeps the conversational path honest by showing exactly what will and will not happen when the operator confirms.</p>
+      </div>
+
+      <div class="stack">
+        <div class="stack-row">
+          <strong id="rail-state-label">Submission state</strong>
+          <span id="rail-state">ready_for_confirmation</span>
+        </div>
+        <div class="stack-row">
+          <strong id="rail-queue-label">What will be queued</strong>
+          <span id="rail-queue">validation job request plus confirmation snapshot</span>
+        </div>
+        <div class="stack-row">
+          <strong id="rail-manual-label">What remains manual</strong>
+          <span id="rail-manual">human interpretation of outputs and any external follow-up research</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong id="check-intent-title">Intent preserved</strong>
+          <p id="check-intent-copy">The confirmation step still reflects the user's own research question rather than only internal runtime fields.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong id="check-boundary-title">Boundary preserved</strong>
+          <p id="check-boundary-copy">The operator can see which claims stay forbidden before any run is launched.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong id="check-runtime-title">Runtime fit</strong>
+          <p id="check-runtime-copy">Only backend-supported subsets should expose an active queue action.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4 id="backend-title">Current backend reality</h4>
+        <p id="backend-copy">This surface is ahead of the current runtime in some scenarios. The UI should preserve those requests as drafts instead of pretending unsupported execution exists.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const uiCopy = {
+      en: {
+        railEyebrow: "Stage 4 Review",
+        railCopy: "This prototype turns the draft plan into a confirmation surface that makes execution readiness, evidence boundaries, and backend limits explicit before queueing.",
+        langLabel: "Language",
+        workspaceLabel: "Workspace",
+        navNewStudy: "New Study",
+        navDraftPlans: "Draft Plans",
+        navRuns: "Runs",
+        navEvidence: "Evidence",
+        focusLabel: "Stage 4 Focus",
+        focusCopy: "This page should answer whether the inferred plan is ready to queue, what remains blocked, and what the operator is explicitly agreeing to.",
+        linkedLabel: "Linked Artifacts",
+        linkStage3: "Stage 3 inference prototype",
+        linkDesign: "Design system preview",
+        linkContract: "Draft plan contract spec",
+        headerEyebrow: "Workspace UI Readiness / Story Progress",
+        headerTitle: "Research plan confirmation surface",
+        headerCopy: "The system now exposes the exact study shape, evidence boundary, submit state, and remaining assumptions before the operator queues any run.",
+        metricThemeLabel: "Theme",
+        metricStoryLabel: "Story",
+        metricSurfaceLabel: "Surface",
+        metricStateLabel: "Submit state",
+        metricSurfaceValue: "Stage 4",
+        confirmTitle: "Confirmation sheet",
+        confirmCopy: "This is the operator-facing checkpoint that turns an inferred plan into an explicit execution decision.",
+        goalTitle: "Research goal",
+        planTitle: "Inferred plan",
+        setupTitle: "Study setup",
+        boundaryTitle: "Evidence boundary",
+        gateLabel: "Submission gate",
+        conditionsLabel: "Operator is confirming",
+        beforeTitle: "Before queueing",
+        beforeCopy: "The confirmation surface should preserve unresolved assumptions instead of hiding them inside internal state.",
+        assumptionsLabel: "Unresolved assumptions",
+        mappingLabel: "Backend mapping view",
+        payloadTitle: "Confirmation payload preview",
+        payloadCopy: "The UI submits an explicit confirmation snapshot, not just a loose button click on top of hidden state.",
+        sidecarEyebrow: "Confirmation Sidecar",
+        sidecarTitle: "Pre-submit summary",
+        sidecarCopy: "The side rail keeps the conversational path honest by showing exactly what will and will not happen when the operator confirms.",
+        railStateLabel: "Submission state",
+        railQueueLabel: "What will be queued",
+        railManualLabel: "What remains manual",
+        checkIntentTitle: "Intent preserved",
+        checkBoundaryTitle: "Boundary preserved",
+        checkRuntimeTitle: "Runtime fit",
+        checkIntentCopy: "The confirmation step still reflects the user's own research question rather than only internal runtime fields.",
+        checkBoundaryCopy: "The operator can see which claims stay forbidden before any run is launched.",
+        checkRuntimeCopy: "Only backend-supported subsets should expose an active queue action.",
+        backendTitle: "Current backend reality",
+        backendCopy: "This surface is ahead of the current runtime in some scenarios. The UI should preserve those requests as drafts instead of pretending unsupported execution exists.",
+        secondaryAction: "Save draft",
+        primaryAction: "Confirm and queue"
+      },
+      zh: {
+        railEyebrow: "Stage 4 檢視",
+        railCopy: "這個 prototype 把 draft plan 推進成 confirmation surface，在排隊前清楚顯示可執行性、證據邊界，以及 backend 限制。",
+        langLabel: "語言",
+        workspaceLabel: "工作區",
+        navNewStudy: "新研究",
+        navDraftPlans: "草稿計劃",
+        navRuns: "執行紀錄",
+        navEvidence: "證據",
+        focusLabel: "Stage 4 重點",
+        focusCopy: "這一頁應回答三件事：這個計劃是否可排隊、哪些部分仍被阻擋，以及操作員實際上確認了什麼。",
+        linkedLabel: "相關項目",
+        linkStage3: "Stage 3 推斷 prototype",
+        linkDesign: "Design system 預覽",
+        linkContract: "Draft plan contract 規格",
+        headerEyebrow: "Workspace UI Readiness / Story Progress",
+        headerTitle: "研究計劃確認介面",
+        headerCopy: "系統現在會在排隊前展示研究形態、證據邊界、提交狀態，以及剩餘假設，而不是只給一個隱藏狀態上的按鈕。",
+        metricThemeLabel: "主題",
+        metricStoryLabel: "Story",
+        metricSurfaceLabel: "介面階段",
+        metricStateLabel: "提交狀態",
+        metricSurfaceValue: "Stage 4",
+        confirmTitle: "確認頁面",
+        confirmCopy: "這是面向操作員的關口，把 inferred plan 轉成明確的執行決策。",
+        goalTitle: "研究目標",
+        planTitle: "系統推斷計劃",
+        setupTitle: "研究設定",
+        boundaryTitle: "證據邊界",
+        gateLabel: "提交關口",
+        conditionsLabel: "操作員正在確認",
+        beforeTitle: "排隊前檢查",
+        beforeCopy: "確認介面應保留未解決假設，而不是把它們藏在內部狀態裡。",
+        assumptionsLabel: "未解決假設",
+        mappingLabel: "Backend 映射視圖",
+        payloadTitle: "確認 payload 預覽",
+        payloadCopy: "UI 提交的是明確的 confirmation snapshot，而不是壓在隱藏狀態上的鬆散 click 行為。",
+        sidecarEyebrow: "確認側欄",
+        sidecarTitle: "提交前摘要",
+        sidecarCopy: "右側欄讓對話式流程保持誠實，明示確認後會發生什麼，以及不會發生什麼。",
+        railStateLabel: "提交狀態",
+        railQueueLabel: "將會排隊的內容",
+        railManualLabel: "仍需人手處理",
+        checkIntentTitle: "保留原始意圖",
+        checkBoundaryTitle: "保留邊界",
+        checkRuntimeTitle: "符合 runtime",
+        checkIntentCopy: "確認步驟仍然反映用戶本身的研究問題，而不只是內部 runtime fields。",
+        checkBoundaryCopy: "操作員在啟動任何 run 前，可以先看到哪些 claim 仍然被禁止。",
+        checkRuntimeCopy: "只有 backend 已支援的子集才應顯示可用的 queue action。",
+        backendTitle: "目前 backend 現實",
+        backendCopy: "在部分 scenario，這個 surface 走得比當前 runtime 更前。UI 應保留這些需求為 draft，而不是假裝已經支援執行。",
+        secondaryAction: "儲存草稿",
+        primaryAction: "確認並排隊"
+      }
+    };
+
+    const scenarioContent = {
+      trust_proto: {
+        tone: "ready",
+        metricState: { en: "Ready subset", zh: "可執行子集" },
+        button: { en: "Trust + screenshots", zh: "信任 + 截圖" },
+        pill: { en: "ready", zh: "可確認" },
+        payloadPill: { en: "confirmable", zh: "可確認" },
+        goal: {
+          en: [
+            ["Question", "Will HK SMB operators trust this AI assistant enough to try it in the first week?"],
+            ["Outcome", "Surface trust gaps, setup friction, and likely abandonment triggers."]
+          ],
+          zh: [
+            ["問題", "香港中小企營運者會否足夠信任這個 AI 助手，願意在第一週試用？"],
+            ["目標", "找出信任缺口、設定摩擦，以及可能放棄使用的觸發點。"]
+          ]
+        },
+        plan: {
+          en: [
+            ["Primary mode", "prototype_validation"],
+            ["Secondary lens", "adoption barrier and setup friction"],
+            ["Confidence", "medium-high"]
+          ],
+          zh: [
+            ["主要模式", "prototype_validation"],
+            ["次要視角", "採用阻力與設定摩擦"],
+            ["信心", "中高"]
+          ]
+        },
+        setup: {
+          en: [
+            ["Panel", "mainstream HK SMB / 5 personas"],
+            ["Stimulus", "founder brief + 3 onboarding screenshots"],
+            ["Outputs", "report.json, transcript, markdown summary"]
+          ],
+          zh: [
+            ["Panel", "香港中小企主流樣本 / 5 個 personas"],
+            ["刺激材料", "founder brief + 3 張 onboarding 截圖"],
+            ["輸出", "report.json、對話逐字稿、markdown 摘要"]
+          ]
+        },
+        boundary: {
+          en: [
+            ["Allowed", "stated interpretation, inferred friction, trust objections"],
+            ["Forbidden", "observed action trace, real task completion"],
+            ["Human gap", "click-path evidence remains unproven until clickable or live interaction exists"]
+          ],
+          zh: [
+            ["可使用", "陳述性解讀、推斷摩擦、信任阻礙"],
+            ["禁止聲稱", "觀察到的操作軌跡、真實任務完成"],
+            ["人手驗證缺口", "在有 clickable 或 live interaction 前，仍未能證明 click-path 證據"]
+          ]
+        },
+        decision: {
+          en: {
+            title: "Ready to confirm",
+            copy: "Required clarifications are closed, and this study maps cleanly into the current validation-job subset."
+          },
+          zh: {
+            title: "可確認並提交",
+            copy: "所需澄清已關閉，這個研究可直接映射到目前 validation-job 可支援的子集。"
+          }
+        },
+        blockers: {
+          en: [
+            ["No blocking gap", "The main remaining limitation is evidence maturity, not backend submission readiness."]
+          ],
+          zh: [
+            ["沒有阻擋缺口", "目前主要限制是證據成熟度，而不是 backend 提交可行性。"]
+          ]
+        },
+        conditions: {
+          en: [
+            ["Artifact scope", "The screenshots and brief supplied are the only stimulus inputs for this run."],
+            ["Boundary acceptance", "The operator accepts that the output cannot claim observed behavior."],
+            ["Queue shape", "The system will submit a standard validation job plus the confirmation snapshot."]
+          ],
+          zh: [
+            ["材料範圍", "本次 run 的刺激材料只包括現有 brief 與截圖。"],
+            ["邊界接受", "操作員同意輸出不能聲稱觀察到的真實行為。"],
+            ["排隊形態", "系統會提交標準 validation job，加上 confirmation snapshot。"]
+          ]
+        },
+        assumptions: {
+          en: [
+            ["Market slice stays broad", "The default HK SMB slice is used for the first pass; no narrower role filter is applied."],
+            ["Follow-up research still needed", "Any high-stakes trust conclusion still needs later real-user validation."]
+          ],
+          zh: [
+            ["市場切片維持寬鬆", "第一輪使用預設香港中小企樣本，未再收窄角色範圍。"],
+            ["仍需後續研究", "任何高風險的信任結論，之後仍需真人研究驗證。"]
+          ]
+        },
+        mapping: {
+          en: [
+            ["brief_path", "briefs/founder-brief.json"],
+            ["panel_spec", "mainstream_hk_smb:5"],
+            ["provider_name", "mock"],
+            ["confirmation gate", "status == confirmed"]
+          ],
+          zh: [
+            ["brief_path", "briefs/founder-brief.json"],
+            ["panel_spec", "mainstream_hk_smb:5"],
+            ["provider_name", "mock"],
+            ["確認關口", "status == confirmed"]
+          ]
+        },
+        payloadTags: {
+          en: ["ready subset", "confirmation snapshot", "static stimulus"],
+          zh: ["可執行子集", "confirmation snapshot", "靜態刺激材料"]
+        },
+        footer: {
+          en: "This is the clearest current example of a Workspace UI flow that could queue into the existing backend without exposing raw CLI setup.",
+          zh: "這是現階段最清楚的 Workspace UI 例子，展示如何在不暴露原始 CLI setup 的情況下排隊進入現有 backend。"
+        },
+        actions: {
+          en: { primary: "Confirm and queue", secondary: "Save draft" },
+          zh: { primary: "確認並排隊", secondary: "儲存草稿" }
+        },
+        rail: {
+          en: {
+            state: "ready_for_confirmation",
+            queue: "validation job request plus confirmation snapshot",
+            manual: "human interpretation and any later real-user verification",
+            intent: "The original trust question stays visible at confirmation time.",
+            boundary: "The queue action still preserves the screenshot-based evidence limit.",
+            runtime: "This scenario fits the current runtime subset."
+          },
+          zh: {
+            state: "ready_for_confirmation",
+            queue: "validation job request + confirmation snapshot",
+            manual: "人工解讀輸出，以及之後的真人驗證",
+            intent: "在確認時仍保留原始信任問題。",
+            boundary: "即使可以排隊，仍保留 screenshot-based 證據限制。",
+            runtime: "這個 scenario 符合目前 runtime 子集。"
+          }
+        },
+        backend: {
+          en: "This is the nearest-term shippable confirmation path because it stays inside the current static-stimulus runtime boundary.",
+          zh: "這是最接近可交付的 confirmation path，因為它仍然留在目前 static-stimulus runtime 的邊界內。"
+        },
+        payloadJson: `{
+  "draft_plan_id": "draft_plan_20260627_proto_01",
+  "workspace_id": "ws_hk_ops",
+  "confirmation": {
+    "status": "confirmed",
+    "confirmed_by": "operator",
+    "accepted_boundaries": [
+      "no_observed_action_trace",
+      "no_task_completion_claim"
+    ]
+  },
+  "execution_adapter": {
+    "submit_target": "validation_job",
+    "brief_path": "briefs/founder-brief.json",
+    "panel_spec": "mainstream_hk_smb:5",
+    "provider_name": "mock"
+  }
+}`
+      },
+      concept_copy: {
+        tone: "warn",
+        metricState: { en: "Draft only", zh: "只可草稿" },
+        button: { en: "Concept copy only", zh: "只有概念文案" },
+        pill: { en: "draft", zh: "草稿" },
+        payloadPill: { en: "not queueable", zh: "不可排隊" },
+        goal: {
+          en: [
+            ["Question", "Would first-time operators find this AI operations concept credible enough to request a demo?"],
+            ["Outcome", "Surface trust reactions, confusion points, and objections to the promise."]
+          ],
+          zh: [
+            ["問題", "首次接觸的營運者會否覺得這個 AI 營運概念可信，並願意要求 demo？"],
+            ["目標", "找出信任反應、理解障礙，以及對價值主張的反對點。"]
+          ]
+        },
+        plan: {
+          en: [
+            ["Primary mode", "concept_evaluation"],
+            ["Secondary lens", "message credibility"],
+            ["Confidence", "medium"]
+          ],
+          zh: [
+            ["主要模式", "concept_evaluation"],
+            ["次要視角", "訊息可信度"],
+            ["信心", "中等"]
+          ]
+        },
+        setup: {
+          en: [
+            ["Panel", "mainstream HK SMB / 5 personas"],
+            ["Stimulus", "headline copy, value prop, CTA text"],
+            ["Outputs", "concept summary, objections, follow-up questions"]
+          ],
+          zh: [
+            ["Panel", "香港中小企主流樣本 / 5 個 personas"],
+            ["刺激材料", "headline copy、value prop、CTA 文案"],
+            ["輸出", "concept 摘要、反對點、後續問題"]
+          ]
+        },
+        boundary: {
+          en: [
+            ["Allowed", "stated reactions, clarity objections, value interpretation"],
+            ["Forbidden", "observed product friction, usage drop-off"],
+            ["Human gap", "no product interaction exists in this path"]
+          ],
+          zh: [
+            ["可使用", "陳述性反應、清晰度問題、價值解讀"],
+            ["禁止聲稱", "觀察到的產品摩擦、使用流失"],
+            ["人手驗證缺口", "這條路徑並沒有產品互動可供觀察"]
+          ]
+        },
+        decision: {
+          en: {
+            title: "Draft only",
+            copy: "The confirmation surface can explain this study clearly, but the current backend still lacks a dedicated concept-only execution bridge."
+          },
+          zh: {
+            title: "只能保留草稿",
+            copy: "確認介面已可清楚表達這類研究，但當前 backend 仍未有專門的 concept-only execution bridge。"
+          }
+        },
+        blockers: {
+          en: [
+            ["Backend gap", "A concept-evaluation request can be understood and confirmed, but cannot yet queue through a dedicated UI-to-backend path."],
+            ["Output discipline", "The UI must not downgrade the study into prototype validation just to make the button active."]
+          ],
+          zh: [
+            ["Backend 缺口", "系統可理解並確認 concept-evaluation，但仍不能經由專用 UI-to-backend path 排隊。"],
+            ["輸出紀律", "UI 不應為了點亮按鈕而把這類研究錯降成 prototype validation。"]
+          ]
+        },
+        conditions: {
+          en: [
+            ["Intent preservation", "The study remains categorized as concept evaluation in the draft layer."],
+            ["Draft handling", "The operator can save or hand off the plan without pretending it is queueable today."]
+          ],
+          zh: [
+            ["保留原意", "在 draft layer 中，這個研究仍然被歸類為 concept evaluation。"],
+            ["草稿處理", "操作員可先儲存或交接計劃，而不是假裝今天已可排隊。"]
+          ]
+        },
+        assumptions: {
+          en: [
+            ["Concept evidence remains synthetic", "This flow can rank reactions, not prove market pull."],
+            ["Execution bridge should follow", "A concept-specific execution adapter is still an explicit roadmap gap."]
+          ],
+          zh: [
+            ["概念證據仍屬模擬", "這條路徑只能排序反應，不能證明市場拉力。"],
+            ["執行橋接仍待補", "concept-specific execution adapter 仍是明確的 roadmap 缺口。"]
+          ]
+        },
+        mapping: {
+          en: [
+            ["draft status", "ready_for_confirmation but not queueable"],
+            ["execution_status", "draft_only"],
+            ["adapter note", "concept adapter missing"],
+            ["next path", "save draft or route to later capability"]
+          ],
+          zh: [
+            ["draft 狀態", "ready_for_confirmation 但不可排隊"],
+            ["execution_status", "draft_only"],
+            ["adapter 備註", "concept adapter 缺失"],
+            ["下一步", "儲存草稿或等待後續能力"]
+          ]
+        },
+        payloadTags: {
+          en: ["draft only", "concept mode", "bridge missing"],
+          zh: ["只可草稿", "concept mode", "橋接未完成"]
+        },
+        footer: {
+          en: "This is where the confirmation surface proves product clarity without overstating backend completeness.",
+          zh: "這裡展示 confirmation surface 可以先把產品邏輯說清楚，同時不誇大 backend 完整度。"
+        },
+        actions: {
+          en: { primary: "Queue unavailable", secondary: "Save draft" },
+          zh: { primary: "暫不可排隊", secondary: "儲存草稿" }
+        },
+        rail: {
+          en: {
+            state: "confirmed_but_not_queueable",
+            queue: "no runtime submission; save draft only",
+            manual: "operator routing and later backend support",
+            intent: "The original concept question stays intact.",
+            boundary: "No product-behavior claim is implied.",
+            runtime: "Current runtime fit is incomplete."
+          },
+          zh: {
+            state: "confirmed_but_not_queueable",
+            queue: "不提交 runtime；只可儲存草稿",
+            manual: "操作員交接與等待後續 backend 支援",
+            intent: "原始 concept 問題保持不變。",
+            boundary: "不會暗示任何產品行為證據。",
+            runtime: "目前 runtime 並未完整支援。"
+          }
+        },
+        backend: {
+          en: "This scenario should remain visible in the same surface, but the final action must stay non-executable until the concept adapter exists.",
+          zh: "這個 scenario 應保留在同一個 surface 內，但在 concept adapter 出現前，最終 action 必須維持不可執行。"
+        },
+        payloadJson: `{
+  "draft_plan_id": "draft_plan_20260627_concept_02",
+  "workspace_id": "ws_hk_ops",
+  "confirmation": {
+    "status": "confirmed",
+    "confirmed_by": "operator",
+    "execution_note": "not_queueable_current_backend"
+  },
+  "execution_adapter": {
+    "submit_target": null,
+    "execution_status": "draft_only",
+    "blocking_reason": "missing_concept_adapter"
+  }
+}`
+      },
+      live_flow: {
+        tone: "blocked",
+        metricState: { en: "Blocked", zh: "被阻擋" },
+        button: { en: "Live URL request", zh: "Live URL 請求" },
+        pill: { en: "blocked", zh: "被阻擋" },
+        payloadPill: { en: "blocked", zh: "被阻擋" },
+        goal: {
+          en: [
+            ["Question", "Where do operators get lost in the staging admin flow, and do they continue after the first task?"],
+            ["Outcome", "Expose action-level confusion, drop-off risk, and next-step product fixes."]
+          ],
+          zh: [
+            ["問題", "操作員在 staging admin flow 哪裡會迷失，做完第一個 task 後會否繼續？"],
+            ["目標", "找出 action-level 混亂、流失風險，以及下一步產品修正方向。"]
+          ]
+        },
+        plan: {
+          en: [
+            ["Primary mode", "prototype_validation"],
+            ["Secondary lens", "live-app expansion dependency"],
+            ["Confidence", "medium"]
+          ],
+          zh: [
+            ["主要模式", "prototype_validation"],
+            ["次要視角", "live-app 擴展依賴"],
+            ["信心", "中等"]
+          ]
+        },
+        setup: {
+          en: [
+            ["Panel", "mainstream HK SMB / 5 personas"],
+            ["Stimulus", "staging URL + task list"],
+            ["Outputs", "deferred live-app request or downgraded fallback plan"]
+          ],
+          zh: [
+            ["Panel", "香港中小企主流樣本 / 5 個 personas"],
+            ["刺激材料", "staging URL + task list"],
+            ["輸出", "延後的 live-app request 或降級 fallback plan"]
+          ]
+        },
+        boundary: {
+          en: [
+            ["Allowed", "target evidence intent and fallback planning"],
+            ["Forbidden", "claiming observed action traces before capture exists"],
+            ["Human gap", "real interaction evidence depends on future browser/live-app capture"]
+          ],
+          zh: [
+            ["可使用", "目標證據意圖與 fallback planning"],
+            ["禁止聲稱", "在 capture 能力出現前，不可聲稱已有觀察到的操作軌跡"],
+            ["人手驗證缺口", "真實互動證據仍依賴未來 browser/live-app capture"]
+          ]
+        },
+        decision: {
+          en: {
+            title: "Blocked by backend gap",
+            copy: "The requested evidence target is legitimate, but the current platform cannot capture live interaction traces yet."
+          },
+          zh: {
+            title: "被 backend 缺口阻擋",
+            copy: "所要求的證據目標是合理的，但平台目前仍未能捕捉 live interaction traces。"
+          }
+        },
+        blockers: {
+          en: [
+            ["Driver missing", "No live-app execution driver exists in the current runtime."],
+            ["Fallback unresolved", "The operator must choose whether to downgrade into screenshots/flow review or hold this as a future live-app study."]
+          ],
+          zh: [
+            ["Driver 缺失", "目前 runtime 沒有 live-app execution driver。"],
+            ["Fallback 未定", "操作員需要決定是降級成 screenshot/flow review，還是把它保留為未來的 live-app study。"]
+          ]
+        },
+        conditions: {
+          en: [
+            ["Dependency visibility", "The confirmation surface must make the missing driver explicit."],
+            ["No false queue", "The UI must not emit a queue action for unsupported live capture."],
+            ["Fallback path", "The operator may save the plan and request a downgraded supported path."]
+          ],
+          zh: [
+            ["依賴可見", "確認介面必須清楚標示缺少 live driver。"],
+            ["不可假排隊", "UI 不可為未支援的 live capture 送出 queue action。"],
+            ["Fallback 路徑", "操作員可以先儲存計劃，再要求一個受支援的降級路徑。"]
+          ]
+        },
+        assumptions: {
+          en: [
+            ["Live-app capability is later", "This request belongs to a future action-layer expansion, not the current runnable subset."],
+            ["Evidence target still matters", "Blocking execution should not erase the operator's original need for action-grounded evidence."]
+          ],
+          zh: [
+            ["Live-app 能力屬後續階段", "這個要求屬於未來 action-layer 擴展，不是目前可執行子集。"],
+            ["證據目標仍然重要", "即使阻擋執行，也不應抹去操作員對 action-grounded evidence 的原始需求。"]
+          ]
+        },
+        mapping: {
+          en: [
+            ["draft status", "blocked"],
+            ["execution_status", "blocked_by_backend_gap"],
+            ["blocking_reason", "missing_live_app_driver"],
+            ["fallback option", "downgrade to screenshot review"]
+          ],
+          zh: [
+            ["draft 狀態", "blocked"],
+            ["execution_status", "blocked_by_backend_gap"],
+            ["blocking_reason", "missing_live_app_driver"],
+            ["fallback 選項", "降級為 screenshot review"]
+          ]
+        },
+        payloadTags: {
+          en: ["blocked", "live target", "future dependency"],
+          zh: ["被阻擋", "live 目標", "未來依賴"]
+        },
+        footer: {
+          en: "The confirmation surface should be able to preserve demand for stronger evidence without lying about current execution support.",
+          zh: "confirmation surface 應保留對更強證據的需求，同時不能對目前執行能力說謊。"
+        },
+        actions: {
+          en: { primary: "Queue unavailable", secondary: "Save blocked draft" },
+          zh: { primary: "暫不可排隊", secondary: "儲存受阻草稿" }
+        },
+        rail: {
+          en: {
+            state: "blocked",
+            queue: "none until live-app driver or fallback is chosen",
+            manual: "operator decides downgrade path or waits for future capability",
+            intent: "The action-grounded research question remains visible.",
+            boundary: "No claim of observed behavior is allowed before runtime support exists.",
+            runtime: "Current runtime fit does not exist."
+          },
+          zh: {
+            state: "blocked",
+            queue: "在有 live-app driver 或 fallback 前，不會排隊",
+            manual: "操作員決定是否降級，或等待未來能力",
+            intent: "action-grounded research question 仍然可見。",
+            boundary: "在 runtime 支援出現前，不可聲稱已觀察到行為。",
+            runtime: "目前 runtime 不具備這個支援。"
+          }
+        },
+        backend: {
+          en: "This scenario is strategically important because it points toward the action layer, but it remains outside the current backend boundary.",
+          zh: "這個 scenario 在策略上很重要，因為它指向未來 action layer，但目前仍在 backend 邊界之外。"
+        },
+        payloadJson: `{
+  "draft_plan_id": "draft_plan_20260627_live_03",
+  "workspace_id": "ws_hk_ops",
+  "confirmation": {
+    "status": "blocked",
+    "confirmed_by": null,
+    "blocking_reasons": ["missing_live_app_driver", "fallback_not_selected"]
+  },
+  "execution_adapter": {
+    "submit_target": null,
+    "execution_status": "blocked_by_backend_gap",
+    "fallback_option": "screenshot_review"
+  }
+}`
+      }
+    };
+
+    const langButtons = Array.from(document.querySelectorAll("[data-lang]"));
+    const scenarioButtons = Array.from(document.querySelectorAll("[data-scenario]"));
+    let currentLang = "en";
+    let currentScenario = "trust_proto";
+
+    const chromeNodes = {
+      railEyebrow: document.getElementById("rail-eyebrow"),
+      railCopy: document.getElementById("rail-copy"),
+      langLabel: document.getElementById("lang-label"),
+      workspaceLabel: document.getElementById("workspace-label"),
+      navNewStudy: document.getElementById("nav-new-study"),
+      navDraftPlans: document.getElementById("nav-draft-plans"),
+      navRuns: document.getElementById("nav-runs"),
+      navEvidence: document.getElementById("nav-evidence"),
+      focusLabel: document.getElementById("focus-label"),
+      focusCopy: document.getElementById("focus-copy"),
+      linkedLabel: document.getElementById("linked-label"),
+      linkStage3: document.getElementById("link-stage3"),
+      linkDesign: document.getElementById("link-design"),
+      linkContract: document.getElementById("link-contract"),
+      headerEyebrow: document.getElementById("header-eyebrow"),
+      headerTitle: document.getElementById("header-title"),
+      headerCopy: document.getElementById("header-copy"),
+      metricThemeLabel: document.getElementById("metric-theme-label"),
+      metricStoryLabel: document.getElementById("metric-story-label"),
+      metricSurfaceLabel: document.getElementById("metric-surface-label"),
+      metricStateLabel: document.getElementById("metric-state-label"),
+      metricSurfaceValue: document.getElementById("metric-surface-value"),
+      confirmTitle: document.getElementById("confirm-title"),
+      confirmCopy: document.getElementById("confirm-copy"),
+      goalTitle: document.getElementById("goal-title"),
+      planTitle: document.getElementById("plan-title"),
+      setupTitle: document.getElementById("setup-title"),
+      boundaryTitle: document.getElementById("boundary-title"),
+      gateLabel: document.getElementById("gate-label"),
+      conditionsLabel: document.getElementById("conditions-label"),
+      beforeTitle: document.getElementById("before-title"),
+      beforeCopy: document.getElementById("before-copy"),
+      assumptionsLabel: document.getElementById("assumptions-label"),
+      mappingLabel: document.getElementById("mapping-label"),
+      payloadTitle: document.getElementById("payload-title"),
+      payloadCopy: document.getElementById("payload-copy"),
+      sidecarEyebrow: document.getElementById("sidecar-eyebrow"),
+      sidecarTitle: document.getElementById("sidecar-title"),
+      sidecarCopy: document.getElementById("sidecar-copy"),
+      railStateLabel: document.getElementById("rail-state-label"),
+      railQueueLabel: document.getElementById("rail-queue-label"),
+      railManualLabel: document.getElementById("rail-manual-label"),
+      checkIntentTitle: document.getElementById("check-intent-title"),
+      checkBoundaryTitle: document.getElementById("check-boundary-title"),
+      checkRuntimeTitle: document.getElementById("check-runtime-title"),
+      checkIntentCopy: document.getElementById("check-intent-copy"),
+      checkBoundaryCopy: document.getElementById("check-boundary-copy"),
+      checkRuntimeCopy: document.getElementById("check-runtime-copy"),
+      backendTitle: document.getElementById("backend-title"),
+      backendCopy: document.getElementById("backend-copy"),
+      secondaryAction: document.getElementById("secondary-action"),
+      primaryAction: document.getElementById("primary-action")
+    };
+
+    const goalList = document.getElementById("goal-list");
+    const planList = document.getElementById("plan-list");
+    const setupList = document.getElementById("setup-list");
+    const boundaryList = document.getElementById("boundary-list");
+    const blockerList = document.getElementById("blocker-list");
+    const conditionList = document.getElementById("condition-list");
+    const assumptionList = document.getElementById("assumption-list");
+    const mappingGrid = document.getElementById("mapping-grid");
+    const payloadTags = document.getElementById("payload-tags");
+    const payloadJson = document.getElementById("payload-json");
+    const footerNote = document.getElementById("footer-note");
+    const metricStateValue = document.getElementById("metric-state-value");
+    const scenarioPill = document.getElementById("scenario-pill");
+    const payloadPill = document.getElementById("payload-pill");
+    const decisionBand = document.getElementById("decision-band");
+    const decisionTitle = document.getElementById("decision-title");
+    const decisionCopy = document.getElementById("decision-copy");
+    const railState = document.getElementById("rail-state");
+    const railQueue = document.getElementById("rail-queue");
+    const railManual = document.getElementById("rail-manual");
+    const checkIntentCopy = document.getElementById("check-intent-copy");
+    const checkBoundaryCopy = document.getElementById("check-boundary-copy");
+    const checkRuntimeCopy = document.getElementById("check-runtime-copy");
+    const backendCopy = document.getElementById("backend-copy");
+    const primaryAction = document.getElementById("primary-action");
+    const secondaryAction = document.getElementById("secondary-action");
+
+    function renderSummaryRows(node, items) {
+      node.innerHTML = "";
+      items.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "summary-row";
+        row.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderRuleCards(node, items) {
+      node.innerHTML = "";
+      items.forEach(([title, body]) => {
+        const card = document.createElement("div");
+        card.className = "rule-card";
+        card.innerHTML = `<strong>${title}</strong><p>${body}</p>`;
+        node.appendChild(card);
+      });
+    }
+
+    function renderOutputCards(node, items) {
+      node.innerHTML = "";
+      items.forEach(([title, body]) => {
+        const card = document.createElement("div");
+        card.className = "output-card";
+        card.innerHTML = `<strong>${title}</strong><p class="scenario-note">${body}</p>`;
+        node.appendChild(card);
+      });
+    }
+
+    function renderTags(items) {
+      payloadTags.innerHTML = "";
+      items.forEach((label, index) => {
+        const tag = document.createElement("div");
+        tag.className = `tag ${index === 0 ? "ok" : "accent"}`;
+        tag.textContent = label;
+        payloadTags.appendChild(tag);
+      });
+    }
+
+    function applyChrome(lang) {
+      const copy = uiCopy[lang];
+      Object.entries(copy).forEach(([key, value]) => {
+        if (chromeNodes[key]) {
+          chromeNodes[key].textContent = value;
+        }
+      });
+    }
+
+    function applyScenario() {
+      const content = scenarioContent[currentScenario];
+      const lang = currentLang;
+
+      scenarioButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.scenario === currentScenario);
+        button.textContent = scenarioContent[button.dataset.scenario].button[lang];
+      });
+
+      renderSummaryRows(goalList, content.goal[lang]);
+      renderSummaryRows(planList, content.plan[lang]);
+      renderSummaryRows(setupList, content.setup[lang]);
+      renderSummaryRows(boundaryList, content.boundary[lang]);
+      renderRuleCards(blockerList, content.blockers[lang]);
+      renderRuleCards(conditionList, content.conditions[lang]);
+      renderRuleCards(assumptionList, content.assumptions[lang]);
+      renderOutputCards(mappingGrid, content.mapping[lang]);
+      renderTags(content.payloadTags[lang]);
+
+      metricStateValue.textContent = content.metricState[lang];
+      scenarioPill.textContent = content.pill[lang];
+      payloadPill.textContent = content.payloadPill[lang];
+      decisionTitle.textContent = content.decision[lang].title;
+      decisionCopy.textContent = content.decision[lang].copy;
+      decisionBand.className = `decision-band ${content.tone}`;
+      payloadJson.textContent = content.payloadJson;
+      footerNote.textContent = content.footer[lang];
+      secondaryAction.textContent = content.actions[lang].secondary;
+      primaryAction.textContent = content.actions[lang].primary;
+
+      railState.textContent = content.rail[lang].state;
+      railQueue.textContent = content.rail[lang].queue;
+      railManual.textContent = content.rail[lang].manual;
+      checkIntentCopy.textContent = content.rail[lang].intent;
+      checkBoundaryCopy.textContent = content.rail[lang].boundary;
+      checkRuntimeCopy.textContent = content.rail[lang].runtime;
+      backendCopy.textContent = content.backend[lang];
+
+      const disabled = content.tone !== "ready";
+      primaryAction.classList.toggle("disabled", disabled);
+      primaryAction.setAttribute("aria-disabled", disabled ? "true" : "false");
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.setAttribute("lang", lang === "zh" ? "zh-Hant" : "en");
+      langButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.lang === lang);
+      });
+      applyChrome(lang);
+      applyScenario();
+    }
+
+    langButtons.forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    scenarioButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentScenario = button.dataset.scenario;
+        applyScenario();
+      });
+    });
+
+    setLanguage("en");
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 metadata:
   schema_version: v2
-  last_updated: 2026-06-27
+  last_updated: 2026-06-28
   owner: platform-development-chief
   source_documents:
     - AGENTS.md
@@ -10,8 +10,8 @@ metadata:
     - README.md
 
 current_platform_state:
-  current_stage: backend_foundation_complete_workspace_ui_readiness_next
-  strategic_focus: use the completed backend foundation while closing the remaining evidence-query gap and moving the operator workflow toward workspace UI readiness
+  current_stage: backend_foundation_complete_workspace_ui_readiness_started
+  strategic_focus: use the completed backend foundation while closing the remaining replay-depth gap, promoting the new backend-driven workspace-shell contract, and moving the operator workflow toward a conversational, confirmation-driven workspace UI
   proven_capabilities:
     - reusable persona generation
     - structured synthetic interviews
@@ -27,16 +27,19 @@ current_platform_state:
     - SQLite-first metadata projection for runs, interviews, personas, and artifact paths while preserving JSON and filesystem artifacts as the primary record
     - relational persona selection indexes with trait provenance and similarity edges while keeping full persona profiles in JSON artifacts
     - authenticated workspace-scoped API ingress for queued validation jobs
+    - authenticated workspace-session summary for workspace, billing, limits, and job-count context
+    - backend-driven workspace-shell snapshot hydration for session, selected-job, evidence-query, and runtime-sync state
     - queue-backed local worker runtime for validation job execution beyond one-shot CLI runs
     - enforced workspace role gates, billing gates, plan quotas, path isolation, and retention-driven artifact purge
+    - reusable workspace-console design-system CSS foundation and low-fi flow prototype for the planned conversational workspace UI
   not_yet_proven:
     - complete discovery-stage coverage
     - live-interface behavior validation beyond scripted clickable manifests
     - action-grounded adoption prediction across repeated interface runs
   next_moves:
-    - finish evidence query index and replay as the last backend-foundation gap before broader productization
-    - start the workspace shell, run submission UI, and queue-status views on top of the shared runtime
-    - add workspace evidence browsing, replay affordances, and richer worker observability before broader tenant-admin expansion
+    - finish evidence query index and replay by deepening replay-bearing artifacts and replay-linked review depth on top of the backend workspace-shell snapshot surface
+    - continue from the implemented design-system foundation, draft adapter, queue/run monitor, evidence browser, evidence query, integrated-shell, workspace-session bridge, validation-job bridge, and shell frontend adapter prototypes into a real workspace shell on top of the shared runtime
+    - promote the workspace-session bridge, validation-job bridge, workspace-shell snapshot contract, and page-level shell frontend adapter from prototype wiring into the real workspace shell before adding richer worker observability and deeper replay/comparison surfaces
     - add browser-driven clickable execution only after the query and replay surface can keep observed evidence auditable
     - review whether MongoDB document storage or a graph projection is warranted only after the implemented selection index hits repeated similarity or diversity traversal bottlenecks
 
@@ -51,12 +54,12 @@ agile_tracking:
   estimation_policy: story point rollups are backfilled first for active and upcoming strategic scopes; previously completed milestones may remain status-only unless deeper retrospective sizing is needed
   active_milestone:
     id: milestone.workspace_ui_readiness
-    task_count_total: 6
-    task_count_completed: 0
-    story_points_total: 22
-    story_points_completed: 0
-    story_points_remaining: 22
-    completion_pct: 0.0
+    task_count_total: 9
+    task_count_completed: 1
+    story_points_total: 33
+    story_points_completed: 3
+    story_points_remaining: 30
+    completion_pct: 9.1
   active_epic:
     id: workstream.system_architecture_upgrade
     task_count_total: 7
@@ -80,16 +83,16 @@ productization_layers:
 
   - id: layer.workspace_ui_readiness
     title: Workspace UI Readiness
-    status: planned
+    status: in_progress
     linked_milestone: milestone.workspace_ui_readiness
     depends_on:
       - story.system_architecture_upgrade.evidence_query_index_and_replay
-    task_count_total: 6
-    task_count_completed: 0
-    story_points_total: 22
-    story_points_completed: 0
-    story_points_remaining: 22
-    completion_pct: 0.0
+    task_count_total: 9
+    task_count_completed: 1
+    story_points_total: 33
+    story_points_completed: 3
+    story_points_remaining: 30
+    completion_pct: 9.1
 
   - id: layer.full_saas_product_surface
     title: Full SaaS Product Surface
@@ -491,6 +494,7 @@ milestones:
         story_points: 5
         evidence:
           - src/ai_validation_swarm/saas/api.py now exposes authenticated POST and GET validation-job routes for workspace-scoped job submission and status retrieval
+          - src/ai_validation_swarm/saas/api.py now also exposes browser-callable CORS headers and OPTIONS handling for the validation-job routes so a local workspace shell can call them directly
           - src/ai_validation_swarm/saas/runtime.py now submits queued jobs and processes them through the existing validation runner with a reusable worker loop
           - src/ai_validation_swarm/saas/job_store.py now persists validation job lifecycle state in SQLite
           - src/ai_validation_swarm/cli/main.py now exposes bootstrap-saas-workspace, serve-saas-api, and run-saas-worker commands
@@ -507,43 +511,165 @@ milestones:
           - focused SaaS runtime tests verify role, billing, quota, and workspace-boundary enforcement
 
   - id: milestone.workspace_ui_readiness
-    status: planned
+    status: in_progress
     evidence:
-      - documented in DEVELOPMENT_ROADMAP.md as Milestone 10 planned
+      - documented in DEVELOPMENT_ROADMAP.md as Milestone 10 in progress
       - depends on story.system_architecture_upgrade.evidence_query_index_and_replay so workspace evidence browsing can stay auditable and replayable
-    task_count_total: 6
-    task_count_completed: 0
-    story_points_total: 22
-    story_points_completed: 0
-    story_points_remaining: 22
-    completion_pct: 0.0
+      - default product path is now defined as conversational intake plus final plan confirmation rather than builder-style workflow setup
+      - reusable design-system CSS now exists under demo/workspace_ui_design_system/, and the low-fi flow prototype now consumes that shared theme
+      - demo/workspace_ui_moss_stage3/index.html now extends the Moss prototype into intent inference, progressive clarification, and draft plan inspection
+      - demo/workspace_ui_moss_stage4/index.html now extends the Moss prototype into a research-plan confirmation surface with explicit queueability states and bilingual EN / Traditional Chinese review
+      - demo/workspace_ui_moss_stage5/index.html now refines the default product path into a single blocked-draft remediation flow without review-only scenario tabs
+      - demo/workspace_ui_moss_stage6/index.html now converges intake, inference, blocked confirmation, and remediation into one single-page workspace flow
+      - demo/workspace_ui_moss_stage7/index.html now adds a local state-machine adapter layer that recomputes visible draft state after operator actions
+      - demo/workspace_ui_moss_stage8/index.html now extends the same workspace flow into queue, worker, completion, failure, and retry-visible operator states
+      - demo/workspace_ui_moss_stage9/index.html now extends the completed run into artifact browsing, evidence-family filtering, and replay-linked review inside the same workspace shell
+      - demo/workspace_ui_moss_stage10/index.html now extends completed-run review into metadata-backed evidence querying, result ranking, and replay-linked result selection
+      - demo/workspace_ui_moss_stage11/index.html now converges intake, confirmation, queue visibility, and evidence query review into one integrated operator shell with an explicit runtime bridge
+      - demo/workspace_ui_moss_stage12/index.html now connects the shell to the authenticated validation-job API through live request mapping, job loading, normalized run-state projection, backend-query-driven evidence review, and a shared runtime heartbeat with optional auto-refresh
+      - demo/workspace_ui_moss_stage13/index.html now reuses the same runtime bridge in a more product-facing workspace shell where plan, run, and evidence surfaces lead before raw debug payloads
+      - demo/workspace_ui_moss_stage14/index.html now moves that product-facing shell onto one backend-driven workspace-shell snapshot path for session, selected-job, and evidence-focus refresh
+      - demo/workspace_ui_shared/workspace_ui_adapter.mjs now extracts the Stage 7 derivation into a shared executable adapter, run-monitor, evidence-browser, evidence-query, and integrated-shell module, while demo/workspace_ui_shared/workspace_runtime_bridge.mjs now defines the validation-job runtime bridge, demo/workspace_ui_shared/workspace_session_runtime_bridge.mjs now defines the authenticated workspace-session runtime bridge, demo/workspace_ui_shared/workspace_shell_runtime_client.mjs now defines the shared live runtime client for session/job/evidence-query/workspace-shell orchestration, demo/workspace_ui_shared/workspace_shell_runtime_sync.mjs now defines the shared heartbeat and polling layer for backend workspace-shell snapshot refresh, demo/workspace_ui_shared/workspace_shell_frontend_adapter.mjs now defines the page-level shell frontend adapter plus visible review-surface projection, demo/workspace_ui_shared/workspace_shell_app.mjs now defines the app-layer shell controller/model boundary, and tests/workspace_ui/test_workspace_ui_adapter.mjs, tests/workspace_ui/test_workspace_ui_run_monitor.mjs, tests/workspace_ui/test_workspace_ui_evidence_browser.mjs, tests/workspace_ui/test_workspace_ui_evidence_query.mjs, tests/workspace_ui/test_workspace_ui_shell_bundle.mjs, tests/workspace_ui/test_workspace_runtime_bridge.mjs, tests/workspace_ui/test_workspace_session_runtime_bridge.mjs, tests/workspace_ui/test_workspace_shell_runtime_client.mjs, tests/workspace_ui/test_workspace_shell_runtime_sync.mjs, tests/workspace_ui/test_workspace_shell_frontend_adapter.mjs, and tests/workspace_ui/test_workspace_shell_app.mjs now fix blocked, fallback, queueable, queued, running, completed, failed, retry-ready, evidence-browser, evidence-query, integrated-shell, runtime-bridge, session-runtime-bridge, shell-runtime-client, shell-runtime-sync, shell-app-controller, and shell-frontend-adapter transitions
+      - specs/workspace_evidence_query_contract.md now defines the draft metadata-backed query and replay boundary between structured evidence indexes and the workspace review surface
+      - specs/workspace_research_plan_contract.md now defines the application-layer planning object that bridges conversational intake, clarification, confirmation, and backend mapping
+      - specs/workspace_ui_adapter_contract.md now defines the dedicated frontend derivation boundary from conversation state and draft-plan state into visible Workspace UI state
+      - specs/workspace_validation_job_bridge_contract.md now defines the runtime ingress mapping between confirmed drafts, the validation-job API, and shell run-monitor state
+      - specs/workspace_shell_frontend_adapter_contract.md now defines the final page-facing adapter object that the real workspace frontend should consume on top of the integrated shell bundle and runtime bridge
+      - specs/workspace_shell_snapshot_contract.md now defines the backend-driven shell hydration contract between workspace session, selected job, evidence query, and runtime heartbeat
+    task_count_total: 9
+    task_count_completed: 1
+    story_points_total: 33
+    story_points_completed: 3
+    story_points_remaining: 30
+    completion_pct: 9.1
     stories:
+      - id: story.workspace_ui_readiness.design_system_foundation
+        title: design system foundation
+        status: implemented
+        story_points: 3
+        evidence:
+          - demo/workspace_ui_design_system/workspace-ui-base.css now defines the shared workspace-console layout and reusable component styles
+          - demo/workspace_ui_design_system/workspace-theme-moss.css, workspace-theme-slate.css, and workspace-theme-ink.css now define three alternative color directions on top of the same component system
+          - demo/workspace_ui_design_system/index.html now previews the shared tokens, status states, plan sidecar, console primitives, and theme switching
+          - demo/workspace_ui_lowfi/index.html now consumes the shared base styles and can switch between the three theme variants in-context
+        design_rule:
+          - all reusable components that enter the Workspace UI main flow should be added to the shared design system instead of remaining page-local
+          - page-local CSS is acceptable only for temporary layout experiments or clearly one-off review artifacts that are not yet proven reusable
       - id: story.workspace_ui_readiness.workspace_shell_and_auth
         title: workspace shell and session auth
-        status: planned
+        status: in_progress
         story_points: 3
-      - id: story.workspace_ui_readiness.validation_run_submission_console
-        title: validation and interview run submission console
-        status: planned
+        evidence:
+          - demo/workspace_ui_moss_stage11/index.html now prototypes one integrated workspace shell that carries intake, confirmation, run monitoring, and evidence query review in a single operator-facing page
+          - demo/workspace_ui_moss_stage11/index.html now maps the shell to the existing validation-job ingress endpoints while keeping the metadata-backed query/replay endpoint explicitly pending
+          - demo/workspace_ui_moss_stage12/index.html now upgrades that shell boundary into a browser-callable validation-job bridge demo with live request mapping, job loading, and authenticated workspace-session loading
+          - demo/workspace_ui_moss_stage13/index.html now reuses the same runtime bridge in a more product-facing workspace shell where plan, run, and evidence surfaces lead before raw debug payloads
+          - src/ai_validation_swarm/saas/api.py now exposes GET /api/v1/session so the shell can load workspace, billing, and plan-limit context through the same authenticated runtime
+          - src/ai_validation_swarm/saas/api.py now exposes GET /api/v1/workspace-shell so the shell can hydrate session, selected-job, evidence-query, and runtime-sync state through one backend snapshot
+          - demo/workspace_ui_shared/workspace_session_runtime_bridge.mjs now projects that session payload into one frontend-facing session/runtime state object
+          - demo/workspace_ui_moss_stage14/index.html now uses that snapshot path as the primary product-facing refresh model instead of a page-local chain of session, job-detail, and evidence-query calls
+          - demo/workspace_ui_shared/workspace_shell_runtime_client.mjs now centralizes the live session, job, evidence-query, and workspace-shell snapshot fetch/state transitions that Stage 12 previously kept inside one page script
+          - demo/workspace_ui_shared/workspace_shell_runtime_sync.mjs now centralizes heartbeat, sync-now, optional auto-refresh, and backend evidence-focus refresh so the shell can stay aligned from one shared polling layer
+          - demo/workspace_ui_shared/workspace_shell_app.mjs now centralizes the app-layer shell orchestration for draft scenarios, session loading, runtime actions, evidence query selection, and snapshot-driven runtime sync so frontend pages can consume one shared shell boundary instead of reimplementing orchestration
+          - demo/workspace_ui_moss_stage12/index.html now renders its metrics, summaries, evidence-review cards, and JSON projections from demo/workspace_ui_shared/workspace_shell_frontend_adapter.mjs instead of ad hoc page-local derivation
+          - demo/workspace_ui_moss_stage12/index.html now renders a separate workspace-session surface from demo/workspace_ui_shared/workspace_session_runtime_bridge.mjs instead of treating bearer auth as a raw token field only
+          - specs/workspace_shell_app_contract.md now defines the app-layer controller and render-model contract that should survive the move from prototype pages to framework-hosted frontend components
+          - specs/workspace_shell_frontend_adapter_contract.md now defines the page-level shell adapter contract that should survive the move from demo shell to real frontend implementation
+          - specs/workspace_shell_snapshot_contract.md now defines the backend-driven shell hydration contract that should survive the move from engineering demo to hosted shell implementation
+          - specs/workspace_session_runtime_contract.md now defines the authenticated session/runtime contract that should survive the move from demo shell to real frontend implementation
+          - tests/workspace_ui/test_workspace_ui_shell_bundle.mjs now fixes blocked, confirmation-ready, completed-review, and failure-visible shell transitions as executable coverage
+          - tests/workspace_ui/test_workspace_shell_runtime_client.mjs now fixes session load, job submission, job listing/detail, evidence-query loading, sample-mode switching, and runtime error handling as executable coverage
+          - tests/workspace_ui/test_workspace_shell_runtime_sync.mjs now fixes missing-token, session-sync, selected-job sync, completed-evidence refresh, and attention-state behavior as executable coverage
+          - tests/workspace_ui/test_workspace_shell_app.mjs now fixes default draft-only derivation, confirmed-draft submission readiness, controller-driven job submission and session loading, runtime sync, and auto-refresh toggle behavior as executable coverage
+          - tests/workspace_ui/test_workspace_shell_frontend_adapter.mjs now fixes blocked, submission-ready, completed-live, warning-visible, and backend-review-surface frontend shell projections as executable coverage
+          - tests/workspace_ui/test_workspace_session_runtime_bridge.mjs now fixes missing-token, loaded-session, and auth-error session bridge projections as executable coverage
+        remaining_gap: the shell now has explicit page-level, session-level, shared runtime-sync, and app-layer controller boundaries, but it is still a local prototype and is not yet wired to framework session persistence, push-based observability, or the final hosted shell implementation
+      - id: story.workspace_ui_readiness.conversational_intake_and_artifact_drop
+        title: conversational intake and artifact drop
+        status: in_progress
         story_points: 5
+        design_rule:
+          - default workspace entry should start from natural-language research intent and optional artifact upload, not a rigid setup form
+          - do not expose node-graph or n8n-style workflow configuration in the main path
+        evidence:
+          - demo/workspace_ui_moss_stage2/index.html now prototypes a richer Moss-based intake screen with natural-language prompt capture, artifact drop, minimal follow-up prompts, and a preflight sidecar
+          - demo/workspace_ui_design_system/workspace-ui-base.css now includes reusable intake primitives such as composer-grid, input-shell, dropzone, draft-panel, and checklist blocks
+          - demo/workspace_ui_moss_stage6/index.html now places conversational intake directly inside the same single-page draft flow that later reaches blocked confirmation and remediation
+          - demo/workspace_ui_moss_stage7/index.html now keeps the conversation thread and operator actions coupled to a recomputed draft state instead of a static artifact
+          - demo/workspace_ui_moss_stage11/index.html now keeps conversational intake and operator actions inside the same shell that later exposes run and evidence review
+      - id: story.workspace_ui_readiness.intent_inference_and_progressive_clarification
+        title: intent inference and progressive clarification
+        status: in_progress
+        story_points: 5
+        design_rule:
+          - the system should infer likely research mode, panel shape, and missing inputs behind the scenes
+          - follow-up questions should gather only missing context instead of forcing up-front schema completion
+        evidence:
+          - demo/workspace_ui_moss_stage3/index.html now prototypes scenario-based intent inference, minimal clarification prompts, and explicit evidence-boundary handling inside the Moss workspace flow
+          - specs/workspace_research_plan_contract.md now defines shared draft-plan fields for inferred mode, clarification state, proposed run shape, evidence boundary, confirmation gate, and backend mapping notes
+          - demo/workspace_ui_moss_stage6/index.html now shows inferred planning and missing-evidence reasoning inline between intake and remediation rather than as an isolated review artifact
+          - demo/workspace_ui_moss_stage7/index.html now demonstrates a frontend adapter derived from draft state, artifact state, and fallback selection
+          - specs/workspace_ui_adapter_contract.md now defines the adapter inputs, output projection, and derivation rules that the frontend can use to render inferred state consistently
+          - demo/workspace_ui_shared/workspace_ui_adapter.mjs now turns that derivation into executable shared logic instead of page-local prototype code
+      - id: story.workspace_ui_readiness.research_plan_confirmation_surface
+        title: research plan confirmation surface
+        status: in_progress
+        story_points: 3
+        design_rule:
+          - every run should pass through an explicit confirmation step that shows inferred mode, selected artifacts, evidence boundary, and expected outputs before execution
+          - when a run is not queueable, the surface should guide users into concrete supplement, fallback, or save-draft actions instead of ending in a dead disabled button
+        evidence:
+          - demo/workspace_ui_moss_stage4/index.html now prototypes a confirmation-first review surface that distinguishes ready, draft-only, and blocked submit states without leaving the Moss interaction model
+          - demo/workspace_ui_moss_stage4/index.html now provides bilingual EN / Traditional Chinese review of the same confirmation flow rather than splitting the product into separate interaction patterns
+          - demo/workspace_ui_design_system/workspace-ui-base.css now includes reusable stage-4 confirmation primitives such as summary-grid, decision-band, output-grid, and confirm-footer
+          - demo/workspace_ui_moss_stage5/index.html now prototypes a single-path blocked-draft remediation flow with named supplement, downgrade, and save-draft paths
+          - specs/workspace_research_plan_contract.md now defines remediation contract fields for blocking reasons, missing inputs, required artifacts, fallback options, and recommended next action
+          - demo/workspace_ui_moss_stage6/index.html now keeps blocked confirmation and remediation inside the same operator-facing page that began with conversational intake
+          - specs/workspace_research_plan_contract.md now documents a derived frontend adapter projection so one draft object can drive queue state, blockers, and primary actions consistently
+          - demo/workspace_ui_moss_stage7/index.html now shows queueability, fallback readiness, and queued state as actual transitions instead of static screenshots
+          - specs/workspace_ui_adapter_contract.md now defines the canonical frontend state-machine boundary for queue state, blocker rendering, button state, and sidecar summaries
+          - tests/workspace_ui/test_workspace_ui_adapter.mjs now fixes the confirmation and remediation transitions as executable adapter contract coverage
       - id: story.workspace_ui_readiness.queue_and_run_status_monitor
         title: queue and run status monitor
-        status: planned
+        status: in_progress
         story_points: 3
+        evidence:
+          - demo/workspace_ui_moss_stage8/index.html now prototypes the operator-facing move from confirmed draft into queued, leased, running, completed, failed, and retry-ready run states
+          - demo/workspace_ui_shared/workspace_ui_adapter.mjs now includes shared run-monitor derivation on top of the same workspace draft and adapter boundary
+          - tests/workspace_ui/test_workspace_ui_run_monitor.mjs now fixes queued, running, completed, failed, and retry-ready monitor states as executable coverage
+          - demo/workspace_ui_moss_stage11/index.html now places queue and worker visibility back into the same shell that collected the original research intent
       - id: story.workspace_ui_readiness.evidence_browser_and_replay_surface
         title: evidence browser and replay surface
-        status: planned
+        status: in_progress
         story_points: 5
         dependency:
           - story.system_architecture_upgrade.evidence_query_index_and_replay
-      - id: story.workspace_ui_readiness.persona_and_study_setup_surface
-        title: persona and study setup surface
+        evidence:
+          - demo/workspace_ui_moss_stage9/index.html now prototypes completed-run artifact browsing, evidence-family filtering, selected artifact inspection, and replay-linked review on the same workspace surface
+          - demo/workspace_ui_shared/workspace_ui_adapter.mjs now includes shared evidence-browser derivation on top of the completed draft and run-monitor state
+          - tests/workspace_ui/test_workspace_ui_evidence_browser.mjs now fixes completed-only gating, filter behavior, selection fallback, and replay-focus behavior as executable coverage
+          - demo/workspace_ui_moss_stage10/index.html now extends that review surface into metadata-backed query text, family facets, result ranking, and replay-linked result selection
+          - specs/workspace_evidence_query_contract.md now defines the future query/replay boundary for this surface
+          - demo/workspace_ui_moss_stage11/index.html now keeps evidence query and replay-linked review inside the same operator shell that previously handled plan confirmation and run monitoring
+          - demo/workspace_ui_moss_stage12/index.html now lets completed live jobs load backend evidence-query payloads while keeping replay limits explicit on the review surface
+          - demo/workspace_ui_moss_stage14/index.html now keeps the same evidence review controls but rehydrates them from the backend workspace-shell snapshot so selected result and replay focus can stay inside the same live refresh path
+          - demo/workspace_ui_shared/workspace_shell_frontend_adapter.mjs now projects one stable review surface for query results, selected evidence detail, and replay focus regardless of whether the source is local projection or backend query
+      - id: story.workspace_ui_readiness.advanced_persona_and_study_controls
+        title: advanced persona and study controls
         status: planned
         story_points: 3
+        design_rule:
+          - structured fields, mode overrides, persona filters, and study controls should live behind an advanced path rather than the default intake flow
       - id: story.workspace_ui_readiness.operator_feedback_and_failure_visibility
         title: operator feedback and failure visibility
-        status: planned
+        status: in_progress
         story_points: 3
+        evidence:
+          - demo/workspace_ui_moss_stage8/index.html now prototypes failed and retry-ready run states
+          - demo/workspace_ui_moss_stage11/index.html now keeps failure-visible shell state inside the same operator flow as intake and review
+          - demo/workspace_ui_moss_stage12/index.html now maps live or sample failed validation jobs back into visible shell failure state
+          - demo/workspace_ui_moss_stage14/index.html now keeps runtime attention state, auth gaps, and shell-sync heartbeat visible while the product-facing shell stays on the snapshot path
+        remaining_gap: failure visibility is still prototype-local and not yet driven by a dedicated error-detail endpoint beyond the validation job last_error field
 
   - id: milestone.full_saas_product_surface
     status: planned
@@ -706,9 +832,23 @@ active_workstreams:
           - facilitator runtime now routes executable clickable artifacts through the adapter before falling back to raw trace ingestion
       - id: story.system_architecture_upgrade.evidence_query_index_and_replay
         title: evidence query index and replay
-        status: planned
+        status: in_progress
         story_points: 3
-        remaining_gap: artifact files exist, but there is no query and replay surface built on top of structured metadata and artifact references for audit, comparison, or future workspace retrieval
+        evidence:
+          - specs/workspace_evidence_query_contract.md now defines the draft query/replay boundary between completed-run metadata and the workspace review surface
+          - specs/workspace_shell_snapshot_contract.md now defines the backend-driven shell hydration boundary for workspace review
+          - demo/workspace_ui_shared/workspace_ui_adapter.mjs now includes shared evidence-query derivation on top of structured artifact metadata and replay references
+          - demo/workspace_ui_moss_stage10/index.html now prototypes metadata-backed search, facet filtering, result ranking, and replay-linked result focus inside the workspace shell
+          - demo/workspace_ui_moss_stage11/index.html now proves that the same evidence-query projection can stay intact inside an integrated workspace shell rather than only a standalone review page
+          - src/ai_validation_swarm/saas/evidence_query.py now serves completed-run evidence-query payloads from the structured metadata store and artifact paths through the local SaaS runtime
+          - src/ai_validation_swarm/saas/api.py now exposes GET /api/v1/evidence-query with authenticated browser-callable CORS support for the workspace shell
+          - src/ai_validation_swarm/saas/runtime.py and src/ai_validation_swarm/saas/api.py now compose and serve GET /api/v1/workspace-shell so session state, selected-job state, evidence-query state, and runtime sync can hydrate from one backend snapshot
+          - tests/unit/test_saas_runtime.py now verifies both completed-run and pending-job evidence-query responses through the real local API boundary
+          - demo/workspace_ui_moss_stage12/index.html now keeps backend evidence query separate from job ingress while making the remaining replay-depth limits explicit
+          - demo/workspace_ui_moss_stage14/index.html now consumes that backend shell snapshot in a product-facing review shell instead of relying on page-local multi-endpoint review refresh
+          - tests/workspace_ui/test_workspace_shell_runtime_client.mjs, tests/workspace_ui/test_workspace_shell_runtime_sync.mjs, and tests/workspace_ui/test_workspace_shell_app.mjs now verify snapshot hydration, selection override refresh, and app-layer snapshot orchestration
+          - tests/workspace_ui/test_workspace_ui_evidence_query.mjs now fixes query gating, family filtering, relevance ranking, selection fallback, and replay-linked result behavior as executable coverage
+        remaining_gap: completed-run evidence query and shell snapshot hydration are now served through real backend endpoints, but replay depth still depends on trace-linked artifacts and the shell still lacks deeper replay and comparison surfaces beyond the current engineering demo contract
       - id: story.system_architecture_upgrade.async_job_ingress_boundary
         title: async job ingress boundary
         status: implemented

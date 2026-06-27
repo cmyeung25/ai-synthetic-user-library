@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 14</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+  <style>
+    .stage13-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stage13-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 18px;
+    }
+
+    .stage13-column {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .debug-shell details {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.018);
+      padding: 12px;
+    }
+
+    .debug-shell summary {
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 980px) {
+      .stage13-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 14 Review</div>
+        <h1>Moss Workspace</h1>
+        <p>This prototype shifts the shell from a multi-call engineering flow toward one backend-driven workspace snapshot. The page still uses the shared shell app controller, but review hydration now centers on one API contract.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">Research Shell</div>
+        <div class="nav-item">Session + Runtime</div>
+        <div class="nav-item">Run Queue</div>
+        <div class="nav-item">Evidence Review</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage13/index.html">Stage 13 shared-shell prototype</a><br>
+          <a href="../workspace_ui_shared/workspace_shell_app.mjs">Shell app controller</a><br>
+          <a href="../workspace_ui_shared/workspace_shell_runtime_sync.mjs">Runtime sync layer</a><br>
+          <a href="../../specs/workspace_shell_snapshot_contract.md">Workspace shell snapshot contract</a><br>
+          <a href="../../specs/workspace_shell_frontend_adapter_contract.md">Shell frontend adapter contract</a><br>
+          <a href="../workspace_ui_design_system/index.html">Design system preview</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Default Path</div>
+        <div class="nav-note">The main path should stay close to conversational intake, inferred plan confirmation, real run submission, and backend-driven evidence review. Debug surfaces still exist, but they should no longer determine how the shell works.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="stage13-shell">
+        <header class="main-header">
+          <div>
+            <div class="eyebrow">Workspace UI Readiness / Backend-Driven Shell</div>
+            <h2>Snapshot-backed research workspace</h2>
+            <p>This page keeps the first viewport focused on plan readiness, runtime health, run status, and evidence review, but now treats the backend shell snapshot as the primary hydration boundary instead of separate session, job, and evidence refresh calls.</p>
+          </div>
+          <div class="top-metrics">
+            <div class="metric">
+              <span>Plan readiness</span>
+              <strong id="metric-plan-readiness">draft_only</strong>
+            </div>
+            <div class="metric">
+              <span>Session</span>
+              <strong id="metric-session-status">missing_token</strong>
+            </div>
+            <div class="metric">
+              <span>Selected run</span>
+              <strong id="metric-selected-run">-</strong>
+            </div>
+            <div class="metric">
+              <span>Evidence</span>
+              <strong id="metric-evidence-status">query_pending</strong>
+            </div>
+          </div>
+        </header>
+
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="section-title">Workspace runtime inputs</h3>
+                  <p class="section-copy">These inputs stay operator-visible for now, but the shell now uses them to hydrate one backend snapshot contract instead of a page-local chain of API calls.</p>
+            </div>
+            <div class="status-bar">
+              <div class="status-pill queued" id="bridge-pill">draft_only</div>
+              <div class="status-pill queued" id="session-pill">missing_token</div>
+              <div class="status-pill queued" id="runtime-sync-pill">idle</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label for="api-base-url">API base URL</label>
+                <input id="api-base-url" type="text" value="http://127.0.0.1:8011">
+              </div>
+              <div class="field">
+                <label for="api-token">Bearer token</label>
+                <input id="api-token" type="text" value="token-api">
+              </div>
+              <div class="field">
+                <label for="brief-path">brief_path</label>
+                <input id="brief-path" type="text" value="briefs/brief.json">
+              </div>
+              <div class="field">
+                <label for="persona-dir">persona_dir</label>
+                <input id="persona-dir" type="text" value="personas">
+              </div>
+            </div>
+
+            <div class="cta-row" id="draft-scenario-actions"></div>
+          </div>
+        </section>
+
+        <div class="stage13-grid">
+          <div class="stage13-column">
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Research plan and execution path</h3>
+                  <p class="section-copy">This compresses the current draft, confirmation status, run stage, and backend snapshot readiness into one operator-readable surface.</p>
+                </div>
+                <div class="status-pill completed" id="shell-pill">conversation_intake</div>
+              </div>
+              <div class="card-body">
+                <div class="journey-strip" id="stage-strip"></div>
+
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <strong>Draft state</strong>
+                    <div class="summary-list" id="draft-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Inference + confirmation</strong>
+                    <div class="summary-list" id="adapter-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Run monitor</strong>
+                    <div class="summary-list" id="run-monitor-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Evidence readiness</strong>
+                    <div class="summary-list" id="review-summary"></div>
+                  </div>
+                </div>
+
+                <div class="decision-band warn">
+                  <strong>Current backend boundary</strong>
+                  <p class="decision-copy" id="bridge-gap-copy"></p>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Run queue and backend shell state</h3>
+                  <p class="section-copy">Confirmed drafts can submit to the real API, and selected runs now feed back into the visible shell through the shared snapshot endpoint instead of separate job-detail and evidence-query fetches.</p>
+                </div>
+                <div class="status-pill running" id="job-pill">no job</div>
+              </div>
+              <div class="card-body">
+                <div class="cta-row">
+                  <button class="action-button primary" id="submit-live-job">submit live job</button>
+                  <button class="action-button" id="use-sample-jobs">use sample jobs</button>
+                </div>
+
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <strong>Request mapping</strong>
+                    <div class="summary-list" id="request-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Snapshot contract</strong>
+                    <div class="summary-list" id="bridge-summary"></div>
+                  </div>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Available runs</div>
+                  <div class="evidence-grid" id="job-grid"></div>
+                </div>
+
+                <div class="summary-card">
+                  <strong>Selected run</strong>
+                  <div class="summary-list" id="selected-job-summary"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="stage13-column">
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Session and runtime health</h3>
+                  <p class="section-copy">Workspace identity, plan limits, job counts, and runtime sync status stay visible without pushing the operator into filesystem inspection, and the sync path now hydrates one snapshot object.</p>
+                </div>
+                <div class="status-pill queued" id="evidence-pill">query_pending</div>
+              </div>
+              <div class="card-body">
+                <div class="summary-card">
+                  <strong>Runtime sync</strong>
+                  <div class="cta-row">
+                    <button class="action-button" id="runtime-sync-now">load shell snapshot</button>
+                    <button class="action-button" id="runtime-sync-toggle">start auto refresh</button>
+                  </div>
+                  <div class="summary-list" id="runtime-sync-summary"></div>
+                </div>
+
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <strong>Session summary</strong>
+                    <div class="summary-list" id="session-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Plan limits</strong>
+                    <div class="summary-list" id="session-limit-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Job counts</strong>
+                    <div class="summary-list" id="session-job-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Runtime paths</strong>
+                    <div class="summary-list" id="session-path-summary"></div>
+                  </div>
+                </div>
+
+                <div class="surface-grid" id="session-capability-grid"></div>
+
+                <div class="decision-band warn">
+                  <strong>Session boundary</strong>
+                  <p class="decision-copy" id="session-boundary-copy"></p>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Evidence review workspace</h3>
+                  <p class="section-copy">The shell stays centered on result selection, selected evidence, and replay focus while keeping query controls lightweight. In live mode, result and replay focus are re-hydrated through the same backend snapshot path.</p>
+                </div>
+                <div class="status-pill completed" id="query-source-pill">local projection</div>
+              </div>
+              <div class="card-body">
+                <div class="draft-panel">
+                  <div class="inline-label">Query controls</div>
+                  <div class="form-grid">
+                    <div class="field">
+                      <label for="evidence-query-text">query text</label>
+                      <input id="evidence-query-text" type="text" value="">
+                    </div>
+                    <div class="field">
+                      <label for="evidence-family">family</label>
+                      <select id="evidence-family">
+                        <option value="all">all</option>
+                        <option value="input">input</option>
+                        <option value="trace">trace</option>
+                        <option value="analysis">analysis</option>
+                        <option value="output">output</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="evidence-sort">sort</label>
+                      <select id="evidence-sort">
+                        <option value="relevance">relevance</option>
+                        <option value="newest">newest</option>
+                        <option value="family">family</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="cta-row">
+                    <button class="action-button" id="apply-evidence-query">apply evidence query</button>
+                  </div>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Evidence results</div>
+                  <div class="evidence-grid" id="evidence-result-grid"></div>
+                  <p class="footer-note" id="evidence-result-note"></p>
+                </div>
+
+                <div class="summary-card">
+                  <strong>Selected evidence</strong>
+                  <div class="summary-list" id="selected-evidence-summary"></div>
+                  <div class="signal-grid" id="selected-evidence-detail"></div>
+                </div>
+
+                <div class="summary-card">
+                  <strong>Replay focus</strong>
+                  <div class="timeline" id="replay-step-list"></div>
+                  <p class="footer-note" id="replay-note"></p>
+                </div>
+              </div>
+            </section>
+
+            <section class="card debug-shell">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Debug details</h3>
+                  <p class="section-copy">The engineering traces are still available, but they are no longer the main product surface.</p>
+                </div>
+                <div class="status-pill completed">optional</div>
+              </div>
+              <div class="card-body">
+                <div class="stack" id="sidecar-stack"></div>
+
+                <details>
+                  <summary>Last API response</summary>
+                  <pre class="json-block" id="api-response-json">{}</pre>
+                </details>
+                <details>
+                  <summary>Validation-job request</summary>
+                  <pre class="json-block" id="request-json">{}</pre>
+                </details>
+                <details>
+                  <summary>Derived run record</summary>
+                  <pre class="json-block" id="run-record-json">{}</pre>
+                </details>
+                <details>
+                  <summary>Bridge state</summary>
+                  <pre class="json-block" id="bridge-state-json">{}</pre>
+                </details>
+                <details>
+                  <summary>Shell state</summary>
+                  <pre class="json-block" id="shell-state-json">{}</pre>
+                </details>
+                <details>
+                  <summary>Selected run payload</summary>
+                  <pre class="json-block" id="selected-job-json">{}</pre>
+                </details>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Stage 14 Direction</div>
+        <h3>Backend-driven shell boundary</h3>
+        <p>This review surface keeps the Stage 13 shared controller, but now pushes the product shell one step further by treating the backend snapshot as the visible runtime source of truth.</p>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong>Snapshot contract</strong>
+          <p>Session state, selected job state, and evidence query focus can now hydrate from one backend workspace-shell payload.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong>Product-first composition</strong>
+          <p>Plan, run, and evidence surfaces still lead before raw response payloads, but the operator path is now closer to a real shell refresh model.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong>Still prototype-grade</strong>
+          <p>This is still a static HTML prototype and not yet a framework-hosted shell with persistent app session state or push updates.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Runtime requirement</h4>
+        <p>Use `scripts/start_stage12_demo.bat` first. This stage expects the local API and worker to be current because the page now reads the new `workspace-shell` endpoint instead of stitching review state together in the page.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    import {
+      createWorkspaceShellAppController
+    } from "../workspace_ui_shared/workspace_shell_app.mjs";
+
+    const controller = createWorkspaceShellAppController();
+    let runtimeSyncTimer = null;
+
+    const draftScenarioConfig = [
+      { id: "blocked_draft", label: "blocked draft" },
+      { id: "ready_for_confirmation", label: "ready for confirmation" },
+      { id: "confirmed_draft", label: "confirmed draft" },
+      { id: "completed_local_shell", label: "completed local shell" },
+      { id: "failed_local_shell", label: "failed local shell" }
+    ];
+
+    const metricPlanReadiness = document.getElementById("metric-plan-readiness");
+    const metricSessionStatus = document.getElementById("metric-session-status");
+    const metricSelectedRun = document.getElementById("metric-selected-run");
+    const metricEvidenceStatus = document.getElementById("metric-evidence-status");
+    const bridgePill = document.getElementById("bridge-pill");
+    const sessionPill = document.getElementById("session-pill");
+    const runtimeSyncPill = document.getElementById("runtime-sync-pill");
+    const shellPill = document.getElementById("shell-pill");
+    const jobPill = document.getElementById("job-pill");
+    const evidencePill = document.getElementById("evidence-pill");
+    const querySourcePill = document.getElementById("query-source-pill");
+    const draftScenarioActions = document.getElementById("draft-scenario-actions");
+    const stageStrip = document.getElementById("stage-strip");
+    const draftSummary = document.getElementById("draft-summary");
+    const adapterSummary = document.getElementById("adapter-summary");
+    const runMonitorSummary = document.getElementById("run-monitor-summary");
+    const reviewSummary = document.getElementById("review-summary");
+    const bridgeGapCopy = document.getElementById("bridge-gap-copy");
+    const requestSummary = document.getElementById("request-summary");
+    const bridgeSummary = document.getElementById("bridge-summary");
+    const jobGrid = document.getElementById("job-grid");
+    const selectedJobSummary = document.getElementById("selected-job-summary");
+    const sessionSummary = document.getElementById("session-summary");
+    const sessionLimitSummary = document.getElementById("session-limit-summary");
+    const sessionJobSummary = document.getElementById("session-job-summary");
+    const sessionPathSummary = document.getElementById("session-path-summary");
+    const sessionCapabilityGrid = document.getElementById("session-capability-grid");
+    const sessionBoundaryCopy = document.getElementById("session-boundary-copy");
+    const runtimeSyncSummary = document.getElementById("runtime-sync-summary");
+    const evidenceResultGrid = document.getElementById("evidence-result-grid");
+    const evidenceResultNote = document.getElementById("evidence-result-note");
+    const selectedEvidenceSummary = document.getElementById("selected-evidence-summary");
+    const selectedEvidenceDetail = document.getElementById("selected-evidence-detail");
+    const replayStepList = document.getElementById("replay-step-list");
+    const replayNote = document.getElementById("replay-note");
+    const sidecarStack = document.getElementById("sidecar-stack");
+    const apiResponseJson = document.getElementById("api-response-json");
+    const requestJson = document.getElementById("request-json");
+    const runRecordJson = document.getElementById("run-record-json");
+    const bridgeStateJson = document.getElementById("bridge-state-json");
+    const shellStateJson = document.getElementById("shell-state-json");
+    const selectedJobJson = document.getElementById("selected-job-json");
+
+    const apiBaseUrlInput = document.getElementById("api-base-url");
+    const apiTokenInput = document.getElementById("api-token");
+    const briefPathInput = document.getElementById("brief-path");
+    const personaDirInput = document.getElementById("persona-dir");
+    const evidenceQueryTextInput = document.getElementById("evidence-query-text");
+    const evidenceFamilySelect = document.getElementById("evidence-family");
+    const evidenceSortSelect = document.getElementById("evidence-sort");
+
+    const submitLiveJobButton = document.getElementById("submit-live-job");
+    const useSampleJobsButton = document.getElementById("use-sample-jobs");
+    const runtimeSyncNowButton = document.getElementById("runtime-sync-now");
+    const runtimeSyncToggleButton = document.getElementById("runtime-sync-toggle");
+    const applyEvidenceQueryButton = document.getElementById("apply-evidence-query");
+
+    function readInputs() {
+      return {
+        apiBaseUrl: apiBaseUrlInput.value.trim(),
+        bearerToken: apiTokenInput.value.trim(),
+        briefPath: briefPathInput.value.trim(),
+        personaDir: personaDirInput.value.trim(),
+        queryState: {
+          queryText: evidenceQueryTextInput.value.trim(),
+          activeFamily: evidenceFamilySelect.value,
+          sortBy: evidenceSortSelect.value
+        }
+      };
+    }
+
+    function stopRuntimeSyncLoop() {
+      if (runtimeSyncTimer !== null) {
+        window.clearInterval(runtimeSyncTimer);
+        runtimeSyncTimer = null;
+      }
+    }
+
+    function refreshRuntimeSyncLoop(model) {
+      stopRuntimeSyncLoop();
+      if (!model.state.runtimeSync?.auto_refresh_enabled) {
+        return;
+      }
+      const intervalMs = Number(model.state.runtimeSync?.interval_ms) || 4000;
+      runtimeSyncTimer = window.setInterval(() => {
+        void performRuntimeSync();
+      }, intervalMs);
+    }
+
+    function renderRows(node, rows) {
+      node.innerHTML = "";
+      rows.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "summary-row";
+        row.innerHTML = `<strong>${item.label}</strong><span>${item.value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderCapabilityCards(node, cards) {
+      node.innerHTML = "";
+      (cards || []).forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `surface-card${item.active ? " active" : ""}`;
+        card.innerHTML = `<strong>${item.title}</strong><span>${item.body}</span>`;
+        node.appendChild(card);
+      });
+    }
+
+    function renderStack(node, rows) {
+      node.innerHTML = "";
+      rows.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "stack-row";
+        row.innerHTML = `<strong>${item.label}</strong><span>${item.value}</span>`;
+        node.appendChild(row);
+      });
+    }
+
+    function renderScenarioActions(model) {
+      draftScenarioActions.innerHTML = "";
+      draftScenarioConfig.forEach((scenario) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `action-button${model.frontendState.metrics.bridge_status === "ready_to_submit" && scenario.id === "confirmed_draft" ? " primary" : ""}`;
+        button.textContent = scenario.label;
+        button.addEventListener("click", () => {
+          controller.applyDraftScenario(scenario.id);
+          render();
+        });
+        draftScenarioActions.appendChild(button);
+      });
+    }
+
+    function renderJobs(model) {
+      jobGrid.innerHTML = "";
+      model.jobs.forEach((job) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `evidence-card${job.job_id === model.state.selectedJobId ? " active" : ""}`;
+        card.innerHTML = `
+          <strong>${job.job_id}</strong>
+          <div class="evidence-meta">
+            <span>${job.status}</span>
+            <span>${job.provider_name}</span>
+          </div>
+          <p>${job.output_run_path || job.last_error || job.input_artifact_path}</p>
+        `;
+        card.addEventListener("click", async () => {
+          controller.selectJob(job.job_id);
+          if (controller.getState().mode === "live") {
+            await performRuntimeSync();
+            return;
+          }
+          render();
+        });
+        jobGrid.appendChild(card);
+      });
+    }
+
+    function renderEvidence(model) {
+      evidenceResultGrid.innerHTML = "";
+      const reviewSurface = model.frontendState.review_surface;
+      if (!reviewSurface.results.length) {
+        evidenceResultNote.textContent = reviewSurface.empty_note;
+      } else {
+        evidenceResultNote.textContent = reviewSurface.empty_note;
+      }
+
+      reviewSurface.results.forEach((result) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `evidence-card${result.selected ? " active" : ""}`;
+        card.innerHTML = `
+          <strong>${result.title}</strong>
+          <div class="evidence-meta">
+            <span>${result.family}</span>
+            <span>${result.kind}</span>
+            <span>score ${result.relevance_score ?? "-"}</span>
+          </div>
+          <p>${result.summary}</p>
+        `;
+        card.addEventListener("click", async () => {
+          if (model.state.mode === "live" && model.state.selectedJobId) {
+            await performRuntimeSync({
+              selectedResultId: result.id,
+              selectedReplayStepId: ""
+            });
+          } else {
+            controller.selectLocalEvidenceResult(result.id);
+          }
+          render();
+        });
+        evidenceResultGrid.appendChild(card);
+      });
+
+      renderRows(selectedEvidenceSummary, reviewSurface.selected_evidence_summary || []);
+      selectedEvidenceDetail.innerHTML = "";
+      (reviewSurface.selected_evidence_detail || []).forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `signal-card${item.tone === "active" ? " active" : ""}`;
+        card.innerHTML = `<strong>${item.title}</strong><span>${item.body}</span>`;
+        selectedEvidenceDetail.appendChild(card);
+      });
+
+      replayStepList.innerHTML = "";
+      replayNote.textContent = reviewSurface.replay_note;
+      (reviewSurface.replay_steps || []).forEach((step) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `timeline-card${step.selected ? " active" : ""}`;
+        card.innerHTML = `<h4>${step.title}</h4><p>${step.timestamp || "-"}</p><p>${step.note || "No replay note."}</p>`;
+        card.addEventListener("click", async () => {
+          if (model.state.mode === "live" && model.state.selectedJobId) {
+            await performRuntimeSync({
+              selectedResultId: reviewSurface.selected_result_id || "",
+              selectedReplayStepId: step.id
+            });
+          } else {
+            controller.selectLocalReplayStep(step.id);
+          }
+          render();
+        });
+        replayStepList.appendChild(card);
+      });
+    }
+
+    function render() {
+      const model = controller.deriveModel(readInputs());
+
+      metricPlanReadiness.textContent = model.frontendState.metrics.bridge_status;
+      metricSessionStatus.textContent = model.sessionBridgeState.session_status;
+      metricSelectedRun.textContent = model.frontendState.metrics.selected_job_id || "-";
+      metricEvidenceStatus.textContent = model.frontendState.review_surface.query_status;
+
+      bridgePill.className = `status-pill ${model.frontendState.pills.bridge.tone}`;
+      bridgePill.textContent = model.frontendState.pills.bridge.label;
+      sessionPill.className = `status-pill ${model.sessionBridgeState.pill.tone}`;
+      sessionPill.textContent = model.sessionBridgeState.pill.label;
+      runtimeSyncPill.className = `status-pill ${model.runtimeSyncView.pill.tone}`;
+      runtimeSyncPill.textContent = model.runtimeSyncView.pill.label;
+      shellPill.className = `status-pill ${model.frontendState.pills.shell.tone}`;
+      shellPill.textContent = model.frontendState.pills.shell.label;
+      jobPill.className = `status-pill ${model.frontendState.pills.job.tone}`;
+      jobPill.textContent = model.frontendState.pills.job.label;
+      evidencePill.className = `status-pill ${model.frontendState.review_surface.query_status === "query_ready" ? "completed" : "queued"}`;
+      evidencePill.textContent = model.frontendState.review_surface.query_status;
+      querySourcePill.className = `status-pill ${model.querySource === "backend" ? "completed" : "queued"}`;
+      querySourcePill.textContent = model.querySource === "backend" ? "backend evidence endpoint" : "local projection";
+
+      renderScenarioActions(model);
+
+      stageStrip.innerHTML = "";
+      model.frontendState.stage_strip.forEach((stage) => {
+        const card = document.createElement("div");
+        card.className = `journey-step ${stage.state === "done" ? "done" : stage.state === "active" ? "active" : ""}`;
+        card.innerHTML = `<strong>${stage.label}</strong><span>${stage.state}</span>`;
+        stageStrip.appendChild(card);
+      });
+
+      renderRows(draftSummary, model.frontendState.draft_summary);
+      renderRows(adapterSummary, model.frontendState.adapter_summary);
+      renderRows(runMonitorSummary, model.frontendState.run_monitor_summary);
+      renderRows(reviewSummary, model.frontendState.review_summary);
+      bridgeGapCopy.textContent = model.state.mode === "live" && model.state.liveEvidenceQuery
+        ? (model.reviewQueryState.boundary_warning || "Metadata-backed evidence query is now being served by the API.")
+        : model.frontendState.bridge_gap;
+
+      renderRows(requestSummary, model.frontendState.request_summary);
+      renderRows(bridgeSummary, model.frontendState.bridge_summary);
+      renderJobs(model);
+      renderRows(selectedJobSummary, model.frontendState.selected_job_summary);
+
+      renderRows(sessionSummary, model.sessionBridgeState.session_summary);
+      renderRows(sessionLimitSummary, model.sessionBridgeState.limit_summary);
+      renderRows(sessionJobSummary, model.sessionBridgeState.job_summary);
+      renderRows(sessionPathSummary, model.sessionBridgeState.path_summary);
+      renderCapabilityCards(sessionCapabilityGrid, model.sessionBridgeState.capability_cards);
+      sessionBoundaryCopy.textContent = model.sessionBridgeState.boundary_warning;
+      renderRows(runtimeSyncSummary, model.runtimeSyncView.summary);
+
+      renderEvidence(model);
+
+      renderStack(sidecarStack, [
+        ...model.frontendState.sidecar_rows,
+        { label: "query source", value: model.querySource === "backend" ? "backend" : "local" }
+      ]);
+
+      submitLiveJobButton.disabled = !model.frontendState.actions.submit_live_job.enabled;
+      applyEvidenceQueryButton.disabled = !model.frontendState.actions.apply_evidence_query.enabled;
+      runtimeSyncNowButton.disabled = !model.runtimeSyncView.actions.sync_now.enabled;
+      runtimeSyncToggleButton.disabled = !model.runtimeSyncView.actions.toggle_auto_refresh.enabled;
+      runtimeSyncToggleButton.textContent = model.state.runtimeSync?.auto_refresh_enabled ? "stop auto refresh" : "start auto refresh";
+
+      apiResponseJson.textContent = JSON.stringify(model.frontendState.json_panels.last_api_response, null, 2);
+      requestJson.textContent = JSON.stringify(model.frontendState.json_panels.request_payload, null, 2);
+      runRecordJson.textContent = JSON.stringify(model.frontendState.json_panels.derived_run_record, null, 2);
+      bridgeStateJson.textContent = JSON.stringify(model.frontendState.json_panels.bridge_state, null, 2);
+      shellStateJson.textContent = JSON.stringify(model.frontendState.json_panels.shell_state, null, 2);
+      selectedJobJson.textContent = JSON.stringify(model.frontendState.json_panels.selected_job, null, 2);
+
+      refreshRuntimeSyncLoop(model);
+    }
+
+    async function submitLiveJob() {
+      await controller.submitLiveJob(readInputs());
+      render();
+    }
+
+    async function applyEvidenceQuery() {
+      const model = controller.deriveModel(readInputs());
+      if (model.state.mode === "live" && model.state.selectedJobId) {
+        await performRuntimeSync({
+          selectedResultId: "",
+          selectedReplayStepId: ""
+        });
+      } else {
+        controller.clearLocalEvidenceQuery();
+        render();
+      }
+    }
+
+    async function performRuntimeSync(overrides = {}) {
+      const model = controller.deriveModel(readInputs());
+      if (model.state.runtimeSync?.is_syncing) {
+        return;
+      }
+      await controller.syncRuntime({
+        ...readInputs(),
+        ...overrides
+      });
+      render();
+    }
+
+    function toggleRuntimeAutoRefresh() {
+      controller.toggleRuntimeAutoRefresh();
+      render();
+    }
+
+    submitLiveJobButton.addEventListener("click", submitLiveJob);
+    useSampleJobsButton.addEventListener("click", () => {
+      controller.useSampleJobs();
+      render();
+    });
+    runtimeSyncNowButton.addEventListener("click", performRuntimeSync);
+    runtimeSyncToggleButton.addEventListener("click", toggleRuntimeAutoRefresh);
+    applyEvidenceQueryButton.addEventListener("click", applyEvidenceQuery);
+    window.addEventListener("beforeunload", stopRuntimeSyncLoop);
+
+    controller.reset();
+    render();
+  </script>
+</body>
+</html>

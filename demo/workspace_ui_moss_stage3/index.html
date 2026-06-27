@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 3</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 3 Review</div>
+        <h1>Moss Console</h1>
+        <p>This prototype advances the workspace flow from intake into intent inference, progressive clarification, and a structured draft plan before execution.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active">New Study</div>
+        <div class="nav-item">Draft Plans</div>
+        <div class="nav-item">Runs</div>
+        <div class="nav-item">Evidence</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Stage 3 Focus</div>
+        <div class="nav-note">This page should answer whether the system can infer a usable research mode and ask only the missing questions before showing a confirmation-ready draft plan.</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage2/index.html">Stage 2 intake prototype</a><br>
+          <a href="../workspace_ui_design_system/index.html">Design system preview</a><br>
+          <a href="../../specs/workspace_research_plan_contract.md">Draft plan contract spec</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="eyebrow">Workspace UI Readiness / Story Progress</div>
+          <h2>Intent inference and progressive clarification</h2>
+          <p>The system now translates natural-language input into an explicit draft plan object. The default user path still stays conversational, but the right rail and contract preview make the hidden structure inspectable.</p>
+        </div>
+        <div class="top-metrics">
+          <div class="metric">
+            <span>Theme</span>
+            <strong>Moss</strong>
+          </div>
+          <div class="metric">
+            <span>Story</span>
+            <strong>5 SP</strong>
+          </div>
+          <div class="metric">
+            <span>Contract</span>
+            <strong>Drafted</strong>
+          </div>
+          <div class="metric">
+            <span>Execution</span>
+            <strong>Not queued</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="phase-strip" aria-label="Scenario review">
+        <button class="phase-button active" data-scenario="trust_proto">Trust + screenshots</button>
+        <button class="phase-button" data-scenario="concept_copy">Concept copy only</button>
+        <button class="phase-button" data-scenario="live_flow">Live URL request</button>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Inference board</h3>
+            <p class="section-copy" id="scenario-copy">The system reads the intent and artifacts, then proposes one likely path without forcing the user to choose a mode up front.</p>
+          </div>
+          <div class="status-pill running" id="scenario-pill">drafting</div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="input-shell">
+              <div class="inline-label">User intent</div>
+              <div class="input-area" id="intent-text">
+                We want to know whether Hong Kong SMB operators would trust this AI operations assistant enough to try it in the first week. We have a founder brief and three onboarding screenshots, and we suspect setup burden is the main adoption risk.
+              </div>
+
+              <div class="tag-list" id="artifact-tags">
+                <div class="tag accent">founder-brief.json</div>
+                <div class="tag accent">screen-01.png</div>
+                <div class="tag accent">screen-02.png</div>
+                <div class="tag accent">screen-03.png</div>
+              </div>
+
+              <div class="signal-grid">
+                <div class="signal-card active">
+                  <strong>Likely primary mode</strong>
+                  <p class="scenario-note" id="primary-mode">prototype_validation</p>
+                </div>
+                <div class="signal-card">
+                  <strong>Secondary lens</strong>
+                  <p class="scenario-note" id="secondary-lens">adoption barrier and setup friction</p>
+                </div>
+                <div class="signal-card">
+                  <strong>Evidence maturity</strong>
+                  <p class="scenario-note" id="evidence-maturity">static stimulus interpretation only; no observed action trace</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="draft-panel">
+              <div class="inline-label">Why the system inferred this</div>
+              <div class="rule-grid" id="inference-rules">
+                <div class="rule-card">
+                  <strong>Stimulus rule</strong>
+                  <p>Screenshots indicate prototype-oriented review rather than concept-only questioning.</p>
+                </div>
+                <div class="rule-card">
+                  <strong>Research goal rule</strong>
+                  <p>Trust and first-week trial language implies adoption-risk synthesis should be carried as a secondary lens.</p>
+                </div>
+                <div class="rule-card">
+                  <strong>Boundary rule</strong>
+                  <p>Because the user only supplied screenshots, the system must not imply observed behavior evidence.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Progressive clarification</h3>
+            <p class="section-copy">The system asks only for missing decisions that materially change the run shape or evidence quality.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="analysis-grid">
+            <div class="draft-panel">
+              <div class="inline-label">Questions to ask now</div>
+              <div class="rule-grid" id="clarification-needed">
+                <div class="rule-card">
+                  <strong>Panel stance</strong>
+                  <p>Should the first pass use a mainstream five-person panel or a more skeptical stance?</p>
+                </div>
+                <div class="rule-card">
+                  <strong>Market slice</strong>
+                  <p>Should the system use the default HK SMB pool or a narrower operational subsegment?</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="advanced-panel">
+              <div class="inline-label">Questions to avoid</div>
+              <div class="rule-grid" id="clarification-avoid">
+                <div class="rule-card">
+                  <strong>Do not ask for raw mode choice</strong>
+                  <p>The user should not have to distinguish concept validation versus prototype validation as a first step.</p>
+                </div>
+                <div class="rule-card">
+                  <strong>Do not expose panel schema</strong>
+                  <p>Sample-size fields, preset names, and provider settings remain behind advanced controls unless needed.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="section-title">Draft plan contract preview</h3>
+            <p class="section-copy">This is the app-level object the workspace would build before final confirmation. It is richer than the current validation job request and can later map into execution contracts.</p>
+          </div>
+          <div class="status-pill queued">not confirmed</div>
+        </div>
+        <div class="card-body">
+          <div class="contract-shell">
+            <div class="contract-grid">
+              <div class="contract-card active">
+                <strong>Plan identity</strong>
+                <p class="scenario-note" id="plan-identity">draft_plan_20260627_proto_01 / workspace ws_hk_ops</p>
+              </div>
+              <div class="contract-card">
+                <strong>Execution readiness</strong>
+                <p class="scenario-note" id="execution-readiness">blocked until clarification is resolved and the user confirms the plan</p>
+              </div>
+              <div class="contract-card">
+                <strong>Proposed run</strong>
+                <p class="scenario-note" id="proposed-run">prototype_validation with mainstream panel, sample size 5, static screenshot stimulus</p>
+              </div>
+              <div class="contract-card">
+                <strong>Human validation gaps</strong>
+                <p class="scenario-note" id="human-gap">cannot claim real task completion or observed drop-off until clickable or live interaction exists</p>
+              </div>
+            </div>
+
+            <pre class="json-block" id="contract-json">{
+  "draft_plan_id": "draft_plan_20260627_proto_01",
+  "research_question": "...",
+  "inferred_mode": "...",
+  "clarifications": [],
+  "proposed_run": {},
+  "evidence_boundary": {},
+  "confirmation": {}
+}</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="plan">
+      <div class="plan-header">
+        <div class="eyebrow">Right Rail / Confirmation Preview</div>
+        <h3>Preflight summary</h3>
+        <p>The sidecar shows what the future confirmation sheet would need to display before a job can be created.</p>
+      </div>
+
+      <div class="stack">
+        <div class="stack-row">
+          <strong>Inferred mode</strong>
+          <span id="rail-mode">prototype_validation</span>
+        </div>
+        <div class="stack-row">
+          <strong>Missing inputs</strong>
+          <span id="rail-missing">panel stance, market slice</span>
+        </div>
+        <div class="stack-row">
+          <strong>Outputs if confirmed</strong>
+          <span id="rail-outputs">run contract, transcript, report, human validation gaps</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item ok">
+          <strong>Inference rule</strong>
+          <p id="rail-rule">Hide internal mode taxonomy unless the user explicitly requests an override.</p>
+        </div>
+        <div class="checklist-item warn">
+          <strong>Evidence rule</strong>
+          <p id="rail-evidence">Do not overstate evidence maturity beyond what the supplied stimulus supports.</p>
+        </div>
+        <div class="checklist-item ok">
+          <strong>Contract rule</strong>
+          <p id="rail-contract">Keep unresolved assumptions explicit so the final plan confirmation is meaningful.</p>
+        </div>
+      </div>
+
+      <div class="guardrail warn">
+        <h4>Current backend reality</h4>
+        <p id="rail-backend">Only the subset that maps to the current validation-job runtime is executable today. The draft plan contract is intentionally richer than the current backend request.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const scenarioContent = {
+      trust_proto: {
+        copy: "The system reads the intent and artifacts, then proposes one likely path without forcing the user to choose a mode up front.",
+        pill: "drafting",
+        intent: "We want to know whether Hong Kong SMB operators would trust this AI operations assistant enough to try it in the first week. We have a founder brief and three onboarding screenshots, and we suspect setup burden is the main adoption risk.",
+        artifacts: ["founder-brief.json", "screen-01.png", "screen-02.png", "screen-03.png"],
+        primaryMode: "prototype_validation",
+        secondaryLens: "adoption barrier and setup friction",
+        evidenceMaturity: "static stimulus interpretation only; no observed action trace",
+        inferenceRules: [
+          ["Stimulus rule", "Screenshots indicate prototype-oriented review rather than concept-only questioning."],
+          ["Research goal rule", "Trust and first-week trial language implies adoption-risk synthesis should be carried as a secondary lens."],
+          ["Boundary rule", "Because the user only supplied screenshots, the system must not imply observed behavior evidence."]
+        ],
+        clarificationNeeded: [
+          ["Panel stance", "Should the first pass use a mainstream five-person panel or a more skeptical stance?"],
+          ["Market slice", "Should the system use the default HK SMB pool or a narrower operational subsegment?"]
+        ],
+        clarificationAvoid: [
+          ["Do not ask for raw mode choice", "The user should not have to distinguish concept validation versus prototype validation as a first step."],
+          ["Do not expose panel schema", "Sample-size fields, preset names, and provider settings remain behind advanced controls unless needed."]
+        ],
+        planIdentity: "draft_plan_20260627_proto_01 / workspace ws_hk_ops",
+        executionReadiness: "blocked until clarification is resolved and the user confirms the plan",
+        proposedRun: "prototype_validation with mainstream panel, sample size 5, static screenshot stimulus",
+        humanGap: "cannot claim real task completion or observed drop-off until clickable or live interaction exists",
+        railMode: "prototype_validation",
+        railMissing: "panel stance, market slice",
+        railOutputs: "run contract, transcript, report, human validation gaps",
+        railEvidence: "Do not imply observed action evidence from static screenshots.",
+        railBackend: "Today this can map into the validation-job runtime only after the plan is confirmed and converted into a bounded prototype-validation request.",
+        contractJson: `{
+  "draft_plan_id": "draft_plan_20260627_proto_01",
+  "workspace_id": "ws_hk_ops",
+  "research_question": "Will HK SMB operators trust this AI assistant enough to try it in the first week?",
+  "artifact_refs": [
+    {"type": "brief", "path": "briefs/founder-brief.json"},
+    {"type": "screenshot", "path": "stimulus/screen-01.png"},
+    {"type": "screenshot", "path": "stimulus/screen-02.png"},
+    {"type": "screenshot", "path": "stimulus/screen-03.png"}
+  ],
+  "inference": {
+    "primary_mode": "prototype_validation",
+    "secondary_lenses": ["adoption_barrier_validation"],
+    "confidence": "medium"
+  },
+  "clarifications": [
+    {"id": "panel_stance", "status": "open"},
+    {"id": "market_slice", "status": "open"}
+  ],
+  "proposed_run": {
+    "panel_type": "mainstream",
+    "sample_size": 5,
+    "stimulus_type": "static_screenshot_set"
+  },
+  "evidence_boundary": {
+    "allowed_evidence": ["stated_interpretation", "inferred_friction"],
+    "forbidden_claims": ["observed_action_trace", "task_completion"]
+  },
+  "confirmation": {
+    "status": "draft",
+    "required": true
+  }
+}`
+      },
+      concept_copy: {
+        copy: "When the user only provides copy and a concept description, the system should shift to concept-oriented inference and ask a different minimum set of questions.",
+        pill: "drafting",
+        intent: "We have a one-page concept for an AI bookkeeper assistant. We want to know whether small operators understand the promise, what trust objections appear first, and whether they see enough value to trial it.",
+        artifacts: ["concept-onepager.pdf", "pricing-notes.md"],
+        primaryMode: "concept_validation",
+        secondaryLens: "adoption barrier validation",
+        evidenceMaturity: "stated understanding, objection structure, and trial conditions only",
+        inferenceRules: [
+          ["Stimulus rule", "A concept one-pager supports concept evaluation, not prototype validation."],
+          ["Goal rule", "Understanding, trust objections, and willingness to trial indicate concept validation with adoption lens."],
+          ["Boundary rule", "Without an interface or task flow, the plan must avoid UI-friction claims."]
+        ],
+        clarificationNeeded: [
+          ["Decision audience", "Are you testing likely operators, buyers, or both in the first pass?"],
+          ["Trust focus", "Do you want the first run optimized for understanding gaps or for payment/adoption skepticism?"]
+        ],
+        clarificationAvoid: [
+          ["Do not expose mode taxonomy", "The user should not have to choose between hypothesis, concept, and adoption modes up front."],
+          ["Do not ask for prototype-only fields", "No panel or evidence question should assume a clickable flow exists."]
+        ],
+        planIdentity: "draft_plan_20260627_concept_02 / workspace ws_hk_ops",
+        executionReadiness: "blocked until audience and trust-focus clarifications are confirmed",
+        proposedRun: "concept_validation with likely operators, sample size 5, one-pager stimulus",
+        humanGap: "cannot infer real task friction or first-session behavior from concept copy alone",
+        railMode: "concept_validation",
+        railMissing: "decision audience, trust focus",
+        railOutputs: "concept transcript, objection map, adoption conditions, human validation gaps",
+        railEvidence: "Keep the evidence boundary at stated understanding and objections only.",
+        railBackend: "This remains a draft plan surface until the app layer can route non-prototype modes through the appropriate backend contract.",
+        contractJson: `{
+  "draft_plan_id": "draft_plan_20260627_concept_02",
+  "workspace_id": "ws_hk_ops",
+  "research_question": "Do small operators understand and trust this AI bookkeeper concept enough to try it?",
+  "artifact_refs": [
+    {"type": "concept_doc", "path": "concepts/bookkeeper-onepager.pdf"},
+    {"type": "notes", "path": "concepts/pricing-notes.md"}
+  ],
+  "inference": {
+    "primary_mode": "concept_validation",
+    "secondary_lenses": ["adoption_barrier_validation"],
+    "confidence": "high"
+  },
+  "clarifications": [
+    {"id": "decision_audience", "status": "open"},
+    {"id": "trust_focus", "status": "open"}
+  ],
+  "proposed_run": {
+    "panel_type": "likely_operators",
+    "sample_size": 5,
+    "stimulus_type": "concept_document"
+  },
+  "evidence_boundary": {
+    "allowed_evidence": ["stated_understanding", "trust_objections", "trial_conditions"],
+    "forbidden_claims": ["observed_ui_friction", "task_completion"]
+  },
+  "confirmation": {
+    "status": "draft",
+    "required": true
+  }
+}`
+      },
+      live_flow: {
+        copy: "When a user asks for live URL validation, the system should still keep the path conversational while making the backend and evidence constraints explicit.",
+        pill: "needs backend",
+        intent: "We have a staging URL for a new admin flow. We want to know where real operators would get lost during setup and whether the value is clear enough to continue after the first task.",
+        artifacts: ["staging-url.txt", "task-list.md"],
+        primaryMode: "prototype_validation",
+        secondaryLens: "live-app expansion dependency",
+        evidenceMaturity: "targeting observed behavior, but blocked by live-app driver availability",
+        inferenceRules: [
+          ["Stimulus rule", "A live URL implies prototype validation moving toward live-app execution."],
+          ["Capability rule", "The requested evidence maturity exceeds the current backend runtime because live-app capture is not yet implemented."],
+          ["Boundary rule", "The plan must preserve the desired evidence target while clearly flagging the missing execution capability."]
+        ],
+        clarificationNeeded: [
+          ["Fallback path", "Should the system fall back to screenshot or flow review while live-app execution is unavailable?"],
+          ["Task framing", "Which one or two setup tasks matter most for the first validation pass?"]
+        ],
+        clarificationAvoid: [
+          ["Do not pretend execution exists", "The UI should not imply that live-app capture is already a runnable backend capability."],
+          ["Do not hide dependency risk", "The missing driver should be explicit in the draft plan before confirmation."]
+        ],
+        planIdentity: "draft_plan_20260627_live_03 / workspace ws_hk_ops",
+        executionReadiness: "blocked by missing live-app execution capability and unresolved fallback choice",
+        proposedRun: "prototype_validation targeting live interface, pending fallback or future live-app driver",
+        humanGap: "observed task evidence requires future browser/live-app capture before the plan becomes executable as requested",
+        railMode: "prototype_validation (live-app target)",
+        railMissing: "fallback choice, task framing, backend dependency resolution",
+        railOutputs: "fallback review plan or deferred live-app validation request",
+        railEvidence: "Make the desired evidence target explicit, but do not claim the current system can capture it yet.",
+        railBackend: "This request exceeds the current validation-job runtime and should stay as a draft plan or downgrade into a supported screenshot/flow path.",
+        contractJson: `{
+  "draft_plan_id": "draft_plan_20260627_live_03",
+  "workspace_id": "ws_hk_ops",
+  "research_question": "Where do operators get lost in the staging admin flow, and do they continue after the first task?",
+  "artifact_refs": [
+    {"type": "live_url", "path": "staging-url.txt"},
+    {"type": "task_list", "path": "tasks/task-list.md"}
+  ],
+  "inference": {
+    "primary_mode": "prototype_validation",
+    "secondary_lenses": ["live_app_expansion_dependency"],
+    "confidence": "medium"
+  },
+  "clarifications": [
+    {"id": "fallback_mode", "status": "open"},
+    {"id": "task_framing", "status": "open"}
+  ],
+  "proposed_run": {
+    "panel_type": "mainstream",
+    "sample_size": 5,
+    "stimulus_type": "live_url",
+    "execution_status": "blocked_by_backend_gap"
+  },
+  "evidence_boundary": {
+    "target_evidence": ["observed_action_trace", "action_grounded_synthesis"],
+    "current_limit": "live_app_capture_not_available"
+  },
+  "confirmation": {
+    "status": "draft",
+    "required": true,
+    "blocking_reason": "missing_live_app_driver"
+  }
+}`
+      }
+    };
+
+    const scenarioButtons = Array.from(document.querySelectorAll("[data-scenario]"));
+    const artifactTags = document.getElementById("artifact-tags");
+    const scenarioCopy = document.getElementById("scenario-copy");
+    const scenarioPill = document.getElementById("scenario-pill");
+    const intentText = document.getElementById("intent-text");
+    const primaryMode = document.getElementById("primary-mode");
+    const secondaryLens = document.getElementById("secondary-lens");
+    const evidenceMaturity = document.getElementById("evidence-maturity");
+    const inferenceRules = document.getElementById("inference-rules");
+    const clarificationNeeded = document.getElementById("clarification-needed");
+    const clarificationAvoid = document.getElementById("clarification-avoid");
+    const planIdentity = document.getElementById("plan-identity");
+    const executionReadiness = document.getElementById("execution-readiness");
+    const proposedRun = document.getElementById("proposed-run");
+    const humanGap = document.getElementById("human-gap");
+    const contractJson = document.getElementById("contract-json");
+    const railMode = document.getElementById("rail-mode");
+    const railMissing = document.getElementById("rail-missing");
+    const railOutputs = document.getElementById("rail-outputs");
+    const railEvidence = document.getElementById("rail-evidence");
+    const railBackend = document.getElementById("rail-backend");
+
+    function renderRuleCards(node, items) {
+      node.innerHTML = "";
+      items.forEach(([title, body]) => {
+        const card = document.createElement("div");
+        card.className = "rule-card";
+        card.innerHTML = `<strong>${title}</strong><p>${body}</p>`;
+        node.appendChild(card);
+      });
+    }
+
+    function renderTags(items) {
+      artifactTags.innerHTML = "";
+      items.forEach((label) => {
+        const tag = document.createElement("div");
+        tag.className = "tag accent";
+        tag.textContent = label;
+        artifactTags.appendChild(tag);
+      });
+    }
+
+    function setScenario(key) {
+      const content = scenarioContent[key];
+      scenarioButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.scenario === key);
+      });
+      scenarioCopy.textContent = content.copy;
+      scenarioPill.textContent = content.pill;
+      scenarioPill.className = key === "live_flow" ? "status-pill failed" : "status-pill running";
+      intentText.textContent = content.intent;
+      renderTags(content.artifacts);
+      primaryMode.textContent = content.primaryMode;
+      secondaryLens.textContent = content.secondaryLens;
+      evidenceMaturity.textContent = content.evidenceMaturity;
+      renderRuleCards(inferenceRules, content.inferenceRules);
+      renderRuleCards(clarificationNeeded, content.clarificationNeeded);
+      renderRuleCards(clarificationAvoid, content.clarificationAvoid);
+      planIdentity.textContent = content.planIdentity;
+      executionReadiness.textContent = content.executionReadiness;
+      proposedRun.textContent = content.proposedRun;
+      humanGap.textContent = content.humanGap;
+      contractJson.textContent = content.contractJson;
+      railMode.textContent = content.railMode;
+      railMissing.textContent = content.railMissing;
+      railOutputs.textContent = content.railOutputs;
+      railEvidence.textContent = content.railEvidence;
+      railBackend.textContent = content.railBackend;
+    }
+
+    scenarioButtons.forEach((button) => {
+      button.addEventListener("click", () => setScenario(button.dataset.scenario));
+    });
+  </script>
+</body>
+</html>
