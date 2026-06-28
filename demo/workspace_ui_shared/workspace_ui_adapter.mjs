@@ -2,6 +2,39 @@ function compactStrings(values) {
   return [...new Set((values || []).filter((value) => typeof value === "string" && value.trim().length > 0))];
 }
 
+function normalizeSampleSize(value, fallback = 5) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return fallback;
+  }
+  const rounded = Math.max(1, Math.round(numeric));
+  return rounded;
+}
+
+function normalizeModeOverride(value) {
+  const normalized = String(value || "").trim();
+  return normalized && normalized !== "auto" ? normalized : null;
+}
+
+function normalizePersonaFilters(filters = {}) {
+  const nextFilters = {};
+  Object.entries(filters || {}).forEach(([key, value]) => {
+    const normalized = String(value || "").trim();
+    if (normalized) {
+      nextFilters[key] = normalized;
+    }
+  });
+  return nextFilters;
+}
+
+function summarizePersonaFilters(filters = {}) {
+  const entries = Object.entries(normalizePersonaFilters(filters));
+  if (!entries.length) {
+    return "none";
+  }
+  return entries.map(([key, value]) => `${key}=${value}`).join(", ");
+}
+
 function inferRunState(draftPlan) {
   const executionStatus = draftPlan?.proposed_run?.execution_status;
   const draftStatus = draftPlan?.status;
@@ -191,9 +224,15 @@ export function deriveWorkspaceUiState({
 export function createStage7DemoState() {
   return {
     hasScreenshots: false,
+    attachedArtifacts: [],
     firstTask: null,
     fallbackChosen: false,
     savedBlocked: false,
+    panelType: "mainstream",
+    sampleSize: 5,
+    providerName: "mock",
+    modeOverride: null,
+    personaFilters: {},
     queueConfirmed: false,
     events: [{ type: "reset", at: "21:46" }]
   };
@@ -313,6 +352,9 @@ export function deriveStage7DemoBundle({
   copy,
   localUiState = {}
 }) {
+  const attachedArtifacts = Array.isArray(demoState.attachedArtifacts)
+    ? demoState.attachedArtifacts.filter((value) => String(value || "").trim().length > 0)
+    : [];
   const conversationState = {
     workspace_id: "ws_hk_ops",
     thread_id: "thread_workspace_new_study",
@@ -320,7 +362,9 @@ export function deriveStage7DemoBundle({
     artifact_refs: compactStrings([
       "founder-brief.json",
       "homepage-copy.md",
-      demoState.hasScreenshots ? "onboarding-screens.zip" : null
+      ...(demoState.hasScreenshots
+        ? (attachedArtifacts.length ? attachedArtifacts : ["onboarding-screens.zip"])
+        : [])
     ]),
     clarification_answers: demoState.firstTask ? { first_task_name: demoState.firstTask } : {},
     selected_fallback: demoState.fallbackChosen ? "concept_evaluation" : null
@@ -329,7 +373,12 @@ export function deriveStage7DemoBundle({
   const queueableFallback = demoState.fallbackChosen && !demoState.queueConfirmed;
   const queueablePrototype = demoState.hasScreenshots && Boolean(demoState.firstTask) && !demoState.queueConfirmed;
 
-  const primaryMode = queueableFallback ? "concept_evaluation" : "prototype_validation";
+  const modeOverride = normalizeModeOverride(demoState.modeOverride);
+  const panelType = String(demoState.panelType || "").trim() || "mainstream";
+  const sampleSize = normalizeSampleSize(demoState.sampleSize, 5);
+  const providerName = String(demoState.providerName || "").trim() || "mock";
+  const personaFilters = normalizePersonaFilters(demoState.personaFilters);
+  const primaryMode = modeOverride || (queueableFallback ? "concept_evaluation" : "prototype_validation");
   const executionStatus = demoState.queueConfirmed
     ? "queued"
     : queueableFallback
@@ -405,7 +454,7 @@ export function deriveStage7DemoBundle({
   };
 
   const draftPlan = {
-    draft_plan_id: "draft_plan_20260627_proto_07",
+    draft_plan_id: demoState.draftPlanId || "draft_plan_20260627_proto_07",
     status: demoState.queueConfirmed
       ? "confirmed"
       : queueableFallback || queueablePrototype
@@ -423,6 +472,11 @@ export function deriveStage7DemoBundle({
     proposed_run: {
       primary_mode: primaryMode,
       first_task: demoState.firstTask,
+      mode_override: modeOverride,
+      panel_type: panelType,
+      sample_size: sampleSize,
+      provider_name: providerName,
+      persona_filters: personaFilters,
       execution_status: executionStatus
     },
     evidence_boundary: {
@@ -433,6 +487,24 @@ export function deriveStage7DemoBundle({
         : queueablePrototype
           ? "This path is queueable for prototype-oriented interpretation, but it still does not claim real observed user behavior."
           : "Prototype evidence still needs stronger artifacts before the workspace should claim task-friction signal."
+    },
+    advanced_controls: {
+      mode_override_available: true,
+      persona_filters_available: true,
+      provider_override_available: true,
+      selected_overrides: {
+        mode_override: modeOverride,
+        panel_type: panelType,
+        sample_size: sampleSize,
+        provider_name: providerName,
+        persona_filters: personaFilters
+      },
+      summary: {
+        mode: modeOverride || "auto",
+        panel: `${panelType}:${sampleSize}`,
+        filters: summarizePersonaFilters(personaFilters),
+        provider: providerName
+      }
     },
     remediation,
     confirmation: {
@@ -447,7 +519,9 @@ export function deriveStage7DemoBundle({
     audit: {
       inferred_by: "workspace_ui_stage7_demo",
       contract_version: "workspace-research-plan/v0-draft",
-      saved_for_later: remediation.saved_for_later
+      saved_for_later: remediation.saved_for_later,
+      submission_key: demoState.submissionKey || null,
+      confirmed_at: demoState.confirmedAt || null
     }
   };
 
@@ -1061,6 +1135,15 @@ function buildWorkspaceConversationFeed({ shellState, bundle }) {
     });
   }
 
+  if (bundle.draft.advanced_controls?.summary) {
+    const summary = bundle.draft.advanced_controls.summary;
+    feed.push({
+      speaker: "system",
+      title: "Advanced study controls",
+      body: `Mode override: ${summary.mode}. Panel: ${summary.panel}. Filters: ${summary.filters}. Provider: ${summary.provider}.`
+    });
+  }
+
   if (bundle.run_monitor.status === "queued") {
     feed.push({
       speaker: "system",
@@ -1178,10 +1261,18 @@ function deriveWorkspaceShellState({ bundle }) {
 
 export function createStage11WorkspaceShellDemoState() {
   return {
+    researchIntent: "Where do new operators hesitate during onboarding, and do they continue after the first task?",
+    desiredOutcome: "task-friction and continuation risk",
     hasScreenshots: false,
+    attachedArtifacts: [],
     firstTask: null,
     fallbackChosen: false,
     savedBlocked: false,
+    panelType: "mainstream",
+    sampleSize: 5,
+    providerName: "mock",
+    modeOverride: null,
+    personaFilters: {},
     lifecycle: "ready_to_queue",
     attemptCount: 0,
     failureReason: null,
@@ -1203,10 +1294,19 @@ export function deriveStage11WorkspaceShellBundle({
 }) {
   const baseBundle = deriveStage7DemoBundle({
     demoState: {
+      draftPlanId: shellState.draftPlanId,
+      submissionKey: shellState.submissionKey,
+      confirmedAt: shellState.confirmedAt,
       hasScreenshots: Boolean(shellState.hasScreenshots),
+      attachedArtifacts: shellState.attachedArtifacts || [],
       firstTask: shellState.firstTask,
       fallbackChosen: Boolean(shellState.fallbackChosen),
       savedBlocked: Boolean(shellState.savedBlocked),
+      panelType: shellState.panelType,
+      sampleSize: shellState.sampleSize,
+      providerName: shellState.providerName,
+      modeOverride: shellState.modeOverride,
+      personaFilters: shellState.personaFilters,
       queueConfirmed: shellState.lifecycle !== "ready_to_queue",
       events: shellState.events || []
     },

@@ -47,6 +47,22 @@ What it proves:
 - shared runtime sync can keep session, selected job, and completed-run evidence query aligned from one heartbeat layer
 - replay remains limited unless the run artifacts actually contain trace-linked steps
 
+### Stage 14
+
+URL:
+
+- `http://127.0.0.1:4173/demo/workspace_ui_moss_stage14/index.html`
+
+Purpose:
+
+- verify the backend-driven workspace shell can hydrate session, selected job, and evidence-query focus through one `workspace-shell` snapshot contract
+
+What it proves:
+
+- the current product-facing shell can refresh from one backend snapshot path instead of stitching state together in the page
+- selected evidence and replay focus can stay aligned through the same live snapshot flow
+- the engineering demo now defaults to the latest shell surface instead of the older contract-debug page
+
 ## Fast start
 
 Double-click:
@@ -59,9 +75,9 @@ That helper will:
 2. copy `data/briefs/sample_brief.json` into the workspace as `briefs/brief.json`
 3. copy `data/personas/` into the workspace
 4. start the static server on `4173` if needed
-5. restart the SaaS API on `8011` so the demo uses the current repo code
+5. restart the SaaS API on `8011`, wait for `GET /api/v1/session` to respond, and make sure the demo uses the current repo code
 6. restart the worker loop so queued jobs use the current repo code
-7. open the Stage 12 page
+7. open the Stage 14 page by default
 
 Default live-mode values:
 
@@ -75,22 +91,24 @@ Default live-mode values:
 If you only want one short pass, use this sequence:
 
 1. double-click `scripts/start_stage12_demo.bat`
-2. wait until the browser opens Stage 12
-3. click `confirmed draft`
-4. click `load workspace session`
-5. click `submit live job`
-6. click `list live jobs`
-7. select the newest job card
-8. click `load selected live job`
-9. if the job becomes `completed`, click `load live evidence query`
+2. wait until the browser opens Stage 14
+3. keep or edit the research intent, desired output, and first-task anchor in the intake panel
+4. click `attach screenshots`
+5. click `confirm plan` once queueability becomes `ready for confirmation`
+6. click `submit live job`
+7. click `load shell snapshot`
+8. if needed, click `start auto refresh`
+9. once the newest job becomes `completed`, click the run card again or change one evidence query control
+10. click one evidence result card
+11. if replay steps are visible, click one replay step
 
 Expected result:
 
-- `Last API response` can move across `session`, `job`, `jobs`, and `evidence-query` payloads as you test the shell
-- the session card shows workspace, role, plan tier, billing status, and plan limits after `load workspace session`
+- the shell snapshot loads a real workspace session, selected job, and evidence-query payload through one backend response
 - `Selected job` becomes a real job id
 - `Shell surface` moves out of the blocked intake state
-- `Evidence review` shows `query source = backend evidence endpoint` after the final step
+- `Evidence review` shows `query source = backend evidence endpoint`
+- selected evidence detail and replay focus stay aligned after snapshot refresh
 - `Bridge gap` stays explicit about synthetic evidence and replay limits rather than pretending the system is production-complete
 
 ## Test pass 1: Stage 11 local shell flow

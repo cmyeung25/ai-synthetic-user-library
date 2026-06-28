@@ -48,7 +48,7 @@ Optional live mode:
 
 Fast local helper:
 
-- double-click `scripts/start_stage12_demo.bat` to bootstrap `ws_api_demo`, sync sample brief and personas, start the static server, restart the SaaS API and worker loop against the current repo code, and open the Stage 12 page with the default demo token
+- double-click `scripts/start_stage12_demo.bat` to bootstrap `ws_api_demo`, sync sample brief and personas, start the static server, restart the SaaS API and worker loop against the current repo code, wait for the authenticated session endpoint to respond, and open the Stage 14 page with the default demo token
 - follow `demo/workspace_ui_moss_stage12/TESTING_GUIDE.md` for a structured manual test pass over Stage 11 and Stage 12, including a short smoke test, live-mode checks, and direct API sanity checks
 - follow `demo/workspace_ui_moss_stage12/ENGINEERING_DEMO_TESTING_ZH.md` if you want the same testing flow in Chinese
 

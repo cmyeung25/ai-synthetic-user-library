@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable, TypeVar
+import uuid
 
 from ai_validation_swarm.domain.models import (
     AuditFinding,
@@ -26,6 +27,11 @@ from ai_validation_swarm.storage.files import ensure_dir, load_personas, write_j
 PROTOCOL_ID = "problem_validation/v1"
 PROMPT_VERSION = "persona-response/v1, skeptic-review/v1, sensitive-audit/v1, report-writer/v1"
 T = TypeVar("T")
+
+
+def _new_run_id() -> str:
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S_%f")
+    return f"run_{timestamp}_{uuid.uuid4().hex[:8]}"
 
 
 def _make_error_record(*, stage_name: str, attempt: int, exc: Exception, persona_id: str | None = None) -> dict[str, object]:
@@ -245,7 +251,7 @@ def run_validation(
     if not personas:
         raise ValueError("No personas found. Generate personas before running validation.")
 
-    run_id = datetime.now(UTC).strftime("run_%Y%m%d_%H%M%S")
+    run_id = _new_run_id()
     run_dir = run_root / run_id
     ensure_dir(run_dir)
     started_at = utc_now_iso()

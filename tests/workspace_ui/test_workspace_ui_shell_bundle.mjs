@@ -53,6 +53,38 @@ test("deriveStage11WorkspaceShellBundle moves into confirmation when prototype i
   assert.deepEqual(bundle.adapter.visible_waiting_for, ["final_confirmation"]);
 });
 
+test("deriveStage11WorkspaceShellBundle keeps advanced study controls behind the same confirmation flow", () => {
+  const state = createStage11WorkspaceShellDemoState();
+  state.hasScreenshots = true;
+  state.firstTask = "connect data";
+  state.modeOverride = "concept_validation";
+  state.panelType = "skeptic";
+  state.sampleSize = 3;
+  state.providerName = "codex";
+  state.personaFilters = {
+    location_type: "urban_core",
+    privacy_concern: "high"
+  };
+
+  const bundle = deriveStage11WorkspaceShellBundle({
+    shellState: state,
+    copy: makeCopy(),
+    localUiState: { locale: "en", active_panel: "workspace_shell" }
+  });
+
+  assert.equal(bundle.adapter.ui_phase, "ready_for_confirmation");
+  assert.equal(bundle.draft.inference.primary_mode, "concept_validation");
+  assert.equal(bundle.draft.proposed_run.panel_type, "skeptic");
+  assert.equal(bundle.draft.proposed_run.sample_size, 3);
+  assert.equal(bundle.draft.proposed_run.provider_name, "codex");
+  assert.deepEqual(bundle.draft.proposed_run.persona_filters, {
+    location_type: "urban_core",
+    privacy_concern: "high"
+  });
+  assert.equal(bundle.draft.advanced_controls.summary.filters, "location_type=urban_core, privacy_concern=high");
+  assert.equal(bundle.workspace_shell.conversation_feed[2].title, "Advanced study controls");
+});
+
 test("deriveStage11WorkspaceShellBundle unlocks evidence query after completion", () => {
   const state = createStage11WorkspaceShellDemoState();
   state.hasScreenshots = true;

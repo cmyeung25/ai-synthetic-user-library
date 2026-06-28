@@ -577,6 +577,7 @@ body {
 .summary-card,
 .decision-band,
 .output-card {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.018);
@@ -594,6 +595,7 @@ body {
 .summary-list {
   display: grid;
   gap: 10px;
+  min-width: 0;
 }
 
 .summary-row {
@@ -601,6 +603,7 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
+  min-width: 0;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
 }
@@ -611,15 +614,20 @@ body {
 }
 
 .summary-row strong {
+  min-width: 0;
   font-size: 13px;
   font-weight: 600;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 
 .summary-row span {
+  min-width: 0;
   color: var(--muted);
-  text-align: right;
+  text-align: left;
   font-size: 13px;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .decision-band.ready {

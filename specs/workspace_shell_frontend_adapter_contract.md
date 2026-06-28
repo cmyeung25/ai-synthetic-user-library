@@ -165,6 +165,11 @@ Example:
   "metrics": {
     "bridge_status": "job_loaded",
     "submission_ready": true,
+    "selected_project_id": "project_123",
+    "selected_study_id": "study_123",
+    "selected_export_bundle_id": "export_123",
+    "selected_share_bundle_id": "share_123",
+    "selected_support_snapshot_id": "support_123",
     "selected_job_id": "job_20260627_abcdef12",
     "shell_surface": "run_monitor"
   },
@@ -182,11 +187,56 @@ Example:
     "use_sample_jobs": { "intent": "switch_to_sample_jobs", "enabled": true }
   },
   "request_summary": [
-    { "id": "brief_path", "label": "brief_path", "value": "briefs/brief.json" }
+    { "id": "brief_path", "label": "brief_path", "value": "briefs/brief.json" },
+    { "id": "filters", "label": "filters", "value": "none" },
+    { "id": "provider_name", "label": "provider_name", "value": "mock" }
   ],
   "draft_summary": [
-    { "id": "mode", "label": "mode", "value": "prototype_validation" }
+    { "id": "mode", "label": "mode", "value": "prototype_validation" },
+    { "id": "mode_override", "label": "mode override", "value": "auto" },
+    { "id": "persona_filters", "label": "persona filters", "value": "none" }
   ],
+  "product_surface": {
+    "projects": [
+      { "project_id": "project_123", "title": "Inbox Coach Launch", "selected": true }
+    ],
+    "studies": [
+      { "study_id": "study_123", "title": "Onboarding hesitation study", "selected": true }
+    ],
+    "export_bundles": [
+      { "export_bundle_id": "export_123", "title": "Exec review export", "selected": true }
+    ],
+    "share_bundles": [
+      { "share_bundle_id": "share_123", "title": "Board review share", "selected": true }
+    ],
+    "support_snapshots": [
+      { "support_snapshot_id": "support_123", "title": "Provider failure handoff", "selected": true }
+    ]
+  },
+  "support_surface": {
+    "submission_gate_summary": [
+      { "id": "submission_gate_status", "label": "submission gate", "value": "blocked" }
+    ],
+    "blocked_reasons": [
+      {
+        "code": "concurrency_limit_reached",
+        "message": "Workspace reached the max concurrent job limit (1).",
+        "next_action": "Wait for an in-flight run to finish or move to a higher plan limit."
+      }
+    ],
+    "job_diagnostic_summary": [
+      { "id": "job_status", "label": "job status", "value": "failed" },
+      { "id": "failure_category", "label": "failure category", "value": "provider_configuration" }
+    ],
+    "job_diagnostic_cards": [
+      {
+        "id": "job_support_summary",
+        "title": "provider_configuration",
+        "body": "Unknown provider: unknown-provider",
+        "tone": "active"
+      }
+    ]
+  },
   "review_surface": {
     "query_status": "query_ready",
     "query_source": "backend",
@@ -213,8 +263,76 @@ Example:
         "tone": "active"
       }
     ],
+    "evidence_coverage_cards": [
+      {
+        "id": "coverage_trace",
+        "title": "Trace evidence",
+        "body": "1 item in backend snapshot | active filter.",
+        "active": true
+      }
+    ],
+    "replay_focus_summary": [
+      { "id": "replay_step", "label": "replay step", "value": "su_0002 response" }
+    ],
+    "replay_focus_detail": [
+      {
+        "id": "replay_focus",
+        "title": "su_0002 response",
+        "body": "Objection: procurement review. Try signal: clearer onboarding evidence.",
+        "tone": "active"
+      }
+    ],
     "replay_steps": [],
-    "replay_note": "No replay-linked steps are available for the current selection."
+    "selected_comparison_run_id": "run_20260628_102100",
+    "cross_run_summary": [
+      { "id": "comparison_run_count", "label": "comparison runs", "value": 1 },
+      { "id": "selected_comparison_run", "label": "selected comparison run", "value": "run_20260628_102100" }
+    ],
+    "cross_run_detail": [
+      {
+        "id": "cross_run_summary",
+        "title": "run_20260628_102100",
+        "body": "Compare same-kind artifacts across runs to check whether the same signal repeats under the same evidence surface.",
+        "tone": "active"
+      }
+    ],
+    "cross_run_candidates": [
+      {
+        "run_id": "run_20260628_102100",
+        "job_id": "job_007",
+        "title": "Raw responses",
+        "run_kind": "validation_run",
+        "status": "completed",
+        "relation_note": "same brief",
+        "result_count": 2,
+        "replay_result_count": 1,
+        "selected": true
+      }
+    ],
+    "cross_run_result_cards": [
+      {
+        "id": "query-cross-run-raw_responses",
+        "title": "Raw responses",
+        "family": "trace",
+        "kind": "raw_responses",
+        "summary": "Persona-level raw response payloads.",
+        "recommended": true
+      }
+    ],
+    "cross_run_note": "1 comparable completed run is available for cross-run review.",
+    "related_results": [
+      {
+        "id": "query-stage_results",
+        "title": "Stage results",
+        "family": "trace",
+        "kind": "stage_results",
+        "summary": "Execution-stage status summary.",
+        "relation_note": "same family with replay context",
+        "selected": false
+      }
+    ],
+    "related_results_note": "Use same-family evidence to check whether the same signal repeats across nearby artifacts.",
+    "replay_note": "2 replay step(s) are linked to the selected evidence. Current focus: response 2."
   },
   "bridge_gap": "The validation-job API and backend evidence query can now both be attached, but replay still depends on trace-linked artifacts and a fuller backend-driven review surface.",
   "stage_strip": [
@@ -239,6 +357,7 @@ Use for top-line status only:
 
 - bridge status
 - submission readiness
+- selected project, study, export, share, and support ids
 - selected job id
 - active shell surface
 
@@ -272,6 +391,40 @@ Each row should expose:
 - `label`
 - `value`
 
+### `product_surface`
+
+This field is the stable render contract for Milestone 11 product objects around the research shell.
+
+It may now carry:
+
+- `projects`
+- `studies`
+- `export_bundles`
+- `share_bundles`
+- `support_snapshots`
+- `selected_project_summary`
+- `selected_study_summary`
+- `selected_export_bundle_summary`
+- `selected_share_bundle_summary`
+- `selected_support_snapshot_summary`
+
+The adapter should preserve synthetic-boundary language inside the selected export summary instead of stripping it out as page copy.
+The same rule applies to the selected share summary.
+The same rule also applies to selected support snapshots: the adapter should preserve the current diagnostic summary instead of forcing the page to rediscover it from raw snapshot payloads.
+
+### `support_surface`
+
+This field is the stable render contract for the visible operator-support area.
+
+It should carry:
+
+- submission-gate summary rows
+- blocked-reason objects
+- job-diagnostic summary rows
+- support action/detail cards
+
+The page should not rebuild support-language explanations from raw error strings in many places.
+
 ### `bridge_gap`
 
 This field keeps the remaining backend boundary explicit.
@@ -291,10 +444,19 @@ It should carry:
 - effective query status
 - effective query source
 - selected result and replay ids
+- selected comparison run id
 - visible result cards
+- evidence coverage cards
 - selected evidence summary rows
 - selected evidence detail cards
+- replay-focus summary rows
+- replay-focus detail cards
 - replay-step cards
+- cross-run comparison summary rows
+- cross-run comparison detail cards
+- selectable comparison-run cards
+- comparison-run artifact cards
+- related evidence comparison cards
 - empty or boundary notes
 
 ### `stage_strip`
@@ -327,6 +489,8 @@ When a selected live job exists, the shell-facing summaries should reflect the j
 ### Rule 4: review rendering should consume one effective query state
 
 The page should not rebuild result cards, selected evidence summaries, and replay notes from raw backend payloads in many places. It should consume the adapter's one effective review surface whether the source is local projection or backend query.
+
+When backend `comparison_context`, `replay_context`, or `cross_run_comparison` exists, the adapter should prefer those backend notes and ranking decisions over page-local fallback heuristics.
 
 ### Rule 5: the remaining review boundary stays visible
 

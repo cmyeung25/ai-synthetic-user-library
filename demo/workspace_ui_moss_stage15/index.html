@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace UI Moss Stage 15</title>
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-ui-base.css">
+  <link rel="stylesheet" href="../workspace_ui_design_system/workspace-theme-moss.css">
+  <style>
+    .stage15-shell {
+      display: grid;
+      gap: 20px;
+    }
+
+    .stage15-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .stage15-column {
+      display: grid;
+      gap: 20px;
+      align-content: start;
+      min-width: 0;
+    }
+
+    .product-stack {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .product-card {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+        rgba(9, 16, 14, 0.72);
+      padding: 14px 15px;
+      text-align: left;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(196, 214, 185, 0.36);
+    }
+
+    .product-card.active {
+      border-color: rgba(196, 214, 185, 0.68);
+      background:
+        linear-gradient(180deg, rgba(205, 223, 194, 0.12), rgba(255, 255, 255, 0.02)),
+        rgba(13, 23, 20, 0.88);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .product-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .product-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .product-card p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .product-empty {
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .product-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .signal-band {
+      border: 1px solid rgba(196, 214, 185, 0.18);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background:
+        radial-gradient(circle at top left, rgba(205, 223, 194, 0.14), transparent 44%),
+        rgba(10, 18, 16, 0.84);
+    }
+
+    .signal-band strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .signal-band p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbar .action-button[disabled] {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+
+    .muted-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .detail-stack {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .detail-card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 13px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .detail-card.active {
+      border-color: rgba(196, 214, 185, 0.46);
+      background: rgba(205, 223, 194, 0.08);
+    }
+
+    .detail-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-card span {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    pre.debug-panel {
+      margin: 0;
+      max-height: 280px;
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(4, 8, 7, 0.84);
+      padding: 14px;
+      color: #d9dfd4;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1080px) {
+      .stage15-grid,
+      .split-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="eyebrow">Stage 15 Product Surface</div>
+        <h1>Moss Workspace</h1>
+        <p>This stage turns the shell into a study-first product surface. Project and study objects are now the visible operating layer above the runtime, without dropping the conversational intake and evidence-review path.</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Milestone 11</div>
+        <div class="nav-item active">Project + Study Surface</div>
+        <div class="nav-item">Run Timeline</div>
+        <div class="nav-item">Evidence Review</div>
+        <div class="nav-item">Support Surface</div>
+        <div class="nav-item">Workspace Settings</div>
+        <div class="nav-item">Workspace Runtime</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Linked Artifacts</div>
+        <div class="nav-note">
+          <a href="../workspace_ui_moss_stage14/index.html">Stage 14 snapshot shell</a><br>
+          <a href="../workspace_ui_shared/workspace_shell_app.mjs">Shared shell controller</a><br>
+          <a href="../../specs/milestone_11_full_saas_product_surface_design_spec.md">Milestone 11 design spec</a><br>
+          <a href="../../specs/workspace_project_study_contract.md">Project / study contract</a><br>
+          <a href="../../specs/workspace_study_activity_surface_contract.md">Study activity contract</a><br>
+          <a href="../../specs/workspace_support_surface_contract.md">Support surface contract</a><br>
+          <a href="../../specs/workspace_settings_surface_contract.md">Workspace settings contract</a><br>
+          <a href="../../specs/workspace_billing_quota_surface_contract.md">Billing / quota contract</a><br>
+          <a href="../../specs/workspace_shell_snapshot_contract.md">Workspace shell snapshot contract</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Why This Surface</div>
+        <div class="nav-note">The research bottleneck is no longer raw run execution. It is the lack of a durable user-facing layer that organizes studies, keeps evidence contextualized, and lets a team operate research work without filesystem inspection.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="stage15-shell">
+        <header class="main-header">
+          <div>
+            <div class="eyebrow">Study-First Hosted Shell Direction</div>
+            <h2>Project and study operations on top of the workspace runtime</h2>
+            <p>The selected study is now the durable home for intake, run submission, snapshot sync, and evidence review. Projects orient the work. Runs remain operational records inside that study context.</p>
+          </div>
+          <div class="top-metrics">
+            <div class="metric">
+              <span>Project</span>
+              <strong id="metric-project">-</strong>
+            </div>
+            <div class="metric">
+              <span>Study</span>
+              <strong id="metric-study">-</strong>
+            </div>
+            <div class="metric">
+              <span>Shell</span>
+              <strong id="metric-shell">conversation_intake</strong>
+            </div>
+            <div class="metric">
+              <span>Run</span>
+              <strong id="metric-run">-</strong>
+            </div>
+          </div>
+        </header>
+
+        <div class="stage15-grid">
+          <div class="stage15-column">
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Workspace connection</h3>
+                  <p class="section-copy">Session, project, and study hydration stay backend-owned. The same workspace token gates everything below.</p>
+                </div>
+                <div class="status-bar">
+                  <div class="status-pill queued" id="session-pill">missing_token</div>
+                  <div class="status-pill queued" id="runtime-pill">idle</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="api-base-url">API base URL</label>
+                    <input id="api-base-url" type="text" value="http://127.0.0.1:8011">
+                  </div>
+                  <div class="field">
+                    <label for="api-token">Bearer token</label>
+                    <input id="api-token" type="text" value="token-api">
+                  </div>
+                  <div class="field">
+                    <label for="brief-path">brief_path</label>
+                    <input id="brief-path" type="text" value="briefs/brief.json">
+                  </div>
+                  <div class="field">
+                    <label for="persona-dir">persona_dir</label>
+                    <input id="persona-dir" type="text" value="personas">
+                  </div>
+                </div>
+                <div class="toolbar">
+                  <button class="action-button" id="refresh-workspace">refresh workspace</button>
+                  <button class="action-button" id="load-session">load session</button>
+                  <button class="action-button" id="load-shell">load study shell</button>
+                  <button class="action-button" id="toggle-auto-refresh">start auto refresh</button>
+                </div>
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <strong>Session summary</strong>
+                    <div class="summary-list" id="session-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Workspace limits</strong>
+                    <div class="summary-list" id="limit-summary"></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Workspace settings</h3>
+                  <p class="section-copy">Governance stays secondary to the study workflow, but this product layer still needs visible membership, quota, retention, and API access controls.</p>
+                </div>
+                <div class="status-bar">
+                  <div class="status-pill queued" id="settings-pill">settings_unloaded</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Membership + policy</div>
+                    <div class="toolbar">
+                      <button class="action-button" id="load-workspace-settings" type="button">load settings</button>
+                      <button class="action-button" id="load-audit-events" type="button">load audit history</button>
+                      <button class="action-button primary" id="upsert-workspace-member" type="button">upsert member</button>
+                    </div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="member-user-id">Member user_id</label>
+                        <input id="member-user-id" type="text" placeholder="researcher_001">
+                      </div>
+                      <div class="field">
+                        <label for="member-role">Role</label>
+                        <select id="member-role">
+                          <option value="editor">editor</option>
+                          <option value="viewer">viewer</option>
+                          <option value="admin">admin</option>
+                          <option value="billing_admin">billing_admin</option>
+                          <option value="owner">owner</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="summary-grid">
+                      <div class="summary-card">
+                        <strong>Workspace</strong>
+                        <div class="summary-list" id="workspace-settings-summary"></div>
+                      </div>
+                      <div class="summary-card">
+                        <strong>Billing + limits</strong>
+                        <div class="summary-list" id="workspace-billing-summary"></div>
+                      </div>
+                    </div>
+                    <div class="summary-card">
+                      <strong>Policy</strong>
+                      <div class="summary-list" id="workspace-policy-summary"></div>
+                    </div>
+                    <div class="summary-card">
+                      <strong>Members</strong>
+                      <div class="product-stack" id="workspace-member-list"></div>
+                    </div>
+                    <div class="summary-card">
+                      <strong>Audit history</strong>
+                      <div class="summary-list" id="workspace-audit-summary"></div>
+                    </div>
+                  </div>
+
+                  <div class="draft-panel">
+                    <div class="inline-label">Billing + token administration</div>
+                    <div class="toolbar">
+                      <button class="action-button" id="update-workspace-billing" type="button">update billing</button>
+                      <button class="action-button primary" id="issue-api-token" type="button">issue token</button>
+                    </div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="audit-target-type">Audit target_type</label>
+                        <input id="audit-target-type" type="text" placeholder="api_token">
+                      </div>
+                      <div class="field">
+                        <label for="audit-action-prefix">Audit action_prefix</label>
+                        <input id="audit-action-prefix" type="text" placeholder="workspace_">
+                      </div>
+                      <div class="field">
+                        <label for="audit-limit">Audit limit</label>
+                        <input id="audit-limit" type="number" min="1" max="100" step="1" value="20">
+                      </div>
+                      <div class="field">
+                        <label for="billing-plan-tier">Plan tier</label>
+                        <select id="billing-plan-tier">
+                          <option value="trial">trial</option>
+                          <option value="pro">pro</option>
+                          <option value="enterprise">enterprise</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="billing-status">Billing status</label>
+                        <select id="billing-status">
+                          <option value="trialing">trialing</option>
+                          <option value="active">active</option>
+                          <option value="past_due">past_due</option>
+                          <option value="canceled">canceled</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="billing-seat-count">Seat count</label>
+                        <input id="billing-seat-count" type="number" min="1" step="1" value="1">
+                      </div>
+                      <div class="field">
+                        <label for="billing-renewal-at">Renewal at</label>
+                        <input id="billing-renewal-at" type="text" placeholder="2026-07-31T00:00:00+00:00">
+                      </div>
+                      <div class="field">
+                        <label for="quota-daily-runs">Daily runs</label>
+                        <input id="quota-daily-runs" type="number" min="0" step="1" value="3">
+                      </div>
+                      <div class="field">
+                        <label for="quota-concurrent-jobs">Concurrent jobs</label>
+                        <input id="quota-concurrent-jobs" type="number" min="0" step="1" value="1">
+                      </div>
+                      <div class="field">
+                        <label for="quota-retention-days">Retention days</label>
+                        <input id="quota-retention-days" type="number" min="0" step="1" value="7">
+                      </div>
+                    </div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="token-user-id">Token user_id</label>
+                        <input id="token-user-id" type="text" placeholder="researcher_001">
+                      </div>
+                    </div>
+                    <p class="muted-note">Existing tokens stay masked. A full token value is only shown at the moment it is issued in this shell session.</p>
+                    <div class="summary-card">
+                      <strong>Last issued token</strong>
+                      <div class="summary-list" id="last-issued-token-summary"></div>
+                    </div>
+                    <div class="summary-card">
+                      <strong>API tokens</strong>
+                      <div class="product-stack" id="workspace-token-list"></div>
+                    </div>
+                    <div class="summary-card">
+                      <strong>Audit events</strong>
+                      <div class="product-stack" id="workspace-audit-list"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Projects</h3>
+                  <p class="section-copy">Projects are long-lived research areas. They orient studies, saved evidence, and later export or decision history.</p>
+                </div>
+                <div class="status-pill completed" id="project-pill">0 projects</div>
+              </div>
+              <div class="card-body">
+                <form class="product-form" id="project-form">
+                  <div class="form-grid">
+                    <div class="field">
+                      <label for="project-name">Project name</label>
+                      <input id="project-name" type="text" placeholder="Inbox Coach Launch">
+                    </div>
+                    <div class="field">
+                      <label for="project-slug">Slug</label>
+                      <input id="project-slug" type="text" placeholder="inbox-coach-launch">
+                    </div>
+                  </div>
+                  <div class="toolbar">
+                    <button class="action-button primary" id="create-project" type="submit">create project</button>
+                    <button class="action-button" id="reload-projects" type="button">reload projects</button>
+                  </div>
+                </form>
+                <div class="product-stack" id="project-list"></div>
+                <div class="summary-card">
+                  <strong>Selected project</strong>
+                  <div class="summary-list" id="selected-project-summary"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Studies</h3>
+                  <p class="section-copy">The selected study is the default operating object. Intake, runs, evidence review, and reruns should all live here.</p>
+                </div>
+                <div class="status-pill completed" id="study-pill">0 studies</div>
+              </div>
+              <div class="card-body">
+                <form class="product-form" id="study-form">
+                  <div class="form-grid">
+                    <div class="field">
+                      <label for="study-title">Study title</label>
+                      <input id="study-title" type="text" placeholder="Onboarding hesitation review">
+                    </div>
+                    <div class="field">
+                      <label for="study-first-task">First task seed</label>
+                      <input id="study-first-task" type="text" placeholder="connect CRM">
+                    </div>
+                  </div>
+                  <div class="toolbar">
+                    <button class="action-button primary" id="create-study" type="submit">create study</button>
+                    <button class="action-button" id="reload-studies" type="button">reload studies</button>
+                  </div>
+                </form>
+                <div class="product-stack" id="study-list"></div>
+                <div class="summary-card">
+                  <strong>Selected study</strong>
+                  <div class="summary-list" id="selected-study-summary"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="stage15-column">
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Study workspace</h3>
+                  <p class="section-copy">Conversational intake remains the hero action, but it is now anchored to the selected study instead of a free-floating engineering shell.</p>
+                </div>
+                <div class="status-bar">
+                  <div class="status-pill queued" id="bridge-pill">draft_only</div>
+                  <div class="status-pill queued" id="job-pill">no job</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Intake</div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="research-intent">Research intent</label>
+                        <textarea id="research-intent" rows="5"></textarea>
+                      </div>
+                      <div class="field">
+                        <label for="desired-outcome">Desired output</label>
+                        <textarea id="desired-outcome" rows="4"></textarea>
+                      </div>
+                      <div class="field">
+                        <label for="first-task">First task</label>
+                        <input id="first-task" type="text" placeholder="connect CRM">
+                      </div>
+                      <div class="field">
+                        <label for="artifact-files">Prototype artifacts</label>
+                        <input id="artifact-files" type="file" accept=".png,.jpg,.jpeg,.webp" multiple>
+                      </div>
+                    </div>
+                    <p class="muted-note" id="artifact-note">No prototype artifacts attached yet.</p>
+                  </div>
+
+                  <div class="draft-panel">
+                    <div class="inline-label">Advanced study controls</div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="mode-override">mode override</label>
+                        <select id="mode-override">
+                          <option value="auto">auto infer</option>
+                          <option value="prototype_validation">prototype_validation</option>
+                          <option value="concept_validation">concept_validation</option>
+                          <option value="adoption_barrier_validation">adoption_barrier_validation</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="panel-type">panel_type</label>
+                        <select id="panel-type">
+                          <option value="mainstream">mainstream</option>
+                          <option value="skeptic">skeptic</option>
+                          <option value="privacy_sensitive">privacy_sensitive</option>
+                          <option value="budget_constrained">budget_constrained</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="sample-size">sample_size</label>
+                        <input id="sample-size" type="number" min="1" max="12" step="1" value="5">
+                      </div>
+                      <div class="field">
+                        <label for="provider-name">provider_name</label>
+                        <select id="provider-name">
+                          <option value="mock">mock</option>
+                          <option value="codex">codex</option>
+                          <option value="openai">openai</option>
+                          <option value="agnes">agnes</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="persona-filter-location">location_type</label>
+                        <select id="persona-filter-location">
+                          <option value="all">all</option>
+                          <option value="urban_core">urban_core</option>
+                          <option value="suburban">suburban</option>
+                          <option value="regional">regional</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="persona-filter-privacy">privacy_concern</label>
+                        <select id="persona-filter-privacy">
+                          <option value="all">all</option>
+                          <option value="low">low</option>
+                          <option value="medium">medium</option>
+                          <option value="high">high</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="toolbar" id="study-actions"></div>
+                  </div>
+                </div>
+
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <strong>Draft state</strong>
+                    <div class="summary-list" id="draft-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Study shell</strong>
+                    <div class="summary-list" id="adapter-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Run monitor</strong>
+                    <div class="summary-list" id="run-summary"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Evidence readiness</strong>
+                    <div class="summary-list" id="review-summary"></div>
+                  </div>
+                </div>
+
+                <div class="signal-band">
+                  <strong>Synthetic evidence boundary</strong>
+                  <p id="boundary-copy">Synthetic evidence remains bounded to the selected study and run. This surface must never imply human market proof.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Run timeline and evidence review</h3>
+                  <p class="section-copy">The visible review path stays anchored to the selected study. Use the same shell snapshot to refresh run state, evidence focus, replay, and cross-run comparison.</p>
+                </div>
+                <div class="status-pill queued" id="query-pill">query_pending</div>
+              </div>
+              <div class="card-body">
+                <div class="toolbar">
+                  <button class="action-button primary" id="submit-live-job">submit live job</button>
+                  <button class="action-button" id="retry-selected-job">retry selected job</button>
+                  <button class="action-button" id="cancel-selected-job">cancel queued job</button>
+                  <button class="action-button" id="use-sample-jobs">use sample jobs</button>
+                  <button class="action-button" id="apply-evidence-query">refresh evidence</button>
+                </div>
+
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="evidence-query-text">query text</label>
+                    <input id="evidence-query-text" type="text" value="">
+                  </div>
+                  <div class="field">
+                    <label for="evidence-family">family</label>
+                    <select id="evidence-family">
+                      <option value="all">all</option>
+                      <option value="input">input</option>
+                      <option value="trace">trace</option>
+                      <option value="analysis">analysis</option>
+                      <option value="output">output</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="evidence-sort">sort</label>
+                    <select id="evidence-sort">
+                      <option value="relevance">relevance</option>
+                      <option value="newest">newest</option>
+                      <option value="family">family</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Run timeline</div>
+                    <div class="product-stack" id="job-list"></div>
+                  </div>
+                  <div class="draft-panel">
+                    <div class="inline-label">Evidence results</div>
+                    <p class="muted-note" id="evidence-note">Evidence query stays pending until a completed run is available.</p>
+                    <div class="product-stack" id="evidence-list"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="summary-card">
+                    <strong>Selected evidence</strong>
+                    <div class="summary-list" id="selected-evidence-summary"></div>
+                    <div class="detail-stack" id="selected-evidence-detail"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Cross-run comparison</strong>
+                    <div class="summary-list" id="cross-run-summary"></div>
+                    <div class="detail-stack" id="cross-run-detail"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Saved evidence views</div>
+                    <div class="toolbar">
+                      <button class="action-button primary" id="create-evidence-view" type="button">save current view</button>
+                      <button class="action-button" id="reload-evidence-views" type="button">reload saved views</button>
+                    </div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="evidence-view-title">View title</label>
+                        <input id="evidence-view-title" type="text" placeholder="Onboarding hesitation trace view">
+                      </div>
+                      <div class="field">
+                        <label for="evidence-view-note">View note</label>
+                        <textarea id="evidence-view-note" rows="3" placeholder="Why this slice matters, and what to revisit later."></textarea>
+                      </div>
+                    </div>
+                    <p class="muted-note">Saved views persist the current evidence query and selection state so the team can return to the same review angle later.</p>
+                    <div class="product-stack" id="evidence-view-list"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Selected saved view</strong>
+                    <div class="summary-list" id="selected-evidence-view-summary"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Decision logs</div>
+                    <div class="toolbar">
+                      <button class="action-button primary" id="create-decision-log" type="button">record decision</button>
+                      <button class="action-button" id="reload-decision-logs" type="button">reload decisions</button>
+                    </div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="decision-log-title">Decision title</label>
+                        <input id="decision-log-title" type="text" placeholder="Keep onboarding guidance visible after the first action">
+                      </div>
+                      <div class="field">
+                        <label for="decision-log-summary">Decision summary</label>
+                        <textarea id="decision-log-summary" rows="3" placeholder="The evidence supports keeping guidance visible because hesitation clusters around confirmation and reversibility."></textarea>
+                      </div>
+                      <div class="field">
+                        <label for="decision-log-rationale">Rationale</label>
+                        <textarea id="decision-log-rationale" rows="4" placeholder="Reference the specific run, evidence slice, and cross-run comparison that drove the decision."></textarea>
+                      </div>
+                    </div>
+                    <p class="muted-note">Decision logs keep research conclusions attached to the study, run lineage, and evidence context instead of drifting into external notes.</p>
+                    <div class="product-stack" id="decision-log-list"></div>
+                  </div>
+                  <div class="draft-panel">
+                    <div class="toolbar">
+                      <div class="inline-label">Selected decision review</div>
+                      <div class="status-pill queued" id="decision-review-pill">draft</div>
+                    </div>
+                    <div class="summary-card">
+                      <strong>Selected decision</strong>
+                      <div class="summary-list" id="selected-decision-log-summary"></div>
+                    </div>
+                    <div class="toolbar">
+                      <button class="action-button" id="reload-decision-review" type="button">reload review</button>
+                      <button class="action-button" id="request-decision-review" type="button">request review</button>
+                      <button class="action-button primary" id="approve-decision-log" type="button">approve</button>
+                      <button class="action-button" id="request-decision-revision" type="button">needs revision</button>
+                    </div>
+                    <div class="summary-card">
+                      <strong>Review status</strong>
+                      <div class="summary-list" id="decision-review-summary"></div>
+                    </div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="decision-comment-anchor">Comment anchor</label>
+                        <select id="decision-comment-anchor">
+                          <option value="general">general</option>
+                          <option value="decision_summary">decision_summary</option>
+                          <option value="rationale">rationale</option>
+                          <option value="evidence_view">evidence_view</option>
+                          <option value="comparison">comparison</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="decision-review-note">Review note</label>
+                        <textarea id="decision-review-note" rows="3" placeholder="Why the decision is approved, or what still needs revision."></textarea>
+                      </div>
+                      <div class="field">
+                        <label for="decision-comment-body">Thread comment</label>
+                        <textarea id="decision-comment-body" rows="4" placeholder="Flag a weak rationale, ask for stronger evidence, or confirm the study conclusion."></textarea>
+                      </div>
+                    </div>
+                    <div class="toolbar">
+                      <button class="action-button primary" id="create-decision-comment" type="button">add comment</button>
+                      <button class="action-button" id="clear-decision-reply-target" type="button">clear reply target</button>
+                      <div class="status-pill queued" id="decision-reply-target">reply_to:none</div>
+                    </div>
+                    <p class="muted-note">Review stays attached to the decision log so approval, objections, and evidence challenges do not drift into separate notes or chat tools.</p>
+                    <div class="product-stack" id="decision-comment-list"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="summary-card">
+                    <strong>Study activity</strong>
+                    <div class="summary-list" id="study-activity-summary"></div>
+                    <p class="muted-note">This timeline keeps study review continuity visible across runs, saved views, decisions, exports, shares, and support handoffs.</p>
+                  </div>
+                  <div class="draft-panel">
+                    <div class="toolbar">
+                      <div class="inline-label">Cross-artifact timeline</div>
+                      <button class="action-button" id="reload-study-activity" type="button">reload timeline</button>
+                    </div>
+                    <p class="muted-note">Reload after collaboration actions when you need the latest study-scoped audit trail.</p>
+                    <div class="product-stack" id="study-activity-list"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Export bundles</div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="export-title">Export title</label>
+                        <input id="export-title" type="text" placeholder="Exec review export">
+                      </div>
+                      <div class="field">
+                        <label for="export-format">export_format</label>
+                        <select id="export-format">
+                          <option value="bundle_json">bundle_json</option>
+                          <option value="report_markdown">report_markdown</option>
+                          <option value="report_json">report_json</option>
+                          <option value="report_csv">report_csv</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="export-artifacts">artifact_ids (comma separated, optional)</label>
+                        <input id="export-artifacts" type="text" placeholder="report.json, summary.json">
+                      </div>
+                    </div>
+                    <div class="toolbar">
+                      <button class="action-button primary" id="create-export-bundle" type="button">create export bundle</button>
+                      <button class="action-button" id="reload-export-bundles" type="button">reload exports</button>
+                    </div>
+                    <p class="muted-note">Each export preserves the synthetic boundary, source study, source job, and run lineage.</p>
+                    <div class="product-stack" id="export-list"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Selected export</strong>
+                    <div class="summary-list" id="selected-export-summary"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Share bundles</div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="share-title">Share title</label>
+                        <input id="share-title" type="text" placeholder="Board review share">
+                      </div>
+                      <div class="field">
+                        <label for="share-expires-days">expires_in_days</label>
+                        <input id="share-expires-days" type="number" min="1" max="90" step="1" value="7">
+                      </div>
+                    </div>
+                    <div class="toolbar">
+                      <button class="action-button primary" id="create-share-bundle" type="button">create share bundle</button>
+                      <button class="action-button" id="reload-share-bundles" type="button">reload shares</button>
+                      <button class="action-button" id="revoke-share-bundle" type="button">revoke selected share</button>
+                    </div>
+                    <p class="muted-note">Share bundles expose a viewer-safe payload with public path, expiry, and revocation, while keeping synthetic boundary and run lineage visible.</p>
+                    <div class="product-stack" id="share-list"></div>
+                  </div>
+                  <div class="summary-card">
+                    <strong>Selected share</strong>
+                    <div class="summary-list" id="selected-share-summary"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="draft-panel">
+                    <div class="inline-label">Support diagnostics</div>
+                    <div class="toolbar">
+                      <button class="action-button" id="load-support-diagnostics" type="button">load diagnostics</button>
+                      <button class="action-button primary" id="create-support-snapshot" type="button">generate snapshot</button>
+                    </div>
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="support-snapshot-title">Snapshot title</label>
+                        <input id="support-snapshot-title" type="text" placeholder="Provider failure handoff">
+                      </div>
+                      <div class="field">
+                        <label for="support-snapshot-notes">Operator notes</label>
+                        <textarea id="support-snapshot-notes" rows="4" placeholder="What blocked the study, what was already checked, and who should pick it up next."></textarea>
+                      </div>
+                    </div>
+                    <div class="summary-grid">
+                      <div class="summary-card">
+                        <strong>Submission gate</strong>
+                        <div class="summary-list" id="support-gate-summary"></div>
+                      </div>
+                      <div class="summary-card">
+                        <strong>Job diagnostic</strong>
+                        <div class="summary-list" id="support-diagnostic-summary"></div>
+                      </div>
+                    </div>
+                    <div class="split-grid">
+                      <div class="summary-card">
+                        <strong>Blocked reasons</strong>
+                        <div class="detail-stack" id="support-blocked-reasons"></div>
+                      </div>
+                      <div class="summary-card">
+                        <strong>Support actions</strong>
+                        <div class="detail-stack" id="support-diagnostic-cards"></div>
+                      </div>
+                    </div>
+                    <div class="summary-card">
+                      <strong>Recent failure digest</strong>
+                      <p class="muted-note">Use this to jump back into the most recent failed or canceled study jobs without leaving the support surface.</p>
+                      <div class="product-stack" id="support-recent-failures"></div>
+                    </div>
+                  </div>
+                  <div class="draft-panel">
+                    <div class="inline-label">Support snapshots</div>
+                    <div class="toolbar">
+                      <button class="action-button" id="reload-support-snapshots" type="button">reload snapshots</button>
+                      <div class="status-pill queued" id="support-pill">support_idle</div>
+                    </div>
+                    <p class="muted-note">Snapshots materialize a support handoff bundle for blocked submissions, failed runs, or operator audit follow-up without dropping into CLI state.</p>
+                    <div class="product-stack" id="support-list"></div>
+                    <div class="summary-card">
+                      <strong>Selected support snapshot</strong>
+                      <div class="summary-list" id="selected-support-summary"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="section-title">Debug trace</h3>
+                  <p class="section-copy">These traces stay secondary. They are here only to verify the product surface is backed by the same contracts.</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="footer-grid">
+                  <div>
+                    <strong>Last API response</strong>
+                    <pre class="debug-panel" id="last-api-json"></pre>
+                  </div>
+                  <div>
+                    <strong>Shell request payload</strong>
+                    <pre class="debug-panel" id="request-payload-json"></pre>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { mountStage15WorkspaceShell } from "./workspace_shell_stage15_app.mjs";
+
+    mountStage15WorkspaceShell();
+  </script>
+</body>
+</html>

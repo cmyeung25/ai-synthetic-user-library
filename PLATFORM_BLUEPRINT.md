@@ -149,6 +149,7 @@ Important rule:
 
 - `CLI` is the first execution shell, not the platform itself.
 - the default workspace product surface should gather research intent conversationally, keep internal mode taxonomy behind the scenes, and require explicit plan confirmation before execution
+- the canonical product-surface doctrine lives in `PLATFORM_UI_DESIGN_SYSTEM_PRINCIPLES.md` and `UX_OPERATING_MODEL.md`, which define the study-first shell, evidence-review hierarchy, and default operating loop
 
 ## Product Surface Principle
 
@@ -169,6 +170,12 @@ Why this matters:
 - it lowers setup friction across discovery, concept evaluation, and prototype validation
 - it preserves throughput without weakening evidence discipline
 - it keeps the platform aligned to replacing interviewer-led setup work instead of training users to operate an internal orchestration model
+
+Canonical operating rule:
+
+- the default product loop should be `Ask -> Clarify -> Confirm Plan -> Run -> Review Evidence -> Compare -> Decide -> Share With Boundary`
+- the default information architecture should stay `workspace -> project -> study -> run -> saved evidence view -> decision log -> export or share bundle`
+- `study` is the primary product object; `run` is a record inside the study, not the product's top-level mental model
 
 ## 5. Evidence Model
 
@@ -248,19 +255,19 @@ Primary output:
 - panel synthesis exists
 - realism scoring exists
 - over-optimism warnings exist
+- prototype-validation mode contract exists with static image review, flow review, scripted clickable task execution, application-supplied observed traces, and browser-observed clickable/live-app trace ingestion
 
 ### What Is Partially Proven
 
 - concept evaluation workflows
 - hypothesis-oriented interview discipline
-- prototype-validation mode contract with static image review, flow review, and browser-independent clickable task execution, but without live-interface execution yet
 - synthetic panel reporting
 
 ### What Is Not Yet Proven
 
 - full discovery-stage coverage
-- live-interface prototype behavior validation beyond scripted clickable manifests
-- action-grounded adoption prediction
+- broad external benchmark coverage for action-grounded adoption prediction
+- replacement-grade reliability across research stages or high-stakes domains
 
 ## 8. Platform Sequencing Principle
 
@@ -296,7 +303,7 @@ Build order should follow:
 
 - Do not treat every user request as a new product surface request.
 - Do not expand SaaS scope ahead of core simulation quality.
-- Do not claim prototype validation before stimuli and action traces exist.
+- Do not claim replacement-readiness before synthetic traces are calibrated against human-reviewed outcomes.
 - Do not let concept-specific conclusions leak into reusable persona core.
 - Do not confuse eloquent synthetic agreement with realism.
 - Do not count report polish as platform progress unless evidence quality improves.
@@ -305,11 +312,11 @@ Build order should follow:
 
 The fastest path toward a stronger platform is:
 
-1. extend the implemented clickable executor boundary from scripted manifests to browser-driven prototype execution
+1. attach human benchmark datasets or manually reviewed human outcomes to comparable synthetic interview and browser-trace runs
 
-2. add a normalized executor adapter before driver-specific browser or app automation expansion
+2. evaluate where objections, trust gaps, task failures, abandonment, and adoption barriers converge or diverge
 
-3. add live app execution only after clickable prototype behavior is proven
+3. define replacement-readiness thresholds by research stage and evidence type
 
 This keeps the platform aligned with its real bottleneck:
 

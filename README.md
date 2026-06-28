@@ -2,7 +2,7 @@
 
 AI Validation Swarm is building toward a synthetic-user human behavior simulation platform. The product north star is to replace parts of interview-led user research by simulating behaviorally plausible human decisions, objections, and adoption barriers at scale.
 
-Today, this repository still operates as a local, no-UI validation engine for testing founder assumptions against a library of structured synthetic users while that replacement-grade capability is being built and calibrated.
+Today, this repository is still local-first and engineering-oriented, but it is no longer no-UI only: it now includes a local authenticated workspace shell that can take research intent, attach prototype artifacts, confirm an inferred plan, submit live validation jobs, and review evidence with replay, cross-run comparison, reliability labels, calibration records, and audit lineage from the same product-facing surface. Milestone 13 is implemented through real-user `New Study`, `Study Workspace`, and `Evidence Review` page components. Milestone 14 is also implemented: browser-observed clickable and live-app event logs can be safety-gated, normalized into `observed-action-trace/v1`, persisted, and synthesized without treating synthetic traces as human proof. Milestone 15 is implemented as a fixture-backed human calibration workflow: human-reviewed outcome signals can be attached to comparable synthetic runs, scored for alignment/divergence, and projected into evidence reliability records while preserving replacement-readiness boundaries.
 
 This repository currently contains:
 
@@ -15,9 +15,10 @@ This repository currently contains:
 - Markdown, JSON, and CSV report export
 - canonical `report.json` artifacts and run archive indexing
 - fixture-driven evaluation harness with regression comparison
+- fixture-backed human calibration suite with prediction-alignment scoring and replacement-readiness boundary output
 - multi-turn local conversation sessions with synthetic personas
 - SaaS-readiness contracts, tenant schemas, and market-distribution configs
-- Workspace UI low-fi prototype, Moss stage-2 intake prototype, Moss stage-3 inference prototype, Moss stage-4 confirmation prototype, Moss stage-5 blocked-draft remediation prototype, Moss stage-6 converged single-page flow, Moss stage-7 state-machine adapter prototype with EN / Traditional Chinese review, Moss stage-8 queue and run status monitor prototype, Moss stage-9 evidence browser and replay prototype, Moss stage-10 metadata-backed evidence query and replay prototype, Moss stage-11 integrated operator-shell prototype, Moss stage-12 validation-job, session, and evidence-query runtime bridge prototype, Moss stage-13 product-facing workspace shell prototype, Moss stage-14 backend-driven workspace shell prototype, a shared executable workspace UI adapter, run-monitor, evidence-browser, evidence-query, and integrated-shell module plus dedicated validation-job and session runtime bridge modules, a shared shell runtime client for live session/job/evidence-query/workspace-shell orchestration, a shared shell runtime sync module for heartbeat and optional auto-refresh, a shared shell app controller module for frontend orchestration, a page-level shell frontend adapter module with Node contract tests and a stable review-surface projection, a draft workspace research plan contract spec, a dedicated workspace UI adapter contract spec, a draft workspace evidence query contract spec, a draft workspace validation-job bridge contract spec, a draft workspace session runtime contract spec, a draft workspace shell frontend adapter contract spec, a draft workspace shell app contract spec, a draft workspace shell snapshot contract spec, and reusable design-system CSS foundation with Moss, Slate, and Ink theme variants for the planned workspace console
+- Workspace UI low-fi prototype, Moss stage-2 intake prototype, Moss stage-3 inference prototype, Moss stage-4 confirmation prototype, Moss stage-5 blocked-draft remediation prototype, Moss stage-6 converged single-page flow, Moss stage-7 state-machine adapter prototype with EN / Traditional Chinese review, Moss stage-8 queue and run status monitor prototype, Moss stage-9 evidence browser and replay prototype, Moss stage-10 metadata-backed evidence query and replay prototype, Moss stage-11 integrated operator-shell prototype, Moss stage-12 validation-job, session, and evidence-query runtime bridge prototype, Moss stage-13 product-facing workspace shell prototype, Moss stage-14 backend-driven workspace shell prototype with editable intake, real prototype-file selection state, collapsed advanced study controls, artifact-derived replay focus, backend-owned replay/comparison context, initial cross-run comparison guidance, and coverage/replay/comparison review cards, a repo-local engineering-demo launcher that boots Stage 14 after authenticated API readiness and resets the demo workspace before each run, a shared executable workspace UI adapter, run-monitor, evidence-browser, evidence-query, and integrated-shell module plus dedicated validation-job and session runtime bridge modules, a shared shell runtime client for live session/job/evidence-query/workspace-shell orchestration, a shared shell runtime sync module for heartbeat and optional auto-refresh, a shared shell app controller module for frontend orchestration and draft mutation, a page-level shell frontend adapter module with Node contract tests and a stable review-surface projection, a draft workspace research plan contract spec, a dedicated workspace UI adapter contract spec, a draft workspace evidence query contract spec, a draft workspace validation-job bridge contract spec, a draft workspace session runtime contract spec, a draft workspace shell frontend adapter contract spec, a draft workspace shell app contract spec, a draft workspace shell snapshot contract spec, and reusable design-system CSS foundation with Moss, Slate, and Ink theme variants for the planned workspace console
 - basic tests
 
 ## North Star
@@ -67,6 +68,7 @@ The CLI exposes these commands:
 - `audit-report`
 - `export-report`
 - `run-evaluation`
+- `run-human-calibration`
 - `compare-evaluations`
 
 ## Persona generation backends
@@ -285,7 +287,7 @@ For `--stimulus-type clickable`, `--stimulus-artifact` can point to either:
 - a JSON clickable prototype manifest with `screens` plus `task_script`, which the runtime executes through the native stimulus executor before the interview starts; or
 - a JSON observed action trace artifact supplied by the prototype or application layer.
 
-For `--stimulus-type live_app`, `--stimulus-artifact` currently accepts a JSON observed action trace artifact supplied by the application layer.
+For `--stimulus-type live_app`, `--stimulus-artifact` accepts either a JSON observed action trace artifact supplied by the application layer or a browser behavior trace artifact with browser session metadata and event logs. Browser behavior traces are blocked before synthesis when they indicate credentialed, high-stakes, destructive, payment, token, transfer, or non-local/non-allowed-origin execution.
 
 In both cases, the runtime snapshots the JSON, writes `observed_action_trace.json`, and upgrades the prototype evidence boundary to `observed_action_trace` when real actions are present.
 
@@ -322,7 +324,7 @@ ai-validation-swarm run-facilitated-interview `
   --backend agnes
 ```
 
-The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. The current `prototype_validation` mode now supports static image review, multi-screen flow review, scripted clickable task execution, and application-supplied observed action traces with an explicit evidence boundary. Live-app execution is still a later expansion. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, `persona_driver_trace.md`, and, for prototype runs, `stimulus_analysis.json` and/or `observed_action_trace.json` plus snapshotted copies of the reviewed assets. Current outputs should still be treated as synthetic evidence, not human market proof, while the platform is being calibrated toward replacement-grade reliability.
+The facilitator and persona use separate LLM sessions. The facilitator cannot read hidden persona artifacts and chooses its interview phase, probing method, next question, evidence updates, root-cause hypotheses, and stopping point from the transcript. Hypothesis validation explicitly seeks supporting, contradicting, and alternative evidence and returns `not_tested`, `unsupported`, `mixed`, or `provisionally_supported`; it never claims confirmation from synthetic evidence. The current `prototype_validation` mode now supports static image review, multi-screen flow review, scripted clickable task execution, application-supplied observed action traces, and browser-observed clickable/live-app traces with an explicit evidence boundary. Outputs are stored under `interviews/{interview_id}/`, including `transcript.md`, `facilitator_trace.json`, `insights.md`, `persona_driver_trace.md`, and, for prototype runs, `stimulus_analysis.json` and/or `observed_action_trace.json` plus snapshotted copies of the reviewed assets. Current outputs should still be treated as synthetic evidence, not human market proof, while the platform is being calibrated toward replacement-grade reliability.
 
 ### Observer-controlled interview
 
@@ -358,16 +360,75 @@ The repository now includes a local authenticated SaaS-style runtime on top of t
 - `run-saas-worker`
 - `purge-saas-expired-artifacts`
 
-The local runtime stores workspace, billing, API token, and validation-job lifecycle state in `saas_runtime/saas_runtime.sqlite3`, keeps run artifacts under `saas_runtime/workspaces/{workspace_id}/runs/`, and exposes:
+The local runtime stores workspace, billing, API token, validation-job lifecycle state, export bundles, share bundles, and audit events in `saas_runtime/saas_runtime.sqlite3`, keeps run artifacts under `saas_runtime/workspaces/{workspace_id}/runs/`, and exposes:
 
 - `POST /api/v1/validation-jobs`
 - `GET /api/v1/validation-jobs`
 - `GET /api/v1/validation-jobs/{job_id}`
+- `POST /api/v1/validation-jobs/{job_id}/cancel`
+- `POST /api/v1/validation-jobs/{job_id}/retry`
 - `GET /api/v1/session`
+- `GET /api/v1/workspace-settings`
+- `GET /api/v1/audit-events`
+- `POST /api/v1/workspace-billing`
+- `POST /api/v1/workspace-members`
+- `POST /api/v1/api-tokens`
+- `POST /api/v1/api-tokens/{token_id}/revoke`
+- `POST /api/v1/projects`
+- `GET /api/v1/projects`
+- `GET /api/v1/projects/{project_id}`
+- `POST /api/v1/studies`
+- `GET /api/v1/studies`
+- `GET /api/v1/studies/{study_id}`
+- `POST /api/v1/export-bundles`
+- `GET /api/v1/export-bundles`
+- `GET /api/v1/export-bundles/{export_bundle_id}`
+- `POST /api/v1/share-bundles`
+- `GET /api/v1/share-bundles`
+- `GET /api/v1/share-bundles/{share_bundle_id}`
+- `POST /api/v1/share-bundles/{share_bundle_id}/revoke`
+- `GET /public/v1/share-bundles/{share_key}`
+- `GET /api/v1/support-diagnostics`
+- `POST /api/v1/support-snapshots`
+- `GET /api/v1/support-snapshots`
+- `GET /api/v1/support-snapshots/{support_snapshot_id}`
+- `POST /api/v1/evidence-views`
+- `GET /api/v1/evidence-views`
+- `GET /api/v1/evidence-views/{evidence_view_id}`
+- `POST /api/v1/decision-logs`
+- `GET /api/v1/decision-logs`
+- `GET /api/v1/decision-logs/{decision_log_id}`
 - `GET /api/v1/evidence-query`
 - `GET /api/v1/workspace-shell`
 
-This surface is still local-first and engineering-oriented, but it means authenticated workspace session loading, API ingress, queued job execution, workspace isolation, billing gates, plan limits, and retention purge now exist as real repository behavior rather than design-only contracts.
+This surface is still local-first and engineering-oriented, but it means authenticated workspace session loading, workspace settings governance, visible workspace audit history, writable billing/quota controls, project/study product objects, a study-scoped activity timeline, durable saved evidence views, durable decision logs, first-pass decision review comments and approval state, API ingress, queued job execution, workspace isolation, billing gates, plan limits, retention purge, and token lifecycle controls now exist as real repository behavior rather than design-only contracts.
+
+The local SaaS wrapper now also exposes a same-origin study-first shell entrypoint at `GET /app/workspace`, which directly renders the hosted Stage 15 product shell from the same local runtime instead of requiring a separate static file server.
+
+That hosted Stage 15 shell now mounts through `demo/workspace_ui_moss_stage15/workspace_shell_stage15_app.mjs`, so the first Milestone 11 product shell no longer depends on one large inline HTML module for route bootstrap and product-surface event orchestration.
+
+The same hosted shell is now route-aware for:
+
+- `GET /app/workspace`
+- `GET /app/new-study`
+- `GET /app/projects/{project_id}`
+- `GET /app/studies/{study_id}`
+- `GET /app/evidence-views/{evidence_view_id}`
+- `GET /app/decision-logs/{decision_log_id}`
+- `GET /app/export-bundles/{export_bundle_id}`
+- `GET /app/share-bundles/{share_bundle_id}`
+- `GET /app/support-snapshots/{support_snapshot_id}`
+- `GET /app/jobs/{job_id}`
+
+The server injects route context, and the shared shell controller bootstraps the selected product object from the corresponding detail endpoint so deep links stay inside the same study-first shell.
+
+The local SaaS wrapper now prefers a framework-owned frontend host build under `frontend/workspace_shell_app/dist/` for those `/app/*` routes. That host preserves the same Stage 15 controller, route bootstrap, and study-first product behavior while moving app entry ownership out of one prototype HTML file. It now owns the Milestone 13 real-user page components for `New Study`, `Study Workspace`, and `Evidence Review`, renders the research workflow before settings/support/debug surfaces, and maps backend route context to the active M13 page. Use `scripts\build_workspace_shell_app.bat` to install dependencies when needed and rebuild that hosted frontend entrypoint.
+
+Run `scripts\\start_stage12_demo.bat` to launch the engineering demo. The launcher now resets only the local `ws_api_demo` workspace before boot so repeated demo sessions do not get blocked by retained trial quota state.
+Set `NO_OPEN_BROWSER=1` when another script should bootstrap the demo without spawning a visible browser window.
+
+For the first Milestone 11/12/13 user-facing product slice, open `http://127.0.0.1:8011/app/workspace?token=token-api` or `http://127.0.0.1:8011/app/new-study?token=token-api` after the demo boot script starts the API. That first authenticated hit now exchanges the bootstrap token for a server-backed same-origin browser session, so the same browser can revisit clean `/app/*` routes and call the hosted API without repeating the token query. Explicit query tokens still override the current browser session when you need to re-bootstrap, and the shell exposes an `end browser session` action when you need to clear it. That hosted shell lifts the shared shell into a study-first surface where project selection, study selection, conversational intake, explicit plan confirmation, run submission, evidence refresh, reliability review, calibration records, audit lineage, study activity timeline, saved evidence views, decision logs, in-place decision review comments and approval state, export-bundle creation, viewer-safe share-bundle creation, blocked-submission diagnostics, queued/running support visibility, recent failure digest, failed-run explanation, queued-job cancel, failed/canceled retry, support-snapshot generation, and secondary workspace settings actions for membership, audit-history review, billing/quota updates, plus API-token lifecycle all operate inside one visible product context. Once product objects exist, the same flow can also be opened through route-aware deep links such as `/app/studies/{study_id}`, `/app/jobs/{job_id}`, `/app/evidence-views/{evidence_view_id}`, `/app/decision-logs/{decision_log_id}`, or `/app/export-bundles/{export_bundle_id}`.
+Run `node scripts/verify_stage15_hosted_shell_smoke.mjs` to execute the hosted-shell browser smoke flow and write the screenshot plus JSON summary under `output/playwright/stage15_hosted_shell_smoke/`. The smoke now also verifies clean job deep-link hydration and Milestone 12 layout acceptance for blocked primary actions and critical panel overlap.
 
 ## Bundled Python runtime
 

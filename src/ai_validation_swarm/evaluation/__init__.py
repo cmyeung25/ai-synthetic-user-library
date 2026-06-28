@@ -1,2 +1,1 @@
-"""Evaluation harness for fixture-driven quality gates and regression checks."""
-
+"""Evaluation harnesses for quality gates, regression checks, and human calibration."""

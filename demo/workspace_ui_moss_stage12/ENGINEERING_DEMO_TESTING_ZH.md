@@ -25,7 +25,7 @@
 4. 啟動 static server `http://127.0.0.1:4173`
 5. 重新啟動 SaaS API `http://127.0.0.1:8011`，確保 demo 用的是目前 repo 代碼
 6. 重新啟動 worker loop，確保 queued jobs 用的是目前 repo 代碼
-7. 自動打開 Stage 12 頁面
+7. 預設自動打開 Stage 14 頁面
 
 預設 live-mode 參數：
 
@@ -44,6 +44,10 @@ Stage 12:
 
 - `http://127.0.0.1:4173/demo/workspace_ui_moss_stage12/index.html`
 
+Stage 14:
+
+- `http://127.0.0.1:4173/demo/workspace_ui_moss_stage14/index.html`
+
 ## 建議測試方式
 
 先跑一個 smoke test，再做深入檢查。
@@ -51,22 +55,24 @@ Stage 12:
 ### Smoke test
 
 1. 雙擊 `scripts/start_stage12_demo.bat`
-2. 等瀏覽器打開 Stage 12
-3. 點 `confirmed draft`
-4. 點 `load workspace session`
-5. 點 `submit live job`
-6. 點 `list live jobs`
-7. 選最新 job card
-8. 點 `load selected live job`
-9. 如果 job 變成 `completed`，再點 `load live evidence query`
+2. 等瀏覽器打開 Stage 14
+3. 保留或修改 intake panel 內的 research intent、desired output、同 first-task anchor
+4. 點 `attach screenshots`
+5. 當 queueability 變成 `ready for confirmation` 後，點 `confirm plan`
+6. 點 `submit live job`
+7. 點 `load shell snapshot`
+8. 如有需要，點 `start auto refresh`
+9. 等最新 job 變成 `completed` 後，再點一次 run card 或改一個 evidence query control
+10. 點一張 evidence result card
+11. 如果有 replay steps，就再點其中一個
 
 預期結果：
 
-- `Last API response` 會依序看到 `session`、`job`、`jobs`、`evidence-query`
+- shell snapshot 會一次帶回真實 workspace session、selected job、同 evidence-query payload
 - `Selected job` 會變成真實 job id
-- session 區域會顯示 workspace / role / plan / billing / limits
 - shell 不再停留於 blocked state
 - evidence review 會顯示 backend evidence endpoint 回來的結果
+- selected evidence detail 同 replay focus 會跟住 snapshot refresh 保持一致
 
 ## 深入檢查
 

@@ -16,6 +16,7 @@
 ## Skill Routing Rule
 
 - Always use [$platform-development-chief](C:\Users\user\.codex\skills\platform-development-chief\SKILL.md) for this repository when making platform-level roadmap, backlog, milestone, status, prioritization, or capability-sequencing decisions.
+- When `platform-development-chief` is used for platform UI, UX, workflow, intake, evidence-review, or workspace information-architecture decisions, it must also read and follow `PLATFORM_UI_DESIGN_SYSTEM_PRINCIPLES.md` and `UX_OPERATING_MODEL.md` in the same turn. Treat both as mandatory product-surface doctrine, not optional references.
 - If the task also involves system architecture, module boundaries, API contracts, worker design, persistence, deployment, or observability, also consult [$platform-system-architect](C:\Users\user\.codex\skills\platform-system-architect\SKILL.md) in the same turn.
 
 ## Mandatory Alignment Check Before Any Work
@@ -41,3 +42,5 @@ Before starting a task, confirm:
 - baking concept conclusions into personas up front
 - treating agreement or eloquence as evidence of realism
 - spending cycles on broad SaaS surface area that does not strengthen the core simulation engine
+- exposing internal mode taxonomy as the default product mental model
+- defaulting to workflow-builder panels, oversized setup forms, or chat-only transient surfaces when a study-first research workspace would preserve stronger evidence discipline

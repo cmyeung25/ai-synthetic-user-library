@@ -22,6 +22,7 @@ from ai_validation_swarm.facilitator.models import FacilitatorDecision, Intervie
 from ai_validation_swarm.facilitator.optimism import attach_over_optimism_risks
 from ai_validation_swarm.facilitator.providers import FacilitatorProvider
 from ai_validation_swarm.facilitator.stimulus_executor import (
+    BrowserBehaviorTraceExecutor,
     SCRIPTED_CLICKABLE_EXECUTOR_VERSION,
     ScriptedClickablePrototypeExecutor,
     StimulusExecutor,
@@ -145,7 +146,9 @@ class FacilitatedInterviewRuntime:
         self.progress_writer = progress_writer
         self.approved_learning_rules_path = approved_learning_rules_path
         self.max_approved_learning_rules = max_approved_learning_rules
-        self.stimulus_executors = list(stimulus_executors or [ScriptedClickablePrototypeExecutor()])
+        self.stimulus_executors = list(
+            stimulus_executors or [BrowserBehaviorTraceExecutor(), ScriptedClickablePrototypeExecutor()]
+        )
 
     def _progress(self, message: str) -> None:
         if self.progress_writer is not None:
@@ -1638,6 +1641,19 @@ class FacilitatedInterviewRuntime:
                     f"- Visited screens: {', '.join(analysis.get('visited_screens', [])) or '(none)'}\n"
                     f"- Evidence boundary: {analysis.get('evidence_boundary', '')}\n\n"
                 )
+            elif analysis_type in {"browser_clickable_trace", "live_app_browser_trace"}:
+                sections.append(
+                    "BROWSER-OBSERVED EXECUTION CONTEXT (instrumented browser task run, not human session evidence):\n"
+                    f"- Summary: {analysis.get('summary', '')}\n"
+                    f"- Prototype label: {analysis.get('prototype_label', '')}\n"
+                    f"- Driver: {analysis.get('driver', '')}\n"
+                    f"- Event count: {analysis.get('event_count', 0)}\n"
+                    f"- Normalized action count: {analysis.get('normalized_action_count', 0)}\n"
+                    f"- Start URL: {analysis.get('start_url', '') or '(none)'}\n"
+                    f"- Final URL: {analysis.get('final_url', '') or '(none)'}\n"
+                    f"- Safety gate: {analysis.get('safety_gate', {}).get('status', 'unknown')}\n"
+                    f"- Evidence boundary: {analysis.get('evidence_boundary', '')}\n\n"
+                )
             else:
                 sections.append(
                     "STATIC IMAGE STIMULUS REVIEW (application-supplied context, not participant evidence):\n"
@@ -1979,9 +1995,11 @@ class FacilitatedInterviewRuntime:
                 self._progress(
                     f"executing_{stimulus_type}_stimulus executor={executor.executor_id} artifact={artifact_path.name}"
                 )
+                executor_payload = dict(payload)
+                executor_payload.setdefault("stimulus_type", stimulus_type)
                 return executor.execute(
                     artifact_path=artifact_path,
-                    payload=payload,
+                    payload=executor_payload,
                     prototype_task=prototype_task,
                 )
         return None
@@ -2271,6 +2289,18 @@ class FacilitatedInterviewRuntime:
                     f"- Evidence boundary: {session.stimulus_analysis.get('evidence_boundary', '')}",
                     "",
                 ])
+            elif analysis_type in {"browser_clickable_trace", "live_app_browser_trace"}:
+                lines.extend([
+                    f"- Prototype label: {session.stimulus_analysis.get('prototype_label', '')}",
+                    f"- Driver: {session.stimulus_analysis.get('driver', '')}",
+                    f"- Event count: {session.stimulus_analysis.get('event_count', 0)}",
+                    f"- Normalized action count: {session.stimulus_analysis.get('normalized_action_count', 0)}",
+                    f"- Start URL: {session.stimulus_analysis.get('start_url', '') or '(none)'}",
+                    f"- Final URL: {session.stimulus_analysis.get('final_url', '') or '(none)'}",
+                    f"- Safety gate: {session.stimulus_analysis.get('safety_gate', {}).get('status', 'unknown')}",
+                    f"- Evidence boundary: {session.stimulus_analysis.get('evidence_boundary', '')}",
+                    "",
+                ])
             else:
                 lines.extend([
                     f"- Visible elements: {', '.join(session.stimulus_analysis.get('visible_elements', [])) or '(none)'}",
@@ -2440,6 +2470,15 @@ class FacilitatedInterviewRuntime:
                 lines.append(f"- Start screen: {session.stimulus_analysis.get('start_screen', '')}")
                 for item in session.stimulus_analysis.get("visited_screens", []):
                     lines.append(f"- Visited screen: {item}")
+                lines.append(f"- Evidence boundary: {session.stimulus_analysis.get('evidence_boundary', '')}")
+            elif analysis_type in {"browser_clickable_trace", "live_app_browser_trace"}:
+                lines.append(f"- Prototype label: {session.stimulus_analysis.get('prototype_label', '')}")
+                lines.append(f"- Driver: {session.stimulus_analysis.get('driver', '')}")
+                lines.append(f"- Event count: {session.stimulus_analysis.get('event_count', 0)}")
+                lines.append(f"- Normalized action count: {session.stimulus_analysis.get('normalized_action_count', 0)}")
+                lines.append(f"- Start URL: {session.stimulus_analysis.get('start_url', '') or '(none)'}")
+                lines.append(f"- Final URL: {session.stimulus_analysis.get('final_url', '') or '(none)'}")
+                lines.append(f"- Safety gate: {session.stimulus_analysis.get('safety_gate', {}).get('status', 'unknown')}")
                 lines.append(f"- Evidence boundary: {session.stimulus_analysis.get('evidence_boundary', '')}")
             else:
                 for item in session.stimulus_analysis.get("visible_elements", []):

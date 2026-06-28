@@ -1,0 +1,53 @@
+{
+  "suite_id": "human-calibration-fixture-v1",
+  "suite_version": "human-benchmark-suite/v1",
+  "benchmarks": [
+    {
+      "benchmark_id": "inbox_coach_followup_fixture",
+      "name": "Inbox Coach follow-up workflow fixture",
+      "research_stage": "concept_evaluation",
+      "evidence_type": "objection_and_trust_gap_prediction",
+      "synthetic_run_dir": "runs/inbox_coach_sample",
+      "source": {
+        "source_type": "fixture_human_review",
+        "review_method": "manual_reviewed_outcome_fixture",
+        "boundary": "Fixture-backed human review validates the calibration workflow but is not replacement-grade human market proof."
+      },
+      "human_panel": {
+        "participant_count": 4,
+        "segment": "independent consultants and small agency operators"
+      },
+      "human_outcomes": {
+        "signals": [
+          {
+            "category": "objection",
+            "label": "uncertain ROI",
+            "severity": "medium",
+            "weight": 1.0,
+            "terms": ["uncertain", "roi", "value", "payback"]
+          },
+          {
+            "category": "trust_gap",
+            "label": "proof that it fits existing habits",
+            "severity": "high",
+            "weight": 1.0,
+            "terms": ["proof", "fits", "existing", "habits", "workflow"]
+          },
+          {
+            "category": "risk",
+            "label": "privacy risk",
+            "severity": "medium",
+            "weight": 1.0,
+            "terms": ["privacy", "data", "client"]
+          }
+        ]
+      },
+      "thresholds": {
+        "min_precision": 0.5,
+        "min_recall": 0.5,
+        "min_alignment_score": 50,
+        "replacement_readiness_min_score": 85
+      }
+    }
+  ]
+}

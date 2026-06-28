@@ -75,6 +75,7 @@ export async function syncWorkspaceShellRuntime({
   queryState = {},
   selectedResultId,
   selectedReplayStepId,
+  selectedComparisonRunId,
   fetchImpl = fetch,
   now = () => new Date()
 }) {
@@ -110,6 +111,7 @@ export async function syncWorkspaceShellRuntime({
     sortBy: queryState.sortBy || "relevance",
     selectedResultId: selectedResultId ?? nextState.liveEvidenceQuery?.selected_result_id ?? "",
     selectedReplayStepId: selectedReplayStepId ?? nextState.liveEvidenceQuery?.selected_replay_step_id ?? "",
+    selectedComparisonRunId: selectedComparisonRunId ?? nextState.liveEvidenceQuery?.cross_run_comparison?.selected_comparison_run_id ?? "",
     fetchImpl
   });
   let lastAction = "load_workspace_shell_snapshot";

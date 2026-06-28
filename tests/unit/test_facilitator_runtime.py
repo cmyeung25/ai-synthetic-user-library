@@ -172,6 +172,59 @@ def _write_clickable_prototype_manifest(path: Path) -> Path:
     return path
 
 
+def _write_browser_behavior_trace(path: Path) -> Path:
+    path.write_text(
+        json.dumps(
+            {
+                "trace_version": "browser-behavior-trace/v1",
+                "prototype_label": "Hosted Evidence Workspace",
+                "trace_label": "hosted-browser-review-run",
+                "driver": "playwright",
+                "session": {
+                    "start_url": "http://127.0.0.1:4173/prototype.html",
+                    "final_url": "http://127.0.0.1:4173/prototype.html#evidence",
+                    "viewport": {"width": 1280, "height": 800},
+                },
+                "events": [
+                    {
+                        "type": "navigation",
+                        "url": "http://127.0.0.1:4173/prototype.html",
+                        "page_title": "Prototype",
+                        "timestamp_ms": 0,
+                    },
+                    {
+                        "type": "click",
+                        "selector": "[data-action='open-summary']",
+                        "target": "summary panel",
+                        "page_title": "Review Workspace",
+                        "timestamp_ms": 240,
+                    },
+                    {
+                        "type": "click",
+                        "selector": "[data-action='open-evidence']",
+                        "target": "evidence drawer",
+                        "page_title": "Review Workspace",
+                        "timestamp_ms": 700,
+                        "duration_ms": 60,
+                    },
+                    {
+                        "type": "click",
+                        "selector": "[data-action='confirm-review']",
+                        "target": "confirm review button",
+                        "page_title": "Evidence Drawer",
+                        "timestamp_ms": 1210,
+                        "result": "success",
+                    },
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 class RecordedLLMFacilitator:
     provider_name = "recorded-llm"
     model_name = "recorded-facilitator/v1"
@@ -1697,6 +1750,55 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             self.assertIn("CLICKABLE PROTOTYPE EXECUTION CONTEXT", next(call[1]["user_prompt"] for call in provider.calls if call[0] == "next_turn"))
             self.assertIn("Observed Action Trace", transcript_text)
             self.assertIn("Visited screen: Evidence Drawer", insights_text)
+            self.assertFalse(any(call[0] == "review_image_stimulus" for call in provider.calls))
+            self.assertFalse(any(call[0] == "review_flow_stimulus" for call in provider.calls))
+
+    def test_prototype_validation_browser_behavior_trace_is_normalized_and_persisted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=84)[0]
+            save_persona(persona, root / "personas")
+            provider = PrototypeValidationFacilitator()
+            trace = _write_browser_behavior_trace(root / "prototype-browser-trace.json")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=provider,
+                persona_provider=PrototypeValidationPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Validate whether the hosted prototype supports a concrete review task.",
+                interview_mode="prototype_validation",
+                product_context="A hosted workspace that summarizes evidence, reveals source detail, and asks for permission before final action.",
+                stimulus_type="clickable",
+                stimulus_artifact=str(trace),
+                prototype_task="Review one recommendation and decide whether to act on it.",
+                soft_turn_limit=7,
+                hard_turn_limit=8,
+            )
+
+            session = read_json(output / "interview.json")
+            report = read_json(output / "insight_report.json")
+            analysis = read_json(output / "stimulus_analysis.json")
+            observed = read_json(output / "observed_action_trace.json")
+            next_turn_prompt = next(call[1]["user_prompt"] for call in provider.calls if call[0] == "next_turn")
+            transcript_text = (output / "transcript.md").read_text(encoding="utf-8")
+            insights_text = (output / "insights.md").read_text(encoding="utf-8")
+
+            self.assertEqual(session["stimulus_type"], "clickable")
+            self.assertEqual(analysis["analysis_type"], "browser_clickable_trace")
+            self.assertEqual(analysis["driver"], "playwright")
+            self.assertEqual(analysis["safety_gate"]["status"], "allowed")
+            self.assertEqual(observed["trace_version"], "observed-action-trace/v1")
+            self.assertEqual(len(observed["actions"]), 4)
+            self.assertEqual(observed["actions"][0]["action"], "navigate")
+            self.assertEqual(observed["actions"][2]["raw_metadata"]["selector"], "[data-action='open-evidence']")
+            self.assertEqual(report["behavioral_evidence_boundary"]["evidence_level"], "observed_action_trace")
+            self.assertTrue(report["behavioral_evidence_boundary"]["observed_action_available"])
+            self.assertIn("BROWSER-OBSERVED EXECUTION CONTEXT", next_turn_prompt)
+            self.assertIn("Browser-observed synthetic task execution only", transcript_text)
+            self.assertIn("Safety gate: allowed", insights_text)
             self.assertFalse(any(call[0] == "review_image_stimulus" for call in provider.calls))
             self.assertFalse(any(call[0] == "review_flow_stimulus" for call in provider.calls))
 

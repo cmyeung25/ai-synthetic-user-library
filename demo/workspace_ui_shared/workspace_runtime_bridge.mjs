@@ -2,6 +2,33 @@ function compactStrings(values) {
   return [...new Set((values || []).filter((value) => typeof value === "string" && value.trim().length > 0))];
 }
 
+function normalizePersonaFilters(filters = {}) {
+  const nextFilters = {};
+  Object.entries(filters || {}).forEach(([key, value]) => {
+    const normalized = String(value || "").trim();
+    if (normalized) {
+      nextFilters[key] = normalized;
+    }
+  });
+  return nextFilters;
+}
+
+function normalizeSampleSize(value, fallback = 5) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return fallback;
+  }
+  return Math.max(1, Math.round(numeric));
+}
+
+function summarizePersonaFilters(filters = {}) {
+  const entries = Object.entries(normalizePersonaFilters(filters));
+  if (!entries.length) {
+    return "none";
+  }
+  return entries.map(([key, value]) => `${key}=${value}`).join(", ");
+}
+
 function normalizeJobStatus(status) {
   if (status === "canceled") {
     return "failed";
@@ -45,11 +72,15 @@ export function canSubmitValidationJobFromDraftPlan(draftPlan) {
 export function createWorkspaceValidationBridgeDemoContext() {
   return {
     workspace_id: "ws_api_demo",
+    project_id: null,
+    study_id: null,
     brief_path: "briefs/brief.json",
     persona_dir: "personas",
     panel_type: "mainstream",
     sample_size: 5,
     provider_name: "mock",
+    persona_filters: {},
+    mode_override: null,
     priority: "normal",
     max_retries: 1,
     run_root: "runs",
@@ -84,6 +115,8 @@ export function createWorkspaceValidationBridgeDemoJob(status = "completed") {
     last_error: status === "failed" ? "stimulus render timeout before trace packaging" : "",
     metadata: {
       workspace_id: "ws_api_demo",
+      project_id: "project_demo_inbox_coach",
+      study_id: "study_demo_onboarding_hesitation",
       draft_plan_id: "draft_plan_20260627_proto_07",
       primary_mode: "prototype_validation",
       first_task: "connect data",
@@ -104,8 +137,22 @@ export function buildValidationJobRequestFromDraftPlan({
   workspaceContext
 }) {
   const panelType = workspaceContext?.panel_type || draftPlan?.proposed_run?.panel_type || "mainstream";
-  const sampleSize = workspaceContext?.sample_size || draftPlan?.proposed_run?.sample_size || 5;
+  const sampleSize = normalizeSampleSize(
+    workspaceContext?.sample_size ?? draftPlan?.proposed_run?.sample_size,
+    5
+  );
   const providerName = workspaceContext?.provider_name || draftPlan?.proposed_run?.provider_name || "mock";
+  const personaFilters = normalizePersonaFilters(
+    workspaceContext?.persona_filters || draftPlan?.proposed_run?.persona_filters || {}
+  );
+  const modeOverride = workspaceContext?.mode_override || draftPlan?.proposed_run?.mode_override || null;
+
+  const idempotencyBase = workspaceContext?.idempotency_key || "";
+  const idempotencySuffix =
+    draftPlan?.audit?.submission_key ||
+    draftPlan?.draft_plan_id ||
+    "";
+  const idempotencyKey = [idempotencyBase, idempotencySuffix].filter(Boolean).join(":");
 
   return {
     brief_path: workspaceContext?.brief_path || "",
@@ -113,18 +160,24 @@ export function buildValidationJobRequestFromDraftPlan({
     panel_spec: {
       panel_type: panelType,
       sample_size: sampleSize,
-      random_seed: workspaceContext?.random_seed || 11
+      random_seed: workspaceContext?.random_seed || 11,
+      filters: personaFilters
     },
     provider_name: providerName,
     priority: workspaceContext?.priority || "normal",
     max_retries: workspaceContext?.max_retries || 1,
-    idempotency_key: workspaceContext?.idempotency_key || "",
+    idempotency_key: idempotencyKey,
     run_root: workspaceContext?.run_root || "runs",
     metadata: {
       workspace_id: workspaceContext?.workspace_id || draftPlan?.workspace_id || null,
+      project_id: workspaceContext?.project_id || draftPlan?.project_id || null,
+      study_id: workspaceContext?.study_id || draftPlan?.study_id || null,
       draft_plan_id: draftPlan?.draft_plan_id || null,
       primary_mode: draftPlan?.inference?.primary_mode || null,
+      mode_override: modeOverride,
       first_task: draftPlan?.proposed_run?.first_task || null,
+      persona_filters: personaFilters,
+      persona_filter_summary: summarizePersonaFilters(personaFilters),
       source_intent: draftPlan?.source_intent?.user_text || null,
       evidence_boundary: draftPlan?.evidence_boundary || null,
       bridge_version: "workspace-validation-job-bridge/v0-draft"

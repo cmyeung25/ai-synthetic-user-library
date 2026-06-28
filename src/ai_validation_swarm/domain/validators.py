@@ -263,8 +263,11 @@ def validate_observed_action_trace_payload(payload: Any, *, default_label: str =
                 "ts_ms",
                 "duration_ms",
                 "elapsed_ms",
+                "raw_metadata",
             }
         }
+        if isinstance(item.get("raw_metadata"), dict):
+            raw_metadata.update(item["raw_metadata"])
         actions.append(
             ObservedActionTraceAction(
                 step=step,

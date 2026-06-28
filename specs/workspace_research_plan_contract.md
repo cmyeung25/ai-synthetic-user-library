@@ -103,6 +103,8 @@ The draft plan contract should capture:
     "sample_size": 5,
     "stimulus_type": "static_screenshot_set",
     "provider_name": "mock",
+    "mode_override": null,
+    "persona_filters": {},
     "execution_status": "draft_only"
   },
   "evidence_boundary": {
@@ -127,7 +129,20 @@ The draft plan contract should capture:
   "advanced_controls": {
     "mode_override_available": true,
     "persona_filters_available": true,
-    "provider_override_available": true
+    "provider_override_available": true,
+    "selected_overrides": {
+      "mode_override": null,
+      "panel_type": "mainstream",
+      "sample_size": 5,
+      "provider_name": "mock",
+      "persona_filters": {}
+    },
+    "summary": {
+      "mode": "auto",
+      "panel": "mainstream:5",
+      "filters": "none",
+      "provider": "mock"
+    }
   },
   "confirmation": {
     "required": true,
@@ -232,7 +247,9 @@ Example mapping to `ValidationJobRequest`:
 - `artifact_refs[brief]` -> `brief_path`
 - `artifact_refs[persona_library]` or workspace-default library -> `persona_dir`
 - `proposed_run.panel_type` + `sample_size` -> `panel_spec`
+- `proposed_run.persona_filters` -> `panel_spec.filters`
 - `proposed_run.provider_name` -> `provider_name`
+- `proposed_run.mode_override` -> request metadata for audit and operator review
 - `confirmation.status == confirmed` -> gate before `submit_validation_job`
 
 Non-directly-executable examples:

@@ -142,7 +142,8 @@ Example frontend-generated request:
   "panel_spec": {
     "panel_type": "mainstream",
     "sample_size": 5,
-    "random_seed": 11
+    "random_seed": 11,
+    "filters": {}
   },
   "provider_name": "mock",
   "priority": "normal",
@@ -153,7 +154,10 @@ Example frontend-generated request:
     "workspace_id": "ws_api_demo",
     "draft_plan_id": "draft_plan_20260627_proto_07",
     "primary_mode": "prototype_validation",
+    "mode_override": null,
     "first_task": "connect data",
+    "persona_filters": {},
+    "persona_filter_summary": "none",
     "source_intent": "Where do new operators hesitate during onboarding, and do they continue after the first task?",
     "bridge_version": "workspace-validation-job-bridge/v0-draft"
   }
@@ -188,6 +192,12 @@ This should be `true` only when:
 - `remediation.blocking_reasons` is empty
 
 ### `request_payload`
+
+The request payload should preserve advanced study controls without moving them onto the default intake path:
+
+- `panel_spec.filters` carries persona-filter overrides when the operator opens the secondary advanced path
+- `metadata.mode_override` preserves an explicit study-mode override for audit and confirmation review
+- `run_root` remains runtime context, not conversational plan content
 
 This is the final API-facing request shape derived from the draft plus runtime context.
 

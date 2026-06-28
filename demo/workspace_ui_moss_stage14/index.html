@@ -117,8 +117,8 @@
         <section class="card">
           <div class="card-header">
             <div>
-              <h3 class="section-title">Workspace runtime inputs</h3>
-                  <p class="section-copy">These inputs stay operator-visible for now, but the shell now uses them to hydrate one backend snapshot contract instead of a page-local chain of API calls.</p>
+              <h3 class="section-title">Conversational intake and runtime inputs</h3>
+                  <p class="section-copy">This is now the default operator entry. The draft should start from research intent and first-task clarification, then move into confirmation and backend review without using scenario tabs as the main path.</p>
             </div>
             <div class="status-bar">
               <div class="status-pill queued" id="bridge-pill">draft_only</div>
@@ -127,26 +127,130 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="form-grid">
-              <div class="field">
-                <label for="api-base-url">API base URL</label>
-                <input id="api-base-url" type="text" value="http://127.0.0.1:8011">
+            <div class="workspace-shell-grid">
+              <div class="workspace-shell-column">
+                <div class="draft-panel">
+                  <div class="inline-label">Research intake</div>
+                  <div class="form-grid">
+                    <div class="field">
+                      <label for="research-intent">Research intent</label>
+                      <textarea id="research-intent" rows="4"></textarea>
+                    </div>
+                    <div class="field">
+                      <label for="desired-outcome">Desired output</label>
+                      <textarea id="desired-outcome" rows="3"></textarea>
+                    </div>
+                    <div class="field">
+                      <label for="first-task">First task anchor</label>
+                      <input id="first-task" type="text" placeholder="e.g. connect data">
+                    </div>
+                    <div class="field">
+                      <label for="artifact-files">Prototype artifacts</label>
+                      <input id="artifact-files" type="file" accept=".png,.jpg,.jpeg,.webp" multiple>
+                    </div>
+                  </div>
+                  <p class="footer-note" id="artifact-file-note">No prototype artifacts attached yet.</p>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Conversation thread</div>
+                  <div class="chat-stream" id="conversation-thread"></div>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Draft actions</div>
+                  <div class="cta-row" id="operator-actions"></div>
+                </div>
               </div>
-              <div class="field">
-                <label for="api-token">Bearer token</label>
-                <input id="api-token" type="text" value="token-api">
-              </div>
-              <div class="field">
-                <label for="brief-path">brief_path</label>
-                <input id="brief-path" type="text" value="briefs/brief.json">
-              </div>
-              <div class="field">
-                <label for="persona-dir">persona_dir</label>
-                <input id="persona-dir" type="text" value="personas">
+
+              <div class="workspace-shell-column">
+                <div class="draft-panel">
+                  <div class="inline-label">Workspace runtime</div>
+                  <div class="form-grid">
+                    <div class="field">
+                      <label for="api-base-url">API base URL</label>
+                      <input id="api-base-url" type="text" value="http://127.0.0.1:8011">
+                    </div>
+                    <div class="field">
+                      <label for="api-token">Bearer token</label>
+                      <input id="api-token" type="text" value="token-api">
+                    </div>
+                  </div>
+                  <details>
+                    <summary>Advanced study controls</summary>
+                    <div class="form-grid" style="margin-top: 14px;">
+                      <div class="field">
+                        <label for="brief-path">brief_path</label>
+                        <input id="brief-path" type="text" value="briefs/brief.json">
+                      </div>
+                      <div class="field">
+                        <label for="persona-dir">persona_dir</label>
+                        <input id="persona-dir" type="text" value="personas">
+                      </div>
+                      <div class="field">
+                        <label for="run-root">run_root</label>
+                        <input id="run-root" type="text" value="runs">
+                      </div>
+                      <div class="field">
+                        <label for="mode-override">mode override</label>
+                        <select id="mode-override">
+                          <option value="auto">auto infer</option>
+                          <option value="prototype_validation">prototype_validation</option>
+                          <option value="concept_validation">concept_validation</option>
+                          <option value="adoption_barrier_validation">adoption_barrier_validation</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="panel-type">panel_type</label>
+                        <select id="panel-type">
+                          <option value="mainstream">mainstream</option>
+                          <option value="skeptic">skeptic</option>
+                          <option value="privacy_sensitive">privacy_sensitive</option>
+                          <option value="budget_constrained">budget_constrained</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="sample-size">sample_size</label>
+                        <input id="sample-size" type="number" min="1" max="12" step="1" value="5">
+                      </div>
+                      <div class="field">
+                        <label for="provider-name">provider_name</label>
+                        <select id="provider-name">
+                          <option value="mock">mock</option>
+                          <option value="codex">codex</option>
+                          <option value="openai">openai</option>
+                          <option value="agnes">agnes</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="persona-filter-location">persona filter: location_type</label>
+                        <select id="persona-filter-location">
+                          <option value="all">all</option>
+                          <option value="urban_core">urban_core</option>
+                          <option value="suburban">suburban</option>
+                          <option value="regional">regional</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="persona-filter-privacy">persona filter: privacy_concern</label>
+                        <select id="persona-filter-privacy">
+                          <option value="all">all</option>
+                          <option value="low">low</option>
+                          <option value="medium">medium</option>
+                          <option value="high">high</option>
+                        </select>
+                      </div>
+                    </div>
+                    <p class="footer-note">This stays off the default intake path. Use it only when the operator needs a deliberate mode override, panel tuning, or narrower persona selection before confirmation.</p>
+                  </details>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Intake signals</div>
+                  <div class="surface-grid" id="intake-metric-grid"></div>
+                </div>
               </div>
             </div>
-
-            <div class="cta-row" id="draft-scenario-actions"></div>
           </div>
         </section>
 
@@ -320,6 +424,11 @@
                   <p class="footer-note" id="evidence-result-note"></p>
                 </div>
 
+                <div class="draft-panel">
+                  <div class="inline-label">Evidence coverage</div>
+                  <div class="surface-grid" id="evidence-coverage-grid"></div>
+                </div>
+
                 <div class="summary-card">
                   <strong>Selected evidence</strong>
                   <div class="summary-list" id="selected-evidence-summary"></div>
@@ -328,8 +437,33 @@
 
                 <div class="summary-card">
                   <strong>Replay focus</strong>
+                  <div class="summary-list" id="replay-focus-summary"></div>
+                  <div class="signal-grid" id="replay-focus-detail"></div>
                   <div class="timeline" id="replay-step-list"></div>
                   <p class="footer-note" id="replay-note"></p>
+                </div>
+
+                <div class="summary-card">
+                  <strong>Cross-run comparison</strong>
+                  <div class="summary-list" id="cross-run-summary"></div>
+                  <div class="signal-grid" id="cross-run-detail"></div>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Comparable runs</div>
+                  <div class="evidence-grid" id="cross-run-candidate-grid"></div>
+                  <p class="footer-note" id="cross-run-note"></p>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Comparison run artifacts</div>
+                  <div class="evidence-grid" id="cross-run-result-grid"></div>
+                </div>
+
+                <div class="draft-panel">
+                  <div class="inline-label">Related evidence</div>
+                  <div class="evidence-grid" id="related-evidence-grid"></div>
+                  <p class="footer-note" id="related-evidence-note"></p>
                 </div>
               </div>
             </section>
@@ -413,14 +547,6 @@
     const controller = createWorkspaceShellAppController();
     let runtimeSyncTimer = null;
 
-    const draftScenarioConfig = [
-      { id: "blocked_draft", label: "blocked draft" },
-      { id: "ready_for_confirmation", label: "ready for confirmation" },
-      { id: "confirmed_draft", label: "confirmed draft" },
-      { id: "completed_local_shell", label: "completed local shell" },
-      { id: "failed_local_shell", label: "failed local shell" }
-    ];
-
     const metricPlanReadiness = document.getElementById("metric-plan-readiness");
     const metricSessionStatus = document.getElementById("metric-session-status");
     const metricSelectedRun = document.getElementById("metric-selected-run");
@@ -432,7 +558,9 @@
     const jobPill = document.getElementById("job-pill");
     const evidencePill = document.getElementById("evidence-pill");
     const querySourcePill = document.getElementById("query-source-pill");
-    const draftScenarioActions = document.getElementById("draft-scenario-actions");
+    const conversationThread = document.getElementById("conversation-thread");
+    const operatorActions = document.getElementById("operator-actions");
+    const intakeMetricGrid = document.getElementById("intake-metric-grid");
     const stageStrip = document.getElementById("stage-strip");
     const draftSummary = document.getElementById("draft-summary");
     const adapterSummary = document.getElementById("adapter-summary");
@@ -452,10 +580,20 @@
     const runtimeSyncSummary = document.getElementById("runtime-sync-summary");
     const evidenceResultGrid = document.getElementById("evidence-result-grid");
     const evidenceResultNote = document.getElementById("evidence-result-note");
+    const evidenceCoverageGrid = document.getElementById("evidence-coverage-grid");
     const selectedEvidenceSummary = document.getElementById("selected-evidence-summary");
     const selectedEvidenceDetail = document.getElementById("selected-evidence-detail");
+    const replayFocusSummary = document.getElementById("replay-focus-summary");
+    const replayFocusDetail = document.getElementById("replay-focus-detail");
     const replayStepList = document.getElementById("replay-step-list");
     const replayNote = document.getElementById("replay-note");
+    const crossRunSummary = document.getElementById("cross-run-summary");
+    const crossRunDetail = document.getElementById("cross-run-detail");
+    const crossRunCandidateGrid = document.getElementById("cross-run-candidate-grid");
+    const crossRunResultGrid = document.getElementById("cross-run-result-grid");
+    const crossRunNote = document.getElementById("cross-run-note");
+    const relatedEvidenceGrid = document.getElementById("related-evidence-grid");
+    const relatedEvidenceNote = document.getElementById("related-evidence-note");
     const sidecarStack = document.getElementById("sidecar-stack");
     const apiResponseJson = document.getElementById("api-response-json");
     const requestJson = document.getElementById("request-json");
@@ -464,10 +602,22 @@
     const shellStateJson = document.getElementById("shell-state-json");
     const selectedJobJson = document.getElementById("selected-job-json");
 
+    const researchIntentInput = document.getElementById("research-intent");
+    const desiredOutcomeInput = document.getElementById("desired-outcome");
+    const firstTaskInput = document.getElementById("first-task");
+    const artifactFilesInput = document.getElementById("artifact-files");
+    const artifactFileNote = document.getElementById("artifact-file-note");
     const apiBaseUrlInput = document.getElementById("api-base-url");
     const apiTokenInput = document.getElementById("api-token");
     const briefPathInput = document.getElementById("brief-path");
     const personaDirInput = document.getElementById("persona-dir");
+    const runRootInput = document.getElementById("run-root");
+    const modeOverrideSelect = document.getElementById("mode-override");
+    const panelTypeSelect = document.getElementById("panel-type");
+    const sampleSizeInput = document.getElementById("sample-size");
+    const providerNameSelect = document.getElementById("provider-name");
+    const personaFilterLocationSelect = document.getElementById("persona-filter-location");
+    const personaFilterPrivacySelect = document.getElementById("persona-filter-privacy");
     const evidenceQueryTextInput = document.getElementById("evidence-query-text");
     const evidenceFamilySelect = document.getElementById("evidence-family");
     const evidenceSortSelect = document.getElementById("evidence-sort");
@@ -478,12 +628,29 @@
     const runtimeSyncToggleButton = document.getElementById("runtime-sync-toggle");
     const applyEvidenceQueryButton = document.getElementById("apply-evidence-query");
 
+    function buildPersonaFilters() {
+      const filters = {};
+      if (personaFilterLocationSelect.value !== "all") {
+        filters.location_type = personaFilterLocationSelect.value;
+      }
+      if (personaFilterPrivacySelect.value !== "all") {
+        filters.privacy_concern = personaFilterPrivacySelect.value;
+      }
+      return filters;
+    }
+
     function readInputs() {
       return {
         apiBaseUrl: apiBaseUrlInput.value.trim(),
         bearerToken: apiTokenInput.value.trim(),
         briefPath: briefPathInput.value.trim(),
         personaDir: personaDirInput.value.trim(),
+        runRoot: runRootInput.value.trim(),
+        modeOverride: modeOverrideSelect.value,
+        panelType: panelTypeSelect.value,
+        sampleSize: Number(sampleSizeInput.value) || 5,
+        providerName: providerNameSelect.value,
+        personaFilters: buildPersonaFilters(),
         queryState: {
           queryText: evidenceQueryTextInput.value.trim(),
           activeFamily: evidenceFamilySelect.value,
@@ -541,17 +708,59 @@
     }
 
     function renderScenarioActions(model) {
-      draftScenarioActions.innerHTML = "";
-      draftScenarioConfig.forEach((scenario) => {
+      operatorActions.innerHTML = "";
+      const actions = [
+        {
+          label: model.state.shellState?.hasScreenshots ? "clear artifacts" : "use sample artifacts",
+          onClick: () => {
+            controller.togglePrototypeArtifacts();
+            render();
+          }
+        },
+        {
+          label: model.state.shellState?.fallbackChosen ? "clear fallback" : "choose fallback",
+          disabled: model.state.shellState?.lifecycle !== "ready_to_queue",
+          onClick: () => {
+            controller.toggleFallbackMode();
+            render();
+          }
+        },
+        {
+          label: model.state.shellState?.savedBlocked ? "resume draft" : "save blocked draft",
+          disabled: model.state.shellState?.lifecycle !== "ready_to_queue",
+          onClick: () => {
+            controller.toggleSavedDraft();
+            render();
+          }
+        },
+        {
+          label: "confirm plan",
+          primary: true,
+          disabled: model.bundle?.adapter?.ui_phase !== "ready_for_confirmation",
+          onClick: () => {
+            controller.confirmDraftPlan(readInputs());
+            render();
+          }
+        },
+        {
+          label: "reset draft",
+          onClick: () => {
+            controller.resetDraftFlow();
+            render();
+          }
+        }
+      ];
+
+      actions.forEach((action) => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = `action-button${model.frontendState.metrics.bridge_status === "ready_to_submit" && scenario.id === "confirmed_draft" ? " primary" : ""}`;
-        button.textContent = scenario.label;
-        button.addEventListener("click", () => {
-          controller.applyDraftScenario(scenario.id);
-          render();
-        });
-        draftScenarioActions.appendChild(button);
+        button.className = `action-button${action.primary ? " primary" : ""}${action.disabled ? " disabled" : ""}`;
+        if (action.disabled) {
+          button.setAttribute("aria-disabled", "true");
+        }
+        button.textContent = action.label;
+        button.addEventListener("click", action.onClick);
+        operatorActions.appendChild(button);
       });
     }
 
@@ -617,6 +826,7 @@
         evidenceResultGrid.appendChild(card);
       });
 
+      renderCapabilityCards(evidenceCoverageGrid, reviewSurface.evidence_coverage_cards || []);
       renderRows(selectedEvidenceSummary, reviewSurface.selected_evidence_summary || []);
       selectedEvidenceDetail.innerHTML = "";
       (reviewSurface.selected_evidence_detail || []).forEach((item) => {
@@ -624,6 +834,15 @@
         card.className = `signal-card${item.tone === "active" ? " active" : ""}`;
         card.innerHTML = `<strong>${item.title}</strong><span>${item.body}</span>`;
         selectedEvidenceDetail.appendChild(card);
+      });
+
+      renderRows(replayFocusSummary, reviewSurface.replay_focus_summary || []);
+      replayFocusDetail.innerHTML = "";
+      (reviewSurface.replay_focus_detail || []).forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `signal-card${item.tone === "active" ? " active" : ""}`;
+        card.innerHTML = `<strong>${item.title}</strong><span>${item.body}</span>`;
+        replayFocusDetail.appendChild(card);
       });
 
       replayStepList.innerHTML = "";
@@ -645,6 +864,89 @@
           render();
         });
         replayStepList.appendChild(card);
+      });
+
+      renderRows(crossRunSummary, reviewSurface.cross_run_summary || []);
+      crossRunDetail.innerHTML = "";
+      (reviewSurface.cross_run_detail || []).forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `signal-card${item.tone === "active" ? " active" : ""}`;
+        card.innerHTML = `<strong>${item.title}</strong><span>${item.body}</span>`;
+        crossRunDetail.appendChild(card);
+      });
+
+      crossRunCandidateGrid.innerHTML = "";
+      crossRunNote.textContent = reviewSurface.cross_run_note || "";
+      (reviewSurface.cross_run_candidates || []).forEach((run) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `evidence-card${run.selected ? " active" : ""}`;
+        card.innerHTML = `
+          <strong>${run.title}</strong>
+          <div class="evidence-meta">
+            <span>${run.status}</span>
+            <span>${run.run_kind}</span>
+            <span>${run.relation_note}</span>
+          </div>
+          <p>${run.result_count} result(s) | ${run.replay_result_count} replay-bearing.</p>
+        `;
+        card.addEventListener("click", async () => {
+          if (model.state.mode === "live" && model.state.selectedJobId) {
+            await performRuntimeSync({
+              selectedResultId: reviewSurface.selected_result_id || "",
+              selectedReplayStepId: reviewSurface.selected_replay_step_id || "",
+              selectedComparisonRunId: run.run_id || ""
+            });
+          } else {
+            render();
+          }
+        });
+        crossRunCandidateGrid.appendChild(card);
+      });
+
+      crossRunResultGrid.innerHTML = "";
+      (reviewSurface.cross_run_result_cards || []).forEach((result) => {
+        const card = document.createElement("div");
+        card.className = `evidence-card${result.recommended ? " active" : ""}`;
+        card.innerHTML = `
+          <strong>${result.title}</strong>
+          <div class="evidence-meta">
+            <span>${result.family}</span>
+            <span>${result.kind}</span>
+            <span>${result.recommended ? "recommended" : "comparison artifact"}</span>
+          </div>
+          <p>${result.summary}</p>
+        `;
+        crossRunResultGrid.appendChild(card);
+      });
+
+      relatedEvidenceGrid.innerHTML = "";
+      relatedEvidenceNote.textContent = reviewSurface.related_results_note || "";
+      (reviewSurface.related_results || []).forEach((result) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "evidence-card";
+        card.innerHTML = `
+          <strong>${result.title}</strong>
+          <div class="evidence-meta">
+            <span>${result.family}</span>
+            <span>${result.kind}</span>
+            <span>${result.relation_note}</span>
+          </div>
+          <p>${result.summary}</p>
+        `;
+        card.addEventListener("click", async () => {
+          if (model.state.mode === "live" && model.state.selectedJobId) {
+            await performRuntimeSync({
+              selectedResultId: result.id,
+              selectedReplayStepId: ""
+            });
+          } else {
+            controller.selectLocalEvidenceResult(result.id);
+          }
+          render();
+        });
+        relatedEvidenceGrid.appendChild(card);
       });
     }
 
@@ -671,6 +973,13 @@
       querySourcePill.className = `status-pill ${model.querySource === "backend" ? "completed" : "queued"}`;
       querySourcePill.textContent = model.querySource === "backend" ? "backend evidence endpoint" : "local projection";
 
+      researchIntentInput.value = model.state.shellState?.researchIntent || "";
+      desiredOutcomeInput.value = model.state.shellState?.desiredOutcome || "";
+      firstTaskInput.value = model.state.shellState?.firstTask || "";
+      artifactFileNote.textContent = (model.state.shellState?.attachedArtifacts || []).length
+        ? `${model.state.shellState.attachedArtifacts.length} artifact(s): ${model.state.shellState.attachedArtifacts.join(", ")}`
+        : "No prototype artifacts attached yet.";
+
       renderScenarioActions(model);
 
       stageStrip.innerHTML = "";
@@ -679,6 +988,39 @@
         card.className = `journey-step ${stage.state === "done" ? "done" : stage.state === "active" ? "active" : ""}`;
         card.innerHTML = `<strong>${stage.label}</strong><span>${stage.state}</span>`;
         stageStrip.appendChild(card);
+      });
+
+      conversationThread.innerHTML = "";
+      (model.bundle.workspace_shell.conversation_feed || []).forEach((entry) => {
+        const bubble = document.createElement("div");
+        bubble.className = `bubble ${entry.speaker === "user" ? "user" : "system"}`;
+        bubble.innerHTML = `<span class="message-meta">${entry.title}</span>${entry.body}`;
+        conversationThread.appendChild(bubble);
+      });
+
+      intakeMetricGrid.innerHTML = "";
+      const advancedSummary = model.bundle.draft?.advanced_controls?.summary || {};
+      const advancedFilters = advancedSummary.filters || "none";
+      const advancedChanged =
+        advancedSummary.mode !== "auto" ||
+        advancedSummary.panel !== "mainstream:5" ||
+        advancedSummary.provider !== "mock" ||
+        advancedFilters !== "none" ||
+        readInputs().personaDir !== "personas" ||
+        readInputs().briefPath !== "briefs/brief.json" ||
+        readInputs().runRoot !== "runs";
+      [
+        { title: "Artifacts", body: model.state.shellState?.hasScreenshots ? `${(model.state.shellState?.attachedArtifacts || []).length || 1} prototype artifact(s) attached` : "prototype input still missing", active: Boolean(model.state.shellState?.hasScreenshots) },
+        { title: "First task", body: model.state.shellState?.firstTask || "still missing", active: Boolean(model.state.shellState?.firstTask) },
+        { title: "Fallback", body: model.state.shellState?.fallbackChosen ? "concept fallback active" : "prototype path retained", active: Boolean(model.state.shellState?.fallbackChosen) },
+        { title: "Queueability", body: model.bundle.adapter.ui_phase === "ready_for_confirmation" ? "ready for confirmation" : model.bundle.adapter.ui_phase, active: model.bundle.adapter.ui_phase === "ready_for_confirmation" },
+        { title: "Study controls", body: `${advancedSummary.mode || "auto"} | ${advancedSummary.panel || "mainstream:5"} | ${advancedSummary.provider || "mock"}`, active: advancedChanged },
+        { title: "Persona filters", body: advancedFilters, active: advancedFilters !== "none" }
+      ].forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `surface-card${item.active ? " active" : ""}`;
+        card.innerHTML = `<strong>${item.title}</strong><span>${item.body}</span>`;
+        intakeMetricGrid.appendChild(card);
       });
 
       renderRows(draftSummary, model.frontendState.draft_summary);
@@ -735,7 +1077,8 @@
       if (model.state.mode === "live" && model.state.selectedJobId) {
         await performRuntimeSync({
           selectedResultId: "",
-          selectedReplayStepId: ""
+          selectedReplayStepId: "",
+          selectedComparisonRunId: ""
         });
       } else {
         controller.clearLocalEvidenceQuery();
@@ -765,6 +1108,40 @@
       controller.useSampleJobs();
       render();
     });
+    researchIntentInput.addEventListener("input", () => {
+      controller.updateDraftInput({ researchIntent: researchIntentInput.value });
+      render();
+    });
+    desiredOutcomeInput.addEventListener("input", () => {
+      controller.updateDraftInput({ desiredOutcome: desiredOutcomeInput.value });
+      render();
+    });
+    firstTaskInput.addEventListener("input", () => {
+      controller.updateDraftInput({ firstTask: firstTaskInput.value });
+      render();
+    });
+    artifactFilesInput.addEventListener("change", () => {
+      controller.setPrototypeArtifacts(Array.from(artifactFilesInput.files || []).map((file) => file.name));
+      render();
+    });
+    [
+      apiBaseUrlInput,
+      apiTokenInput,
+      briefPathInput,
+      personaDirInput,
+      runRootInput,
+      sampleSizeInput,
+      evidenceQueryTextInput
+    ].forEach((node) => node.addEventListener("input", render));
+    [
+      modeOverrideSelect,
+      panelTypeSelect,
+      providerNameSelect,
+      personaFilterLocationSelect,
+      personaFilterPrivacySelect,
+      evidenceFamilySelect,
+      evidenceSortSelect
+    ].forEach((node) => node.addEventListener("change", render));
     runtimeSyncNowButton.addEventListener("click", performRuntimeSync);
     runtimeSyncToggleButton.addEventListener("click", toggleRuntimeAutoRefresh);
     applyEvidenceQueryButton.addEventListener("click", applyEvidenceQuery);

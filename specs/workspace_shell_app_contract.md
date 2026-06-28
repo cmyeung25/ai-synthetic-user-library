@@ -19,6 +19,10 @@ Stage 13 introduces `demo/workspace_ui_shared/workspace_shell_app.mjs` so the ne
 - runtime sync heartbeat and auto-refresh
 
 Stage 14 extends that boundary so live shell hydration can flow through one backend `workspace-shell` snapshot instead of a page-local chain of session, job-detail, and evidence-query calls.
+The same shared controller now also owns intake-first draft mutation so the Stage 14 shell can start from editable research intent, artifact state, and first-task clarification instead of only preset scenario jumps.
+Milestone 11 now extends the same controller into product-surface orchestration for `projects`, `studies`, `saved evidence views`, `decision logs`, `export bundles`, `share bundles`, and `support snapshots`, so a future hosted shell does not reimplement product-object fetch and selection rules page by page.
+The current hosted shell also uses this controller as the route-bootstrap boundary for product-object deep links, so route-aware selection logic stays shared instead of being hard-coded into individual pages.
+Stage 15 now also has a dedicated hosted-shell entry module at `demo/workspace_ui_moss_stage15/workspace_shell_stage15_app.mjs`, so the first same-origin product shell no longer depends on one large inline page script for mount, route bootstrap, and event wiring.
 
 ## Why this matters now
 
@@ -37,6 +41,7 @@ This is not only UI polish. It is a boundary hardening step that reduces drift b
 ## Module
 
 - `demo/workspace_ui_shared/workspace_shell_app.mjs`
+- current hosted-shell consumer: `demo/workspace_ui_moss_stage15/workspace_shell_stage15_app.mjs`
 
 ## Primary exports
 
@@ -85,6 +90,9 @@ Stateful controller for mutating and refreshing shell state.
 
 Supported responsibilities:
 
+- update editable draft intake fields
+- toggle prototype-artifact readiness, fallback mode, and saved-draft state
+- confirm a queueable draft into the submission-ready shell path
 - reset shell state
 - apply sample draft scenarios
 - switch to sample jobs
@@ -95,6 +103,16 @@ Supported responsibilities:
 - toggle runtime auto refresh
 - submit live job
 - load workspace session
+- load and create projects
+- load and create studies
+- load, create, and detail-load saved evidence views
+- load, create, and detail-load decision logs
+- load and create export bundles
+- load, create, and revoke share bundles
+- load support diagnostics and support snapshots
+- create support snapshots
+- load route-scoped project, study, evidence-view, decision-log, export-bundle, share-bundle, and support-snapshot detail
+- select project, study, evidence view, decision log, export bundle, share bundle, and support snapshot context
 - list live jobs
 - load selected live job
 - load live evidence query
@@ -118,9 +136,22 @@ When the live shell is already operating in backend mode, `syncRuntime(input)` s
 ### Local transitions
 
 - `reset()`
+- `resetDraftFlow()`
 - `applyDraftScenario(scenarioId)`
+- `updateDraftInput(input)`
+- `togglePrototypeArtifacts()`
+- `toggleFallbackMode()`
+- `toggleSavedDraft()`
+- `confirmDraftPlan(input)`
 - `useSampleJobs()`
 - `selectJob(jobId)`
+- `selectProject(projectId)`
+- `selectStudy(studyId)`
+- `selectEvidenceView(evidenceViewId)`
+- `selectDecisionLog(decisionLogId)`
+- `selectExportBundle(exportBundleId)`
+- `selectShareBundle(shareBundleId)`
+- `selectSupportSnapshot(supportSnapshotId)`
 - `selectLocalEvidenceResult(resultId)`
 - `selectLocalReplayStep(stepId)`
 - `clearLocalEvidenceQuery()`
@@ -129,6 +160,29 @@ When the live shell is already operating in backend mode, `syncRuntime(input)` s
 ### Runtime actions
 
 - `submitLiveJob(input)`
+- `loadProjects(input)`
+- `createProject(input)`
+- `loadStudies(input)`
+- `createStudy(input)`
+- `loadEvidenceViews(input)`
+- `createEvidenceView(input)`
+- `loadEvidenceViewDetail(input)`
+- `loadDecisionLogs(input)`
+- `createDecisionLog(input)`
+- `loadDecisionLogDetail(input)`
+- `loadExportBundles(input)`
+- `createExportBundle(input)`
+- `loadShareBundles(input)`
+- `createShareBundle(input)`
+- `revokeShareBundle(input)`
+- `loadSupportDiagnostics(input)`
+- `loadSupportSnapshots(input)`
+- `createSupportSnapshot(input)`
+- `loadProjectDetail(input)`
+- `loadStudyDetail(input)`
+- `loadExportBundleDetail(input)`
+- `loadShareBundleDetail(input)`
+- `loadSupportSnapshotDetail(input)`
 - `loadWorkspaceSession(input)`
 - `listLiveJobs(input)`
 - `loadSelectedLiveJob(input)`
@@ -142,6 +196,8 @@ When the live shell is already operating in backend mode, `syncRuntime(input)` s
 
 so frontend pages can keep evidence focus inside the same snapshot-driven refresh path.
 
+Hosted route bootstrap should prefer these detail loaders before the first snapshot sync when the URL already identifies a concrete product object.
+
 ## Composition rule
 
 Future frontend pages should:
@@ -149,7 +205,7 @@ Future frontend pages should:
 1. keep form inputs page-local
 2. pass those inputs into `deriveModel(...)` and runtime actions
 3. render from the returned model
-4. avoid rebuilding runtime orchestration inside page-local scripts
+4. avoid rebuilding runtime orchestration inside page-local scripts or inline HTML modules
 
 ## Non-goals
 
@@ -166,12 +222,16 @@ This contract does not yet define:
 Executable coverage:
 
 - `tests/workspace_ui/test_workspace_shell_app.mjs`
+- `tests/workspace_ui/test_workspace_shell_stage15_app.mjs`
 
 That coverage must at least prove:
 
 - default draft-only model derivation
+- editable intake input updates and confirmation-ready promotion
 - confirmed-draft submission readiness
 - controller-driven job submission and session loading
 - controller-driven runtime sync
 - controller-driven snapshot-focused evidence selection
+- controller-managed support diagnostics and support snapshot selection
+- controller-managed route-scoped product detail bootstrap
 - controller-managed auto-refresh toggle state

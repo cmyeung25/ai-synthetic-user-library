@@ -54,12 +54,15 @@ Why it matters now:
 
 Minimum supported parameters:
 
+- `project_id`
+- `study_id`
 - `job_id`
 - `query_text`
 - `active_family`
 - `sort_by`
 - `selected_result_id`
 - `selected_replay_step_id`
+- `selected_comparison_run_id`
 
 The frontend may omit `job_id` when it only needs workspace/session context.
 
@@ -76,6 +79,27 @@ Example:
         "workspace_id": "ws_api_demo",
         "role": "owner"
       }
+    },
+    "projects": [
+      {
+        "project_id": "project_001",
+        "name": "Inbox Coach Launch"
+      }
+    ],
+    "selected_project_id": "project_001",
+    "selected_project": {
+      "project_id": "project_001"
+    },
+    "studies": [
+      {
+        "study_id": "study_001",
+        "project_id": "project_001",
+        "latest_job_id": "job_001"
+      }
+    ],
+    "selected_study_id": "study_001",
+    "selected_study": {
+      "study_id": "study_001"
     },
     "jobs": [
       {
@@ -95,6 +119,24 @@ Example:
       "result_count": 1,
       "selected_result_id": "query-run_report",
       "selected_replay_step_id": "step-03",
+      "replay_context": {
+        "selected_result_has_replay": false,
+        "replay_result_count": 2,
+        "selected_family_replay_result_count": 0,
+        "note": "Selected evidence has no replay steps. 2 other visible result(s) carry replay context."
+      },
+      "comparison_context": {
+        "selected_family_result_count": 1,
+        "selected_family_replay_result_count": 0,
+        "recommended_comparison_id": "query-raw_responses",
+        "note": "Selected evidence has no direct replay steps. Compare with replay-bearing artifacts for execution context."
+      },
+      "cross_run_comparison": {
+        "comparison_run_count": 1,
+        "selected_comparison_run_id": "run_20260628_102100",
+        "selected_comparison_job_id": "job_007",
+        "note": "1 comparable completed run is available for cross-run review."
+      },
       "results": [
         {
           "id": "query-run_report",
@@ -134,13 +176,39 @@ Should reuse the session summary shape already served by `GET /api/v1/session`.
 
 Should expose the current workspace job list with the same lifecycle semantics already used by the validation-job API.
 
+### `projects`
+
+Should expose visible workspace projects for the hosted product shell.
+
+### `selected_project_id`
+
+Should reflect:
+
+1. an explicit `project_id` query parameter when present
+2. otherwise the project implied by the selected study when present
+3. otherwise the first visible project
+4. otherwise `null`
+
+### `studies`
+
+Should expose visible workspace studies, scoped to the selected project when one is selected.
+
+### `selected_study_id`
+
+Should reflect:
+
+1. an explicit `study_id` query parameter when present
+2. otherwise the first visible study in the scoped project view
+3. otherwise `null`
+
 ### `selected_job_id`
 
 Should reflect:
 
 1. an explicit `job_id` query parameter when present
-2. otherwise the first available job
-3. otherwise `null`
+2. otherwise the latest job implied by the selected study when available
+3. otherwise the first available job
+4. otherwise `null`
 
 ### `selected_job`
 
@@ -148,7 +216,7 @@ Should be the selected job object or `null`.
 
 ### `evidence_query`
 
-Should embed the completed-run or pending-run evidence query payload instead of forcing the frontend to make a second query call during ordinary shell refresh.
+Should embed the completed-run or pending-run evidence query payload, including replay context, nearby comparison guidance, and initial cross-run comparison guidance, instead of forcing the frontend to make a second query call during ordinary shell refresh.
 
 ### `capabilities`
 
@@ -183,7 +251,6 @@ This contract does not yet define:
 
 - push subscriptions or websockets
 - persistent conversational thread state
-- cross-run comparison payloads
 - deep replay artifact expansion beyond the current evidence-query payload
 - tenant-admin or billing-management surfaces
 

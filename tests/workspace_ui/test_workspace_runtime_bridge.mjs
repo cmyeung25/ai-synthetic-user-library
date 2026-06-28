@@ -49,8 +49,56 @@ test("buildValidationJobRequestFromDraftPlan maps draft plan into validation-job
   assert.equal(payload.panel_spec.panel_type, "mainstream");
   assert.equal(payload.panel_spec.sample_size, 5);
   assert.equal(payload.provider_name, "mock");
+  assert.equal(payload.metadata.project_id, null);
+  assert.equal(payload.metadata.study_id, null);
   assert.equal(payload.metadata.primary_mode, "prototype_validation");
   assert.equal(payload.metadata.first_task, "connect data");
+  assert.deepEqual(payload.panel_spec.filters, {});
+});
+
+test("buildValidationJobRequestFromDraftPlan carries advanced study controls into the request payload", () => {
+  const payload = buildValidationJobRequestFromDraftPlan({
+    draftPlan: makeDraftPlan({
+      inference: {
+        primary_mode: "concept_validation"
+      },
+      proposed_run: {
+        first_task: "connect data",
+        provider_name: "codex",
+        panel_type: "skeptic",
+        sample_size: 3,
+        mode_override: "concept_validation",
+        persona_filters: {
+          location_type: "urban_core",
+          privacy_concern: "high"
+        }
+      }
+    }),
+    workspaceContext: {
+      workspace_id: "ws_api_demo",
+      project_id: "project_001",
+      study_id: "study_001",
+      brief_path: "briefs/custom.json",
+      persona_dir: "personas_v2",
+      run_root: "runs/review"
+    }
+  });
+
+  assert.equal(payload.brief_path, "briefs/custom.json");
+  assert.equal(payload.persona_dir, "personas_v2");
+  assert.equal(payload.panel_spec.panel_type, "skeptic");
+  assert.equal(payload.panel_spec.sample_size, 3);
+  assert.deepEqual(payload.panel_spec.filters, {
+    location_type: "urban_core",
+    privacy_concern: "high"
+  });
+  assert.equal(payload.provider_name, "codex");
+  assert.equal(payload.run_root, "runs/review");
+  assert.equal(payload.metadata.project_id, "project_001");
+  assert.equal(payload.metadata.study_id, "study_001");
+  assert.equal(payload.metadata.primary_mode, "concept_validation");
+  assert.equal(payload.metadata.mode_override, "concept_validation");
+  assert.equal(payload.metadata.persona_filter_summary, "location_type=urban_core, privacy_concern=high");
 });
 
 test("canSubmitValidationJobFromDraftPlan requires confirmed and unblocked draft", () => {

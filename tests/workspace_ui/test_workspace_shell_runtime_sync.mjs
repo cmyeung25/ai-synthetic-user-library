@@ -169,9 +169,11 @@ test("syncWorkspaceShellRuntime forwards evidence selection overrides through th
     },
     selectedResultId: "query-run_report",
     selectedReplayStepId: "step-03",
+    selectedComparisonRunId: "run_002",
     fetchImpl: async (url) => {
       assert.match(url, /selected_result_id=query-run_report/);
       assert.match(url, /selected_replay_step_id=step-03/);
+      assert.match(url, /selected_comparison_run_id=run_002/);
       return fakeResponse(200, {
         snapshot: {
           session: {
@@ -191,6 +193,9 @@ test("syncWorkspaceShellRuntime forwards evidence selection overrides through th
             result_count: 1,
             selected_result_id: "query-run_report",
             selected_replay_step_id: "step-03",
+            cross_run_comparison: {
+              selected_comparison_run_id: "run_002"
+            },
             results: [{ id: "query-run_report" }]
           },
           runtime_sync: {
@@ -203,6 +208,7 @@ test("syncWorkspaceShellRuntime forwards evidence selection overrides through th
 
   assert.equal(next.liveEvidenceQuery.selected_result_id, "query-run_report");
   assert.equal(next.liveEvidenceQuery.selected_replay_step_id, "step-03");
+  assert.equal(next.liveEvidenceQuery.cross_run_comparison.selected_comparison_run_id, "run_002");
   assert.equal(next.runtimeSync.interval_ms, 5000);
 });
 

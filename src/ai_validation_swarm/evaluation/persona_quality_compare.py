@@ -275,7 +275,7 @@ def run_persona_quality_compare(
 ) -> dict[str, Any]:
     resolved_seeds = list(seeds) or [101, 202, 303]
     resolved_experiment_id = experiment_id or (
-        f"persona_ab_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}_{candidate_backend}_vs_{baseline_backend}_matched_pairs"
+        f"persona_ab_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S_%f')}_{candidate_backend}_vs_{baseline_backend}_matched_pairs"
     )
     experiment_dir = output_root / resolved_experiment_id
     baseline_dir = experiment_dir / "baseline_personas"

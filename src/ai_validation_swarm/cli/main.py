@@ -13,6 +13,7 @@ from ai_validation_swarm.domain.validators import (
 )
 from ai_validation_swarm.evaluation.comparison import compare_evaluation_files
 from ai_validation_swarm.evaluation.harness import run_evaluation_suite
+from ai_validation_swarm.evaluation.human_calibration import run_human_calibration_suite
 from ai_validation_swarm.personas.analysis import build_persona_library_summary
 from ai_validation_swarm.personas.batch import enrich_persona_library, enrich_persona_library_to_target, list_valid_persona_ids
 from ai_validation_swarm.personas.generator import PANEL_ROLES, generate_personas
@@ -566,6 +567,12 @@ def _build_parser() -> argparse.ArgumentParser:
     evaluation_cmd.add_argument("--output-dir", type=Path, default=Path("evaluations"))
     evaluation_cmd.add_argument("--repeat-count", type=int, default=2)
     evaluation_cmd.add_argument("--max-retries", type=int, default=1)
+
+    human_calibration_cmd = subparsers.add_parser("run-human-calibration")
+    human_calibration_cmd.add_argument("--suite", type=Path, default=Path("fixtures/human_calibration/suite.json"))
+    human_calibration_cmd.add_argument("--output-dir", type=Path, default=Path("evaluations/human_calibration"))
+    human_calibration_cmd.add_argument("--benchmark-id", default="")
+    human_calibration_cmd.add_argument("--run-dir", type=Path)
 
     bootstrap_saas_cmd = subparsers.add_parser("bootstrap-saas-workspace")
     bootstrap_saas_cmd.add_argument("--runtime-root", type=Path, default=Path("saas_runtime"))
@@ -1713,6 +1720,17 @@ def _cmd_run_evaluation(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_run_human_calibration(args: argparse.Namespace) -> int:
+    calibration_dir = run_human_calibration_suite(
+        suite_path=args.suite,
+        output_root=args.output_dir,
+        benchmark_id=args.benchmark_id,
+        run_dir=args.run_dir,
+    )
+    print(f"Human calibration suite archived at {calibration_dir}")
+    return 0
+
+
 def _cmd_compare_evaluations(args: argparse.Namespace) -> int:
     comparison = compare_evaluation_files(
         baseline_path=args.baseline,
@@ -2304,6 +2322,7 @@ def main(argv: list[str] | None = None) -> int:
         "audit-report": _cmd_audit,
         "export-report": _cmd_export,
         "run-evaluation": _cmd_run_evaluation,
+        "run-human-calibration": _cmd_run_human_calibration,
         "bootstrap-saas-workspace": _cmd_bootstrap_saas_workspace,
         "serve-saas-api": _cmd_serve_saas_api,
         "run-saas-worker": _cmd_run_saas_worker,

@@ -13,6 +13,14 @@ JobStatus = Literal["queued", "running", "completed", "failed", "canceled"]
 JobPriority = Literal["low", "normal", "high"]
 CatalogScope = Literal["global", "workspace_overlay"]
 SimilarityDecisionType = Literal["keep", "merge", "rewrite", "reject"]
+ProjectStatus = Literal["active", "archived"]
+StudyStatus = Literal["draft", "ready", "running", "review_ready", "completed", "archived"]
+ExportBundleStatus = Literal["draft", "published", "revoked", "expired"]
+ExportBundleFormat = Literal["bundle_json", "report_markdown", "report_json", "report_csv"]
+ShareBundleStatus = Literal["draft", "published", "revoked", "expired"]
+SupportSnapshotStatus = Literal["generated"]
+DecisionReviewStatus = Literal["draft", "in_review", "approved", "needs_revision"]
+DecisionCommentAnchorKind = Literal["general", "decision_summary", "rationale", "evidence_view", "comparison"]
 
 
 @dataclass(slots=True)
@@ -59,6 +67,23 @@ class BillingAccount:
 
 
 @dataclass(slots=True)
+class WorkspaceBrowserSession:
+    session_id: str
+    workspace_id: str
+    user_id: str
+    role: WorkspaceRole
+    source_token: str | None
+    created_at: str
+    last_seen_at: str
+    expires_at: str
+    revoked_at: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
 class ValidationJob:
     job_id: str
     workspace_id: str
@@ -81,6 +106,204 @@ class ValidationJob:
             **asdict(self),
             "panel_spec": self.panel_spec.to_dict(),
         }
+
+
+@dataclass(slots=True)
+class WorkspaceProject:
+    project_id: str
+    workspace_id: str
+    slug: str
+    name: str
+    description: str
+    created_by_user_id: str
+    status: ProjectStatus
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceStudy:
+    study_id: str
+    workspace_id: str
+    project_id: str
+    title: str
+    created_by_user_id: str
+    status: StudyStatus
+    research_intent: str
+    desired_output: str
+    first_task: str
+    artifact_refs: list[str]
+    draft_plan: dict[str, Any]
+    latest_job_id: str | None
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceExportBundle:
+    export_bundle_id: str
+    workspace_id: str
+    project_id: str
+    study_id: str
+    job_id: str
+    run_id: str
+    title: str
+    status: ExportBundleStatus
+    export_format: ExportBundleFormat
+    created_by_user_id: str
+    bundle_root: str
+    manifest_path: str
+    exported_files: list[dict[str, Any]]
+    synthetic_boundary: str
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceShareBundle:
+    share_bundle_id: str
+    workspace_id: str
+    export_bundle_id: str
+    project_id: str
+    study_id: str
+    job_id: str
+    run_id: str
+    title: str
+    status: ShareBundleStatus
+    share_key: str
+    public_path: str
+    share_root: str
+    share_payload_path: str
+    created_by_user_id: str
+    synthetic_boundary: str
+    published_at: str
+    expires_at: str | None
+    revoked_at: str | None
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceSupportSnapshot:
+    support_snapshot_id: str
+    workspace_id: str
+    project_id: str | None
+    study_id: str | None
+    job_id: str | None
+    run_id: str | None
+    title: str
+    status: SupportSnapshotStatus
+    summary: str
+    support_root: str
+    snapshot_path: str
+    created_by_user_id: str
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceEvidenceView:
+    evidence_view_id: str
+    workspace_id: str
+    project_id: str
+    study_id: str
+    job_id: str | None
+    run_id: str | None
+    title: str
+    note: str
+    query_text: str
+    active_family: str
+    sort_by: str
+    selected_result_id: str | None
+    selected_replay_step_id: str | None
+    selected_comparison_run_id: str | None
+    payload_path: str
+    created_by_user_id: str
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceDecisionLog:
+    decision_log_id: str
+    workspace_id: str
+    project_id: str
+    study_id: str
+    job_id: str | None
+    run_id: str | None
+    evidence_view_id: str | None
+    title: str
+    decision_summary: str
+    rationale: str
+    selected_result_id: str | None
+    selected_comparison_run_id: str | None
+    payload_path: str
+    created_by_user_id: str
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceDecisionComment:
+    decision_comment_id: str
+    workspace_id: str
+    project_id: str
+    study_id: str
+    decision_log_id: str
+    parent_comment_id: str | None
+    anchor_kind: DecisionCommentAnchorKind
+    body: str
+    created_by_user_id: str
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class AuditEvent:
+    audit_event_id: str
+    workspace_id: str
+    actor_user_id: str
+    actor_role: str
+    action: str
+    target_type: str
+    target_id: str
+    event_payload: dict[str, Any]
+    created_at: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
 
 
 @dataclass(slots=True)
@@ -134,4 +357,3 @@ class MarketDistributionConfig:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
-
