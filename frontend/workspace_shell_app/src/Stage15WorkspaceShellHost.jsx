@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "@demo/workspace_ui_design_system/workspace-ui-base.css";
 import "@demo/workspace_ui_design_system/workspace-theme-moss.css";
@@ -19,6 +19,10 @@ import {
   deriveMilestone13ActivePageIdFromRouteKind,
   deriveMilestone13RealUserWorkspaceModel
 } from "@demo/workspace_ui_shared/milestone13_real_user_workspace.mjs";
+import {
+  derivePostLoginWorkspaceRouteModel,
+  isPostLoginWorkspaceSurfaceActive
+} from "@demo/workspace_ui_shared/post_login_workspace_ia.mjs";
 import { extractStage15ShellDocumentParts } from "@demo/workspace_ui_shared/stage15_shell_document.mjs";
 
 const {
@@ -31,6 +35,50 @@ function readWorkspaceRouteContext() {
     return {};
   }
   return window.__WORKSPACE_ROUTE_CONTEXT__ || {};
+}
+
+function deriveHasActiveStudyFromRouteContext(routeContext = {}) {
+  if (Object.hasOwn(routeContext, "has_active_study")) {
+    return Boolean(routeContext.has_active_study);
+  }
+  if (routeContext.route_kind === "new_study") {
+    return false;
+  }
+  return true;
+}
+
+function applyRouteSurfaceOverride(routeModel, routeSurfaceOverride) {
+  if (!routeSurfaceOverride) {
+    return routeModel;
+  }
+  return {
+    ...routeModel,
+    active_surface_id: routeSurfaceOverride.surface_id,
+    active_nav_id: routeSurfaceOverride.nav_id,
+    landing_rule: routeSurfaceOverride.landing_rule || "client_navigation_surface_switch",
+    surfaces: routeModel.surfaces.map((surface) => ({
+      ...surface,
+      is_active: surface.id === routeSurfaceOverride.surface_id
+    }))
+  };
+}
+
+function RouteSurface({
+  surfaceId,
+  routeModel,
+  children
+}) {
+  const isActive = isPostLoginWorkspaceSurfaceActive(routeModel, surfaceId);
+  return (
+    <section
+      className={`route-surface${isActive ? " is-active" : ""}`}
+      data-route-surface={surfaceId}
+      data-route-active={isActive ? "true" : "false"}
+      hidden={!isActive}
+    >
+      {children}
+    </section>
+  );
 }
 
 function RealUserResearchWorkspacePages() {
@@ -114,6 +162,13 @@ function RealUserResearchWorkspacePages() {
 
 export function Stage15WorkspaceShellHost() {
   const shellMountedRef = useRef(false);
+  const [routeSurfaceOverride, setRouteSurfaceOverride] = useState(null);
+  const routeContext = readWorkspaceRouteContext();
+  const initialRouteModel = derivePostLoginWorkspaceRouteModel({
+    routeKind: routeContext.route_kind,
+    hasActiveStudy: deriveHasActiveStudyFromRouteContext(routeContext)
+  });
+  const routeModel = applyRouteSurfaceOverride(initialRouteModel, routeSurfaceOverride);
 
   useEffect(() => {
     if (!title) {
@@ -155,19 +210,35 @@ export function Stage15WorkspaceShellHost() {
       </div>
       <RealUserResearchWorkspacePages />
       <div className="framework-shell-root">
-        <div className="shell">
-          <RealUserWorkspaceNav />
+        <div
+          className="shell"
+          data-contract-version={routeModel.contract_version}
+          data-active-route-kind={routeModel.active_route_kind}
+          data-active-surface={routeModel.active_surface_id}
+          data-active-nav={routeModel.active_nav_id}
+          data-landing-rule={routeModel.landing_rule}
+        >
+          <RealUserWorkspaceNav
+            routeModel={routeModel}
+            onNavigateSurface={(item) => {
+              setRouteSurfaceOverride({
+                surface_id: item.surface_id,
+                nav_id: item.id,
+                landing_rule: "client_navigation_surface_switch"
+              });
+            }}
+          />
 
           <main className="main">
             <div className="stage15-shell">
               <header className="main-header">
                 <div>
-                  <div className="eyebrow">Study-First Hosted Shell Direction</div>
-                  <h2>Project and study operations on top of the workspace runtime</h2>
+                  <div className="eyebrow">Milestone 16 Active-Route Workspace IA</div>
+                  <h2>Only the active research surface is expanded</h2>
                   <p>
-                    The selected study is now the durable home for intake, run submission, snapshot
-                    sync, and evidence review. Projects orient the work. Runs remain operational
-                    records inside that study context.
+                    The logged-in shell now lands on a study-first route, preserves deep-link
+                    evidence context, and keeps governance surfaces reachable without turning the
+                    workspace into one long admin page.
                   </p>
                 </div>
                 <div className="top-metrics">
@@ -181,7 +252,7 @@ export function Stage15WorkspaceShellHost() {
                   </div>
                   <div className="metric">
                     <span>Shell</span>
-                    <strong id="metric-shell">conversation_intake</strong>
+                    <strong id="metric-shell">{routeModel.active_surface_id}</strong>
                   </div>
                   <div className="metric">
                     <span>Run</span>
@@ -190,19 +261,54 @@ export function Stage15WorkspaceShellHost() {
                 </div>
               </header>
 
-              <div className="stage15-grid">
-                <div className="stage15-column">
-                  <NewStudyPage />
-                  <StudyWorkspacePage />
-                  <EvidenceReviewPage />
+              <section
+                className="post-login-route-summary"
+                aria-label="Active route workspace contract"
+                data-milestone-id={routeModel.milestone_id}
+              >
+                <div>
+                  <div className="framework-banner-eyebrow">Active route</div>
+                  <strong>{routeModel.active_surface_id}</strong>
+                  <span>{routeModel.landing_rule}</span>
+                </div>
+                <div>
+                  <div className="framework-banner-eyebrow">Primary object</div>
+                  <strong>Study</strong>
+                  <span>Runs, decisions, exports, and support stay contextual.</span>
+                </div>
+                <div>
+                  <div className="framework-banner-eyebrow">Deep link rule</div>
+                  <strong>{routeModel.preserves_study_context ? "context preserved" : "workspace landing"}</strong>
+                  <span>/app/jobs/* opens evidence review instead of raw job management.</span>
+                </div>
+              </section>
+
+              <div className="post-login-route-grid" data-active-route-shell="true">
+                <div className="stage15-column route-primary-column">
+                  <RouteSurface surfaceId="new-study" routeModel={routeModel}>
+                    <NewStudyPage />
+                  </RouteSurface>
+                  <RouteSurface surfaceId="study-workspace" routeModel={routeModel}>
+                    <StudyWorkspacePage />
+                  </RouteSurface>
+                  <RouteSurface surfaceId="evidence-review" routeModel={routeModel}>
+                    <EvidenceReviewPage />
+                  </RouteSurface>
+                  <RouteSurface surfaceId="settings" routeModel={routeModel}>
+                    <WorkspaceSettingsSection />
+                  </RouteSurface>
+                  <RouteSurface surfaceId="support" routeModel={routeModel}>
+                    <SupportOperationsSection />
+                  </RouteSurface>
                 </div>
 
-                <div className="stage15-column">
+                <aside className="route-context-drawer" aria-label="Workspace route context">
                   <WorkspaceConnectionSection />
-                  <WorkspaceSettingsSection />
-                  <SupportOperationsSection />
-                  <DebugTraceSection />
-                </div>
+                  <details className="debug-route-drawer" data-route-surface="debug">
+                    <summary>Debug trace</summary>
+                    <DebugTraceSection />
+                  </details>
+                </aside>
               </div>
             </div>
           </main>

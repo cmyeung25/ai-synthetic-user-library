@@ -94,6 +94,96 @@ test("frontend adapter exposes submission-ready confirmed draft", () => {
   assert.equal(frontend.draft_summary[2].value, "confirmed");
 });
 
+test("frontend adapter projects provider runtime boundary into the study shell", () => {
+  const selectedJob = {
+    job_id: "job_codex_001",
+    status: "queued",
+    provider_name: "codex",
+    retry_count: 0,
+    metadata: {
+      provider_runtime_boundary: {
+        provider_name: "codex",
+        provider_family: "codex",
+        evidence_mode: "live_synthetic",
+        is_supported: true,
+        is_live_provider: true,
+        is_codex_provider: true,
+        requires_auth: true,
+        auth_readiness: "missing_or_unverified",
+        runtime_status: "missing_auth",
+        failure_kind: "missing_auth",
+        boundary_label: "Live synthetic evidence",
+        boundary_message: "Codex auth is required before this run can produce live synthetic evidence.",
+        next_actions: [
+          "Sign in to Codex or configure a supported OpenAI API credential.",
+          "Retry from the study surface after auth is ready."
+        ]
+      }
+    }
+  };
+  const bundle = buildBundle({
+    hasScreenshots: true,
+    firstTask: copy.firstTaskValue,
+    lifecycle: "queued"
+  });
+  const bridgeState = deriveWorkspaceValidationBridgeState({
+    draftPlan: bundle.draft,
+    workspaceContext: {
+      ...createWorkspaceValidationBridgeDemoContext(),
+      provider_name: "codex",
+      project_id: "project_001",
+      study_id: "study_001"
+    },
+    jobList: [selectedJob],
+    selectedJob,
+    apiBaseUrl: "http://127.0.0.1:8011"
+  });
+
+  const frontend = deriveWorkspaceShellFrontendAdapter({
+    bundle,
+    bridgeState,
+    selectedJob,
+    providerRuntime: {
+      selected_job_boundary: selectedJob.metadata.provider_runtime_boundary,
+      catalog: [
+        {
+          provider_name: "mock",
+          evidence_mode: "mock_demo",
+          runtime_status: "ready_to_queue",
+          auth_readiness: "not_required",
+          boundary_label: "Mock demo evidence"
+        },
+        {
+          provider_name: "codex",
+          evidence_mode: "live_synthetic",
+          runtime_status: "missing_auth",
+          auth_readiness: "missing_or_unverified",
+          boundary_label: "Live synthetic evidence",
+          is_live_provider: true
+        }
+      ],
+      job_counts: {
+        mock_demo: 0,
+        live_synthetic: 1,
+        unsupported: 0
+      }
+    },
+    mode: "live",
+    lastApiResponse: { job: selectedJob }
+  });
+
+  assert.equal(frontend.pills.provider_runtime.tone, "failed");
+  assert.equal(frontend.pills.provider_runtime.label, "missing_auth");
+  assert.equal(frontend.selected_job_summary[3].value, "live_synthetic");
+  assert.equal(frontend.selected_job_summary[4].value, "missing_auth");
+  assert.equal(frontend.provider_runtime_surface.selected_boundary.provider_name, "codex");
+  assert.equal(frontend.provider_runtime_surface.summary[1].value, "live_synthetic");
+  assert.equal(frontend.provider_runtime_surface.summary[3].value, "missing_or_unverified");
+  assert.equal(frontend.provider_runtime_surface.detail_cards[0].body.includes("Codex auth is required"), true);
+  assert.equal(frontend.provider_runtime_surface.detail_cards[1].body.includes("Sign in to Codex"), true);
+  assert.equal(frontend.provider_runtime_surface.catalog.length, 2);
+});
+
 test("frontend adapter projects selected project and study summaries into product surface", () => {
   const bundle = buildBundle({
     hasScreenshots: true,
@@ -661,7 +751,7 @@ test("frontend adapter exposes queued-job cancel action and hides retry until fa
 
   assert.equal(frontend.actions.cancel_selected_job.enabled, true);
   assert.equal(frontend.actions.retry_selected_job.enabled, false);
-  assert.equal(frontend.selected_job_summary[3].value, 0);
+  assert.equal(frontend.selected_job_summary.find((row) => row.id === "retry_count").value, 0);
 });
 
 test("frontend adapter surfaces bridge warnings without hiding the gap", () => {

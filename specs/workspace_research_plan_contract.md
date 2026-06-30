@@ -11,6 +11,8 @@ This document defines the draft plan contract that sits between:
 
 The product goal is to keep the default user path conversational while still producing a structured, auditable object before any run is created.
 
+For the canonical Frontline Research Studio terminology, entity boundaries, and plan-revision model, see `specs/frontline_research_studio_terminology_and_data_model.md`. This draft-plan contract remains the current application-layer planning bridge; the Frontline spec clarifies that chat/planning state should produce mutable `PlanProposal` objects and only become execution authority after user confirmation creates an immutable `StudyPlanRevision`.
+
 ## Why this contract exists now
 
 Research bottleneck improved:

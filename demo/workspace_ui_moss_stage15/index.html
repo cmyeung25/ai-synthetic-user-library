@@ -716,6 +716,22 @@
 
                 <div class="split-grid">
                   <div class="summary-card">
+                    <div class="toolbar">
+                      <strong>Provider runtime boundary</strong>
+                      <div class="status-pill queued" id="provider-runtime-pill">provider_unknown</div>
+                    </div>
+                    <div class="summary-list" id="provider-runtime-summary"></div>
+                    <div class="detail-stack" id="provider-runtime-detail"></div>
+                  </div>
+                  <div class="draft-panel">
+                    <div class="inline-label">Available validation providers</div>
+                    <p class="muted-note">Provider state is evidence boundary, not setup decoration. The user must see whether a run is mock demo evidence, live synthetic evidence, missing auth, or unsupported before trusting results.</p>
+                    <div class="product-stack" id="provider-runtime-catalog"></div>
+                  </div>
+                </div>
+
+                <div class="split-grid">
+                  <div class="summary-card">
                     <strong>Selected evidence</strong>
                     <div class="summary-list" id="selected-evidence-summary"></div>
                     <div class="detail-stack" id="selected-evidence-detail"></div>

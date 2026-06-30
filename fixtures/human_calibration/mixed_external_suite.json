@@ -1,0 +1,27 @@
+{
+  "suite_id": "human-calibration-mixed-external-v1",
+  "suite_version": "human-benchmark-suite/v1",
+  "benchmarks": [
+    {
+      "benchmark_path": "benchmarks/inbox_coach_followup_review_findings_sample.json",
+      "synthetic_run_dir": "runs/inbox_coach_sample"
+    },
+    {
+      "benchmark_path": "benchmarks/workspace_review_browser_trace_sample.json",
+      "synthetic_run_dir": "runs/browser_trace_permission_dropoff_sample",
+      "requires_high_stakes_review": true
+    },
+    {
+      "benchmark_path": "benchmarks/inbox_coach_followup_review_findings_sample.json",
+      "benchmark_id": "inbox_coach_followup_review_findings_threshold_gap",
+      "name": "Inbox Coach follow-up workflow coded review-findings threshold-gap sample",
+      "synthetic_run_dir": "runs/inbox_coach_sample",
+      "thresholds": {
+        "min_precision": 0.9,
+        "min_recall": 1.0,
+        "min_alignment_score": 90,
+        "replacement_readiness_min_score": 95
+      }
+    }
+  ]
+}

@@ -37,6 +37,7 @@ The local SaaS runtime now exposes:
 - `POST /api/v1/support-snapshots`
 - `GET /api/v1/support-snapshots`
 - `GET /api/v1/support-snapshots/{support_snapshot_id}`
+- `POST /api/v1/support-snapshots/{support_snapshot_id}/handoff`
 
 Related operator-intervention endpoints:
 
@@ -82,6 +83,11 @@ Minimum fields:
 - `updated_at`
 - `metadata`
 
+Projected governance fields:
+
+- `handoff`
+- `handoff_history`
+
 ## Diagnostics rules
 
 ### `GET /api/v1/support-diagnostics`
@@ -89,14 +95,17 @@ Minimum fields:
 Supported query params:
 
 - `job_id` optional
+- `study_id` optional
 
 Behavior:
 
 1. the endpoint always explains the current submission gate for the workspace
 2. if `job_id` is present, the selected job must be visible inside the current workspace
-3. the endpoint returns a normalized job diagnostic for the selected job when available
-4. the endpoint also returns a short recent-failure digest for nearby failed jobs
-5. the endpoint preserves an explicit synthetic-only support boundary
+3. if `study_id` is present, the selected study must be visible inside the current workspace
+4. the endpoint returns governed review/redaction state for the selected or job-linked study when available
+5. the endpoint returns a normalized job diagnostic for the selected job when available
+6. the endpoint also returns a short recent-failure digest for nearby failed jobs
+7. the endpoint preserves an explicit synthetic-only support boundary
 
 Response shape:
 
@@ -106,6 +115,14 @@ Response shape:
     "contract_version": "workspace-support-surface/v0-draft",
     "workspace_id": "ws_api_demo",
     "selected_job_id": "job_123",
+    "selected_study_id": "study_123",
+    "governed_review": {
+      "review_gate_status": "assigned_for_review"
+    },
+    "governed_redaction": {
+      "status": "active",
+      "rule_count": 2
+    },
     "submission_gate": {
       "status": "blocked",
       "blocked_reason_count": 1,
@@ -117,10 +134,27 @@ Response shape:
         }
       ]
     },
+    "provider_runtime": {
+      "contract_version": "workspace-provider-runtime/v0-draft",
+      "selected_job_boundary": {
+        "provider_name": "unknown-provider",
+        "evidence_mode": "unsupported",
+        "is_supported": false,
+        "runtime_status": "unsupported_provider",
+        "failure_kind": "unsupported_provider",
+        "boundary_message": "Provider 'unknown-provider' is not supported by the validation-job runtime."
+      }
+    },
     "job_diagnostic": {
       "job_id": "job_123",
       "status": "failed",
       "provider_name": "unknown-provider",
+      "provider_runtime_boundary": {
+        "provider_name": "unknown-provider",
+        "evidence_mode": "unsupported",
+        "runtime_status": "unsupported_provider",
+        "failure_kind": "unsupported_provider"
+      },
       "failure_category": "provider_configuration",
       "summary": "Unknown provider: unknown-provider",
       "retry_count": 1,
@@ -139,6 +173,11 @@ Response shape:
         "job_id": "job_123",
         "status": "failed",
         "provider_name": "unknown-provider",
+        "provider_runtime_boundary": {
+          "provider_name": "unknown-provider",
+          "evidence_mode": "unsupported",
+          "runtime_status": "unsupported_provider"
+        },
         "retry_count": 1,
         "project_id": "project_123",
         "study_id": "study_123",
@@ -155,7 +194,54 @@ Response shape:
 }
 ```
 
+## Handoff mutation rules
+
+### `POST /api/v1/support-snapshots/{support_snapshot_id}/handoff`
+
+Request body:
+
+```json
+{
+  "status": "assigned",
+  "assigned_user_id": "reviewer_001",
+  "note": "Please confirm provider configuration before retry.",
+  "metadata": {
+    "source": "stage15_demo"
+  }
+}
+```
+
+Supported handoff status values:
+
+- `unassigned`
+- `assigned`
+- `acknowledged`
+- `resolved`
+
+Rules:
+
+1. caller must be `owner`, `admin`, or `editor`
+2. `assigned` requires `assigned_user_id`
+3. `assigned_user_id` must belong to an `owner`, `admin`, or `editor` workspace member
+4. `acknowledged` or `resolved` require an existing assignment
+5. only the assigned handoff owner or `owner` / `admin` members may acknowledge or resolve the handoff
+6. only `owner` / `admin` members may clear assignment back to `unassigned`
+7. each mutation appends to `handoff_history`
+
 ## Failure categories
+
+Provider runtime boundary is more specific than the legacy `failure_category` field.
+
+Provider-specific statuses include:
+
+- `unsupported_provider`
+- `missing_auth`
+- `timeout`
+- `refusal`
+- `retryable_transport`
+- `provider_configuration`
+
+The legacy `failure_category` remains for support grouping and backwards compatibility.
 
 Current first-pass failure categories:
 
@@ -252,6 +338,11 @@ Each created support snapshot now persists:
 - `support_snapshot.json`
 - `README.md`
 
+The materialized payload now also includes:
+
+- `handoff`
+- `handoff_history`
+
 ## Product-surface implications
 
 The Stage 15 shared shell now projects support state through:
@@ -296,3 +387,8 @@ Current implementation entrypoints:
 - `demo/workspace_ui_shared/workspace_shell_app.mjs`
 - `demo/workspace_ui_shared/workspace_shell_frontend_adapter.mjs`
 - `demo/workspace_ui_moss_stage15/index.html`
+
+Audit events:
+
+- `support_snapshot.generated`
+- `support_snapshot.handoff_updated`

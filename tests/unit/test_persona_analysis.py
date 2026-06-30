@@ -32,6 +32,73 @@ class PersonaAnalysisTest(unittest.TestCase):
         self.assertTrue(summary["coverage_checks"]["all_locale_packs_covered"])
         self.assertTrue(summary["coverage_checks"]["all_life_stages_covered"])
         self.assertTrue(summary["coverage_checks"]["all_family_structures_covered"])
+        self.assertEqual(summary["human_difference_axis_summary"]["persona_with_axes_count"], 0)
+
+    def test_build_persona_library_summary_reports_human_difference_axis_gaps(self) -> None:
+        personas = generate_personas(count=3, random_seed=71)
+        personas[0].profile.human_difference_axes = {
+            "control_preference": "Hybrid; wants room to decide but appreciates structure.",
+            "trust_style": "Evidence first with cautious benefit of the doubt.",
+            "complexity_tolerance": "Moderate; will engage if the detail clearly helps.",
+            "decision_tempo": "Measured; gathers enough signal before acting.",
+            "financial_attention_cadence": "Periodic with event-driven spikes.",
+            "relationship_to_money": "Practical security with some growth ambition.",
+            "risk_orientation": "Open to measured risk when the downside is understandable.",
+            "need_for_explanation": "High enough to want plain-language framing.",
+            "life_load": "Moderate; daily life leaves limited room for unnecessary friction.",
+            "fragmentation_reality": "Some assets and information live across more than one place.",
+            "guidance_preference": "Hybrid self-serve plus optional expert clarification.",
+            "reflection_style": "Explains decisions through recent examples and trade-offs.",
+        }
+        personas[0].profile.relational_defense_model = {"default_trust_posture": "guarded_until_proven_safe"}
+        personas[0].profile.communication_behavior_model = {"clarification_tendency": "high_when_abstract"}
+        personas[0].profile.behavior_generation_rules = [{"when": {"human_difference_axes.life_load": "high"}, "then": "asks for a shorter path", "because": "time is scarce", "source": "human_difference_axes"}]
+
+        personas[1].profile.human_difference_axes = {
+            "control_preference": "Guided; prefers a few explicit steps and recommended defaults.",
+            "trust_style": "Verify first and look for clear proof before relying on claims.",
+            "complexity_tolerance": "Low; prefers the useful point without extra detail.",
+            "decision_tempo": "Deliberate; slows down when consequences feel sticky.",
+            "financial_attention_cadence": "Event-driven around salary, bills, and major decisions.",
+            "relationship_to_money": "Money is mainly a security buffer before anything else.",
+            "risk_orientation": "Conservative; wants downside explained before moving.",
+            "need_for_explanation": "High; needs translation into plain language and examples.",
+            "life_load": "High; routine work and family pressure leave little room for friction.",
+            "fragmentation_reality": "Highly fragmented across multiple accounts and records.",
+            "guidance_preference": "Guided with optional expert reassurance.",
+            "reflection_style": "Uses concrete examples more than abstract frameworks.",
+        }
+        personas[1].profile.relational_defense_model = {"default_trust_posture": "guarded_until_proven_safe"}
+        personas[1].profile.communication_behavior_model = {"clarification_tendency": "high_when_abstract"}
+        personas[1].profile.behavior_generation_rules = [{"when": {"human_difference_axes.complexity_tolerance": "low"}, "then": "asks for a simpler explanation", "because": "dense flows raise friction", "source": "human_difference_axes"}]
+
+        personas[2].profile.human_difference_axes = {
+            "control_preference": "Self-serve; wants to decide independently unless the stakes rise.",
+            "trust_style": "Open to credible institutions but still checks core claims.",
+        }
+
+        summary = build_persona_library_summary(personas)
+        axis_summary = summary["human_difference_axis_summary"]
+
+        self.assertEqual(axis_summary["persona_with_axes_count"], 3)
+        self.assertEqual(axis_summary["behavior_model_coverage"]["relational_defense_model"]["persona_count"], 2)
+        self.assertEqual(
+            axis_summary["axis_coverage"]["trust_style"]["bucket_distribution"],
+            {
+                "institution_led": 1,
+                "verify_first": 2,
+            },
+        )
+        self.assertEqual(
+            axis_summary["axis_coverage"]["complexity_tolerance"]["coverage_status"],
+            "partial_presence",
+        )
+        self.assertTrue(
+            any(
+                item["axis"] == "complexity_tolerance" and item["gap_type"] == "partial_presence"
+                for item in axis_summary["coverage_gaps"]
+            )
+        )
 
     def test_summarize_personas_cli_writes_json(self) -> None:
         personas = generate_personas(count=24, random_seed=11)

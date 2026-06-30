@@ -24,12 +24,126 @@ function mapShellTone(status) {
   return "queued";
 }
 
+function mapProviderRuntimeTone(boundary = {}) {
+  if (!boundary?.provider_name && !boundary?.runtime_status && !boundary?.auth_readiness) {
+    return "queued";
+  }
+  const runtimeStatus = boundary?.runtime_status || "unknown";
+  const authReadiness = boundary?.auth_readiness || "not_required";
+  if (
+    runtimeStatus === "completed"
+    || runtimeStatus === "ready_to_queue"
+    || authReadiness === "ready"
+    || authReadiness === "not_required"
+  ) {
+    return "completed";
+  }
+  if (
+    runtimeStatus === "running"
+  ) {
+    return "running";
+  }
+  if (
+    runtimeStatus === "missing_auth"
+    || runtimeStatus === "unsupported_provider"
+    || runtimeStatus === "failed"
+    || runtimeStatus === "timeout"
+    || runtimeStatus === "refusal"
+    || authReadiness === "missing_or_unverified"
+    || authReadiness === "unsupported"
+  ) {
+    return "failed";
+  }
+  return "queued";
+}
+
 function toSummaryRow(id, label, value) {
   return {
     id,
     label,
     value: value === null || value === undefined || value === "" ? "-" : value
   };
+}
+
+function firstObject(...candidates) {
+  return candidates.find((candidate) => candidate && typeof candidate === "object" && !Array.isArray(candidate)) || null;
+}
+
+function pickProviderRuntimeBoundary({
+  providerRuntime = null,
+  selectedJob = null,
+  reviewQueryState = null,
+  supportDiagnostics = null
+} = {}) {
+  return firstObject(
+    providerRuntime?.selected_job_boundary,
+    selectedJob?.metadata?.provider_runtime_boundary,
+    reviewQueryState?.provider_runtime_boundary,
+    supportDiagnostics?.job_diagnostic?.provider_runtime_boundary,
+    supportDiagnostics?.provider_runtime?.selected_job_boundary
+  );
+}
+
+function buildProviderRuntimeSummary(boundary = null, providerRuntime = null) {
+  if (!boundary) {
+    return [
+      toSummaryRow("provider_runtime", "provider runtime", "No provider boundary loaded")
+    ];
+  }
+  const jobCounts = providerRuntime?.job_counts || {};
+  return [
+    toSummaryRow("provider_name", "provider", boundary.provider_name),
+    toSummaryRow("evidence_mode", "evidence mode", boundary.evidence_mode),
+    toSummaryRow("runtime_status", "runtime status", boundary.runtime_status),
+    toSummaryRow("auth_readiness", "auth readiness", boundary.auth_readiness),
+    toSummaryRow("boundary_label", "boundary", boundary.boundary_label),
+    toSummaryRow("live_jobs", "live jobs", jobCounts.live_synthetic ?? 0),
+    toSummaryRow("mock_jobs", "mock jobs", jobCounts.mock_demo ?? 0),
+    toSummaryRow("unsupported_jobs", "unsupported jobs", jobCounts.unsupported ?? 0)
+  ];
+}
+
+function buildProviderRuntimeCards(boundary = null, providerRuntime = null) {
+  if (!boundary) {
+    return [
+      {
+        id: "provider_runtime_empty",
+        title: "Provider boundary not loaded",
+        body: "Refresh the workspace shell or select a run to load provider readiness, auth, and evidence-mode state.",
+        tone: "default"
+      }
+    ];
+  }
+  const cards = [
+    {
+      id: "provider_runtime_boundary",
+      title: boundary.boundary_label || "Provider evidence boundary",
+      body: boundary.boundary_message || "Provider boundary is available. Keep synthetic evidence separate from human market proof.",
+      tone: mapProviderRuntimeTone(boundary)
+    }
+  ];
+
+  (boundary.next_actions || []).slice(0, 3).forEach((action, index) => {
+    cards.push({
+      id: `provider_next_action_${index + 1}`,
+      title: "Provider next action",
+      body: action,
+      tone: boundary.runtime_status === "missing_auth" || boundary.runtime_status === "unsupported_provider" ? "failed" : "default"
+    });
+  });
+
+  const liveCatalog = (providerRuntime?.catalog || []).filter((item) => item?.is_live_provider || item?.evidence_mode === "live_synthetic");
+  if (liveCatalog.length) {
+    cards.push({
+      id: "provider_live_catalog",
+      title: "Live provider catalog",
+      body: liveCatalog
+        .map((item) => `${item.provider_name}: ${item.auth_readiness || item.runtime_status || "available"}`)
+        .join(" | "),
+      tone: "default"
+    });
+  }
+  return cards;
 }
 
 function toCountLabel(value) {
@@ -503,6 +617,7 @@ export function deriveWorkspaceShellFrontendAdapter({
   shareBundles = [],
   supportSnapshots = [],
   supportDiagnostics = null,
+  providerRuntime = null,
   workspaceSettings = null,
   auditEvents = [],
   auditQuery = null,
@@ -518,6 +633,12 @@ export function deriveWorkspaceShellFrontendAdapter({
   const crossRunCandidates = buildCrossRunCandidates(effectiveReviewQueryState);
   const crossRunResultCards = buildCrossRunResultCards(effectiveReviewQueryState);
   const selectedJobId = bridgeState?.selected_job_id || selectedJob?.job_id || null;
+  const selectedProviderBoundary = pickProviderRuntimeBoundary({
+    providerRuntime,
+    selectedJob,
+    reviewQueryState: effectiveReviewQueryState,
+    supportDiagnostics
+  });
   const shellSurface = bundle?.workspace_shell?.active_surface || "conversation_intake";
   const bridgeTone = bridgeState?.warning
     ? "failed"
@@ -552,6 +673,10 @@ export function deriveWorkspaceShellFrontendAdapter({
       shell: {
         tone: mapShellTone(bundle?.run_monitor?.status),
         label: shellSurface
+      },
+      provider_runtime: {
+        tone: mapProviderRuntimeTone(selectedProviderBoundary || {}),
+        label: selectedProviderBoundary?.runtime_status || selectedProviderBoundary?.auth_readiness || "provider_unknown"
       }
     },
     actions: {
@@ -623,6 +748,8 @@ export function deriveWorkspaceShellFrontendAdapter({
       toSummaryRow("job_id", "job_id", selectedJob.job_id),
       toSummaryRow("status", "status", selectedJob.status),
       toSummaryRow("provider", "provider", selectedJob.provider_name),
+      toSummaryRow("evidence_mode", "evidence mode", selectedProviderBoundary?.evidence_mode),
+      toSummaryRow("provider_runtime", "provider runtime", selectedProviderBoundary?.runtime_status),
       toSummaryRow("retry_count", "retry count", selectedJob.retry_count),
       toSummaryRow("output_run_path", "output_run_path", selectedJob.output_run_path),
       toSummaryRow("last_error", "last_error", selectedJob.last_error)
@@ -668,6 +795,23 @@ export function deriveWorkspaceShellFrontendAdapter({
       toSummaryRow("selected_job", "selected job", selectedJobId),
       toSummaryRow("warning", "warning", bridgeState?.warning || "none")
     ],
+    provider_runtime_surface: {
+      pill: {
+        tone: mapProviderRuntimeTone(selectedProviderBoundary || {}),
+        label: selectedProviderBoundary?.runtime_status || selectedProviderBoundary?.auth_readiness || "provider_unknown"
+      },
+      selected_boundary: selectedProviderBoundary || null,
+      summary: buildProviderRuntimeSummary(selectedProviderBoundary, providerRuntime),
+      detail_cards: buildProviderRuntimeCards(selectedProviderBoundary, providerRuntime),
+      catalog: (providerRuntime?.catalog || []).map((item) => ({
+        provider_name: item?.provider_name || "unknown",
+        evidence_mode: item?.evidence_mode || "unknown",
+        runtime_status: item?.runtime_status || "unknown",
+        auth_readiness: item?.auth_readiness || "unknown",
+        boundary_label: item?.boundary_label || "Provider boundary"
+      })),
+      job_counts: providerRuntime?.job_counts || {}
+    },
     bridge_gap: bridgeState?.live_review_gap || null,
     stage_strip: bundle?.workspace_shell?.stage_strip || [],
     review_surface: {

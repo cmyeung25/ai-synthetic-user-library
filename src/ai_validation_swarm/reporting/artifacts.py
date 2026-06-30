@@ -11,6 +11,8 @@ def build_report_payload(
     run_id: str,
     brief: FounderBrief,
     panel_spec: dict[str, object],
+    panel_rationale: str,
+    panel_explainability: dict[str, object],
     summary: dict[str, object],
     responses: list[PersonaResponse],
     planner_steps: list[str],
@@ -25,6 +27,8 @@ def build_report_payload(
         "generated_at": summary.get("generated_at"),
         "run_status": summary.get("run_status"),
         "panel_spec": panel_spec,
+        "panel_rationale": panel_rationale,
+        "panel_explainability": panel_explainability,
         "brief_overview": {
             "problem_statement": brief.problem_statement,
             "target_market": brief.target_market,

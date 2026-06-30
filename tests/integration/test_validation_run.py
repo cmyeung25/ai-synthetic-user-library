@@ -51,6 +51,42 @@ class FlakyProvider(BaseProvider):
 
 
 class ValidationRunTest(unittest.TestCase):
+    def _assign_axes(self, persona, index: int) -> None:
+        trust_styles = [
+            "needs evidence and verification before trusting",
+            "leans on institution and expert-backed guidance",
+            "open to collaborative guidance with some proof",
+        ]
+        control_preferences = [
+            "guided with support",
+            "self-serve and independent",
+            "hybrid with optional support",
+        ]
+        complexity_levels = [
+            "low complexity tolerance",
+            "moderate complexity tolerance",
+            "high detail tolerance",
+        ]
+        decision_tempos = [
+            "fast decisions",
+            "measured decisions",
+            "slow and deliberate",
+        ]
+        persona.profile.human_difference_axes = {
+            "trust_style": trust_styles[index % len(trust_styles)],
+            "control_preference": control_preferences[index % len(control_preferences)],
+            "complexity_tolerance": complexity_levels[index % len(complexity_levels)],
+            "decision_tempo": decision_tempos[index % len(decision_tempos)],
+            "financial_attention_cadence": ["daily attention", "event-driven review", "occasional check-in"][index % 3],
+            "relationship_to_money": ["security oriented", "progress and growth oriented", "practical constraint aware"][index % 3],
+            "risk_orientation": ["conservative downside aware", "measured trade-off aware", "open to upside with guardrails"][index % 3],
+            "need_for_explanation": ["high plain-language explanation need", "moderate explanation need", "low explanation need"][index % 3],
+            "life_load": ["high life load", "moderate life load", "low life load"][index % 3],
+            "fragmentation_reality": ["multiple fragmented tools", "some fragmentation across tools", "single centralized workflow"][index % 3],
+            "guidance_preference": ["guided support", "hybrid optional expert review", "self-serve independent path"][index % 3],
+            "reflection_style": ["example and trade-off driven", "systematic framework driven", "intuition and feeling driven"][index % 3],
+        }
+
     def test_run_validation_writes_report_and_audit(self) -> None:
         personas = generate_personas(count=20, random_seed=31)
         provider = build_provider("mock")
@@ -60,7 +96,8 @@ class ValidationRunTest(unittest.TestCase):
             tmp_root = Path(tmp)
             persona_dir = tmp_root / "personas"
             run_dir = tmp_root / "runs"
-            for persona in personas:
+            for index, persona in enumerate(personas):
+                self._assign_axes(persona, index)
                 save_persona(persona, persona_dir)
 
             archived = run_validation(
@@ -102,6 +139,12 @@ class ValidationRunTest(unittest.TestCase):
             self.assertIsInstance(skeptic["challenged_assumptions"], list)
             self.assertIn("Top Buying Triggers", report)
             self.assertEqual(report_json["report_version"], "report/v1")
+            self.assertTrue(report_json["panel_rationale"])
+            self.assertIn("human_difference_axis_coverage", report_json["panel_explainability"])
+            self.assertEqual(
+                report_json["panel_explainability"]["human_difference_axis_coverage"]["selected_panel"]["persona_with_axes_count"],
+                run_payload["successful_response_count"],
+            )
             self.assertEqual(run_index["run_count"], 1)
             self.assertEqual(run_index["runs"][0]["run_id"], run_payload["run_id"])
             self.assertEqual(run_contract["contract_version"], "shared-run-contract/v1")
@@ -140,7 +183,8 @@ class ValidationRunTest(unittest.TestCase):
             tmp_root = Path(tmp)
             persona_dir = tmp_root / "personas"
             run_dir = tmp_root / "runs"
-            for persona in personas:
+            for index, persona in enumerate(personas):
+                self._assign_axes(persona, index)
                 save_persona(persona, persona_dir)
 
             archived = run_validation(
@@ -173,6 +217,7 @@ class ValidationRunTest(unittest.TestCase):
             self.assertIn("partial failures", report)
             self.assertEqual(aggregation["run_status"], "partial_failed")
             self.assertEqual(report_json["run_status"], "partial_failed")
+            self.assertTrue(report_json["panel_explainability"]["selection_rationale_by_persona"])
 
             by_id = {record["synthetic_user_id"]: record for record in response_records}
             self.assertEqual(by_id[mainstream_ids[0]]["status"], "succeeded")

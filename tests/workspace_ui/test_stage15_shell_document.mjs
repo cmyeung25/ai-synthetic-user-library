@@ -22,6 +22,8 @@ test("extractStage15ShellDocumentParts returns title, styles, and shell markup f
   assert.match(parts.secondColumnFirstSectionMarkup, /id="study-actions"/);
   assert.match(parts.secondColumnRemainingMarkup, /id="query-pill"/);
   assert.match(parts.secondColumnSecondSectionMarkup, /id="query-pill"/);
+  assert.match(parts.secondColumnSecondSectionMarkup, /id="provider-runtime-pill"/);
+  assert.match(parts.secondColumnSecondSectionMarkup, /id="provider-runtime-summary"/);
   assert.match(parts.secondColumnSecondSectionMarkup, /id="reload-study-activity"/);
   assert.match(parts.secondColumnSecondSectionMarkup, /id="study-activity-list"/);
   assert.match(parts.secondColumnSecondSectionMarkup, /id="create-export-bundle"/);

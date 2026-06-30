@@ -61,6 +61,15 @@ PAIN_POINT_DISCOVERY_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "consequence",
     "current_workaround",
 )
+WORKFLOW_MAPPING_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
+    "recent_behaviour",
+    "workflow_sequence",
+    "handoff_boundary",
+    "fragmentation_point",
+    "current_workaround",
+    "switching_cost",
+    "responsibility_gap",
+)
 ADOPTION_BARRIER_VALIDATION_COVERAGE_REQUIREMENTS: tuple[str, ...] = (
     "recent_behaviour",
     "current_workaround",
@@ -354,6 +363,7 @@ class FacilitatedInterviewRuntime:
             conversation_realism=conversation_realism,
             interview_mode=session.interview_mode,
         )
+        synthesis = self._attach_mode_specific_evidence_projection(session, synthesis)
         session.insight_report = synthesis
         self._progress("generating_persona_driver_trace")
         driver_trace, trace_session_id = persona_runtime.generate_persona_driver_trace(
@@ -417,6 +427,8 @@ class FacilitatedInterviewRuntime:
             return CONCEPT_VALIDATION_COVERAGE_REQUIREMENTS
         if interview_mode == "prototype_validation":
             return PROTOTYPE_VALIDATION_COVERAGE_REQUIREMENTS
+        if interview_mode == "workflow_mapping":
+            return WORKFLOW_MAPPING_COVERAGE_REQUIREMENTS
         if interview_mode == "adoption_barrier_validation":
             return ADOPTION_BARRIER_VALIDATION_COVERAGE_REQUIREMENTS
         if interview_mode == "decision_reconstruction":
@@ -885,6 +897,46 @@ class FacilitatedInterviewRuntime:
         )
 
     @staticmethod
+    def _workflow_mapping_gap_instruction(gap: str) -> tuple[str, str]:
+        mapping = {
+            "recent_behaviour": (
+                "recent_event",
+                "Ask for one recent real workflow episode instead of a generic process summary.",
+            ),
+            "workflow_sequence": (
+                "workflow_sequence",
+                "Ask what happened first, next, and after that so the current workflow sequence becomes concrete.",
+            ),
+            "handoff_boundary": (
+                "handoff_boundary",
+                "Ask where work, information, or responsibility moved from one person, team, or tool to another.",
+            ),
+            "fragmentation_point": (
+                "fragmentation_point",
+                "Ask where the workflow split across tools, threads, tabs, or manual tracking and what broke there.",
+            ),
+            "current_workaround": (
+                "current_workaround",
+                "Ask what workaround they use today to keep the workflow moving when the normal path breaks.",
+            ),
+            "switching_cost": (
+                "switching_cost",
+                "Ask what time, attention, re-entry, or verification cost appears when they switch tools or reassemble context.",
+            ),
+            "responsibility_gap": (
+                "responsibility_gap",
+                "Ask where ownership or next-step responsibility becomes unclear enough that progress stalls or gets rechecked.",
+            ),
+        }
+        return mapping.get(
+            gap,
+            (
+                "workflow_mapping_probe",
+                "Ask one short workflow-mapping question that fills the highest-value missing workflow evidence gap.",
+            ),
+        )
+
+    @staticmethod
     def _prototype_validation_gap_instruction(gap: str) -> tuple[str, str]:
         mapping = {
             "stimulus_interpretation": (
@@ -1040,6 +1092,26 @@ class FacilitatedInterviewRuntime:
                 covered["recent_behaviour"] = True
             if "current_workaround" in covered and ("workflow" in labels or "workaround" in labels or "current" in labels):
                 covered["current_workaround"] = True
+            if "workflow_sequence" in covered and (
+                "sequence" in labels or "workflow_sequence" in labels or "journey" in labels or "step" in labels or "path" in labels
+            ):
+                covered["workflow_sequence"] = True
+            if "handoff_boundary" in covered and (
+                "handoff" in labels or "transfer" in labels or "owner" in labels or "boundary" in labels or "approval" in labels
+            ):
+                covered["handoff_boundary"] = True
+            if "fragmentation_point" in covered and (
+                "fragment" in labels or "split" in labels or "context_switch" in labels or "tool_jump" in labels or "reassemble" in labels
+            ):
+                covered["fragmentation_point"] = True
+            if "switching_cost" in covered and (
+                "switching" in labels or "re_entry" in labels or "manual_copy" in labels or "verification" in labels or "reconcile" in labels
+            ):
+                covered["switching_cost"] = True
+            if "responsibility_gap" in covered and (
+                "responsibility" in labels or "ownership" in labels or "owner" in labels or "unclear" in labels or "stall" in labels
+            ):
+                covered["responsibility_gap"] = True
             if "problem_reality" in covered and (
                 "problem" in labels or "pain" in labels or "severity" in labels or "reality" in labels
             ):
@@ -1282,6 +1354,32 @@ class FacilitatedInterviewRuntime:
                 f"Missing items: {', '.join(missing) or '(none listed)'}. "
                 f"Ask one short barrier question next. Use a phase or strategy label like '{phase_hint}' so the runtime "
                 f"can audit the gap. {gap_instruction}\n\n"
+                f"TRANSCRIPT:\n{self._plain_transcript(session)}"
+            )
+            return self.facilitator_provider.next_turn(
+                system_prompt=system_prompt,
+                user_prompt=correction,
+                provider_session_id=decision.provider_session_id or session.facilitator_provider_session_id,
+            )
+        if session.interview_mode == "workflow_mapping":
+            self._update_coverage_status(session)
+            missing = list(session.coverage_status.get("missing", []))
+            if not decision.should_end or not missing:
+                return decision
+            next_gap = missing[0]
+            phase_hint, gap_instruction = self._workflow_mapping_gap_instruction(next_gap)
+            rejected = decision.to_dict()
+            rejected["question_evidence_basis"] = basis
+            rejected["decision_status"] = "rejected_by_workflow_mapping_gate"
+            session.facilitator_decisions.append(rejected)
+            correction = (
+                "WORKFLOW MAPPING GATE: Do not end yet. This mode must cover one recent real workflow episode, "
+                "the concrete step sequence, the handoff boundary, fragmentation points, the current workaround, "
+                "the switching or re-entry cost, and the responsibility gap. Keep the interview on the current "
+                "workflow and do not drift into concept testing or solution pitching. "
+                f"Missing items: {', '.join(missing) or '(none listed)'}. "
+                f"Ask one short workflow question next. Use a phase or strategy label like '{phase_hint}' so the "
+                f"runtime can audit the gap. {gap_instruction}\n\n"
                 f"TRANSCRIPT:\n{self._plain_transcript(session)}"
             )
             return self.facilitator_provider.next_turn(
@@ -1718,6 +1816,7 @@ class FacilitatedInterviewRuntime:
         resolved_stimulus_type = ""
         if mode not in {
             "pain_point_discovery",
+            "workflow_mapping",
             "adoption_barrier_validation",
             "prototype_validation",
             "decision_reconstruction",
@@ -1726,8 +1825,8 @@ class FacilitatedInterviewRuntime:
             "concept_validation",
         }:
             raise ValueError(
-                "interview_mode must be pain_point_discovery, adoption_barrier_validation, prototype_validation, "
-                "decision_reconstruction, explore_root_cause, validate_hypothesis, or concept_validation."
+                "interview_mode must be pain_point_discovery, workflow_mapping, adoption_barrier_validation, "
+                "prototype_validation, decision_reconstruction, explore_root_cause, validate_hypothesis, or concept_validation."
             )
         if mode == "validate_hypothesis" and not hypothesis.strip():
             raise ValueError("validate_hypothesis mode requires a non-empty hypothesis.")
@@ -1754,6 +1853,94 @@ class FacilitatedInterviewRuntime:
                     raise ValueError("prototype_validation mode with stimulus_type=flow requires a non-empty stimulus_artifact path.")
                 FacilitatedInterviewRuntime._resolve_flow_stimulus_artifact_bundle(stimulus_artifact.strip())
         return mode, resolved_stimulus_type
+
+    @staticmethod
+    def _attach_mode_specific_evidence_projection(
+        session: InterviewSession,
+        synthesis: dict[str, Any],
+    ) -> dict[str, Any]:
+        if session.interview_mode != "workflow_mapping":
+            return synthesis
+        enriched = dict(synthesis)
+        enriched["workflow_map"] = FacilitatedInterviewRuntime._build_workflow_map_projection(
+            session,
+            synthesis=enriched,
+        )
+        return enriched
+
+    @staticmethod
+    def _build_workflow_map_projection(
+        session: InterviewSession,
+        *,
+        synthesis: dict[str, Any],
+    ) -> dict[str, Any]:
+        phase_exchanges: dict[str, list[InterviewExchange]] = {}
+        for exchange in session.exchanges:
+            phase_exchanges.setdefault(exchange.facilitator_phase, []).append(exchange)
+
+        def build_items(phase: str) -> list[dict[str, Any]]:
+            items: list[dict[str, Any]] = []
+            for index, exchange in enumerate(phase_exchanges.get(phase, []), start=1):
+                response = str(exchange.persona_response or "").strip()
+                if not response:
+                    continue
+                items.append(
+                    {
+                        "id": f"{phase}_{index}",
+                        "summary": response,
+                        "evidence_ref": f"exchange_{exchange.exchange_id}.persona",
+                        "exchange_id": exchange.exchange_id,
+                        "facilitator_question": exchange.facilitator_question,
+                    }
+                )
+            return items
+
+        recent_episode = build_items("recent_event")
+        workflow_steps = build_items("workflow_sequence")
+        handoffs = build_items("handoff_boundary")
+        fragmentation_points = build_items("fragmentation_point")
+        workaround_chain = build_items("current_workaround")
+        switching_costs = build_items("switching_cost")
+        responsibility_gaps = build_items("responsibility_gap")
+        coverage = dict(session.coverage_status or {})
+        first_insight = ""
+        if isinstance(synthesis.get("insights"), list) and synthesis.get("insights"):
+            first_item = synthesis["insights"][0]
+            if isinstance(first_item, dict):
+                first_insight = str(first_item.get("insight") or "").strip()
+        current_state_summary = str(synthesis.get("executive_summary") or first_insight).strip()
+        return {
+            "contract_version": "workflow-map/v1",
+            "research_goal": session.research_goal,
+            "coverage_requirements": list(WORKFLOW_MAPPING_COVERAGE_REQUIREMENTS),
+            "coverage_complete": bool(coverage.get("coverage_complete")),
+            "missing_coverage": list(coverage.get("missing", [])) if isinstance(coverage.get("missing"), list) else [],
+            "current_state_summary": current_state_summary,
+            "recent_episode": recent_episode,
+            "workflow_steps": workflow_steps,
+            "handoff_boundaries": handoffs,
+            "fragmentation_points": fragmentation_points,
+            "workaround_chain": workaround_chain,
+            "switching_costs": switching_costs,
+            "responsibility_gaps": responsibility_gaps,
+            "evidence_refs": [
+                item["evidence_ref"]
+                for group in (
+                    recent_episode,
+                    workflow_steps,
+                    handoffs,
+                    fragmentation_points,
+                    workaround_chain,
+                    switching_costs,
+                    responsibility_gaps,
+                )
+                for item in group
+            ],
+            "review_guidance": (
+                "Review workflow sequence, handoff, fragmentation, switching cost, and responsibility-gap evidence "
+                "before evaluating solution desirability or adoption claims."
+            ),
+        }
 
     def _prepare_stimulus_context(
         self,
@@ -2352,6 +2539,8 @@ class FacilitatedInterviewRuntime:
             return FacilitatedInterviewRuntime._render_concept_insights(session)
         if session.interview_mode == "prototype_validation":
             return FacilitatedInterviewRuntime._render_prototype_insights(session)
+        if session.interview_mode == "workflow_mapping":
+            return FacilitatedInterviewRuntime._render_workflow_mapping_insights(session)
         lines = [
             f"# Interview Insights: {session.persona_name}", "",
             f"> {report.get('synthetic_only_disclaimer', session.synthetic_only_disclaimer)}", "",
@@ -2554,6 +2743,59 @@ class FacilitatedInterviewRuntime:
         if not risks:
             lines.append("- No explicit over-optimism risks were generated.")
         lines.extend(["", "## Next Experiment", "", str(report.get("next_experiment", ""))])
+        lines.extend(["", "## Evidence Gaps", ""])
+        for item in report.get("evidence_gaps", []):
+            lines.append(f"- {item}")
+        return "\n".join(lines).rstrip() + "\n"
+
+    @staticmethod
+    def _render_workflow_mapping_insights(session: InterviewSession) -> str:
+        report = session.insight_report
+        workflow_map = report.get("workflow_map", {})
+        lines = [
+            f"# Workflow Mapping Interview: {session.persona_name}", "",
+            f"> {report.get('synthetic_only_disclaimer', session.synthetic_only_disclaimer)}", "",
+            "## Executive Summary", "", str(report.get("executive_summary", "")), "",
+            "## Current-State Workflow Map", "",
+            f"- Summary: {workflow_map.get('current_state_summary', '')}",
+            f"- Coverage complete: {workflow_map.get('coverage_complete', False)}",
+        ]
+        if workflow_map.get("missing_coverage"):
+            lines.append(
+                f"- Missing coverage: {', '.join(str(item) for item in workflow_map.get('missing_coverage', []))}"
+            )
+        sections = [
+            ("Recent Episode", workflow_map.get("recent_episode", [])),
+            ("Workflow Steps", workflow_map.get("workflow_steps", [])),
+            ("Handoff Boundaries", workflow_map.get("handoff_boundaries", [])),
+            ("Fragmentation Points", workflow_map.get("fragmentation_points", [])),
+            ("Workaround Chain", workflow_map.get("workaround_chain", [])),
+            ("Switching Costs", workflow_map.get("switching_costs", [])),
+            ("Responsibility Gaps", workflow_map.get("responsibility_gaps", [])),
+        ]
+        for title, items in sections:
+            lines.extend(["", f"## {title}", ""])
+            if items:
+                for item in items:
+                    lines.append(
+                        f"- {item.get('summary', '')} ({item.get('evidence_ref', '')})"
+                    )
+            else:
+                lines.append("- None recorded.")
+        lines.extend(["", "## Insights", ""])
+        for item in report.get("insights", []):
+            lines.append(
+                f"- {item.get('insight', '')} ({item.get('confidence', 'unknown')}; refs: {', '.join(item.get('evidence_refs', []))})"
+            )
+        lines.extend(["", "## Potential Over-Optimism Risks", ""])
+        risks = report.get("potential_over_optimism_risks", [])
+        for item in risks:
+            lines.append(f"- {item}")
+        if not risks:
+            lines.append("- No explicit over-optimism risks were generated.")
+        lines.extend(["", "## How Might We", ""])
+        for item in report.get("how_might_we_questions", []):
+            lines.append(f"- {item}")
         lines.extend(["", "## Evidence Gaps", ""])
         for item in report.get("evidence_gaps", []):
             lines.append(f"- {item}")

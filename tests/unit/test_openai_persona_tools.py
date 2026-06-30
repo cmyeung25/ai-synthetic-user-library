@@ -973,6 +973,52 @@ class OpenAIPersonaToolsTest(unittest.TestCase):
         self.assertNotIn("huge prompt", message)
         self.assertNotIn("Transport requirement", message)
 
+    def test_codex_cli_sends_prompt_over_stdin_not_argv(self) -> None:
+        import subprocess
+
+        with tempfile.TemporaryDirectory() as tmp:
+            config = OpenAIProviderConfig(
+                api_key="test-key",
+                transport="codex_cli",
+                workspace_root=tmp,
+                codex_home_mode="global",
+                codex_home_path=tmp,
+                codex_cli_path="codex",
+                codex_cli_output_mode="direct",
+            )
+            client = OpenAIResponsesClient(config)
+            captured: dict[str, object] = {}
+            huge_marker = "WINDOWS_ARGV_LIMIT_MARKER_" + ("x" * 20000)
+
+            def _fake_run(command, **kwargs):
+                captured["command"] = list(command)
+                captured["input"] = kwargs.get("input")
+                output_path = Path(command[command.index("-o") + 1])
+                output_path.write_text('{"json_payload":"{\\"ok\\":true}"}', encoding="utf-8")
+                return subprocess.CompletedProcess(command, returncode=0, stdout="", stderr="")
+
+            with patch("subprocess.run", side_effect=_fake_run):
+                result = client.create_json_response(
+                    system_prompt="Return JSON only.",
+                    user_prompt=f"Set ok=true. {huge_marker}",
+                    output_schema={
+                        "type": "object",
+                        "additionalProperties": False,
+                        "required": ["ok"],
+                        "properties": {"ok": {"type": "boolean"}},
+                    },
+                )
+
+        command = captured["command"]
+        self.assertEqual(result, {"ok": True})
+        self.assertIsInstance(command, list)
+        self.assertEqual(command[-1], "-")
+        self.assertNotIn(huge_marker, " ".join(command))
+        self.assertIn(huge_marker, str(captured["input"]))
+        self.assertIn("Requested output JSON schema:", str(captured["input"]))
+        self.assertIn('"required": [', str(captured["input"]))
+        self.assertIn('"ok"', str(captured["input"]))
+
     def test_codex_cli_retries_retryable_failure_once_then_succeeds(self) -> None:
         import subprocess
 

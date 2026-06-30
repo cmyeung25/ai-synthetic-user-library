@@ -1,0 +1,435 @@
+{
+  "decision_log_id": "decision_a1f108ba4dd3",
+  "workspace_id": "ws_frontline_smoke",
+  "project_id": "project_e5ffecfb4bd6",
+  "study_id": "study_5a0680778b33",
+  "job_id": "job_20260630_075546_7018e967",
+  "run_id": "run_20260630_075547_224543_6a6658c6",
+  "evidence_view_id": "view_99675a7a9f95",
+  "title": "Concept validation study decision",
+  "decision_summary": "Current belief: the concept is worth exploring, but I still need human validation before treating it as market proof.",
+  "rationale": "The evidence is directionally useful, but it should guide the next validation step rather than become a launch claim.",
+  "selected_result_id": "query-artifact-raw_responses-json",
+  "selected_comparison_run_id": null,
+  "review_status": "draft",
+  "comment_count": 0,
+  "review_status_history": [
+    {
+      "status": "draft",
+      "changed_at": "2026-06-30T07:55:53+00:00",
+      "changed_by_user_id": "owner_frontline_smoke",
+      "note": "Decision log created."
+    }
+  ],
+  "review_assignment": {
+    "contract_version": "workspace-decision-review-assignment/v0-draft",
+    "status": "unassigned",
+    "assignee_user_ids": [],
+    "assignees": [],
+    "assigned_at": null,
+    "assigned_by_user_id": null,
+    "latest_note": ""
+  },
+  "review_assignment_history": [],
+  "created_at": "2026-06-30T07:55:53+00:00",
+  "updated_at": "2026-06-30T07:55:53+00:00",
+  "created_by_user_id": "owner_frontline_smoke",
+  "readiness_gate": {
+    "contract_version": "workspace-evidence-readiness-gate/v0-draft",
+    "status": "human_validation_required",
+    "share_status": "boundary_only",
+    "market_claims_allowed": false,
+    "boundary_required": true,
+    "selected_signal_id": "trace:persona_responses",
+    "stability_label": "mixed_or_contradictory",
+    "stability_score": 0,
+    "human_validation_gap": true,
+    "missing_context_count": 3,
+    "contradicting_evidence_count": 2,
+    "supporting_evidence_count": 0,
+    "calibration_status": "unavailable",
+    "external_benchmark_status": null,
+    "provider_name": "mock",
+    "provider_evidence_mode": "mock_demo",
+    "provider_runtime_status": "completed",
+    "gate_reasons": [
+      "human_validation_gap"
+    ],
+    "threshold_gaps": [],
+    "boundary_note": "Synthetic evidence only. Reliability labels require human calibration before replacement-grade claims.",
+    "distribution_note": "Synthetic evidence may be shared only with explicit boundary language until human calibration is attached.",
+    "calibration_records": [
+      {
+        "id": "synthetic_boundary",
+        "status": "requires_human_validation",
+        "label": "Synthetic evidence boundary",
+        "note": "This reliability review improves repeatability discipline but remains synthetic evidence, not human market proof."
+      },
+      {
+        "id": "repeatability",
+        "status": "mixed_or_contradictory",
+        "label": "Repeatability signal",
+        "score": 0,
+        "supporting_count": 0,
+        "contradicting_count": 2
+      },
+      {
+        "id": "coverage_gap",
+        "status": "open",
+        "label": "Coverage and calibration gaps",
+        "missing_count": 3,
+        "note": "Missing context must stay visible before using this evidence for stronger prediction claims."
+      }
+    ]
+  },
+  "governed_review": {
+    "contract_version": "workspace-study-governed-review/v0-draft",
+    "regulated_review_boundary": {
+      "contract_version": "workspace-study-regulated-review-boundary/v0-draft",
+      "classification_status": "standard",
+      "matched_domain_ids": [],
+      "matched_domains": [],
+      "requires_governed_review": false,
+      "boundary_handling_status": "not_required",
+      "execution_status": "allowed",
+      "allow_execution": true,
+      "explicit_boundary_acknowledged": false,
+      "explicit_boundary_acknowledged_at": null,
+      "explicit_boundary_acknowledged_by_user_id": null,
+      "explicit_boundary_note": "",
+      "policy_labels": [
+        "synthetic_evidence_only"
+      ],
+      "source_fields": [
+        "title",
+        "research_intent",
+        "desired_output",
+        "first_task",
+        "artifact_refs"
+      ],
+      "boundary_message": "This study is not currently classified as regulated or high-stakes."
+    },
+    "reviewer_handoff": {
+      "contract_version": "workspace-study-governed-review-assignment/v0-draft",
+      "required": false,
+      "status": "not_required",
+      "assignee_user_ids": [],
+      "reviewer_members": [],
+      "assigned_at": null,
+      "assigned_by_user_id": null,
+      "escalated_at": null,
+      "escalated_by_user_id": null,
+      "latest_note": ""
+    },
+    "reviewer_handoff_history": [],
+    "review_gate_status": "not_required",
+    "policy_labels": [
+      "synthetic_evidence_only",
+      "governed_review_not_required",
+      "governed_review_status:not_required"
+    ],
+    "human_review_required": false,
+    "human_review_note": "No additional governed reviewer responsibility is required for this study.",
+    "blocked_reason": null,
+    "decision_review_allowed": true,
+    "circulation_allowed": true
+  },
+  "governed_redaction": {
+    "contract_version": "workspace-study-governed-redaction/v0-draft",
+    "required": false,
+    "status": "not_required",
+    "redaction_rules": [],
+    "rule_count": 0,
+    "policy_labels": [
+      "governed_redaction_not_required",
+      "governed_redaction_status:not_required"
+    ],
+    "circulation_allowed": true,
+    "blocked_reason": null,
+    "latest_note": "No governed redaction policy is required for this study.",
+    "updated_at": null,
+    "updated_by_user_id": null
+  },
+  "metadata": {
+    "source": "frontline_research_studio",
+    "study_report_id": "study_report_f8622d0b238c",
+    "plan_revision_id": "planrev_765d7a21acd2",
+    "confidence_boundary": "Confidence is directional only because the supporting evidence is synthetic and still needs human validation.",
+    "human_follow_up": "Run targeted human interviews or prototype tests around the strongest objections before making a customer-facing claim.",
+    "evidence_basis_label": "Saved evidence view with selected source slice and comparison context.",
+    "human_validation_gap_required": true,
+    "selected_evidence_context": {
+      "selected_result_id": "query-artifact-raw_responses-json",
+      "selected_artifact_id": "artifact-raw_responses-json",
+      "selected_result_title": "Persona responses",
+      "selected_result_family": "trace",
+      "selected_result_kind": "persona_responses",
+      "selected_signal_id": "trace:persona_responses",
+      "signal_terms": [
+        "objection",
+        "try signal"
+      ],
+      "workflow_map_focus": false,
+      "workflow_fragmentation_count": 0,
+      "workflow_handoff_count": 0,
+      "workflow_responsibility_gap_count": 0,
+      "workflow_review_guidance": null,
+      "longitudinal_focus": {
+        "selected_window_id": "study_timeline",
+        "same_study_run_count": 0,
+        "same_project_study_count": 0,
+        "study_timeline_entry_count": 3,
+        "source_calibration_status": "unavailable"
+      },
+      "recurring_signal_focus": {
+        "pattern_count": 3,
+        "persistent_pattern_count": 0,
+        "pattern_ids": [
+          "objection",
+          "task_failure",
+          "contradiction"
+        ]
+      },
+      "panel_learning_focus": {
+        "segment_status": "insufficient_axis_data",
+        "repeated_hotspot_axes": [],
+        "persistent_undercovered_axes": [],
+        "confidence_status": "drifting",
+        "total_decision_count": 1,
+        "latest_decision_change_status": "first_decision"
+      },
+      "readiness_gate": {
+        "contract_version": "workspace-evidence-readiness-gate/v0-draft",
+        "status": "human_validation_required",
+        "share_status": "boundary_only",
+        "market_claims_allowed": false,
+        "boundary_required": true,
+        "selected_signal_id": "trace:persona_responses",
+        "stability_label": "mixed_or_contradictory",
+        "stability_score": 0,
+        "human_validation_gap": true,
+        "missing_context_count": 3,
+        "contradicting_evidence_count": 2,
+        "supporting_evidence_count": 0,
+        "calibration_status": "unavailable",
+        "external_benchmark_status": null,
+        "provider_name": "mock",
+        "provider_evidence_mode": "mock_demo",
+        "provider_runtime_status": "completed",
+        "gate_reasons": [
+          "human_validation_gap"
+        ],
+        "threshold_gaps": [],
+        "boundary_note": "Synthetic evidence only. Reliability labels require human calibration before replacement-grade claims.",
+        "distribution_note": "Synthetic evidence may be shared only with explicit boundary language until human calibration is attached.",
+        "calibration_records": [
+          {
+            "id": "synthetic_boundary",
+            "status": "requires_human_validation",
+            "label": "Synthetic evidence boundary",
+            "note": "This reliability review improves repeatability discipline but remains synthetic evidence, not human market proof."
+          },
+          {
+            "id": "repeatability",
+            "status": "mixed_or_contradictory",
+            "label": "Repeatability signal",
+            "score": 0,
+            "supporting_count": 0,
+            "contradicting_count": 2
+          },
+          {
+            "id": "coverage_gap",
+            "status": "open",
+            "label": "Coverage and calibration gaps",
+            "missing_count": 3,
+            "note": "Missing context must stay visible before using this evidence for stronger prediction claims."
+          }
+        ]
+      },
+      "provider_runtime_boundary": {
+        "contract_version": "validation-provider-runtime/v0-draft",
+        "provider_name": "mock",
+        "provider_family": "mock",
+        "evidence_mode": "mock_demo",
+        "is_supported": true,
+        "is_live_provider": false,
+        "is_codex_provider": false,
+        "requires_auth": false,
+        "auth_readiness": "not_required",
+        "auth_source": null,
+        "auth_sources_checked": [],
+        "runtime_status": "completed",
+        "job_status": "completed",
+        "failure_kind": null,
+        "failure_category": "no_failure",
+        "last_error_visible": false,
+        "boundary_label": "Mock demo evidence",
+        "boundary_message": "This provider creates mock demo evidence for product flow testing only.",
+        "next_actions": [
+          "Use codex or codex-sdk when you need live synthetic evidence instead of mock demo evidence."
+        ]
+      }
+    },
+    "readiness_gate": {
+      "contract_version": "workspace-evidence-readiness-gate/v0-draft",
+      "status": "human_validation_required",
+      "share_status": "boundary_only",
+      "market_claims_allowed": false,
+      "boundary_required": true,
+      "selected_signal_id": "trace:persona_responses",
+      "stability_label": "mixed_or_contradictory",
+      "stability_score": 0,
+      "human_validation_gap": true,
+      "missing_context_count": 3,
+      "contradicting_evidence_count": 2,
+      "supporting_evidence_count": 0,
+      "calibration_status": "unavailable",
+      "external_benchmark_status": null,
+      "provider_name": "mock",
+      "provider_evidence_mode": "mock_demo",
+      "provider_runtime_status": "completed",
+      "gate_reasons": [
+        "human_validation_gap"
+      ],
+      "threshold_gaps": [],
+      "boundary_note": "Synthetic evidence only. Reliability labels require human calibration before replacement-grade claims.",
+      "distribution_note": "Synthetic evidence may be shared only with explicit boundary language until human calibration is attached.",
+      "calibration_records": [
+        {
+          "id": "synthetic_boundary",
+          "status": "requires_human_validation",
+          "label": "Synthetic evidence boundary",
+          "note": "This reliability review improves repeatability discipline but remains synthetic evidence, not human market proof."
+        },
+        {
+          "id": "repeatability",
+          "status": "mixed_or_contradictory",
+          "label": "Repeatability signal",
+          "score": 0,
+          "supporting_count": 0,
+          "contradicting_count": 2
+        },
+        {
+          "id": "coverage_gap",
+          "status": "open",
+          "label": "Coverage and calibration gaps",
+          "missing_count": 3,
+          "note": "Missing context must stay visible before using this evidence for stronger prediction claims."
+        }
+      ]
+    },
+    "provider_runtime_boundary": {
+      "contract_version": "validation-provider-runtime/v0-draft",
+      "provider_name": "mock",
+      "provider_family": "mock",
+      "evidence_mode": "mock_demo",
+      "is_supported": true,
+      "is_live_provider": false,
+      "is_codex_provider": false,
+      "requires_auth": false,
+      "auth_readiness": "not_required",
+      "auth_source": null,
+      "auth_sources_checked": [],
+      "runtime_status": "completed",
+      "job_status": "completed",
+      "failure_kind": null,
+      "failure_category": "no_failure",
+      "last_error_visible": false,
+      "boundary_label": "Mock demo evidence",
+      "boundary_message": "This provider creates mock demo evidence for product flow testing only.",
+      "next_actions": [
+        "Use codex or codex-sdk when you need live synthetic evidence instead of mock demo evidence."
+      ]
+    },
+    "governed_review": {
+      "contract_version": "workspace-study-governed-review/v0-draft",
+      "regulated_review_boundary": {
+        "contract_version": "workspace-study-regulated-review-boundary/v0-draft",
+        "classification_status": "standard",
+        "matched_domain_ids": [],
+        "matched_domains": [],
+        "requires_governed_review": false,
+        "boundary_handling_status": "not_required",
+        "execution_status": "allowed",
+        "allow_execution": true,
+        "explicit_boundary_acknowledged": false,
+        "explicit_boundary_acknowledged_at": null,
+        "explicit_boundary_acknowledged_by_user_id": null,
+        "explicit_boundary_note": "",
+        "policy_labels": [
+          "synthetic_evidence_only"
+        ],
+        "source_fields": [
+          "title",
+          "research_intent",
+          "desired_output",
+          "first_task",
+          "artifact_refs"
+        ],
+        "boundary_message": "This study is not currently classified as regulated or high-stakes."
+      },
+      "reviewer_handoff": {
+        "contract_version": "workspace-study-governed-review-assignment/v0-draft",
+        "required": false,
+        "status": "not_required",
+        "assignee_user_ids": [],
+        "reviewer_members": [],
+        "assigned_at": null,
+        "assigned_by_user_id": null,
+        "escalated_at": null,
+        "escalated_by_user_id": null,
+        "latest_note": ""
+      },
+      "reviewer_handoff_history": [],
+      "review_gate_status": "not_required",
+      "policy_labels": [
+        "synthetic_evidence_only",
+        "governed_review_not_required",
+        "governed_review_status:not_required"
+      ],
+      "human_review_required": false,
+      "human_review_note": "No additional governed reviewer responsibility is required for this study.",
+      "blocked_reason": null,
+      "decision_review_allowed": true,
+      "circulation_allowed": true
+    },
+    "governed_redaction": {
+      "contract_version": "workspace-study-governed-redaction/v0-draft",
+      "required": false,
+      "status": "not_required",
+      "redaction_rules": [],
+      "rule_count": 0,
+      "policy_labels": [
+        "governed_redaction_not_required",
+        "governed_redaction_status:not_required"
+      ],
+      "circulation_allowed": true,
+      "blocked_reason": null,
+      "latest_note": "No governed redaction policy is required for this study.",
+      "updated_at": null,
+      "updated_by_user_id": null
+    },
+    "review_status": "draft",
+    "review_status_history": [
+      {
+        "status": "draft",
+        "changed_at": "2026-06-30T07:55:53+00:00",
+        "changed_by_user_id": "owner_frontline_smoke",
+        "note": "Decision log created."
+      }
+    ],
+    "review_status_updated_at": "2026-06-30T07:55:53+00:00",
+    "review_status_updated_by_user_id": "owner_frontline_smoke",
+    "latest_review_note": "",
+    "review_assignment": {
+      "contract_version": "workspace-decision-review-assignment/v0-draft",
+      "status": "unassigned",
+      "assignee_user_ids": [],
+      "assigned_at": null,
+      "assigned_by_user_id": null,
+      "latest_note": ""
+    },
+    "review_assignment_history": []
+  },
+  "comments": []
+}

@@ -106,6 +106,7 @@ function applyWorkspaceShellSnapshot(state, payload) {
     liveSession: snapshot.session || null,
     liveJobs: jobs,
     selectedJobId: snapshot.selected_job_id || jobs[0]?.job_id || null,
+    liveProviderRuntime: snapshot.provider_runtime || state.liveProviderRuntime || null,
     liveEvidenceQuery: snapshot.evidence_query || null,
     liveError: null,
     sessionError: null,

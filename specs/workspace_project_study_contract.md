@@ -11,6 +11,8 @@ This document defines the first Milestone 11 product-layer contract for:
 
 The goal is to introduce durable product objects above raw validation jobs so the hosted frontend can organize research work by `project` and `study` rather than by filesystem paths or standalone run records.
 
+For the canonical Frontline Research Studio terminology and the next user-facing entity boundary, see `specs/frontline_research_studio_terminology_and_data_model.md`. This Milestone 11 contract remains the current operator-shell/runtime contract, while the Frontline spec defines the target separation between `PlanningConversation`, `PlanProposal`, immutable `StudyPlanRevision`, `Run`, `EvidenceSlice`, `Finding`, `StudyReport`, and `DecisionLog`.
+
 ## Why this contract exists
 
 Research bottleneck improved:
@@ -75,6 +77,9 @@ Minimum fields:
 - `latest_job_id`
 - `run_count`
 - `latest_job_status`
+- `regulated_review_boundary`
+- `governed_review`
+- `governed_redaction`
 
 ## Creation rules
 
@@ -127,10 +132,26 @@ Response:
     "study_id": "study_123",
     "project_id": "project_123",
     "status": "draft",
-    "run_count": 0
+    "run_count": 0,
+    "regulated_review_boundary": {
+      "classification_status": "standard",
+      "execution_status": "allowed"
+    },
+    "governed_review": {
+      "review_gate_status": "not_required",
+      "human_review_required": false
+    },
+    "governed_redaction": {
+      "status": "not_required",
+      "rule_count": 0
+    }
   }
 }
 ```
+
+`regulated_review_boundary` is backend-owned. The runtime classifies study intent, desired output, first task, and artifact references into standard or regulated/high-stakes handling and does not rely on page-local inference.
+`governed_review` is also backend-owned. It carries named reviewer responsibility, policy labels, human-review-required notes, and whether governed decision review or partner-facing circulation is currently allowed, blocked, or escalated.
+`governed_redaction` is backend-owned as well. It carries viewer-safe redaction rules, redaction status, and whether partner-facing circulation is blocked until active redaction policy exists.
 
 ## Study-to-run linkage
 
@@ -143,11 +164,62 @@ When a job is submitted with a visible study:
 
 1. the runtime validates that the study belongs to the same workspace
 2. the runtime validates the project/study relationship when both are present
-3. the submitted job metadata preserves the product-layer linkage
-4. the study updates `latest_job_id`
-5. the study can move from `draft` toward `ready`
+3. the runtime enforces the study's backend-owned `regulated_review_boundary` before execution proceeds
+4. the submitted job metadata preserves the product-layer linkage plus the selected study boundary snapshot
+5. the study updates `latest_job_id`
+6. the study can move from `draft` toward `ready`
 
 This keeps product organization outside the research engine while still linking product objects to run artifacts.
+
+## Governed reviewer assignment
+
+`POST /api/v1/studies/{study_id}/governed-review-assignment` now lets owner/admin members assign named governed reviewers to regulated/high-stakes studies.
+
+Request body:
+
+```json
+{
+  "assignee_user_ids": ["reviewer_001"],
+  "status": "assigned",
+  "note": "Assign the governed reviewer before decision approval."
+}
+```
+
+Behavior:
+
+1. the study must already be classified as regulated/high-stakes
+2. only `owner` or `admin` members may mutate governed reviewer assignment
+3. assignees must be visible workspace members with role `owner`, `admin`, or `editor`
+4. governed assignment appends to study activity through `study.governed_review_assignment_updated`
+5. the same governed reviewer state propagates into evidence query, decision review, export manifests, and share payloads
+
+## Governed redaction policy
+
+`POST /api/v1/studies/{study_id}/governed-redaction` now lets owner/admin members activate or escalate viewer-safe redaction rules for regulated/high-stakes studies.
+
+Request body:
+
+```json
+{
+  "status": "active",
+  "redaction_rules": [
+    {
+      "path": "study_context.research_intent",
+      "reason": "Protect sensitive workflow detail.",
+      "replacement": "[REDACTED: research intent]"
+    }
+  ],
+  "note": "Activate viewer-safe circulation redactions for external delivery."
+}
+```
+
+Behavior:
+
+1. the study must already be classified as regulated/high-stakes
+2. only `owner` or `admin` members may mutate governed redaction
+3. `active` requires at least one redaction rule
+4. the same redaction state propagates into evidence query, export manifests, share payloads, support snapshots, and compliance audit bundles
+5. regulated/high-stakes partner-facing share creation remains blocked until governed redaction is `active`
 
 ## Workspace shell snapshot integration
 

@@ -863,6 +863,28 @@ class ObserverRuntimeTest(unittest.TestCase):
             quality_context = runtime._quality_user_prompt(session)
             self.assertIn("INTERVIEW MODE:\npain_point_discovery", quality_context)
 
+    def test_observed_workflow_mapping_reaches_facilitator_and_quality_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = self._library(root)
+            facilitator = ObserverFacilitatorFixture()
+            runtime = ObserverControlledInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=facilitator,
+                persona_provider=ObserverPersonaFixture(),
+                quality_provider=ObserverQualityFixture(),
+            )
+            _, session = runtime.start(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Map the current workflow and where handoffs break.",
+                interview_mode="workflow_mapping",
+            )
+            self.assertEqual(session.interview_mode, "workflow_mapping")
+            self.assertIn("INTERVIEW MODE:\nworkflow_mapping", facilitator.calls[0]["user_prompt"])
+            quality_context = runtime._quality_user_prompt(session)
+            self.assertIn("INTERVIEW MODE:\nworkflow_mapping", quality_context)
+
     def test_observed_adoption_barrier_validation_reaches_facilitator_and_quality_context(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

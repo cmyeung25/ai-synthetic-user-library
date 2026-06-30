@@ -9,6 +9,7 @@ It covers:
 - decision-log review status
 - threaded decision comments
 - decision-log approval and revision workflow
+- explicit review assignment and assignment history
 - API and shared-shell expectations for keeping review attached to the same study evidence surface
 
 The contract exists so research conclusions can be challenged, approved, or sent back for revision inside the product shell instead of drifting into external notes or chat tools.
@@ -37,6 +38,7 @@ The local SaaS runtime now exposes:
 - `POST /api/v1/decision-logs/{decision_log_id}/comments`
 - `GET /api/v1/decision-logs/{decision_log_id}/comments`
 - `POST /api/v1/decision-logs/{decision_log_id}/review-status`
+- `POST /api/v1/decision-logs/{decision_log_id}/review-assignment`
 
 `GET /api/v1/decision-logs/{decision_log_id}` now also returns:
 
@@ -67,6 +69,30 @@ Minimum projected fields on decision-log detail:
 - `latest_review_note`
 - `comment_count`
 - `review_thread_count`
+- `review_assignment`
+- `review_assignment_history`
+- `provider_runtime_boundary`
+- `governed_review`
+- `governed_redaction`
+
+`provider_runtime_boundary` must distinguish `mock_demo`, `live_synthetic`, and `unsupported` evidence modes so decision reviewers do not approve a working judgment while losing whether the supporting evidence came from a mock or live provider path.
+
+### Review assignment
+
+Supported assignment status values:
+
+- `unassigned`
+- `assigned`
+
+Minimum projected fields:
+
+- `contract_version`
+- `status`
+- `assignee_user_ids`
+- `assignees`
+- `latest_note`
+- `assigned_at`
+- `assigned_by_user_id`
 
 ### Decision comment
 
@@ -130,6 +156,33 @@ Rules:
 2. `review_status` must be one of the supported values
 3. each transition appends to `review_status_history`
 4. review status is attached to the same decision log rather than creating a separate approval object
+5. only `owner` / `admin` members or explicitly assigned reviewers may move a decision into `approved` or `needs_revision`
+6. when the linked study is regulated/high-stakes, governed reviewer responsibility must already be assigned at the study level before a decision can move into `approved` or `needs_revision`
+
+### `POST /api/v1/decision-logs/{decision_log_id}/review-assignment`
+
+Request body:
+
+```json
+{
+  "assignee_user_ids": ["reviewer_001"],
+  "note": "Route this decision to the study reviewer.",
+  "metadata": {
+    "source": "stage15_demo"
+  }
+}
+```
+
+Rules:
+
+1. caller must be `owner` or `admin`
+2. every assignee must be an existing workspace member
+3. assignees must have role `owner`, `admin`, or `editor`
+4. assignment appends to `review_assignment_history`
+5. empty `assignee_user_ids` clears assignment back to `unassigned`
+6. assignment stays attached to the same durable decision-log object as evidence linkage, comments, and review status
+
+For regulated/high-stakes studies, new decision logs may inherit default `review_assignment` assignees from the study-level governed reviewer handoff so named reviewer responsibility does not have to be reconstructed per decision.
 
 ## Artifact materialization
 
@@ -147,6 +200,10 @@ The materialized decision-log payload now also includes:
 - `review_status`
 - `comment_count`
 - `review_status_history`
+- `review_assignment`
+- `review_assignment_history`
+- `governed_review`
+- `governed_redaction`
 - `comments`
 
 ## Shared-shell expectations
@@ -165,6 +222,8 @@ The runtime must emit:
 
 - `decision_log.review_status_updated`
 - `decision_log.commented`
+- `decision_log.review_assignment_updated`
+- `study.governed_review_assignment_updated`
 
 These events extend study collaboration into in-product review history.
 

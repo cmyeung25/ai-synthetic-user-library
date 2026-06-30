@@ -103,6 +103,7 @@ export function mountStage15WorkspaceShell({
   const studyPill = documentLike.getElementById("study-pill");
   const bridgePill = documentLike.getElementById("bridge-pill");
   const jobPill = documentLike.getElementById("job-pill");
+  const providerRuntimePill = documentLike.getElementById("provider-runtime-pill");
   const queryPill = documentLike.getElementById("query-pill");
   const supportPill = documentLike.getElementById("support-pill");
   const settingsPill = documentLike.getElementById("settings-pill");
@@ -218,6 +219,9 @@ export function mountStage15WorkspaceShell({
   const draftSummary = documentLike.getElementById("draft-summary");
   const adapterSummary = documentLike.getElementById("adapter-summary");
   const runSummary = documentLike.getElementById("run-summary");
+  const providerRuntimeSummary = documentLike.getElementById("provider-runtime-summary");
+  const providerRuntimeDetail = documentLike.getElementById("provider-runtime-detail");
+  const providerRuntimeCatalog = documentLike.getElementById("provider-runtime-catalog");
   const reviewSummary = documentLike.getElementById("review-summary");
   const selectedEvidenceSummary = documentLike.getElementById("selected-evidence-summary");
   const selectedEvidenceDetail = documentLike.getElementById("selected-evidence-detail");
@@ -931,6 +935,46 @@ export function mountStage15WorkspaceShell({
     });
   }
 
+  function renderProviderRuntime(model) {
+    const providerSurface = model.frontendState.provider_runtime_surface || {};
+    if (providerRuntimePill) {
+      providerRuntimePill.className = `status-pill ${providerSurface.pill?.tone || "queued"}`;
+      providerRuntimePill.textContent = providerSurface.pill?.label || "provider_unknown";
+    }
+    if (providerRuntimeSummary) {
+      renderRows(providerRuntimeSummary, providerSurface.summary || []);
+    }
+    if (providerRuntimeDetail) {
+      renderDetailCards(providerRuntimeDetail, providerSurface.detail_cards || []);
+    }
+    if (!providerRuntimeCatalog) {
+      return;
+    }
+    providerRuntimeCatalog.innerHTML = "";
+    const catalog = providerSurface.catalog || [];
+    if (!catalog.length) {
+      const empty = documentLike.createElement("div");
+      empty.className = "product-empty";
+      empty.textContent = "Provider catalog is not loaded yet.";
+      providerRuntimeCatalog.appendChild(empty);
+      return;
+    }
+    catalog.forEach((item) => {
+      const card = documentLike.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+          <strong>${item.provider_name}</strong>
+          <div class="product-meta">
+            <span>${item.evidence_mode}</span>
+            <span>${item.runtime_status}</span>
+            <span>${item.auth_readiness}</span>
+          </div>
+          <p>${item.boundary_label}</p>
+        `;
+      providerRuntimeCatalog.appendChild(card);
+    });
+  }
+
   function renderEvidence(model) {
     evidenceList.innerHTML = "";
     const reviewSurface = model.frontendState.review_surface;
@@ -1582,6 +1626,7 @@ export function mountStage15WorkspaceShell({
     renderProjects(model);
     renderStudies(model);
     renderJobs(model);
+    renderProviderRuntime(model);
     renderEvidence(model);
     renderCollaboration(model);
     renderStudyActivity(model);

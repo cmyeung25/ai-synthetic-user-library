@@ -36,6 +36,16 @@ Before starting a task, confirm:
 4. Reusable workflows for discovery, concept evaluation, and prototype validation
 5. Tooling, reporting, and infrastructure that directly support the items above
 
+## Product IA and Routing Rule
+
+- Do not treat the user-facing product as one long page once durable research objects exist.
+- Use a persistent shell, but give durable product objects their own route-aware pages.
+- `Project`, `Study`, `Run`, `SavedEvidenceView`, `StudyReport`, `DecisionLog`, `ExportBundle`, and `ShareBundle` should be addressable by URL when they are user-visible outcomes or review contexts.
+- The left navigation should reflect the product IA and object hierarchy, not the temporary workflow stepper.
+- The research loop `Ask -> Clarify -> Confirm Plan -> Run -> Review Evidence -> Compare -> Decide -> Share With Boundary` belongs inside the current study as `Research Copilot`, `Guided Setup`, or progress state.
+- Do not create separate routes for every micro-step if the step has no durable state, shareable context, or browser-history value.
+- Browser back/forward, deep links, refresh, and shared review links must preserve the selected product object and evidence boundary.
+
 ## Avoid
 
 - optimizing for polished output without stronger research signal

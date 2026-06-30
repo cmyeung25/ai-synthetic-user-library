@@ -65,4 +65,4 @@ The platform must not claim blanket replacement-readiness from one calibrated be
 ## Remaining Boundary
 
 The platform can now perform human calibration when benchmark outcomes are attached.
-It still needs broader external benchmark coverage before claiming replacement-grade reliability across markets, stages, or high-stakes domains.
+It now also supports externally referenced benchmark definition files through suite-level `benchmark_path` entries, but it still needs broader external benchmark coverage before claiming replacement-grade reliability across markets, stages, or high-stakes domains.

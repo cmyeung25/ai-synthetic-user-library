@@ -137,6 +137,26 @@ Example:
         "selected_comparison_job_id": "job_007",
         "note": "1 comparable completed run is available for cross-run review."
       },
+      "longitudinal_comparison": {
+        "contract_version": "workspace-longitudinal-comparison/v0-draft",
+        "selected_window_id": "same_study_runs",
+        "same_study_run_count": 1,
+        "same_project_study_count": 1,
+        "study_timeline_entry_count": 4,
+        "recurring_signal_synthesis": {
+          "contract_version": "workspace-longitudinal-recurring-signals/v0-draft",
+          "pattern_count": 1,
+          "persistent_pattern_count": 1
+        },
+        "panel_learning_projection": {
+          "contract_version": "workspace-longitudinal-panel-learning/v0-draft",
+          "decision_trends": {
+            "total_decision_count": 1,
+            "latest_review_status": "approved"
+          }
+        },
+        "note": "Review same-study runs first, then the study timeline, before widening to neighboring studies in the same project."
+      },
       "results": [
         {
           "id": "query-run_report",
@@ -144,9 +164,46 @@ Example:
         }
       ]
     },
+    "provider_runtime": {
+      "contract_version": "workspace-provider-runtime/v0-draft",
+      "catalog": [
+        {
+          "provider_name": "mock",
+          "evidence_mode": "mock_demo",
+          "runtime_status": "ready_to_queue"
+        },
+        {
+          "provider_name": "codex",
+          "evidence_mode": "live_synthetic",
+          "auth_readiness": "ready"
+        }
+      ],
+      "selected_job_boundary": {
+        "contract_version": "validation-provider-runtime/v0-draft",
+        "provider_name": "codex",
+        "provider_family": "codex",
+        "evidence_mode": "live_synthetic",
+        "is_supported": true,
+        "is_live_provider": true,
+        "is_codex_provider": true,
+        "requires_auth": true,
+        "auth_readiness": "ready",
+        "runtime_status": "completed",
+        "failure_kind": null,
+        "boundary_label": "Live synthetic evidence",
+        "boundary_message": "This provider creates live synthetic evidence. It is not human market proof."
+      },
+      "job_counts": {
+        "mock_demo": 0,
+        "live_synthetic": 1,
+        "unsupported": 0
+      }
+    },
     "capabilities": {
       "validation_jobs": true,
       "evidence_query": true,
+      "provider_runtime_boundary": true,
+      "live_validation_providers": true,
       "workspace_shell_snapshot": true
     },
     "runtime_sync": {
@@ -157,6 +214,27 @@ Example:
   }
 }
 ```
+
+## Provider Runtime Boundary
+
+The snapshot owns provider readiness and evidence-mode interpretation so frontend components do not infer this from raw job status or provider names.
+
+Minimum fields:
+
+- `session.validation_provider_catalog`
+- `provider_runtime.catalog`
+- `provider_runtime.selected_job_boundary`
+- `provider_runtime.job_counts`
+- `evidence_query.provider_runtime_boundary`
+- `selected_job.metadata.provider_runtime_boundary`
+
+Required behavior:
+
+- `mock` must be labeled as `mock_demo`
+- `codex`, `codex-sdk`, `openai`, and `agnes` must be labeled as `live_synthetic`
+- unsupported providers must produce `runtime_status: unsupported_provider`
+- missing local credentials must produce `runtime_status: missing_auth`
+- provider runtime state must preserve the synthetic-evidence boundary and must not imply human market proof
 
 ## Canonical fields
 
@@ -216,7 +294,7 @@ Should be the selected job object or `null`.
 
 ### `evidence_query`
 
-Should embed the completed-run or pending-run evidence query payload, including replay context, nearby comparison guidance, and initial cross-run comparison guidance, instead of forcing the frontend to make a second query call during ordinary shell refresh.
+Should embed the completed-run or pending-run evidence query payload, including replay context, nearby comparison guidance, initial cross-run comparison guidance, backend-owned longitudinal comparison context, recurring longitudinal signal synthesis, and panel-learning / decision-trend projection, instead of forcing the frontend to make a second query call during ordinary shell refresh.
 
 ### `capabilities`
 

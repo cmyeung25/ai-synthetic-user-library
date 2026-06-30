@@ -1,0 +1,46 @@
+{
+  "benchmark_id": "inbox_coach_followup_real_study_sample",
+  "name": "Inbox Coach follow-up workflow real-study sample",
+  "research_stage": "concept_evaluation",
+  "evidence_type": "objection_and_trust_gap_prediction",
+  "source": {
+    "source_type": "real_human_study",
+    "review_method": "manually_coded_human_interviews_sample",
+    "boundary": "Human-reviewed outcomes are attached for this benchmark only; replacement readiness remains scoped to this research stage and evidence type."
+  },
+  "human_panel": {
+    "participant_count": 6,
+    "segment": "independent consultants and small agency operators"
+  },
+  "human_outcomes": {
+    "signals": [
+      {
+        "category": "objection",
+        "label": "uncertain ROI",
+        "severity": "medium",
+        "weight": 1.0,
+        "terms": ["uncertain", "roi", "value", "payback"]
+      },
+      {
+        "category": "trust_gap",
+        "label": "proof that it fits existing habits",
+        "severity": "high",
+        "weight": 1.0,
+        "terms": ["proof", "fits", "existing", "habits", "workflow"]
+      },
+      {
+        "category": "risk",
+        "label": "privacy risk",
+        "severity": "medium",
+        "weight": 1.0,
+        "terms": ["privacy", "data", "client"]
+      }
+    ]
+  },
+  "thresholds": {
+    "min_precision": 0.5,
+    "min_recall": 0.5,
+    "min_alignment_score": 50,
+    "replacement_readiness_min_score": 80
+  }
+}

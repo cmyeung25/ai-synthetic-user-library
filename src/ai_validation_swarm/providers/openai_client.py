@@ -1059,7 +1059,16 @@ class OpenAIResponsesClient:
                     ]
                 )
                 wrapped_prompt = "\n".join(
-                    [system_prompt.strip(), "", user_prompt.strip(), "", *transport_requirements]
+                    [
+                        system_prompt.strip(),
+                        "",
+                        user_prompt.strip(),
+                        "",
+                        "Requested output JSON schema:",
+                        json.dumps(output_schema, ensure_ascii=False, indent=2),
+                        "",
+                        *transport_requirements,
+                    ]
                 ).strip()
                 self._debug_block("wrapped_prompt", wrapped_prompt)
 
@@ -1111,7 +1120,9 @@ class OpenAIResponsesClient:
                     command.append("--ignore-rules")
                 if codex_session_id:
                     command.append(codex_session_id)
-                command.append(wrapped_prompt)
+                # Pass the prompt over stdin so Windows process creation does not
+                # fail when validation prompts exceed the command-line length limit.
+                command.append("-")
                 self._debug(f"[llm] codex_cli command={' '.join(command[:-1])}")
 
                 attempts = max(1, int(self.config.codex_cli_retries) + 1)
@@ -1126,7 +1137,7 @@ class OpenAIResponsesClient:
                     try:
                         completed = subprocess.run(
                             command,
-                            stdin=subprocess.DEVNULL,
+                            input=wrapped_prompt,
                             capture_output=True,
                             text=True,
                             encoding="utf-8",

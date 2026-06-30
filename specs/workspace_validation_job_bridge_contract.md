@@ -126,10 +126,24 @@ Example response payload from the existing API:
     "workspace_id": "ws_api_demo",
     "draft_plan_id": "draft_plan_20260627_proto_07",
     "primary_mode": "prototype_validation",
-    "first_task": "connect data"
+    "first_task": "connect data",
+    "provider_runtime_boundary": {
+      "contract_version": "validation-provider-runtime/v0-draft",
+      "provider_name": "mock",
+      "evidence_mode": "mock_demo",
+      "runtime_status": "queued",
+      "boundary_message": "This provider creates mock demo evidence for product flow testing only."
+    }
   }
 }
 ```
+
+Provider boundary rules:
+
+- submitted jobs persist `metadata.provider_runtime_boundary` at queue time
+- worker updates refresh that boundary for `running`, `completed`, and `failed` states
+- frontend run monitors should render this boundary instead of inferring live-vs-mock state from `provider_name` alone
+- `mock` is demo evidence; `codex`, `codex-sdk`, `openai`, and `agnes` are live synthetic evidence; unsupported providers must remain visible as explicit product states
 
 ## Request output contract
 

@@ -26,6 +26,7 @@ def _contains_any_keyword(text: str, keywords: list[str]) -> bool:
 
 
 class MockProvider(BaseProvider):
+    provider_name = "mock"
     model_version = "mock-provider/v1"
 
     def persona_response(self, persona: PersonaSkill, brief: FounderBrief, protocol_id: str) -> PersonaResponse:

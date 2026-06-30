@@ -18,6 +18,25 @@ export function EvidenceReviewPage() {
           <button className="action-button" id="apply-evidence-query" type="button">refresh evidence</button>
         </div>
 
+        <div className="split-grid">
+          <div className="summary-card">
+            <div className="toolbar">
+              <strong>Provider runtime boundary</strong>
+              <div className="status-pill queued" id="provider-runtime-pill">provider_unknown</div>
+            </div>
+            <div className="summary-list" id="provider-runtime-summary" />
+            <div className="detail-stack" id="provider-runtime-detail" />
+          </div>
+          <div className="draft-panel">
+            <div className="inline-label">Available validation providers</div>
+            <p className="muted-note">
+              Provider state is evidence boundary, not setup decoration. Review whether a run is mock demo
+              evidence, live synthetic evidence, missing auth, or unsupported before trusting results.
+            </p>
+            <div className="product-stack" id="provider-runtime-catalog" />
+          </div>
+        </div>
+
         <div className="form-grid">
           <div className="field">
             <label htmlFor="evidence-query-text">query text</label>

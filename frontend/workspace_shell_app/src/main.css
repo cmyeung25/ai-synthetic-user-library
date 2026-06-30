@@ -333,6 +333,125 @@ body {
   gap: 24px;
 }
 
+.post-login-route-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.post-login-route-summary > div {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(196, 214, 185, 0.15);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(205, 223, 194, 0.07), rgba(255, 255, 255, 0.015)),
+    rgba(7, 14, 12, 0.72);
+}
+
+.post-login-route-summary strong {
+  color: #eef5e8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.post-login-route-summary span {
+  color: rgba(221, 228, 215, 0.72);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.post-login-route-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.28fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.route-primary-column {
+  min-width: 0;
+}
+
+.route-surface {
+  min-width: 0;
+}
+
+.route-surface[hidden] {
+  display: none !important;
+}
+
+.route-surface.is-active {
+  animation: framework-rise 180ms ease-out;
+}
+
+.route-context-drawer {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.debug-route-drawer {
+  border: 1px solid rgba(196, 214, 185, 0.14);
+  border-radius: 16px;
+  background: rgba(7, 14, 12, 0.62);
+  overflow: hidden;
+}
+
+.debug-route-drawer summary {
+  cursor: pointer;
+  padding: 13px 15px;
+  color: rgba(237, 243, 231, 0.82);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.debug-route-drawer .card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.framework-host .nav-item {
+  display: grid;
+  gap: 3px;
+  text-decoration: none;
+}
+
+.framework-host .nav-item span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.framework-host .nav-item small {
+  color: rgba(185, 210, 168, 0.68);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.framework-host .nav-item.is-active {
+  border-color: rgba(216, 185, 119, 0.48);
+  background: rgba(216, 185, 119, 0.1);
+  color: #f2dfb7;
+}
+
+.secondary-nav-group .nav-item {
+  opacity: 0.82;
+}
+
+.secondary-nav-group .nav-item.is-active {
+  opacity: 1;
+}
+
 .framework-host [data-m13-page="evidence-review"] .split-grid,
 .framework-host [data-m13-page="study-workspace"] .split-grid {
   grid-template-columns: 1fr;
@@ -457,9 +576,14 @@ body {
 
 @media (max-width: 1180px) {
   .framework-host .stage15-grid,
+  .post-login-route-grid,
   .framework-host [data-m13-page="evidence-review"] .split-grid,
   .framework-host [data-m13-page="study-workspace"] .split-grid {
     grid-template-columns: 1fr;
+  }
+
+  .route-context-drawer {
+    position: static;
   }
 }
 
@@ -476,6 +600,8 @@ body {
   .m13-hero,
   .m13-page-grid,
   .framework-host .stage15-grid,
+  .post-login-route-summary,
+  .post-login-route-grid,
   .framework-host [data-m13-page="evidence-review"] .split-grid,
   .framework-host [data-m13-page="study-workspace"] .split-grid,
   .m13-contract-columns {

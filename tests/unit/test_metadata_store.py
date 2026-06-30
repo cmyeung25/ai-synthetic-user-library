@@ -18,6 +18,20 @@ from ai_validation_swarm.storage.files import rebuild_persona_metadata_index, sa
 class MetadataStoreTest(unittest.TestCase):
     def test_save_persona_updates_sqlite_metadata_index(self) -> None:
         persona = generate_personas(count=1, random_seed=91)[0]
+        persona.profile.human_difference_axes = {
+            "control_preference": "Hybrid; wants room to decide but appreciates a clear default path.",
+            "trust_style": "Evidence first with cautious benefit of the doubt.",
+            "complexity_tolerance": "Moderate; detail is welcome when it clearly helps.",
+            "decision_tempo": "Measured; prefers enough signal before acting.",
+            "financial_attention_cadence": "Periodic with event-driven spikes.",
+            "relationship_to_money": "Practical security with some growth ambition.",
+            "risk_orientation": "Open to measured risk when downside is understandable.",
+            "need_for_explanation": "High enough to want plain-language framing.",
+            "life_load": "Moderate; daily life leaves limited room for unnecessary friction.",
+            "fragmentation_reality": "Some information lives across more than one place.",
+            "guidance_preference": "Hybrid self-serve plus optional expert clarification.",
+            "reflection_style": "Explains trade-offs through recent examples.",
+        }
 
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -61,11 +75,27 @@ class MetadataStoreTest(unittest.TestCase):
                 ).fetchall()
 
             self.assertEqual(selection_row[0], persona.profile.economic_profile["price_sensitivity"])
-            self.assertEqual(selection_row[1], persona.seed.trust_threshold)
+            self.assertEqual(selection_row[1], persona.profile.human_difference_axes["trust_style"])
             self.assertEqual(selection_row[3], 1)
             self.assertIn(f"locale:{persona.seed.locale_pack}", json.loads(selection_row[2]))
             self.assertIn(("panel_role", persona.seed.panel_role, "seed"), trait_rows)
             self.assertIn(("locale_pack", persona.seed.locale_pack, "seed"), trait_rows)
+            self.assertIn(
+                (
+                    "human_difference_axes.control_preference",
+                    persona.profile.human_difference_axes["control_preference"],
+                    "profile",
+                ),
+                trait_rows,
+            )
+            self.assertIn(
+                (
+                    "human_difference_axes.trust_style",
+                    persona.profile.human_difference_axes["trust_style"],
+                    "profile",
+                ),
+                trait_rows,
+            )
 
     def test_rebuild_persona_metadata_index_persists_selection_traits_and_similarity_edges(self) -> None:
         persona = generate_personas(count=1, random_seed=17)[0]

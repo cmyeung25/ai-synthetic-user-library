@@ -20,6 +20,7 @@ from ai_validation_swarm.saas.models import (
     WorkspaceMember,
     WorkspaceProject,
     WorkspaceShareBundle,
+    WorkspaceStudyReport,
     WorkspaceSupportSnapshot,
     WorkspaceStudy,
 )
@@ -325,6 +326,37 @@ def _ensure_schema(connection: sqlite3.Connection) -> None:
 
         CREATE INDEX IF NOT EXISTS idx_workspace_decision_logs_workspace_job_updated
             ON workspace_decision_logs(workspace_id, job_id, updated_at DESC, decision_log_id DESC);
+
+        CREATE TABLE IF NOT EXISTS workspace_study_reports (
+            study_report_id TEXT PRIMARY KEY,
+            workspace_id TEXT NOT NULL,
+            project_id TEXT NOT NULL,
+            study_id TEXT NOT NULL,
+            title TEXT NOT NULL,
+            status TEXT NOT NULL,
+            included_job_ids_json TEXT NOT NULL DEFAULT '[]',
+            included_run_ids_json TEXT NOT NULL DEFAULT '[]',
+            included_plan_revision_ids_json TEXT NOT NULL DEFAULT '[]',
+            stable_patterns_json TEXT NOT NULL DEFAULT '[]',
+            divergent_signals_json TEXT NOT NULL DEFAULT '[]',
+            key_objections_json TEXT NOT NULL DEFAULT '[]',
+            trust_gaps_json TEXT NOT NULL DEFAULT '[]',
+            adoption_barriers_json TEXT NOT NULL DEFAULT '[]',
+            prototype_confusions_json TEXT NOT NULL DEFAULT '[]',
+            contradictions_json TEXT NOT NULL DEFAULT '[]',
+            human_validation_gaps_json TEXT NOT NULL DEFAULT '[]',
+            payload_path TEXT NOT NULL,
+            created_by_user_id TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            FOREIGN KEY (workspace_id) REFERENCES workspaces(workspace_id) ON DELETE CASCADE,
+            FOREIGN KEY (project_id) REFERENCES workspace_projects(project_id) ON DELETE CASCADE,
+            FOREIGN KEY (study_id) REFERENCES workspace_studies(study_id) ON DELETE CASCADE
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_workspace_study_reports_workspace_study_updated
+            ON workspace_study_reports(workspace_id, study_id, updated_at DESC, study_report_id DESC);
 
         CREATE TABLE IF NOT EXISTS workspace_decision_comments (
             decision_comment_id TEXT PRIMARY KEY,
@@ -651,6 +683,43 @@ def _decision_log_from_row(row: sqlite3.Row | None) -> WorkspaceDecisionLog | No
         selected_result_id=str(row["selected_result_id"]) if row["selected_result_id"] is not None else None,
         selected_comparison_run_id=(
             str(row["selected_comparison_run_id"]) if row["selected_comparison_run_id"] is not None else None
+        ),
+        payload_path=str(row["payload_path"]),
+        created_by_user_id=str(row["created_by_user_id"]),
+        created_at=str(row["created_at"]),
+        updated_at=str(row["updated_at"]),
+        metadata=dict(_json_loads(str(row["metadata_json"]))) if str(row["metadata_json"]) else {},
+    )
+
+
+def _study_report_from_row(row: sqlite3.Row | None) -> WorkspaceStudyReport | None:
+    if row is None:
+        return None
+    return WorkspaceStudyReport(
+        study_report_id=str(row["study_report_id"]),
+        workspace_id=str(row["workspace_id"]),
+        project_id=str(row["project_id"]),
+        study_id=str(row["study_id"]),
+        title=str(row["title"]),
+        status=str(row["status"]),
+        included_job_ids=list(_json_loads(str(row["included_job_ids_json"]))) if str(row["included_job_ids_json"]) else [],
+        included_run_ids=list(_json_loads(str(row["included_run_ids_json"]))) if str(row["included_run_ids_json"]) else [],
+        included_plan_revision_ids=(
+            list(_json_loads(str(row["included_plan_revision_ids_json"])))
+            if str(row["included_plan_revision_ids_json"])
+            else []
+        ),
+        stable_patterns=list(_json_loads(str(row["stable_patterns_json"]))) if str(row["stable_patterns_json"]) else [],
+        divergent_signals=list(_json_loads(str(row["divergent_signals_json"]))) if str(row["divergent_signals_json"]) else [],
+        key_objections=list(_json_loads(str(row["key_objections_json"]))) if str(row["key_objections_json"]) else [],
+        trust_gaps=list(_json_loads(str(row["trust_gaps_json"]))) if str(row["trust_gaps_json"]) else [],
+        adoption_barriers=list(_json_loads(str(row["adoption_barriers_json"]))) if str(row["adoption_barriers_json"]) else [],
+        prototype_confusions=(
+            list(_json_loads(str(row["prototype_confusions_json"]))) if str(row["prototype_confusions_json"]) else []
+        ),
+        contradictions=list(_json_loads(str(row["contradictions_json"]))) if str(row["contradictions_json"]) else [],
+        human_validation_gaps=(
+            list(_json_loads(str(row["human_validation_gaps_json"]))) if str(row["human_validation_gaps_json"]) else []
         ),
         payload_path=str(row["payload_path"]),
         created_by_user_id=str(row["created_by_user_id"]),
@@ -1126,6 +1195,46 @@ def list_workspace_export_bundles(
         return [bundle for row in rows if (bundle := _export_bundle_from_row(row)) is not None]
 
 
+def update_workspace_export_bundle(
+    runtime_root: Path,
+    *,
+    export_bundle_id: str,
+    status: str | None = None,
+    metadata_updates: dict[str, Any] | None = None,
+) -> WorkspaceExportBundle:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        current = connection.execute(
+            "SELECT * FROM workspace_export_bundles WHERE export_bundle_id = ?",
+            (export_bundle_id,),
+        ).fetchone()
+        if current is None:
+            raise ValueError(f"Unknown workspace export bundle '{export_bundle_id}'.")
+        metadata = dict(_json_loads(str(current["metadata_json"]))) if str(current["metadata_json"]) else {}
+        metadata.update(metadata_updates or {})
+        connection.execute(
+            """
+            UPDATE workspace_export_bundles
+            SET status = COALESCE(?, status),
+                metadata_json = ?,
+                updated_at = ?
+            WHERE export_bundle_id = ?
+            """,
+            (
+                status,
+                _json_dumps(metadata),
+                utc_now_iso(),
+                export_bundle_id,
+            ),
+        )
+        connection.commit()
+        return _export_bundle_from_row(
+            connection.execute(
+                "SELECT * FROM workspace_export_bundles WHERE export_bundle_id = ?",
+                (export_bundle_id,),
+            ).fetchone()
+        )  # type: ignore[return-value]
+
+
 def create_workspace_share_bundle(runtime_root: Path, share_bundle: WorkspaceShareBundle) -> WorkspaceShareBundle:
     with closing(_connect(runtime_db_path(runtime_root))) as connection:
         connection.execute(
@@ -1393,6 +1502,30 @@ def list_workspace_support_snapshots(
         return [snapshot for row in rows if (snapshot := _support_snapshot_from_row(row)) is not None]
 
 
+def update_workspace_support_snapshot_metadata(
+    runtime_root: Path,
+    *,
+    support_snapshot_id: str,
+    metadata_updates: dict[str, Any],
+    updated_at: str | None = None,
+) -> WorkspaceSupportSnapshot | None:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        connection.execute(
+            """
+            UPDATE workspace_support_snapshots
+            SET metadata_json = ?, updated_at = ?
+            WHERE support_snapshot_id = ?
+            """,
+            (
+                _json_dumps(metadata_updates),
+                updated_at or utc_now_iso(),
+                support_snapshot_id,
+            ),
+        )
+        connection.commit()
+    return get_workspace_support_snapshot(runtime_root, support_snapshot_id)
+
+
 def create_workspace_evidence_view(runtime_root: Path, evidence_view: WorkspaceEvidenceView) -> WorkspaceEvidenceView:
     with closing(_connect(runtime_db_path(runtime_root))) as connection:
         connection.execute(
@@ -1656,6 +1789,110 @@ def list_workspace_decision_logs(
         return [log for row in rows if (log := _decision_log_from_row(row)) is not None]
 
 
+def create_workspace_study_report(runtime_root: Path, study_report: WorkspaceStudyReport) -> WorkspaceStudyReport:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        connection.execute(
+            """
+            INSERT INTO workspace_study_reports(
+                study_report_id,
+                workspace_id,
+                project_id,
+                study_id,
+                title,
+                status,
+                included_job_ids_json,
+                included_run_ids_json,
+                included_plan_revision_ids_json,
+                stable_patterns_json,
+                divergent_signals_json,
+                key_objections_json,
+                trust_gaps_json,
+                adoption_barriers_json,
+                prototype_confusions_json,
+                contradictions_json,
+                human_validation_gaps_json,
+                payload_path,
+                created_by_user_id,
+                created_at,
+                updated_at,
+                metadata_json
+            )
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                study_report.study_report_id,
+                study_report.workspace_id,
+                study_report.project_id,
+                study_report.study_id,
+                study_report.title,
+                study_report.status,
+                _json_dumps(study_report.included_job_ids),
+                _json_dumps(study_report.included_run_ids),
+                _json_dumps(study_report.included_plan_revision_ids),
+                _json_dumps(study_report.stable_patterns),
+                _json_dumps(study_report.divergent_signals),
+                _json_dumps(study_report.key_objections),
+                _json_dumps(study_report.trust_gaps),
+                _json_dumps(study_report.adoption_barriers),
+                _json_dumps(study_report.prototype_confusions),
+                _json_dumps(study_report.contradictions),
+                _json_dumps(study_report.human_validation_gaps),
+                study_report.payload_path,
+                study_report.created_by_user_id,
+                study_report.created_at,
+                study_report.updated_at,
+                _json_dumps(study_report.metadata),
+            ),
+        )
+        connection.commit()
+        return _study_report_from_row(
+            connection.execute(
+                "SELECT * FROM workspace_study_reports WHERE study_report_id = ?",
+                (study_report.study_report_id,),
+            ).fetchone()
+        )  # type: ignore[return-value]
+
+
+def get_workspace_study_report(runtime_root: Path, study_report_id: str) -> WorkspaceStudyReport | None:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        return _study_report_from_row(
+            connection.execute(
+                "SELECT * FROM workspace_study_reports WHERE study_report_id = ?",
+                (study_report_id,),
+            ).fetchone()
+        )
+
+
+def list_workspace_study_reports(
+    runtime_root: Path,
+    workspace_id: str,
+    *,
+    study_id: str = "",
+) -> list[WorkspaceStudyReport]:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        if study_id.strip():
+            rows = connection.execute(
+                """
+                SELECT *
+                FROM workspace_study_reports
+                WHERE workspace_id = ? AND study_id = ?
+                ORDER BY updated_at DESC, study_report_id DESC
+                """,
+                (workspace_id, study_id.strip()),
+            ).fetchall()
+        else:
+            rows = connection.execute(
+                """
+                SELECT *
+                FROM workspace_study_reports
+                WHERE workspace_id = ?
+                ORDER BY updated_at DESC, study_report_id DESC
+                """,
+                (workspace_id,),
+            ).fetchall()
+        return [report for row in rows if (report := _study_report_from_row(row)) is not None]
+
+
 def create_workspace_decision_comment(
     runtime_root: Path,
     decision_comment: WorkspaceDecisionComment,
@@ -1881,6 +2118,35 @@ def resolve_browser_session(runtime_root: Path, session_id: str) -> WorkspaceBro
                 (session_id,),
             ).fetchone()
         )
+
+
+def list_browser_sessions(
+    runtime_root: Path,
+    workspace_id: str | None = None,
+    *,
+    include_revoked: bool = False,
+) -> list[WorkspaceBrowserSession]:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        clauses: list[str] = []
+        parameters: list[Any] = []
+        if workspace_id:
+            clauses.append("workspace_id = ?")
+            parameters.append(workspace_id)
+        if not include_revoked:
+            clauses.append("revoked_at IS NULL")
+        where_clause = ""
+        if clauses:
+            where_clause = "WHERE " + " AND ".join(clauses)
+        rows = connection.execute(
+            f"""
+            SELECT *
+            FROM workspace_browser_sessions
+            {where_clause}
+            ORDER BY last_seen_at DESC, session_id DESC
+            """,
+            tuple(parameters),
+        ).fetchall()
+        return [session for row in rows if (session := _browser_session_from_row(row)) is not None]
 
 
 def touch_browser_session(
@@ -2124,6 +2390,29 @@ def list_workspace_jobs(runtime_root: Path, workspace_id: str) -> list[dict[str,
             """,
             (workspace_id,),
         ).fetchall()
+        return [_job_from_row(row) for row in rows if row is not None]
+
+
+def list_validation_jobs(runtime_root: Path, workspace_id: str | None = None) -> list[dict[str, Any]]:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        if workspace_id:
+            rows = connection.execute(
+                """
+                SELECT *
+                FROM validation_jobs
+                WHERE workspace_id = ?
+                ORDER BY created_at DESC, job_id DESC
+                """,
+                (workspace_id,),
+            ).fetchall()
+        else:
+            rows = connection.execute(
+                """
+                SELECT *
+                FROM validation_jobs
+                ORDER BY created_at DESC, job_id DESC
+                """
+            ).fetchall()
         return [_job_from_row(row) for row in rows if row is not None]
 
 

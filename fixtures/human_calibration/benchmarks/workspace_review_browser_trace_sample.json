@@ -1,0 +1,48 @@
+{
+  "benchmark_id": "workspace_review_browser_trace_sample",
+  "name": "Workspace review browser trace alignment sample",
+  "research_stage": "prototype_validation",
+  "evidence_type": "task_failure_and_abandonment_prediction",
+  "source": {
+    "source_type": "real_human_study",
+    "review_method": "browser_trace_human_outcome_coding_sample",
+    "boundary": "Browser-observed synthetic traces are calibrated against reviewer-coded human task outcomes for this benchmark only."
+  },
+  "human_panel": {
+    "participant_count": 5,
+    "segment": "operators reviewing evidence-heavy workflow tools"
+  },
+  "human_outcomes": {
+    "review_findings": [
+      {
+        "category": "task_failure",
+        "title": "broad permission scope blocked completion",
+        "observation": "Human reviewers coded the run as an incomplete task because the permission scope felt too broad before value was proven.",
+        "severity": "high",
+        "weight": 1.0,
+        "terms": ["permission", "scope", "broad", "value", "proven", "blocked", "completion"]
+      },
+      {
+        "category": "abandonment",
+        "title": "permission request modal drop-off",
+        "observation": "Participants stopped at the permission request modal instead of finishing the task.",
+        "severity": "high",
+        "weight": 1.0,
+        "terms": ["permission", "request", "modal", "drop", "off", "stopped", "task"]
+      },
+      {
+        "trust_concern": "permission request before value proof",
+        "observation": "Trust fell when broad access was requested before the participant saw enough value.",
+        "severity": "medium",
+        "weight": 1.0,
+        "terms": ["permission", "broad", "access", "before", "value", "proof", "trust"]
+      }
+    ]
+  },
+  "thresholds": {
+    "min_precision": 0.6,
+    "min_recall": 0.6,
+    "min_alignment_score": 60,
+    "replacement_readiness_min_score": 80
+  }
+}

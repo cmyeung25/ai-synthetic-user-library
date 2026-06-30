@@ -1,25 +1,78 @@
 import React from "react";
 
-export function RealUserWorkspaceNav() {
+function NavigationItem({
+  item,
+  isActive,
+  tier,
+  onNavigateSurface
+}) {
   return (
-    <aside className="rail" data-m13-nav="real-user-workspace">
+    <a
+      className={`nav-item${isActive ? " active is-active" : ""}`}
+      data-nav-tier={tier}
+      data-nav-id={item.id}
+      data-surface-id={item.surface_id}
+      href={item.route_path}
+      aria-current={isActive ? "page" : undefined}
+      onClick={(event) => {
+        if (!onNavigateSurface) {
+          return;
+        }
+        event.preventDefault();
+        onNavigateSurface(item);
+      }}
+    >
+      <span>{item.label}</span>
+      {item.research_loop_step ? <small>{item.research_loop_step}</small> : null}
+    </a>
+  );
+}
+
+export function RealUserWorkspaceNav({
+  routeModel,
+  onNavigateSurface
+}) {
+  return (
+    <aside
+      className="rail"
+      data-m13-nav="real-user-workspace"
+      data-m16-nav="post-login-workspace"
+      data-active-nav={routeModel?.active_nav_id}
+      data-active-surface={routeModel?.active_surface_id}
+    >
       <div className="brand">
-        <div className="eyebrow">Stage 15 Product Surface</div>
+        <div className="eyebrow">Milestone 16 Product Surface</div>
         <h1>Moss Workspace</h1>
         <p>
-          This stage turns the shell into a study-first product surface. Project and study objects are
-          now the visible operating layer above the runtime, without dropping the conversational intake
-          and evidence-review path.
+          The logged-in workspace now follows a study-first IA: start research, continue studies,
+          review evidence, decide, and only then drop into governance or support paths.
         </p>
       </div>
 
       <div className="nav-group">
-        <div className="nav-label">Milestone 13</div>
-        <div className="nav-item active">New Study</div>
-        <div className="nav-item">Study Workspace</div>
-        <div className="nav-item">Evidence Review</div>
-        <div className="nav-item">Decision + Share Boundary</div>
-        <div className="nav-item">Runtime Support</div>
+        <div className="nav-label">Research loop</div>
+        {routeModel?.primary_navigation?.map((item) => (
+          <NavigationItem
+            item={item}
+            isActive={routeModel.active_nav_id === item.id}
+            key={item.id}
+            onNavigateSurface={onNavigateSurface}
+            tier="primary"
+          />
+        ))}
+      </div>
+
+      <div className="nav-group secondary-nav-group">
+        <div className="nav-label">Governance + support</div>
+        {routeModel?.secondary_navigation?.map((item) => (
+          <NavigationItem
+            item={item}
+            isActive={routeModel.active_nav_id === item.id}
+            key={item.id}
+            onNavigateSurface={onNavigateSurface}
+            tier="secondary"
+          />
+        ))}
       </div>
 
       <div className="nav-group">
@@ -35,6 +88,10 @@ export function RealUserWorkspaceNav() {
           <br />
           <a href="/app-static/specs/milestone_13_real_user_research_workspace_design_spec.md">
             Milestone 13 design spec
+          </a>
+          <br />
+          <a href="/app-static/specs/post_login_workspace_information_architecture_contract.md">
+            Post-login IA contract
           </a>
           <br />
           <a href="/app-static/specs/workspace_project_study_contract.md">Project / study contract</a>

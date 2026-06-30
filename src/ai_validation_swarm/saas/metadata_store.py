@@ -257,6 +257,7 @@ def _trait_assignment_rows(persona: PersonaSkill, updated_at: str, market_tags: 
     identity = persona.profile.basic_identity
     technology = persona.profile.technology_profile
     economic = persona.profile.economic_profile
+    axes = persona.profile.human_difference_axes if isinstance(persona.profile.human_difference_axes, dict) else {}
     assignments: list[tuple[str, Any, str, str]] = [
         ("panel_role", persona.seed.panel_role, "seed.panel_role", "seed"),
         ("locale_pack", persona.seed.locale_pack, "seed.locale_pack", "seed"),
@@ -289,6 +290,15 @@ def _trait_assignment_rows(persona: PersonaSkill, updated_at: str, market_tags: 
         ("trust_style", trust_style, "human_difference_axes.trust_style", "derived"),
         ("market_tag", market_tags, "derived.market_tags", "derived"),
     ]
+    for axis_key, axis_value in sorted(axes.items()):
+        assignments.append(
+            (
+                f"human_difference_axes.{axis_key}",
+                axis_value,
+                f"human_difference_axes.{axis_key}",
+                "profile",
+            )
+        )
 
     rows: list[tuple[str, str, str, str, str, int, str]] = []
     synthetic_user_id = persona.profile.synthetic_user_id

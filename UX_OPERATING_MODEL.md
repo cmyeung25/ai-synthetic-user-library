@@ -79,6 +79,33 @@ A durable judgment artifact that records what the team currently believes and wh
 
 A distribution artifact created after the study work, not the primary product object.
 
+## Route Operating Model
+
+The product should use a persistent shell with route-aware pages.
+This means the shell can stay visually continuous, but the user's location must still map to a durable product object or review context.
+
+Canonical route responsibilities:
+
+- `/studio`: workspace overview and recent study entry points.
+- `/studio/projects`: project list and project creation.
+- `/studio/projects/{project_id}`: project context, studies, collaborators, and recent decisions.
+- `/studio/studies/new`: start a new study through guided setup.
+- `/studio/studies/{study_id}`: study home with question, plan state, latest runs, open evidence, and decisions.
+- `/studio/studies/{study_id}/setup`: Research Copilot or Guided Setup for Ask, Clarify, and Confirm Plan.
+- `/studio/studies/{study_id}/runs/{run_id}`: run monitor, transcript, artifacts, audit, and provider boundary.
+- `/studio/studies/{study_id}/evidence`: evidence review and comparison workspace.
+- `/studio/studies/{study_id}/evidence-views/{evidence_view_id}`: saved evidence slice.
+- `/studio/studies/{study_id}/reports/{study_report_id}`: study-level synthesis.
+- `/studio/studies/{study_id}/decisions/{decision_log_id}`: durable decision review.
+- `/studio/share/{share_bundle_id}`: shared or export-ready boundary-preserving view.
+
+Rules:
+
+- If a user would bookmark it, share it, return to it after refresh, or cite it in a decision, it needs a route.
+- If it is only a temporary step in the current guided setup, keep it as local study workflow state.
+- Browser back/forward must not lose selected study, evidence view, decision log, or synthetic-evidence boundary.
+- Route labels and left navigation must teach the product object model, not internal mode taxonomy.
+
 ## Default Operating Loop
 
 The default user flow should be:

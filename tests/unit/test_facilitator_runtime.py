@@ -26,6 +26,7 @@ from ai_validation_swarm.facilitator.providers import OpenAIFacilitatorProvider,
 from ai_validation_swarm.facilitator.runtime import FacilitatedInterviewRuntime
 from ai_validation_swarm.personas.generator import generate_personas
 from ai_validation_swarm.providers.openai_client import OpenAIProviderConfig, OpenAIProviderError
+from ai_validation_swarm.saas.evidence_query import query_run_evidence
 from ai_validation_swarm.storage.files import read_json, save_persona
 
 
@@ -680,6 +681,193 @@ class PainPointDiscoveryPersona:
                 "missed_follow_up_questions": [],
             },
             "provider_session_id": "pain-point-trace-thread-1",
+        })()
+
+
+class WorkflowMappingFacilitator:
+    provider_name = "workflow-mapping"
+    model_name = "workflow-mapping/v1"
+
+    def __init__(self):
+        self.calls = []
+        self.decisions = [
+            FacilitatorDecision(
+                interview_phase="recent_event",
+                probing_strategy="critical_incident",
+                decision_rationale="Anchor workflow mapping in one recent real episode.",
+                message_to_persona="Tell me about the last time this workflow got messy enough that you had to actively manage it.",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Which real workflow episode should we map?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="workflow-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="workflow_sequence",
+                probing_strategy="sequence_probe",
+                decision_rationale="Map the actual step-by-step sequence.",
+                message_to_persona="What happened first, next, and after that in the workflow?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What is the real sequence?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="workflow-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="handoff_boundary",
+                probing_strategy="handoff_probe",
+                decision_rationale="Identify where work or information changed hands.",
+                message_to_persona="Where did the work or information hand off from one person or tool to another?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Which handoff matters most?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="workflow-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="fragmentation_point",
+                probing_strategy="fragmentation_probe",
+                decision_rationale="Find where the workflow split across surfaces.",
+                message_to_persona="Where did the workflow split across tools, threads, or tabs badly enough to slow you down?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Where does fragmentation show up?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="workflow-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="current_workaround",
+                probing_strategy="workaround_probe",
+                decision_rationale="Capture the workaround chain that keeps the workflow moving.",
+                message_to_persona="What workaround did you use to keep it moving once that happened?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What workaround holds the flow together?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="workflow-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="switching_cost",
+                probing_strategy="switching_cost_probe",
+                decision_rationale="Measure the re-entry or verification cost from fragmentation.",
+                message_to_persona="What time or attention cost shows up when you have to switch and rebuild context like that?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["What is the switching cost?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="workflow-thread-1",
+            ),
+            FacilitatorDecision(
+                interview_phase="responsibility_gap",
+                probing_strategy="responsibility_gap_probe",
+                decision_rationale="Close on the ownership gap that stalls progress.",
+                message_to_persona="Where does next-step ownership become unclear enough that someone has to chase or recheck it?",
+                evidence_updates=[],
+                root_cause_hypotheses=[],
+                open_questions=["Where is ownership unclear?"],
+                should_end=False,
+                end_reason="",
+                provider_session_id="workflow-thread-1",
+            ),
+        ]
+
+    def next_turn(self, **kwargs):
+        self.calls.append(("next_turn", kwargs))
+        return self.decisions.pop(0)
+
+    def synthesize(self, **kwargs):
+        self.calls.append(("synthesize", kwargs))
+        return ({
+            "executive_summary": "The workflow breaks at cross-tool handoffs, then survives through manual workaround and ownership chasing.",
+            "insights": [{
+                "insight": "The workflow slows down when context has to be rebuilt across Slack, a spreadsheet, and the task board.",
+                "evidence_refs": ["exchange_2.persona", "exchange_4.persona", "exchange_6.persona"],
+                "confidence": "medium",
+                "implication": "Workflow evidence should focus on fragmentation and re-entry cost before new solution concepts are evaluated.",
+            }],
+            "needs": ["Keep the workflow moving without rebuilding context across tools at every handoff."],
+            "root_cause_hypotheses": [],
+            "contradictions": [],
+            "pov_statements": [
+                "A workflow owner juggling several tools needs a clearer handoff and ownership path because manual context rebuild turns ordinary work into chase work."
+            ],
+            "how_might_we_questions": ["How might we reduce cross-tool handoff rebuild without creating another tracking layer?"],
+            "hypothesis_assessment": {
+                "hypothesis": "",
+                "verdict": "not_tested",
+                "supporting_evidence_refs": [],
+                "contradicting_evidence_refs": [],
+                "mechanism_test_basis": "not_tested",
+                "condition_present_case_refs": [],
+                "condition_absent_case_refs": [],
+                "alternative_explanations": [],
+                "alternative_tests": [],
+                "evidence_gaps": ["No explicit hypothesis was supplied."],
+                "confidence": "low",
+            },
+            "evidence_gaps": ["Human interviews are still needed to confirm how common this fragmentation pattern is across teams."],
+            "recommended_human_validation": ["Observe one real cross-tool workflow handoff and compare where context is rebuilt manually."],
+            "synthetic_only_disclaimer": "Synthetic-user interview for AI pre-validation only; not human market evidence.",
+        }, "workflow-thread-1")
+
+
+class WorkflowMappingPersona:
+    provider_name = "workflow-mapping"
+    model_name = "workflow-mapping-persona/v1"
+
+    def __init__(self):
+        self.responses = [
+            "Last Thursday we were preparing a client follow-up and I had to coordinate notes, a spreadsheet, and the task board just to see what was already done.",
+            "First I checked Slack, then the spreadsheet, then the task board, and then I went back to Slack because the board was missing the latest note.",
+            "The main handoff was from the account manager's Slack update into the shared task board that operations actually used.",
+            "It fragmented when the board, spreadsheet, and message thread stopped matching, so I had to compare all three.",
+            "I copied the missing note into the board and left myself a reminder in the spreadsheet so the next person would not miss it.",
+            "It costs about twenty minutes and a lot of rechecking because I have to rebuild the same context every time the tools drift apart.",
+            "Ownership gets fuzzy right after the client note lands because nobody is sure who is supposed to update the board first.",
+        ]
+
+    def respond(self, **kwargs):
+        return ChatResult(
+            reply=self.responses.pop(0),
+            intent_level="unclear",
+            confidence="high",
+            provider_session_id="workflow-persona-thread-1",
+        )
+
+    def generate_persona_driver_trace(self, **kwargs):
+        return type("TraceResult", (), {
+            "payload": {
+                "synthetic_only_disclaimer": "Synthetic persona post-interview reflection only; not human market evidence.",
+                "surface_read": {
+                    "what_the_persona_explicitly_said": [
+                        "The workflow broke across Slack, a spreadsheet, and the task board.",
+                        "They manually copied missing notes to keep the handoff moving.",
+                    ],
+                    "what_they_seemed_to_optimize_for": "Keep cross-team follow-up moving without losing context.",
+                    "what_stayed_implicit": [
+                        "Whether the same ownership confusion appears in every client follow-up or only the messy ones.",
+                    ],
+                },
+                "likely_drivers": [{
+                    "driver": "Reduce cross-tool context rebuild during handoffs",
+                    "driver_type": "workflow_pattern",
+                    "why_it_matters_here": "The participant spends effort restoring shared context when ownership and tool state diverge.",
+                    "evidence_refs": ["exchange_2.persona", "exchange_4.persona", "exchange_6.persona", "exchange_7.persona"],
+                    "profile_source_refs": ["workflow_adoption_model"],
+                    "confidence": "medium",
+                    "observed_vs_inferred": "mixed",
+                }],
+                "unspoken_constraints": [],
+                "value_tensions": [],
+                "missed_follow_up_questions": [],
+            },
+            "provider_session_id": "workflow-trace-thread-1",
         })()
 
 
@@ -1472,6 +1660,87 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             )
             self.assertIn("Interview mode: pain_point_discovery", (output / "transcript.md").read_text(encoding="utf-8"))
             self.assertTrue((output / "insight_report.json").exists())
+
+    def test_workflow_mapping_is_first_class_runtime_mode(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            persona = generate_personas(count=1, random_seed=741)[0]
+            save_persona(persona, root / "personas")
+            runtime = FacilitatedInterviewRuntime(
+                data_dir=root / "personas",
+                session_dir=root / "interviews",
+                facilitator_provider=WorkflowMappingFacilitator(),
+                persona_provider=WorkflowMappingPersona(),
+            )
+            output = runtime.run(
+                persona_id=persona.profile.synthetic_user_id,
+                research_goal="Map the current follow-up workflow, handoffs, and fragmentation points.",
+                interview_mode="workflow_mapping",
+                soft_turn_limit=7,
+                hard_turn_limit=8,
+            )
+
+            session = read_json(output / "interview.json")
+            self.assertEqual(session["interview_mode"], "workflow_mapping")
+            self.assertTrue(session["coverage_status"]["coverage_complete"])
+            self.assertEqual(session["coverage_status"]["missing"], [])
+            self.assertEqual(
+                session["coverage_status"]["requirements"],
+                [
+                    "recent_behaviour",
+                    "workflow_sequence",
+                    "handoff_boundary",
+                    "fragmentation_point",
+                    "current_workaround",
+                    "switching_cost",
+                    "responsibility_gap",
+                ],
+            )
+            self.assertEqual(session["stop_reason"], "soft_turn_limit_with_required_coverage_met")
+            self.assertEqual(
+                [item["facilitator_phase"] for item in session["exchanges"]],
+                [
+                    "recent_event",
+                    "workflow_sequence",
+                    "handoff_boundary",
+                    "fragmentation_point",
+                    "current_workaround",
+                    "switching_cost",
+                    "responsibility_gap",
+                ],
+            )
+            self.assertIn("Interview mode: workflow_mapping", (output / "transcript.md").read_text(encoding="utf-8"))
+            report = read_json(output / "insight_report.json")
+            self.assertEqual(report["workflow_map"]["contract_version"], "workflow-map/v1")
+            self.assertTrue(report["workflow_map"]["coverage_complete"])
+            self.assertEqual(len(report["workflow_map"]["fragmentation_points"]), 1)
+            self.assertEqual(len(report["workflow_map"]["responsibility_gaps"]), 1)
+            self.assertIn("cross-tool handoffs", report["workflow_map"]["current_state_summary"])
+            insights_markdown = (output / "insights.md").read_text(encoding="utf-8")
+            self.assertIn("## Current-State Workflow Map", insights_markdown)
+
+            query_payload = query_run_evidence(
+                root / "interviews",
+                run_id=session["interview_id"],
+                query_text="fragmentation",
+                active_family="analysis",
+                sort_by="relevance",
+            )
+            workflow_result = next(
+                item for item in query_payload["results"] if item["kind"] == "workflow_map_evidence"
+            )
+            selected_payload = query_run_evidence(
+                root / "interviews",
+                run_id=session["interview_id"],
+                query_text="fragmentation",
+                active_family="analysis",
+                sort_by="relevance",
+                selected_result_id=workflow_result["id"],
+            )
+            self.assertEqual(selected_payload["selected_result"]["kind"], "workflow_map_evidence")
+            self.assertTrue(selected_payload["selected_result"]["workflow_evidence_projection"]["coverage_complete"])
+            self.assertGreaterEqual(len(selected_payload["replay_sequence"]), 3)
+            self.assertIn("workflow", selected_payload["evidence_reliability"]["signal_terms"])
 
     def test_decision_reconstruction_is_first_class_runtime_mode(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -3594,6 +3863,14 @@ class FacilitatorRuntimeTest(unittest.TestCase):
             "--interview-mode", "pain_point_discovery",
         ])
         self.assertEqual(parsed.interview_mode, "pain_point_discovery")
+
+        parsed = parser.parse_args([
+            "run-facilitated-interview",
+            "--persona-id", "su_0001",
+            "--research-goal", "Map the current workflow",
+            "--interview-mode", "workflow_mapping",
+        ])
+        self.assertEqual(parsed.interview_mode, "workflow_mapping")
 
         parsed = parser.parse_args([
             "run-facilitated-interview",

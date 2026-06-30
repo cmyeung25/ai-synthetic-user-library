@@ -1,0 +1,48 @@
+{
+  "benchmark_id": "inbox_coach_followup_review_findings_sample",
+  "name": "Inbox Coach follow-up workflow coded review-findings sample",
+  "research_stage": "concept_evaluation",
+  "evidence_type": "objection_and_trust_gap_prediction",
+  "source": {
+    "source_type": "real_human_study",
+    "review_method": "coded_research_findings_sample",
+    "boundary": "Reviewer-coded outcomes are attached for this benchmark only; replacement readiness remains scoped to this research stage and evidence type."
+  },
+  "human_panel": {
+    "participant_count": 6,
+    "segment": "independent consultants and small agency operators"
+  },
+  "human_outcomes": {
+    "review_findings": [
+      {
+        "category": "objection",
+        "title": "uncertain ROI",
+        "observation": "Participants wanted clearer proof of payback before they changed an existing follow-up workflow.",
+        "severity": "medium",
+        "weight": 1.0,
+        "terms": ["uncertain", "roi", "value", "payback"]
+      },
+      {
+        "trust_concern": "proof that it fits existing habits",
+        "observation": "Several interviewees needed evidence that the workflow would fit current habits without extra upkeep.",
+        "severity": "high",
+        "weight": 1.0,
+        "terms": ["proof", "fits", "existing", "habits", "workflow"]
+      },
+      {
+        "category": "risk",
+        "title": "privacy risk",
+        "observation": "Client data handling raised privacy concerns during the follow-up interviews.",
+        "severity": "medium",
+        "weight": 1.0,
+        "terms": ["privacy", "data", "client"]
+      }
+    ]
+  },
+  "thresholds": {
+    "min_precision": 0.5,
+    "min_recall": 0.5,
+    "min_alignment_score": 50,
+    "replacement_readiness_min_score": 80
+  }
+}

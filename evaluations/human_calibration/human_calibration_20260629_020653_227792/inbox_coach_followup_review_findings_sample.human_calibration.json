@@ -1,0 +1,248 @@
+{
+  "contract_version": "human-calibration/v1",
+  "benchmark_id": "inbox_coach_followup_review_findings_sample",
+  "benchmark_name": "Inbox Coach follow-up workflow coded review-findings sample",
+  "generated_at": "2026-06-29T02:06:53+00:00",
+  "run": {
+    "run_id": "run_human_calibration_fixture_001",
+    "run_dir": "C:\\Users\\user\\OneDrive\\文件\\AI Synthetic User Library\\fixtures\\human_calibration\\runs\\inbox_coach_sample",
+    "run_status": "completed",
+    "research_stage": "concept_evaluation",
+    "evidence_type": "objection_and_trust_gap_prediction"
+  },
+  "human_benchmark": {
+    "source_type": "real_human_study",
+    "review_method": "coded_research_findings_sample",
+    "benchmark_definition_path": "C:\\Users\\user\\OneDrive\\文件\\AI Synthetic User Library\\fixtures\\human_calibration\\benchmarks\\inbox_coach_followup_review_findings_sample.json",
+    "outcome_count": 3,
+    "participant_count": 6,
+    "segment": "independent consultants and small agency operators"
+  },
+  "synthetic_panel_delta": {
+    "synthetic_sample_size": 2,
+    "human_participant_count": 6,
+    "panel_type": "mainstream",
+    "coverage_label": "human_panel_attached"
+  },
+  "predicted_signals": [
+    {
+      "signal_id": "objection:uncertain_roi",
+      "category": "objection",
+      "label": "uncertain ROI",
+      "source": "report.objection_clusters",
+      "severity": "medium",
+      "weight": 1.0,
+      "terms": [
+        "roi",
+        "uncertain"
+      ]
+    },
+    {
+      "signal_id": "adoption_trigger:clear_time_savings",
+      "category": "adoption_trigger",
+      "label": "clear time savings",
+      "source": "report.trigger_clusters",
+      "severity": "medium",
+      "weight": 1.0,
+      "terms": [
+        "clear",
+        "savings",
+        "time"
+      ]
+    },
+    {
+      "signal_id": "trust_gap:i_would_need_proof_that_this_fits_smoothly_into_existing_habits",
+      "category": "trust_gap",
+      "label": "I would need proof that this fits smoothly into existing habits.",
+      "source": "report.segment_summary.top_trust_concerns",
+      "severity": "medium",
+      "weight": 1.0,
+      "terms": [
+        "existing",
+        "fits",
+        "habits",
+        "into",
+        "need",
+        "proof",
+        "smoothly",
+        "that",
+        "this",
+        "would"
+      ]
+    },
+    {
+      "signal_id": "risk:privacy_risk",
+      "category": "risk",
+      "label": "privacy_risk",
+      "source": "report.risk_map",
+      "severity": "medium",
+      "weight": 1.0,
+      "terms": [
+        "adoption",
+        "affect",
+        "and",
+        "client",
+        "concept",
+        "data",
+        "depends",
+        "language",
+        "minimisation",
+        "privacy",
+        "risk",
+        "the",
+        "workflow"
+      ]
+    }
+  ],
+  "human_outcome_signals": [
+    {
+      "signal_id": "objection:uncertain_roi",
+      "category": "objection",
+      "label": "uncertain ROI",
+      "source": "human_outcomes.review_findings",
+      "severity": "medium",
+      "weight": 1.0,
+      "terms": [
+        "before",
+        "changed",
+        "clearer",
+        "existing",
+        "follow",
+        "objection",
+        "participants",
+        "payback",
+        "proof",
+        "roi",
+        "they",
+        "uncertain",
+        "value",
+        "wanted",
+        "workflow"
+      ]
+    },
+    {
+      "signal_id": "trust_gap:proof_that_it_fits_existing_habits",
+      "category": "trust_gap",
+      "label": "proof that it fits existing habits",
+      "source": "human_outcomes.review_findings",
+      "severity": "high",
+      "weight": 1.0,
+      "terms": [
+        "current",
+        "evidence",
+        "existing",
+        "extra",
+        "fit",
+        "fits",
+        "habits",
+        "interviewees",
+        "needed",
+        "proof",
+        "several",
+        "that",
+        "the",
+        "upkeep",
+        "without",
+        "workflow",
+        "would"
+      ]
+    },
+    {
+      "signal_id": "risk:privacy_risk",
+      "category": "risk",
+      "label": "privacy risk",
+      "source": "human_outcomes.review_findings",
+      "severity": "medium",
+      "weight": 1.0,
+      "terms": [
+        "client",
+        "concerns",
+        "data",
+        "during",
+        "follow",
+        "handling",
+        "interviews",
+        "privacy",
+        "raised",
+        "risk",
+        "the"
+      ]
+    }
+  ],
+  "prediction_accuracy": {
+    "true_positive": 3,
+    "false_positive": 1,
+    "false_negative": 0,
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571,
+    "alignment_score": 85.7,
+    "matches": [
+      {
+        "expected_signal_id": "objection:uncertain_roi",
+        "predicted_signal_id": "objection:uncertain_roi",
+        "category": "objection"
+      },
+      {
+        "expected_signal_id": "trust_gap:proof_that_it_fits_existing_habits",
+        "predicted_signal_id": "trust_gap:i_would_need_proof_that_this_fits_smoothly_into_existing_habits",
+        "category": "trust_gap"
+      },
+      {
+        "expected_signal_id": "risk:privacy_risk",
+        "predicted_signal_id": "risk:privacy_risk",
+        "category": "risk"
+      }
+    ],
+    "missed_human_signal_ids": [],
+    "unsupported_synthetic_signal_ids": [
+      "adoption_trigger:clear_time_savings"
+    ]
+  },
+  "replacement_readiness": {
+    "status": "candidate_replacement_ready",
+    "confidence_score": 85.7,
+    "research_stage": "concept_evaluation",
+    "evidence_type": "objection_and_trust_gap_prediction",
+    "thresholds": {
+      "min_precision": 0.5,
+      "min_recall": 0.5,
+      "min_alignment_score": 50.0,
+      "replacement_readiness_min_score": 80.0
+    },
+    "threshold_passed": true,
+    "high_stakes_gate": false,
+    "boundary": "Human outcome data is attached; replacement readiness remains scoped to this stage and evidence type."
+  },
+  "readiness_projection": {
+    "contract_version": "human-calibration-readiness/v1",
+    "status": "candidate_scope_ready",
+    "status_reason": "candidate_replacement_ready",
+    "scope": {
+      "benchmark_id": "inbox_coach_followup_review_findings_sample",
+      "research_stage": "concept_evaluation",
+      "evidence_type": "objection_and_trust_gap_prediction"
+    },
+    "coverage": {
+      "source_type": "real_human_study",
+      "review_method": "coded_research_findings_sample",
+      "benchmark_origin": "external_definition",
+      "benchmark_definition_path": "C:\\Users\\user\\OneDrive\\文件\\AI Synthetic User Library\\fixtures\\human_calibration\\benchmarks\\inbox_coach_followup_review_findings_sample.json",
+      "human_participant_count": 6,
+      "synthetic_sample_size": 2,
+      "human_outcome_count": 3,
+      "predicted_signal_count": 4
+    },
+    "quality": {
+      "alignment_score": 85.7,
+      "precision": 0.75,
+      "recall": 1.0,
+      "threshold_passed": true,
+      "replacement_threshold_met": true
+    },
+    "gate_reasons": [],
+    "threshold_gaps": [],
+    "boundary": "Human outcome data is attached; replacement readiness remains scoped to this stage and evidence type."
+  },
+  "synthetic_boundary": "Calibration compares synthetic evidence to human-reviewed outcomes; it does not turn synthetic output into human market proof."
+}

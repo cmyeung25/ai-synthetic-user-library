@@ -1255,6 +1255,23 @@ test("loadWorkspaceShellSnapshot hydrates session, jobs, and evidence query in o
             { job_id: "job_001", status: "completed", provider_name: "mock" }
           ],
           selected_job_id: "job_001",
+          provider_runtime: {
+            selected_job_boundary: {
+              provider_name: "mock",
+              evidence_mode: "mock_demo",
+              runtime_status: "completed",
+              auth_readiness: "not_required"
+            },
+            catalog: [
+              { provider_name: "mock", evidence_mode: "mock_demo", runtime_status: "ready_to_queue" },
+              { provider_name: "codex", evidence_mode: "live_synthetic", auth_readiness: "missing_or_unverified" }
+            ],
+            job_counts: {
+              mock_demo: 1,
+              live_synthetic: 0,
+              unsupported: 0
+            }
+          },
           evidence_query: {
             query_status: "query_ready",
             result_count: 1,
@@ -1276,6 +1293,8 @@ test("loadWorkspaceShellSnapshot hydrates session, jobs, and evidence query in o
   assert.equal(next.selectedShareBundleId, "share_001");
   assert.equal(next.selectedSupportSnapshotId, "support_001");
   assert.equal(next.selectedJobId, "job_001");
+  assert.equal(next.liveProviderRuntime.selected_job_boundary.evidence_mode, "mock_demo");
+  assert.equal(next.liveProviderRuntime.catalog[1].provider_name, "codex");
   assert.equal(next.liveEvidenceQuery.query_status, "query_ready");
   assert.equal(next.runtimeSync.interval_ms, 6000);
 });

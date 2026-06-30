@@ -188,7 +188,6 @@ test("Stage 15 host is reduced to composition for the M13 product surface", asyn
   );
 
   for (const component of [
-    "RealUserWorkspaceNav",
     "WorkspaceConnectionSection",
     "WorkspaceSettingsSection",
     "NewStudyPage",
@@ -200,6 +199,7 @@ test("Stage 15 host is reduced to composition for the M13 product surface", asyn
     assert.match(hostSource, new RegExp(`<${component} />`));
   }
 
+  assert.match(hostSource, /<RealUserWorkspaceNav\s+routeModel=\{routeModel\}/);
   assert.ok(
     hostSource.indexOf("<NewStudyPage />") < hostSource.indexOf("<WorkspaceSettingsSection />"),
     "research workflow pages should render before settings in the hosted shell"

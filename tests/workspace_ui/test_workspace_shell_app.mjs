@@ -148,6 +148,37 @@ test("deriveWorkspaceShellAppModel projects advanced controls into draft and req
   assert.equal(model.frontendState.draft_summary[3].value, "concept_validation");
 });
 
+test("deriveWorkspaceShellAppModel infers discovery mode from plain-language pain research intent", () => {
+  const controller = createWorkspaceShellAppController();
+
+  controller.updateDraftInput({
+    researchIntent: "Explore recurring product-discovery pain, root causes, workaround behavior, workflow fragmentation, and insight opportunities.",
+    desiredOutcome: "pain, empathy, root-cause, workflow, and insight discovery",
+    firstTask: "describe a recent product-discovery workflow breakdown"
+  });
+  controller.toggleFallbackMode();
+
+  const model = controller.deriveModel({
+    apiBaseUrl: "http://127.0.0.1:8011",
+    bearerToken: "token-api",
+    briefPath: "briefs/brief.json",
+    personaDir: "personas",
+    providerName: "codex",
+    sampleSize: 1
+  });
+
+  assert.equal(model.bundle.draft.inference.primary_mode, "pain_point_discovery");
+  assert.equal(model.bridgeState.request_payload.metadata.primary_mode, "pain_point_discovery");
+  assert.equal(model.bridgeState.request_payload.metadata.mode_override, null);
+  assert.deepEqual(model.bundle.draft.evidence_boundary.allowed_evidence, [
+    "pain_reality",
+    "root_cause",
+    "workaround_behavior",
+    "workflow_fragmentation",
+    "human_validation_gap"
+  ]);
+});
+
 test("controller stores selected prototype artifact names in the shared draft state", () => {
   const controller = createWorkspaceShellAppController();
 

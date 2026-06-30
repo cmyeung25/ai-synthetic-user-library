@@ -16,6 +16,38 @@ function normalizeModeOverride(value) {
   return normalized && normalized !== "auto" ? normalized : null;
 }
 
+function inferPrimaryModeFromIntent({
+  modeOverride = null,
+  queueableFallback = false,
+  demoState = {},
+  copy = {}
+} = {}) {
+  if (modeOverride) {
+    return modeOverride;
+  }
+  const intentText = [
+    copy.questionValue,
+    copy.desiredValue,
+    demoState.firstTask
+  ].map((value) => String(value || "").toLowerCase()).join(" ");
+  const discoveryMarkers = [
+    "pain",
+    "root cause",
+    "workaround",
+    "workflow",
+    "fragmentation",
+    "empathy",
+    "discovery",
+    "insight",
+    "current behavior",
+    "current process"
+  ];
+  if (discoveryMarkers.some((marker) => intentText.includes(marker))) {
+    return "pain_point_discovery";
+  }
+  return queueableFallback ? "concept_evaluation" : "prototype_validation";
+}
+
 function normalizePersonaFilters(filters = {}) {
   const nextFilters = {};
   Object.entries(filters || {}).forEach(([key, value]) => {
@@ -378,7 +410,13 @@ export function deriveStage7DemoBundle({
   const sampleSize = normalizeSampleSize(demoState.sampleSize, 5);
   const providerName = String(demoState.providerName || "").trim() || "mock";
   const personaFilters = normalizePersonaFilters(demoState.personaFilters);
-  const primaryMode = modeOverride || (queueableFallback ? "concept_evaluation" : "prototype_validation");
+  const primaryMode = inferPrimaryModeFromIntent({
+    modeOverride,
+    queueableFallback,
+    demoState,
+    copy
+  });
+  const queueableDiscovery = primaryMode === "pain_point_discovery" && queueableFallback;
   const executionStatus = demoState.queueConfirmed
     ? "queued"
     : queueableFallback
@@ -387,13 +425,17 @@ export function deriveStage7DemoBundle({
         ? "queueable_prototype_subset"
         : "blocked";
 
-  const allowedEvidence = queueableFallback
+  const allowedEvidence = queueableDiscovery
+    ? ["pain_reality", "root_cause", "workaround_behavior", "workflow_fragmentation", "human_validation_gap"]
+    : queueableFallback
     ? ["message_interpretation", "concept_objections"]
     : queueablePrototype
       ? ["task_friction", "continuation_risk", "message_interpretation"]
       : ["message_interpretation"];
 
-  const forbiddenClaims = queueableFallback
+  const forbiddenClaims = queueableDiscovery
+    ? ["solution_adoption_claim", "human_market_proof", "observed_real_user_behavior"]
+    : queueableFallback
     ? ["task_friction", "observed_continuation"]
     : queueablePrototype
       ? ["observed_real_user_behavior"]
@@ -482,7 +524,9 @@ export function deriveStage7DemoBundle({
     evidence_boundary: {
       allowed_evidence: allowedEvidence,
       forbidden_claims: forbiddenClaims,
-      boundary_note: queueableFallback
+      boundary_note: queueableDiscovery
+        ? "Discovery fallback is queueable for pain, root-cause, workaround, and workflow-fragmentation signals. It remains synthetic evidence, not human proof."
+        : queueableFallback
         ? "Fallback lowers the study to concept-level interpretation until stronger prototype evidence exists."
         : queueablePrototype
           ? "This path is queueable for prototype-oriented interpretation, but it still does not claim real observed user behavior."

@@ -128,6 +128,8 @@ This can initially be assembled in-memory for prototypes, but the stable future 
 
 Browser-observed clickable and live-app traces from Milestone 14 must enter this contract as `family: "trace"` and `kind: "observed_action_trace"`. Driver details such as URL, selector, viewport, browser driver, and safety-gate status belong in artifact metadata or replay-step detail; the Evidence Review surface must not introduce a parallel browser-only evidence family that bypasses reliability, replay, comparison, calibration, or audit-lineage handling.
 
+Workflow-mapping discovery artifacts from Milestone 18 must enter this contract as richer workflow evidence rather than generic interview prose alone. The stable workflow-review surface should treat the structured `workflow_map` projection as `family: "analysis"` and `kind: "workflow_map_evidence"` when that synthesis artifact is available, while still allowing the underlying interview-session trace to remain queryable as a separate trace-bearing artifact.
+
 ### 4. Local UI query state
 
 ```json
@@ -264,6 +266,202 @@ Example output:
     },
     "note": "2 comparable completed runs are available for cross-run review."
   },
+  "longitudinal_comparison": {
+    "contract_version": "workspace-longitudinal-comparison/v0-draft",
+    "source_run_id": "run_20260628_102000",
+    "source_job_id": "job_workspace_proto_008",
+    "source_project_id": "project_001",
+    "source_study_id": "study_001",
+    "comparison_windows": [
+      {
+        "window_id": "same_study_runs",
+        "label": "Same study runs",
+        "run_count": 1,
+        "calibrated_run_count": 0,
+        "note": "Use repeated runs inside the same study first when checking whether a signal persists across one research loop."
+      },
+      {
+        "window_id": "study_timeline",
+        "label": "Study timeline",
+        "entry_count": 4,
+        "evidence_view_count": 1,
+        "decision_log_count": 1,
+        "note": "Use saved evidence views and decision outcomes to preserve how the study evolved instead of rewriting the latest conclusion only."
+      },
+      {
+        "window_id": "same_project_studies",
+        "label": "Same project studies",
+        "study_count": 1,
+        "run_count": 1,
+        "calibrated_run_count": 0,
+        "note": "Use neighboring studies in the same project to compare prototype revisions or adjacent research loops over time."
+      }
+    ],
+    "selected_window_id": "same_study_runs",
+    "same_study_runs": [
+      {
+        "run_id": "run_20260628_102100",
+        "job_id": "job_workspace_proto_007",
+        "project_id": "project_001",
+        "study_id": "study_001",
+        "job_status": "completed",
+        "created_at": "2026-06-28T10:21:00+00:00",
+        "finished_at": "2026-06-28T10:21:43+00:00",
+        "relation_scope": "same_study",
+        "relation_note": "same study repeated run",
+        "has_human_calibration": false,
+        "calibration_status": "unavailable"
+      }
+    ],
+    "same_project_studies": [
+      {
+        "study_id": "study_002",
+        "project_id": "project_001",
+        "title": "Inbox Coach v2 revision",
+        "status": "draft",
+        "latest_job_id": "job_workspace_proto_009",
+        "latest_run_id": "run_20260628_103000",
+        "completed_run_count": 1,
+        "evidence_view_count": 0,
+        "decision_log_count": 0,
+        "calibrated_run_count": 0,
+        "latest_calibration_status": "unavailable",
+        "relation_note": "same project adjacent study"
+      }
+    ],
+    "study_timeline": [
+      {
+        "entry_id": "decision_log_001",
+        "entry_type": "decision_log",
+        "occurred_at": "2026-06-28T10:24:10+00:00",
+        "title": "Do not ship yet",
+        "run_id": "run_20260628_102000",
+        "job_id": "job_workspace_proto_008",
+        "study_id": "study_001",
+        "project_id": "project_001",
+        "selected_signal_id": "trace:persona_responses",
+        "has_comparison_focus": true,
+        "review_status": "draft",
+        "relation_note": "decision outcome in the same study timeline"
+      }
+    ],
+    "same_study_run_count": 1,
+    "same_project_study_count": 1,
+    "study_timeline_entry_count": 4,
+    "recurring_signal_synthesis": {
+      "contract_version": "workspace-longitudinal-recurring-signals/v0-draft",
+      "selected_signal_id": "trace:persona_responses",
+      "selected_signal_terms": ["objection", "try signal"],
+      "pattern_count": 1,
+      "persistent_pattern_count": 1,
+      "patterns": [
+        {
+          "pattern_id": "objection",
+          "label": "Recurring objections",
+          "status": "persistent",
+          "run_count": 3,
+          "study_count": 2,
+          "source_run_present": true,
+          "related_run_ids": ["run_20260628_102000", "run_20260628_102100", "run_20260628_103000"],
+          "related_study_ids": ["study_001", "study_002"],
+          "relation_scopes": ["same_project", "same_study", "source_run"],
+          "matched_terms": ["objection", "try signal"],
+          "timeline_entry_ids": ["decision_log_001", "view_001"],
+          "sample_evidence": [
+            {
+              "run_id": "run_20260628_102000",
+              "job_id": "job_workspace_proto_008",
+              "study_id": "study_001",
+              "relation_scope": "source_run",
+              "selected_signal_id": "trace:persona_responses",
+              "selected_result_title": "Raw responses",
+              "stability_label": "comparison_available",
+              "calibration_status": "unavailable"
+            }
+          ],
+          "note": "This pattern appears in the current run and repeated-study history, so it should be treated as persistent rather than one-run noise."
+        }
+      ],
+      "run_observations": [
+        {
+          "run_id": "run_20260628_102000",
+          "study_id": "study_001",
+          "relation_scope": "source_run",
+          "pattern_ids": ["objection"]
+        }
+      ],
+      "note": "Recurring longitudinal patterns stay linked to repeated runs plus study-timeline artifacts so review can preserve older evidence instead of rewriting only the latest state."
+    },
+    "panel_learning_projection": {
+      "contract_version": "workspace-longitudinal-panel-learning/v0-draft",
+      "source_panel": {
+        "run_id": "run_20260628_102000",
+        "relation_scope": "source_run",
+        "panel_type": "mainstream",
+        "selected_persona_count": 1,
+        "persona_with_axes_count": 0,
+        "undercovered_axis_ids": [],
+        "hotspot_axis_ids": []
+      },
+      "related_panels": [
+        {
+          "run_id": "run_20260628_102100",
+          "relation_scope": "same_study",
+          "panel_type": "mainstream",
+          "selected_persona_count": 1
+        }
+      ],
+      "segment_divergence": {
+        "status": "insufficient_axis_data",
+        "repeated_hotspot_axes": [],
+        "persistent_undercovered_axes": [],
+        "newly_covered_axes": [],
+        "note": "Panel learning cannot yet explain segment divergence because the related runs do not carry human-difference-axis coverage."
+      },
+      "barrier_resolution": {
+        "persistent_pattern_ids": ["objection"],
+        "faded_pattern_ids": [],
+        "emerging_pattern_ids": [],
+        "contradiction_pattern_ids": [],
+        "note": "Persistent patterns still appear in the current run; faded patterns remain only in related history; emerging patterns appear only in the current run."
+      },
+      "confidence_trend": {
+        "status": "stalling",
+        "source_stability_label": "comparison_available",
+        "source_calibration_status": "unavailable",
+        "related_calibration_statuses": ["unavailable", "unavailable"],
+        "note": "Repeated runs are still uncalibrated, so prediction confidence is stalling even when similar signals repeat."
+      },
+      "decision_trends": {
+        "total_decision_count": 1,
+        "review_status_counts": {"approved": 1},
+        "latest_review_status": "approved",
+        "evidence_backed_decision_count": 1,
+        "assumption_led_decision_count": 0,
+        "latest_change_status": "first_decision",
+        "decisions": [
+          {
+            "decision_log_id": "decision_log_001",
+            "review_status": "approved",
+            "evidence_backing_status": "evidence_backed"
+          }
+        ],
+        "note": "Only one decision exists so far, so the study has not yet shown a directional decision change."
+      },
+      "note": "Panel learning stays artifact-linked: panel explainability comes from run reports, recurring barriers come from longitudinal evidence synthesis, and decision trends stay attached to durable decision-log history."
+    },
+    "calibration_lineage": {
+      "run_id": "run_20260628_102000",
+      "has_human_calibration": false,
+      "calibration_status": "unavailable",
+      "same_study_calibrated_run_count": 0,
+      "same_project_calibrated_run_count": 0,
+      "selected_comparison_run_id": "run_20260628_102100",
+      "selected_comparison_calibration_status": "unavailable",
+      "note": "Calibration lineage stays attached to repeated runs so longitudinal review can separate unchanged evidence from uncalibrated drift."
+    },
+    "note": "Review same-study runs first, then the study timeline, before widening to neighboring studies in the same project."
+  },
   "evidence_reliability": {
     "contract_version": "workspace-evidence-reliability/v0-draft",
     "review_status": "reliability_ready",
@@ -310,6 +508,51 @@ Example output:
     ],
     "synthetic_boundary": "Synthetic evidence only. Reliability labels require human calibration before replacement-grade claims."
   },
+  "readiness_gate": {
+    "contract_version": "workspace-evidence-readiness-gate/v0-draft",
+    "status": "human_validation_required",
+    "share_status": "boundary_only",
+    "market_claims_allowed": false,
+    "boundary_required": true,
+    "selected_signal_id": "trace:observed_action_trace",
+    "stability_label": "comparison_available",
+    "stability_score": 52,
+    "human_validation_gap": true,
+    "missing_context_count": 1,
+    "contradicting_evidence_count": 0,
+    "supporting_evidence_count": 1,
+    "calibration_status": "unavailable",
+    "external_benchmark_status": null,
+    "provider_name": "mock",
+    "provider_evidence_mode": "mock_demo",
+    "provider_runtime_status": "completed",
+    "gate_reasons": ["human_validation_gap"],
+    "threshold_gaps": [],
+    "boundary_note": "Synthetic evidence only. Reliability labels require human calibration before replacement-grade claims.",
+    "distribution_note": "Synthetic evidence may be shared only with explicit boundary language until human calibration is attached."
+  },
+  "governed_review": {
+    "contract_version": "workspace-study-governed-review/v0-draft",
+    "review_gate_status": "assigned_for_review",
+    "human_review_required": true,
+    "policy_labels": [
+      "synthetic_evidence_only",
+      "human_review_required",
+      "regulated_high_stakes",
+      "governed_review_required",
+      "governed_review_status:assigned_for_review"
+    ],
+    "human_review_note": "High-stakes synthetic evidence remains bounded and requires the named study reviewer before approval or partner-facing circulation."
+  },
+  "governed_redaction": {
+    "contract_version": "workspace-study-governed-redaction/v0-draft",
+    "status": "active",
+    "rule_count": 2,
+    "policy_labels": [
+      "governed_redaction_required",
+      "governed_redaction_status:active"
+    ]
+  },
   "audit_lineage": {
     "contract_version": "workspace-evidence-audit-lineage/v0-draft",
     "source_run": {
@@ -353,6 +596,17 @@ Example output:
       "selected_comparison_project_id": "project_001",
       "selected_comparison_study_id": "study_001",
       "selected_comparison_result_id": "query-artifact-stage-results-json"
+    },
+    "longitudinal_set": {
+      "source_project_id": "project_001",
+      "source_study_id": "study_001",
+      "selected_window_id": "same_study_runs",
+      "same_study_run_ids": ["run_20260628_102100"],
+      "same_project_study_ids": ["study_002"],
+      "study_timeline_entry_ids": ["decision_log_001", "view_001"],
+      "recurring_pattern_ids": ["objection"],
+      "panel_learning_status": "insufficient_axis_data",
+      "decision_trend_status": "first_decision"
     }
   },
   "boundary_warning": "The run artifacts are ready for operator review, but the evidence remains synthetic and bounded by the current prototype-validation contract."
@@ -437,6 +691,34 @@ It should say:
 - which artifact inside the selected comparison run is the best comparison target
 - whether that comparison preserves the same artifact family, kind, or replay-bearing surface
 
+### `longitudinal_comparison`
+
+This is the backend-owned repeated-study comparison summary for the current workspace study/project scope.
+
+It should say:
+
+- which repeated runs belong to the same study as the current run
+- which neighboring studies belong to the same project and therefore act as likely prototype-revision or adjacent-research comparisons
+- which saved evidence views and decision-log outcomes belong in the current study timeline
+- which comparison window should be reviewed first
+- which attached calibration records still apply across the related run family
+- which recurring objection, trust-gap, failure, or contradiction patterns stay visible across repeated-run and timeline-linked evidence
+- which panel-learning and decision-trend signals explain what changed, what persisted, and where prediction confidence still stalls or drifts
+
+Its `recurring_signal_synthesis` sub-object should say:
+
+- which recurring patterns are visible under the current evidence-review scope
+- whether each pattern is persistent, current-run-only, historical-only, or unresolved
+- which related runs and studies carry that pattern
+- which study-timeline artifacts keep the same pattern visible in saved evidence review or decision history
+
+Its `panel_learning_projection` sub-object should say:
+
+- which repeated hotspot axes or persistent under-covered axes suggest segment divergence across related runs
+- which recurring barriers persist, fade, emerge, or remain contradictory
+- whether prediction confidence appears to be improving, holding, stalling, or drifting, and which calibration/stability signals support that inference
+- which decision changes were evidence-backed versus assumption-led
+
 ### `evidence_reliability`
 
 This is the backend-owned reliability review for the currently selected evidence result.
@@ -471,6 +753,7 @@ It should say:
 - which replay step is in focus when replay exists
 - which comparison runs and jobs were eligible
 - which comparison run and result were selected for review
+- which longitudinal comparison window, same-study run ids, same-project study ids, study-timeline entry ids, recurring pattern ids, panel-learning status, and decision-trend status were active during review
 
 Study/project/job fields may be `null` for legacy runs without workspace metadata, but study-linked validation jobs should populate them through the SaaS runtime wrapper.
 
@@ -528,9 +811,47 @@ Stability labels, supporting evidence, contradicting evidence, missing context, 
 
 The SaaS runtime should enrich run-artifact lineage with job, project, and study identifiers when those runs were created through workspace validation jobs. It must not fabricate study linkage for legacy runs that lack metadata.
 
+### `readiness_gate`
+
+This is the backend-owned distribution and claim boundary derived from evidence reliability plus attached human calibration.
+
+It should say:
+
+- whether the current evidence is pending, human-validation-required, fixture-only, directional-only, scoped externally ready, human-review-required, or insufficiently benchmarked
+- whether customer-facing claims are allowed
+- whether a share should remain boundary-only even if the payload is technically viewable
+- which provider and evidence mode produced the current run, so readiness does not mix `mock_demo` and `live_synthetic` evidence as the same confidence class
+- which gate reasons and threshold gaps still block stronger external claims
+
+### `governed_review`
+
+This is the backend-owned regulated/high-stakes reviewer and policy-label state for the study linked to the current run when workspace study metadata exists.
+
+It should say:
+
+- whether governed human review is required for this study
+- whether reviewer responsibility is blocked, assigned, escalated, or not required
+- which policy labels and human-review-required notes the frontend should render directly
+- whether governed decision approval or partner-facing circulation is currently allowed
+
+### `governed_redaction`
+
+This is the backend-owned viewer-safe redaction state for the study linked to the current run when workspace study metadata exists.
+
+It should say:
+
+- whether governed redaction is required for partner-facing circulation
+- whether redaction is unconfigured, draft, active, escalated, or not required
+- how many backend-owned redaction rules are active
+- whether circulation remains blocked until redaction is activated
+
 ### Rule 12: calibration does not imply human proof
 
 Calibration records can mark repeatability or contradiction inside synthetic evidence, but every payload must preserve a human-validation gap unless real human outcome data has been explicitly attached by a future calibration workflow.
+
+### Rule 13: workflow-mapping review should preserve workflow structure
+
+When workflow-mapping evidence is present, the query layer should preserve workflow-sequence, handoff, fragmentation, workaround, switching-cost, and responsibility-gap structure as backend-owned evidence rather than flattening it into one prose-only summary.
 
 ## Frontend function boundary
 

@@ -84,6 +84,13 @@ Response shape:
       "max_concurrent_jobs": 1,
       "artifact_retention_days": 7
     },
+    "billing_governance": {
+      "contract_version": "workspace-billing-governance/v0-draft",
+      "billing_history": [],
+      "policy_history": [],
+      "latest_billing_change": null,
+      "latest_policy_change": null
+    },
     "members": [
       {
         "user_id": "owner_api",
@@ -107,7 +114,8 @@ Response shape:
       "member_admin": true,
       "token_admin": true,
       "audit_history": true,
-      "billing_overview": true
+      "billing_overview": true,
+      "billing_governance_history": true
     },
     "policies": {
       "region_code": "HK",
@@ -126,6 +134,7 @@ Rules:
 - token values must stay masked in `api_tokens`
 - the current authenticated token may be identified through `current`
 - billing is read-only in this snapshot endpoint; writable billing/quota mutation lives in `specs/workspace_billing_quota_surface_contract.md`
+- `billing_governance` preserves append-only history for billing, quota, and retention policy mutations
 - detailed audit-history browsing lives in `specs/workspace_audit_history_surface_contract.md`
 
 ### `POST /api/v1/workspace-members`

@@ -593,6 +593,12 @@ def _build_parser() -> argparse.ArgumentParser:
     serve_saas_api_cmd.add_argument("--runtime-root", type=Path, default=Path("saas_runtime"))
     serve_saas_api_cmd.add_argument("--host", default="127.0.0.1")
     serve_saas_api_cmd.add_argument("--port", type=int, default=8011)
+    serve_saas_api_cmd.add_argument("--deployment-env", default="local")
+    serve_saas_api_cmd.add_argument("--public-base-url", default="")
+    serve_saas_api_cmd.add_argument("--secret-source", default="local_dev")
+    serve_saas_api_cmd.add_argument("--expected-backup-mode", default="local_filesystem")
+    serve_saas_api_cmd.add_argument("--disable-query-token-bootstrap", action="store_true")
+    serve_saas_api_cmd.add_argument("--structured-logs", action="store_true")
 
     saas_worker_cmd = subparsers.add_parser("run-saas-worker")
     saas_worker_cmd.add_argument("--runtime-root", type=Path, default=Path("saas_runtime"))
@@ -639,7 +645,7 @@ def _build_parser() -> argparse.ArgumentParser:
     interview_cmd = subparsers.add_parser("run-facilitated-interview")
     interview_cmd.add_argument("--persona-id", required=True)
     interview_cmd.add_argument("--research-goal", required=True)
-    interview_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "prototype_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
+    interview_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "workflow_mapping", "adoption_barrier_validation", "prototype_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     interview_cmd.add_argument("--hypothesis", default="")
     interview_cmd.add_argument("--product-context", default="")
     interview_cmd.add_argument("--concept-protocol", default="")
@@ -664,7 +670,7 @@ def _build_parser() -> argparse.ArgumentParser:
     observer_cmd.add_argument("--persona-id")
     observer_cmd.add_argument("--resume", dest="interview_id")
     observer_cmd.add_argument("--research-goal")
-    observer_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "adoption_barrier_validation", "prototype_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
+    observer_cmd.add_argument("--interview-mode", choices=["pain_point_discovery", "workflow_mapping", "adoption_barrier_validation", "prototype_validation", "decision_reconstruction", "explore_root_cause", "validate_hypothesis", "concept_validation"], default="explore_root_cause")
     observer_cmd.add_argument("--hypothesis", default="")
     observer_cmd.add_argument("--product-context", default="")
     observer_cmd.add_argument("--concept-protocol", default="")
@@ -1514,6 +1520,28 @@ def _cmd_summarize_personas(args: argparse.Namespace) -> int:
         print("Coverage checks:")
         for key, value in summary["coverage_checks"].items():
             print(f"- {key}: {value}")
+        human_difference = summary.get("human_difference_axis_summary", {})
+        if isinstance(human_difference, dict):
+            print("Human difference axes:")
+            print(
+                "- personas with axes: "
+                f"{human_difference.get('persona_with_axes_count', 0)}"
+            )
+            print(
+                "- axes with full presence: "
+                f"{human_difference.get('axes_with_full_presence_count', 0)}"
+                f"/{len(human_difference.get('required_axes', []))}"
+            )
+            print(
+                "- axes with multi-pattern coverage: "
+                f"{human_difference.get('axes_with_multi_pattern_count', 0)}"
+            )
+            coverage_gaps = human_difference.get("coverage_gaps", [])
+            if isinstance(coverage_gaps, list) and coverage_gaps:
+                print("Coverage gaps:")
+                for item in coverage_gaps[:5]:
+                    if isinstance(item, dict):
+                        print(f"- {item.get('axis')}: {item.get('gap_type')}")
     return 0
 
 
@@ -2259,7 +2287,17 @@ def _cmd_bootstrap_saas_workspace(args: argparse.Namespace) -> int:
 def _cmd_serve_saas_api(args: argparse.Namespace) -> int:
     from ai_validation_swarm.saas.api import serve_saas_api
 
-    serve_saas_api(args.runtime_root, host=args.host, port=args.port)
+    serve_saas_api(
+        args.runtime_root,
+        host=args.host,
+        port=args.port,
+        deployment_env=args.deployment_env,
+        public_base_url=args.public_base_url,
+        secret_source=args.secret_source,
+        expected_backup_mode=args.expected_backup_mode,
+        allow_query_token_bootstrap=not bool(args.disable_query_token_bootstrap),
+        structured_logs=bool(args.structured_logs),
+    )
     return 0
 
 

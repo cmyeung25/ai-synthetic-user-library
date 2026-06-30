@@ -14,7 +14,18 @@ JobPriority = Literal["low", "normal", "high"]
 CatalogScope = Literal["global", "workspace_overlay"]
 SimilarityDecisionType = Literal["keep", "merge", "rewrite", "reject"]
 ProjectStatus = Literal["active", "archived"]
-StudyStatus = Literal["draft", "ready", "running", "review_ready", "completed", "archived"]
+StudyStatus = Literal[
+    "draft",
+    "planning",
+    "ready",
+    "ready_to_run",
+    "running",
+    "review_ready",
+    "reviewing",
+    "completed",
+    "blocked",
+    "archived",
+]
 ExportBundleStatus = Literal["draft", "published", "revoked", "expired"]
 ExportBundleFormat = Literal["bundle_json", "report_markdown", "report_json", "report_csv"]
 ShareBundleStatus = Literal["draft", "published", "revoked", "expired"]
@@ -261,6 +272,35 @@ class WorkspaceDecisionLog:
     rationale: str
     selected_result_id: str | None
     selected_comparison_run_id: str | None
+    payload_path: str
+    created_by_user_id: str
+    created_at: str
+    updated_at: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class WorkspaceStudyReport:
+    study_report_id: str
+    workspace_id: str
+    project_id: str
+    study_id: str
+    title: str
+    status: str
+    included_job_ids: list[str]
+    included_run_ids: list[str]
+    included_plan_revision_ids: list[str]
+    stable_patterns: list[dict[str, Any]]
+    divergent_signals: list[dict[str, Any]]
+    key_objections: list[dict[str, Any]]
+    trust_gaps: list[dict[str, Any]]
+    adoption_barriers: list[dict[str, Any]]
+    prototype_confusions: list[dict[str, Any]]
+    contradictions: list[dict[str, Any]]
+    human_validation_gaps: list[dict[str, Any]]
     payload_path: str
     created_by_user_id: str
     created_at: str

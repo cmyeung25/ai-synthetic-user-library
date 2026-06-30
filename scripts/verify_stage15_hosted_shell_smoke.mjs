@@ -10,9 +10,94 @@ const repoRoot = path.resolve(__dirname, "..");
 const outputDir = path.join(repoRoot, "output", "playwright", "stage15_hosted_shell_smoke");
 const apiBaseUrl = process.env.STAGE15_API_BASE_URL || "http://127.0.0.1:8011";
 const apiToken = process.env.STAGE15_API_TOKEN || "token-api";
+const validationProviderName = process.env.STAGE15_PROVIDER_NAME || "mock";
+const validationSampleSize = process.env.STAGE15_SAMPLE_SIZE || "5";
+const expectedJobStatuses = (process.env.STAGE15_EXPECTED_JOB_STATUS || "completed")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+const providerAcceptanceOnly = process.env.STAGE15_PROVIDER_ACCEPTANCE_ONLY
+  ? process.env.STAGE15_PROVIDER_ACCEPTANCE_ONLY === "1"
+  : validationProviderName !== "mock";
+const jobStatusTimeoutMs = Number.parseInt(
+  process.env.STAGE15_JOB_STATUS_TIMEOUT_MS || (validationProviderName === "mock" ? "120000" : "900000"),
+  10
+);
 const hostedUrl = `${apiBaseUrl}/app/workspace?token=${encodeURIComponent(apiToken)}`;
 const runLabel = new Date().toISOString().replace(/[:.]/g, "-");
 const artifactDir = path.join(outputDir, runLabel);
+const personalMvpWorkflowId = process.env.STAGE15_PERSONAL_MVP_WORKFLOW || "";
+
+const DEFAULT_SMOKE_WORKFLOW = {
+  id: "generic_hosted_shell_smoke",
+  projectNamePrefix: "Hosted Shell Smoke",
+  studyTitlePrefix: "Milestone 11 study",
+  modeOverride: "concept_validation",
+  attachArtifacts: false,
+  useFallback: true,
+  firstTask: "review onboarding guidance",
+  researchIntent: "Validate whether the onboarding shell explains reversibility clearly enough for first-time workspace setup.",
+  desiredOutcome: "Need a concise evidence-backed readout with key hesitation points and trust gaps.",
+  evidenceViewTitlePrefix: "Smoke evidence view",
+  evidenceViewNote: "Generic hosted shell smoke evidence view.",
+  decisionTitlePrefix: "Smoke decision",
+  decisionSummary: "Generic smoke conclusion remains bounded to synthetic evidence.",
+  decisionRationale: "Recorded to verify the study-first shell can preserve selected evidence into a decision log."
+};
+
+const PERSONAL_MVP_WORKFLOWS = {
+  founder_concept_validation: {
+    id: "founder_concept_validation",
+    projectNamePrefix: "MVP Founder Concept",
+    studyTitlePrefix: "Founder concept validation",
+    modeOverride: "concept_validation",
+    attachArtifacts: false,
+    useFallback: true,
+    firstTask: "explain the startup idea and ask whether the concept feels credible enough to try",
+    researchIntent: "I have a startup idea for a lightweight research workspace that helps founders test concepts with synthetic users before scheduling human interviews. Validate whether first-time founders understand the concept, where trust breaks, what objections appear, and what adoption conditions would make them try it.",
+    desiredOutcome: "Evidence-backed readout covering concept understanding, appeal, objections, trust gaps, adoption barriers, and what must be validated with real humans next.",
+    evidenceViewTitlePrefix: "Founder concept evidence",
+    evidenceViewNote: "Personal MVP acceptance view for startup idea concept validation.",
+    decisionTitlePrefix: "Founder concept decision",
+    decisionSummary: "Record whether the startup concept is directionally worth pursuing, while keeping synthetic evidence boundaries visible.",
+    decisionRationale: "Decision should cite understanding, objection, trust-gap, and adoption-barrier evidence from the completed live run."
+  },
+  ui_prototype_comprehension_validation: {
+    id: "ui_prototype_comprehension_validation",
+    projectNamePrefix: "MVP Prototype Comprehension",
+    studyTitlePrefix: "UI prototype comprehension validation",
+    modeOverride: "prototype_validation",
+    attachArtifacts: true,
+    useFallback: false,
+    firstTask: "review the uploaded prototype screens and describe what the main button and next action mean",
+    researchIntent: "I have a UI/UX prototype and need to understand whether realistic users can interpret the page copy, primary button, secondary actions, and task flow without confusion. Focus on wording ambiguity, CTA/button meaning, layout friction, and likely hesitation points.",
+    desiredOutcome: "Evidence-backed prototype comprehension review covering misunderstood text, button or CTA ambiguity, flow friction, trust gaps, and what requires real human usability validation.",
+    evidenceViewTitlePrefix: "Prototype comprehension evidence",
+    evidenceViewNote: "Personal MVP acceptance view for UI/prototype comprehension validation with an attached prototype artifact.",
+    decisionTitlePrefix: "Prototype comprehension decision",
+    decisionSummary: "Record whether the prototype is clear enough for the next iteration, preserving synthetic-only limits.",
+    decisionRationale: "Decision should cite wording, CTA, flow-friction, and artifact-grounded evidence from the completed run."
+  },
+  pain_empathy_insight_discovery: {
+    id: "pain_empathy_insight_discovery",
+    projectNamePrefix: "MVP Pain Discovery",
+    studyTitlePrefix: "Pain empathy insight discovery",
+    modeOverride: "auto",
+    attachArtifacts: false,
+    useFallback: true,
+    firstTask: "describe the last time the user tried to validate a product idea and where the workflow broke down",
+    researchIntent: "I want to research the pain around early product discovery before deciding on a solution. Explore empathy, recurring pain, root causes, current workaround behavior, decision triggers, workflow fragmentation, and insight opportunities for later solution planning.",
+    desiredOutcome: "Evidence-backed discovery readout covering pain reality, root cause, workaround behavior, workflow gaps, empathy signals, and next questions for real human validation.",
+    evidenceViewTitlePrefix: "Pain discovery evidence",
+    evidenceViewNote: "Personal MVP acceptance view for pain, empathy, root-cause, workflow, and insight discovery.",
+    decisionTitlePrefix: "Pain discovery decision",
+    decisionSummary: "Record the strongest pain and insight hypotheses to carry into solution planning, without treating synthetic signal as proof.",
+    decisionRationale: "Decision should cite pain, root-cause, workaround, workflow-fragmentation, and human-validation-gap evidence from the completed run.",
+    knownLimitation: ""
+  }
+};
+
+const activeWorkflow = personalMvpWorkflowId ? PERSONAL_MVP_WORKFLOWS[personalMvpWorkflowId] : null;
 
 function log(message) {
   process.stdout.write(`${message}\n`);
@@ -162,6 +247,13 @@ async function requestJson(url, init = {}) {
   return payload;
 }
 
+function authHeaders(extra = {}) {
+  return {
+    Authorization: `Bearer ${apiToken}`,
+    ...extra
+  };
+}
+
 async function requestText(url, init = {}) {
   const response = await fetch(url, init);
   const text = await response.text();
@@ -240,11 +332,19 @@ async function waitForSummaryValue(page, selector, expectedValue, message) {
   }, message);
 }
 
+async function waitForSummaryLabelValue(page, selector, label, expectedValue, message) {
+  return await waitFor(async () => {
+    const rows = await readSummaryRows(page, selector);
+    return rows.some((row) => row.label === label && row.value.includes(expectedValue)) ? rows : null;
+  }, message);
+}
+
 async function waitForEnabled(locator, message) {
   await waitFor(async () => (await locator.isVisible()) && !(await locator.isDisabled()), message);
 }
 
-async function waitForJobStatus(jobId, expectedStatus) {
+async function waitForJobStatus(jobId, expectedStatuses, timeoutMs = jobStatusTimeoutMs) {
+  const allowedStatuses = Array.isArray(expectedStatuses) ? expectedStatuses : [expectedStatuses];
   return await waitFor(async () => {
     const payload = await requestJson(`${apiBaseUrl}/api/v1/validation-jobs/${jobId}`, {
       headers: {
@@ -252,24 +352,44 @@ async function waitForJobStatus(jobId, expectedStatus) {
       }
     });
     log(`Observed job ${jobId} status: ${payload?.job?.status || "unknown"}`);
-    return payload?.job?.status === expectedStatus ? payload.job : null;
-  }, `Timed out waiting for job ${jobId} to reach status '${expectedStatus}'.`);
+    return allowedStatuses.includes(payload?.job?.status) ? payload.job : null;
+  }, `Timed out waiting for job ${jobId} to reach one of: ${allowedStatuses.join(", ")}.`, {
+    timeoutMs,
+    intervalMs: validationProviderName === "mock" ? 500 : 5000,
+  });
 }
 
-async function waitForJobCreatedForStudy(studyId) {
-  return await waitFor(async () => {
-    const payload = await requestJson(`${apiBaseUrl}/api/v1/validation-jobs`, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`
-      }
-    });
-    const matchingJob = (payload?.jobs || []).find((job) => String(job?.metadata?.study_id || "") === String(studyId));
-    if (matchingJob?.job_id) {
-      log(`Observed submitted job ${matchingJob.job_id} for study ${studyId}.`);
-      return matchingJob;
-    }
+async function readSubmitDebug(page) {
+  if (!page) {
     return null;
-  }, `Timed out waiting for a submitted job linked to study '${studyId}'.`);
+  }
+  return {
+    bridgePill: String(await page.locator("#bridge-pill").textContent().catch(() => "") || "").trim(),
+    jobPill: String(await page.locator("#job-pill").textContent().catch(() => "") || "").trim(),
+    requestPayload: String(await page.locator("#request-payload-json").textContent().catch(() => "") || "").trim(),
+    lastApiResponse: String(await page.locator("#last-api-json").textContent().catch(() => "") || "").trim()
+  };
+}
+
+async function waitForJobCreatedForStudy(studyId, page = null) {
+  try {
+    return await waitFor(async () => {
+      const payload = await requestJson(`${apiBaseUrl}/api/v1/validation-jobs`, {
+        headers: {
+          Authorization: `Bearer ${apiToken}`
+        }
+      });
+      const matchingJob = (payload?.jobs || []).find((job) => String(job?.metadata?.study_id || "") === String(studyId));
+      if (matchingJob?.job_id) {
+        log(`Observed submitted job ${matchingJob.job_id} for study ${studyId}.`);
+        return matchingJob;
+      }
+      return null;
+    }, `Timed out waiting for a submitted job linked to study '${studyId}'.`);
+  } catch (error) {
+    const debug = await readSubmitDebug(page);
+    throw new Error(`${error.message}\nSubmit debug:\n${JSON.stringify(debug, null, 2)}`);
+  }
 }
 
 async function waitForStudyCard(page, selector, expectedText, message) {
@@ -277,6 +397,75 @@ async function waitForStudyCard(page, selector, expectedText, message) {
     const texts = await page.locator(`${selector} .product-card`).allTextContents();
     return texts.some((text) => text.includes(expectedText)) ? texts : null;
   }, message);
+}
+
+async function createPrototypeFixtureArtifact() {
+  const pngBase64 =
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/lSXw4QAAAABJRU5ErkJggg==";
+  const artifactPath = path.join(artifactDir, "personal_mvp_prototype_fixture.png");
+  await fs.writeFile(artifactPath, Buffer.from(pngBase64, "base64"));
+  return artifactPath;
+}
+
+async function waitForEvidenceViewDetail({ studyId, jobId, title }) {
+  return await waitFor(async () => {
+    const params = new URLSearchParams({ study_id: studyId, job_id: jobId });
+    const payload = await requestJson(`${apiBaseUrl}/api/v1/evidence-views?${params.toString()}`, {
+      headers: authHeaders()
+    });
+    const view = (payload?.evidence_views || []).find((item) => item?.title === title);
+    if (!view?.evidence_view_id) {
+      return null;
+    }
+    const detail = await requestJson(`${apiBaseUrl}/api/v1/evidence-views/${encodeURIComponent(view.evidence_view_id)}`, {
+      headers: authHeaders()
+    });
+    return detail?.evidence_view || null;
+  }, `Timed out waiting for evidence view '${title}' to be created.`);
+}
+
+async function waitForDecisionLogDetail({ studyId, jobId, evidenceViewId, title }) {
+  return await waitFor(async () => {
+    const params = new URLSearchParams({ study_id: studyId, job_id: jobId });
+    if (evidenceViewId) {
+      params.set("evidence_view_id", evidenceViewId);
+    }
+    const payload = await requestJson(`${apiBaseUrl}/api/v1/decision-logs?${params.toString()}`, {
+      headers: authHeaders()
+    });
+    const decision = (payload?.decision_logs || []).find((item) => item?.title === title);
+    if (!decision?.decision_log_id) {
+      return null;
+    }
+    const detail = await requestJson(`${apiBaseUrl}/api/v1/decision-logs/${encodeURIComponent(decision.decision_log_id)}`, {
+      headers: authHeaders()
+    });
+    return detail?.decision_log || null;
+  }, `Timed out waiting for decision log '${title}' to be created.`);
+}
+
+function assertProviderBoundary(payload, expectedProviderName, artifactLabel) {
+  const boundary = payload?.provider_runtime_boundary || {};
+  assert(
+    boundary.provider_name === expectedProviderName,
+    `${artifactLabel} did not preserve provider_name='${expectedProviderName}'. Boundary: ${JSON.stringify(boundary)}`
+  );
+  if (expectedProviderName === "mock") {
+    assert(
+      boundary.evidence_mode === "mock_demo",
+      `${artifactLabel} did not preserve mock_demo evidence mode. Boundary: ${JSON.stringify(boundary)}`
+    );
+    return boundary;
+  }
+  assert(
+    boundary.evidence_mode === "live_synthetic",
+    `${artifactLabel} did not preserve live_synthetic evidence mode. Boundary: ${JSON.stringify(boundary)}`
+  );
+  assert(
+    boundary.runtime_status === "completed",
+    `${artifactLabel} did not preserve completed provider runtime status. Boundary: ${JSON.stringify(boundary)}`
+  );
+  return boundary;
 }
 
 async function clickAndWaitForPath(page, trigger, pathnamePattern, message) {
@@ -288,6 +477,16 @@ async function selectCardByText(page, selector, text, message) {
   const card = page.locator(`${selector} .product-card`).filter({ hasText: text }).first();
   await waitFor(async () => (await card.count()) > 0, message);
   await card.click();
+}
+
+async function openWorkspaceSurface(page, navId, visibleSelector) {
+  const navItem = page.locator(`[data-nav-id="${navId}"]`).first();
+  await waitForEnabled(navItem, `Navigation item '${navId}' was not visible and enabled.`);
+  await navItem.click();
+  await waitFor(async () => {
+    const target = page.locator(visibleSelector).first();
+    return (await target.count()) > 0 && (await target.isVisible()) ? true : null;
+  }, `Workspace surface '${navId}' did not expose '${visibleSelector}'.`);
 }
 
 async function waitForHostedShellReady(page) {
@@ -354,6 +553,8 @@ async function assertNoCriticalPanelOverlap(page) {
     ["selected-project-summary", "#selected-project-summary"],
     ["selected-study-summary", "#selected-study-summary"],
     ["evidence-list", "#evidence-list"],
+    ["provider-runtime-summary", "#provider-runtime-summary"],
+    ["provider-runtime-catalog", "#provider-runtime-catalog"],
     ["selected-evidence-summary", "#selected-evidence-summary"],
     ["cross-run-summary", "#cross-run-summary"],
     ["selected-export-summary", "#selected-export-summary"],
@@ -424,6 +625,10 @@ async function writeJson(targetPath, payload) {
 
 async function main() {
   await ensureDir(artifactDir);
+  assert(
+    !personalMvpWorkflowId || activeWorkflow,
+    `Unknown STAGE15_PERSONAL_MVP_WORKFLOW='${personalMvpWorkflowId}'. Expected one of: ${Object.keys(PERSONAL_MVP_WORKFLOWS).join(", ")}.`
+  );
 
   const bootstrap = await runDemoBootstrap();
   await fs.writeFile(path.join(artifactDir, "demo_bootstrap.log"), bootstrap.output || "", "utf8");
@@ -455,12 +660,16 @@ async function main() {
   });
 
   const timestampToken = Date.now();
-  const projectName = `Hosted Shell Smoke ${timestampToken}`;
+  const workflow = activeWorkflow || DEFAULT_SMOKE_WORKFLOW;
+  const personalMvpAcceptance = Boolean(activeWorkflow);
+  const projectName = `${workflow.projectNamePrefix} ${timestampToken}`;
   const projectSlug = slugify(projectName);
-  const studyTitle = `Milestone 11 study ${timestampToken}`;
-  const firstTask = "review onboarding guidance";
-  const researchIntent = "Validate whether the onboarding shell explains reversibility clearly enough for first-time workspace setup.";
-  const desiredOutcome = "Need a concise evidence-backed readout with key hesitation points and trust gaps.";
+  const studyTitle = `${workflow.studyTitlePrefix} ${timestampToken}`;
+  const firstTask = workflow.firstTask;
+  const researchIntent = workflow.researchIntent;
+  const desiredOutcome = workflow.desiredOutcome;
+  const evidenceViewTitle = `${workflow.evidenceViewTitlePrefix} ${timestampToken}`;
+  const decisionLogTitle = `${workflow.decisionTitlePrefix} ${timestampToken}`;
   const exportTitle = `Smoke export ${timestampToken}`;
   const shareTitle = `Smoke share ${timestampToken}`;
   const supportSnapshotTitle = `Smoke support snapshot ${timestampToken}`;
@@ -487,10 +696,36 @@ async function main() {
       return metricText && metricText !== "-" ? metricText : null;
     }, "Hosted shell did not expose a selected project after project creation.");
 
-    await page.selectOption("#mode-override", "concept_validation");
+    await openWorkspaceSurface(page, "new-study", "#mode-override");
+    await page.selectOption("#mode-override", workflow.modeOverride);
+    await page.selectOption("#provider-name", validationProviderName);
+    await page.fill("#sample-size", validationSampleSize);
     await page.fill("#research-intent", researchIntent);
     await page.fill("#desired-outcome", desiredOutcome);
     await page.fill("#first-task", firstTask);
+    if (workflow.attachArtifacts) {
+      const prototypeArtifactPath = await createPrototypeFixtureArtifact();
+      log(`Attaching prototype fixture artifact: ${prototypeArtifactPath}`);
+      await page.setInputFiles("#artifact-files", prototypeArtifactPath);
+      await waitFor(async () => {
+        const text = String(await page.locator("#artifact-note").textContent() || "");
+        return text.includes("personal_mvp_prototype_fixture.png") ? text : null;
+      }, "Prototype artifact file selection did not update the hosted shell artifact state.");
+    }
+
+    const chooseFallbackButton = page.getByRole("button", { name: "choose fallback" });
+    if (workflow.useFallback) {
+      await waitForEnabled(chooseFallbackButton, "Choose fallback button never became enabled for concept-level study submission.");
+      log("Switching the hosted shell into explicit fallback mode...");
+      await chooseFallbackButton.click();
+    }
+
+    const confirmPlanButton = page.getByRole("button", { name: "confirm plan" });
+    await waitForEnabled(confirmPlanButton, "Confirm plan button never became enabled.");
+    log("Confirming inferred study plan...");
+    await confirmPlanButton.click();
+
+    await openWorkspaceSurface(page, "studies", "#study-title");
     await page.fill("#study-title", studyTitle);
     await page.fill("#study-first-task", firstTask);
 
@@ -506,31 +741,67 @@ async function main() {
       return metricText && metricText !== "-" ? metricText : null;
     }, "Hosted shell did not expose a selected study after study creation.");
 
-    const chooseFallbackButton = page.getByRole("button", { name: "choose fallback" });
-    await waitForEnabled(chooseFallbackButton, "Choose fallback button never became enabled for concept-level study submission.");
-    log("Switching the hosted shell into explicit fallback mode...");
-    await chooseFallbackButton.click();
-
-    const confirmPlanButton = page.getByRole("button", { name: "confirm plan" });
-    await waitForEnabled(confirmPlanButton, "Confirm plan button never became enabled.");
-    log("Confirming inferred study plan...");
-    await confirmPlanButton.click();
-
     const submitLiveJobButton = page.locator("#submit-live-job");
     await waitForEnabled(submitLiveJobButton, "Submit live job button never became enabled after plan confirmation.");
     log("Submitting live validation job...");
     await submitLiveJobButton.click();
-    const submittedJob = await waitForJobCreatedForStudy(studyId);
+    const submittedJob = await waitForJobCreatedForStudy(studyId, page);
     const firstJobId = submittedJob.job_id;
-    await waitForJobStatus(firstJobId, "completed");
+    const terminalJob = await waitForJobStatus(firstJobId, expectedJobStatuses);
+    const terminalJobStatus = terminalJob.status;
 
-    log("Reopening the completed job deep link inside the hosted shell...");
+    log(`Reopening the ${terminalJobStatus} job deep link inside the hosted shell...`);
     await page.goto(`${apiBaseUrl}/app/jobs/${firstJobId}`, { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(3000);
     await waitFor(async () => {
       const jobPillText = await page.locator("#job-pill").textContent();
-      return String(jobPillText || "").trim() === "completed";
-    }, "Completed job route did not hydrate back into the hosted shell.");
+      return String(jobPillText || "").trim() === terminalJobStatus;
+    }, `${terminalJobStatus} job route did not hydrate back into the hosted shell.`);
+
+    const providerRuntimeSummary = await waitForSummaryLabelValue(
+      page,
+      "#provider-runtime-summary",
+      "provider",
+      validationProviderName,
+      "Provider runtime summary did not show the selected validation provider."
+    );
+    assert(
+      providerRuntimeSummary.some((row) => row.label === "evidence mode" && row.value !== "-"),
+      "Provider runtime summary did not expose evidence mode."
+    );
+
+    if (terminalJobStatus !== "completed") {
+      assert(pageErrors.length === 0, `Hosted shell hit page errors during provider-state smoke flow: ${pageErrors.join("\n")}`);
+      log("Running provider-state layout acceptance gates...");
+      const layoutAcceptance = await assertMilestone12LayoutAcceptance(page);
+      const summary = {
+        hostedUrl,
+        apiBaseUrl,
+        artifactDir,
+        playwrightModuleUrl,
+        chromiumExecutablePath,
+        validationProviderName,
+        validationSampleSize,
+        expectedJobStatuses,
+        workflowId: workflow.id,
+        personalMvpWorkflowId,
+        terminalJobStatus,
+        projectName,
+        projectSlug,
+        studyTitle,
+        firstJobId,
+        providerRuntimeSummary,
+        selectedProjectSummary: await readSummaryRows(page, "#selected-project-summary"),
+        selectedStudySummary: await readSummaryRows(page, "#selected-study-summary"),
+        layoutAcceptance,
+        consoleMessages,
+        pageErrors
+      };
+      await page.screenshot({ path: path.join(artifactDir, "stage15_hosted_shell_smoke.png"), fullPage: true });
+      await writeJson(path.join(artifactDir, "stage15_hosted_shell_smoke.summary.json"), summary);
+      log(`Stage 15 hosted shell provider-state smoke verification passed. Artifacts: ${artifactDir}`);
+      return;
+    }
 
     log("Refreshing evidence review surface...");
     await page.click("#apply-evidence-query");
@@ -539,6 +810,121 @@ async function main() {
       "Evidence results did not appear after reopening the completed job route."
     );
 
+    let personalMvpWorkflowAcceptance = null;
+    if (personalMvpAcceptance) {
+      log(`Creating saved evidence view for personal MVP workflow '${workflow.id}'...`);
+      await openWorkspaceSurface(page, "studies", "#create-evidence-view");
+      await page.fill("#evidence-view-title", evidenceViewTitle);
+      await page.fill("#evidence-view-note", workflow.evidenceViewNote);
+      const createEvidenceViewButton = page.locator("#create-evidence-view");
+      await waitForEnabled(createEvidenceViewButton, "Create evidence view button never became enabled for personal MVP acceptance.");
+      await clickAndWaitForPath(
+        page,
+        () => createEvidenceViewButton.click(),
+        /\/app\/evidence-views\/[^/?#]+$/,
+        "Evidence view route did not promote into an evidence-view hosted path."
+      );
+      const evidenceViewDetail = await waitForEvidenceViewDetail({
+        studyId,
+        jobId: firstJobId,
+        title: evidenceViewTitle
+      });
+      const evidenceViewBoundary = assertProviderBoundary(
+        evidenceViewDetail,
+        validationProviderName,
+        "Saved evidence view"
+      );
+      await waitForSummaryValue(
+        page,
+        "#selected-evidence-view-summary",
+        evidenceViewTitle,
+        "Selected evidence-view summary did not show the created personal MVP evidence view."
+      );
+
+      log(`Creating decision log for personal MVP workflow '${workflow.id}'...`);
+      await openWorkspaceSurface(page, "studies", "#create-decision-log");
+      await page.fill("#decision-log-title", decisionLogTitle);
+      await page.fill("#decision-log-summary", workflow.decisionSummary);
+      await page.fill("#decision-log-rationale", workflow.decisionRationale);
+      const createDecisionLogButton = page.locator("#create-decision-log");
+      await waitForEnabled(createDecisionLogButton, "Create decision log button never became enabled for personal MVP acceptance.");
+      await clickAndWaitForPath(
+        page,
+        () => createDecisionLogButton.click(),
+        /\/app\/decision-logs\/[^/?#]+$/,
+        "Decision-log route did not promote into a decision-log hosted path."
+      );
+      const decisionLogDetail = await waitForDecisionLogDetail({
+        studyId,
+        jobId: firstJobId,
+        evidenceViewId: evidenceViewDetail.evidence_view_id,
+        title: decisionLogTitle
+      });
+      const decisionLogBoundary = assertProviderBoundary(
+        decisionLogDetail,
+        validationProviderName,
+        "Decision log"
+      );
+      await waitForSummaryValue(
+        page,
+        "#selected-decision-log-summary",
+        decisionLogTitle,
+        "Selected decision-log summary did not show the created personal MVP decision log."
+      );
+
+      personalMvpWorkflowAcceptance = {
+        workflow_id: workflow.id,
+        primary_mode: terminalJob?.metadata?.primary_mode || "",
+        mode_override: workflow.modeOverride,
+        attach_artifacts: workflow.attachArtifacts,
+        used_fallback: workflow.useFallback,
+        known_limitation: workflow.knownLimitation || "",
+        evidence_view_id: evidenceViewDetail.evidence_view_id,
+        evidence_view_title: evidenceViewDetail.title,
+        evidence_view_provider_runtime_boundary: evidenceViewBoundary,
+        decision_log_id: decisionLogDetail.decision_log_id,
+        decision_log_title: decisionLogDetail.title,
+        decision_log_provider_runtime_boundary: decisionLogBoundary
+      };
+    }
+
+    if (providerAcceptanceOnly && !personalMvpAcceptance) {
+      assert(pageErrors.length === 0, `Hosted shell hit page errors during provider acceptance flow: ${pageErrors.join("\n")}`);
+      log("Running provider acceptance layout gates...");
+      const layoutAcceptance = await assertMilestone12LayoutAcceptance(page);
+      const summary = {
+        hostedUrl,
+        apiBaseUrl,
+        artifactDir,
+        playwrightModuleUrl,
+        chromiumExecutablePath,
+        validationProviderName,
+        validationSampleSize,
+        expectedJobStatuses,
+        workflowId: workflow.id,
+        personalMvpWorkflowId,
+        terminalJobStatus,
+        projectName,
+        projectSlug,
+        studyTitle,
+        firstJobId,
+        providerRuntimeSummary: await readSummaryRows(page, "#provider-runtime-summary"),
+        reviewSummary: await readSummaryRows(page, "#review-summary"),
+        selectedEvidenceSummary: await readSummaryRows(page, "#selected-evidence-summary"),
+        personalMvpWorkflowAcceptance,
+        selectedProjectSummary: await readSummaryRows(page, "#selected-project-summary"),
+        selectedStudySummary: await readSummaryRows(page, "#selected-study-summary"),
+        layoutAcceptance,
+        consoleMessages,
+        pageErrors
+      };
+      await page.screenshot({ path: path.join(artifactDir, "stage15_hosted_shell_smoke.png"), fullPage: true });
+      await writeJson(path.join(artifactDir, "stage15_hosted_shell_smoke.summary.json"), summary);
+      log(`Stage 15 hosted shell provider acceptance smoke verification passed. Artifacts: ${artifactDir}`);
+      return;
+    }
+
+    await openWorkspaceSurface(page, "evidence", "#export-title");
     await page.fill("#export-title", exportTitle);
     log("Creating export bundle...");
     await clickAndWaitForPath(
@@ -586,6 +972,7 @@ async function main() {
       "Public share payload did not preserve a synthetic boundary."
     );
 
+    await openWorkspaceSurface(page, "support", "#load-support-diagnostics");
     log("Loading support diagnostics...");
     await page.click("#load-support-diagnostics");
     await waitFor(async () => {
@@ -619,6 +1006,12 @@ async function main() {
       artifactDir,
       playwrightModuleUrl,
       chromiumExecutablePath,
+      validationProviderName,
+      validationSampleSize,
+      expectedJobStatuses,
+      workflowId: workflow.id,
+      personalMvpWorkflowId,
+      terminalJobStatus,
       projectName,
       projectSlug,
       studyTitle,
@@ -626,6 +1019,10 @@ async function main() {
       publicShareUrl,
       selectedProjectSummary: await readSummaryRows(page, "#selected-project-summary"),
       selectedStudySummary: await readSummaryRows(page, "#selected-study-summary"),
+      providerRuntimeSummary: await readSummaryRows(page, "#provider-runtime-summary"),
+      reviewSummary: await readSummaryRows(page, "#review-summary"),
+      selectedEvidenceSummary: await readSummaryRows(page, "#selected-evidence-summary"),
+      personalMvpWorkflowAcceptance,
       selectedExportSummary: await readSummaryRows(page, "#selected-export-summary"),
       selectedShareSummary: await readSummaryRows(page, "#selected-share-summary"),
       selectedSupportSummary: await readSummaryRows(page, "#selected-support-summary"),

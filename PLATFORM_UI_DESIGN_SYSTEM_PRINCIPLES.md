@@ -42,6 +42,34 @@ The product hierarchy should default to:
 `Run` is an execution record inside a study.
 It is not the top-level product object.
 
+## Routing Doctrine
+
+The product may use a persistent application shell, but it should not behave as one undifferentiated page.
+
+Routes should exist for durable product objects and review contexts:
+
+- `/studio`
+- `/studio/projects`
+- `/studio/projects/{project_id}`
+- `/studio/studies/new`
+- `/studio/studies/{study_id}`
+- `/studio/studies/{study_id}/setup`
+- `/studio/studies/{study_id}/runs`
+- `/studio/studies/{study_id}/runs/{run_id}`
+- `/studio/studies/{study_id}/evidence`
+- `/studio/studies/{study_id}/evidence-views/{evidence_view_id}`
+- `/studio/studies/{study_id}/reports/{study_report_id}`
+- `/studio/studies/{study_id}/decisions/{decision_log_id}`
+- `/studio/share/{share_bundle_id}`
+
+Route pages should preserve the same shell and study context where useful, but each route must have a clear primary object, loading contract, empty state, and evidence boundary.
+
+Do not use routes for workflow micro-steps that are only local interaction state.
+`Ask`, `Clarify`, and `Confirm Plan` can be presented inside `Research Copilot` or `Guided Setup` under the relevant study route unless a step produces a durable object that needs a deep link.
+
+The left navigation should map to the product IA, not to the research loop.
+The research loop should be visible as study-local progress, not as the global navigation model.
+
 ## Product-Surface Principles
 
 ### 1. Study-First Shell

@@ -83,7 +83,8 @@ Request shape:
   "renewal_at": "2026-07-31T00:00:00+00:00",
   "daily_runs": 25,
   "max_concurrent_jobs": 3,
-  "artifact_retention_days": 30
+  "artifact_retention_days": 30,
+  "note": "Upgrade pilot limits for the active design-partner workspace."
 }
 ```
 
@@ -95,6 +96,7 @@ Field rules:
 - quota override fields must be integers greater than or equal to `0`
 - omitted fields keep current stored values
 - `renewal_at` may be empty to clear the visible renewal value
+- `note` is optional and is preserved in durable governance history when provided
 
 Response shape:
 
@@ -115,6 +117,13 @@ Response shape:
       "daily_runs": 25,
       "max_concurrent_jobs": 3,
       "artifact_retention_days": 30
+    },
+    "billing_governance": {
+      "contract_version": "workspace-billing-governance/v0-draft",
+      "billing_history": [],
+      "policy_history": [],
+      "latest_billing_change": null,
+      "latest_policy_change": null
     }
   },
   "workspace_settings": {}
@@ -125,8 +134,11 @@ Behavior rules:
 
 - changing `plan_tier` updates both `workspace.plan_tier` and `billing_account.price_book_id`
 - quota overrides persist inside `workspace.settings`
+- billing/account changes append to `billing_governance.billing_history`
+- quota and retention changes append to `billing_governance.policy_history`
 - the response includes a refreshed `workspace_settings` snapshot so the hosted shell stays on one governance object
-- billing updates must emit an audit event
+- billing/account changes emit `workspace_billing.updated`
+- quota/retention policy changes emit `workspace_policy.updated`
 
 ## Relationship To Workspace Settings
 

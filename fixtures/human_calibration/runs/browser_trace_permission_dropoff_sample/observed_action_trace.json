@@ -1,0 +1,37 @@
+{
+  "trace_version": "observed-action-trace/v1",
+  "trace_label": "workspace-review-permission-dropoff",
+  "task_outcome": "partial_success",
+  "summary": "The participant reviewed the summary, opened supporting evidence, and stopped at the permission request before the final action.",
+  "first_error": "The permission scope felt too broad before value was proven.",
+  "drop_off_point": "permission request modal",
+  "completion_notes": "The task ended before the final confirmation step.",
+  "missing_signals": [
+    "Browser events were captured from an instrumented synthetic task run, not from a live human usability session."
+  ],
+  "actions": [
+    {
+      "step": 1,
+      "action": "open_summary",
+      "target": "summary panel",
+      "screen": "review workspace",
+      "result": "success",
+      "note": "Started with the top-line recommendation."
+    },
+    {
+      "step": 2,
+      "action": "open_evidence",
+      "target": "evidence drawer",
+      "screen": "review workspace",
+      "result": "success"
+    },
+    {
+      "step": 3,
+      "action": "dismiss_flow",
+      "target": "permission request modal",
+      "screen": "permission modal",
+      "result": "stopped",
+      "note": "Broad access concern blocked completion."
+    }
+  ]
+}

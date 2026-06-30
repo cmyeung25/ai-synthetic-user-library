@@ -36,6 +36,8 @@ The local SaaS runtime now exposes:
 - `POST /api/v1/export-bundles`
 - `GET /api/v1/export-bundles`
 - `GET /api/v1/export-bundles/{export_bundle_id}`
+- `POST /api/v1/export-bundles/{export_bundle_id}/mvp-promotion-request`
+- `POST /api/v1/export-bundles/{export_bundle_id}/mvp-promotion-review`
 
 ## Object intent
 
@@ -62,6 +64,11 @@ Minimum fields:
 - `manifest_path`
 - `exported_files`
 - `synthetic_boundary`
+- `readiness_gate`
+- `public_claims_boundary`
+- `mvp_launch_scope`
+- `mvp_promotion`
+- `mvp_promotion_history`
 - `created_by_user_id`
 - `created_at`
 
@@ -99,7 +106,14 @@ Creation behavior:
 5. the runtime resolves the source `run_id` and run artifact directory
 6. the runtime materializes a durable bundle under the workspace export root
 7. the bundle always writes a manifest and synthetic-boundary context
-8. the runtime records an audit event for export creation
+8. the bundle now also writes one backend-owned readiness gate so downstream surfaces do not invent customer-facing claim policy
+9. the bundle now also writes one backend-owned MVP launch scope so circulation rules do not depend on page-local interpretation
+10. the bundle now also writes one backend-owned MVP promotion state so design-partner circulation requires explicit approval instead of implicit operator judgment
+11. the bundle now also preserves append-only `mvp_promotion_history` so later partner-facing circulation can show who requested and reviewed promotion
+12. the bundle now also writes one backend-owned `governed_review` projection so regulated/high-stakes reviewer responsibility and policy labels stay visible outside page-local UI state
+13. the bundle now also writes one backend-owned `governed_redaction` projection plus `compliance_audit_bundle` so viewer-safe circulation policy and audit reconstruction remain durable
+14. the bundle now also writes one backend-owned `public_claims_boundary` so broader customer-facing claim posture and benchmark disclosure do not depend on page-local interpretation
+15. the runtime records an audit event for export creation
 
 Response shape:
 
@@ -114,10 +128,60 @@ Response shape:
     "status": "published",
     "export_format": "report_csv",
     "exported_file_count": 1,
-    "synthetic_boundary": "Synthetic evidence only. This export is derived from synthetic-user research and is not human market proof."
+    "synthetic_boundary": "Synthetic evidence only. This export is derived from synthetic-user research and is not human market proof.",
+    "readiness_gate": {
+      "status": "human_validation_required",
+      "market_claims_allowed": false,
+      "distribution_note": "Synthetic evidence may be shared only with explicit boundary language until human calibration is attached."
+    },
+    "provider_runtime_boundary": {
+      "provider_name": "mock",
+      "evidence_mode": "mock_demo",
+      "runtime_status": "completed",
+      "boundary_message": "This provider creates mock demo evidence for product flow testing only."
+    },
+    "public_claims_boundary": {
+      "status": "research_preview_only",
+      "customer_claim_status": "synthetic_preview_only"
+    },
+    "governed_review": {
+      "review_gate_status": "assigned_for_review",
+      "human_review_required": true
+    },
+    "governed_redaction": {
+      "status": "active",
+      "rule_count": 2
+    },
+    "compliance_audit_bundle": {
+      "status": "ready",
+      "study_id": "study_123"
+    },
+    "mvp_launch_scope": {
+      "status": "internal_only",
+      "launch_type": "not_launch_ready",
+      "allowed_audiences": ["internal_team"],
+      "share_allowed": true,
+      "market_claims_allowed": false
+    },
+    "mvp_promotion": {
+      "status": "not_applicable",
+      "eligible": false,
+      "share_requires_approval": false
+    }
   }
 }
 ```
+
+## MVP promotion workflow
+
+When an export bundle becomes `design_partner_candidate`, the same export object can now move through a bounded promotion workflow before any partner-facing public share is created.
+
+See `specs/workspace_mvp_promotion_contract.md` for:
+
+- promotion request rules
+- review rules
+- approval statuses
+- share gating for design-partner-candidate exports
 
 ## Persistence boundary
 
@@ -129,6 +193,10 @@ Each created bundle now persists:
 - `README.md`
 - one or more exported files derived from the source run artifacts
 
+The manifest now keeps `public_claims_boundary` attached so benchmark disclosure, customer-facing claim limits, and replacement-grade prohibitions remain durable on the exported artifact.
+
+The manifest and export-bundle summary also keep `provider_runtime_boundary` attached so exported artifacts preserve whether the evidence was `mock_demo`, `live_synthetic`, or `unsupported`.
+
 ## Audit rule
 
 Export creation now emits an audit event with:
@@ -139,6 +207,10 @@ Export creation now emits an audit event with:
 - target id
 - project, study, job, and run lineage
 - export format
+- readiness status
+- provider name, evidence mode, and provider runtime status
+- MVP launch-scope status
+- MVP promotion status
 - manifest path
 
 ## Non-goals

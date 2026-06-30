@@ -21,6 +21,9 @@ INPUT_ARTIFACTS = {
     "sampling.json",
 }
 TRACE_ARTIFACTS = {
+    "interview.json",
+    "facilitator_trace.json",
+    "transcript.md",
     "raw_responses.json",
     "stage_results.json",
     "errors.json",
@@ -32,6 +35,12 @@ ANALYSIS_ARTIFACTS = {
     "summary.json",
     "skeptic.json",
     "planner.json",
+    "stimulus_analysis.json",
+    "hypothesis_evidence_judgment.json",
+    "insight_report.json",
+    "insights.md",
+    "persona_driver_trace.json",
+    "persona_driver_trace.md",
 }
 OUTPUT_ARTIFACTS = {
     "report.json",
@@ -81,6 +90,9 @@ def _artifact_kind(artifact_rel_path: str) -> str:
         "panel.json": "panel_spec",
         "selected_personas.json": "selected_personas",
         "sampling.json": "sampling_rationale",
+        "interview.json": "interview_session",
+        "facilitator_trace.json": "facilitator_trace",
+        "transcript.md": "interview_transcript",
         "raw_responses.json": "persona_responses",
         "stage_results.json": "stage_results",
         "errors.json": "error_log",
@@ -90,6 +102,12 @@ def _artifact_kind(artifact_rel_path: str) -> str:
         "summary.json": "run_summary",
         "skeptic.json": "skeptic_review",
         "planner.json": "planner_steps",
+        "stimulus_analysis.json": "stimulus_analysis",
+        "hypothesis_evidence_judgment.json": "hypothesis_evidence_judgment",
+        "insight_report.json": "insight_report",
+        "insights.md": "insight_markdown",
+        "persona_driver_trace.json": "persona_driver_trace",
+        "persona_driver_trace.md": "persona_driver_trace_markdown",
         "report.json": "report",
         "report.md": "summary_markdown",
         "run_contract.json": "run_contract",
@@ -104,6 +122,9 @@ def _artifact_title(artifact_rel_path: str) -> str:
         "panel.json": "Panel spec",
         "selected_personas.json": "Selected personas",
         "sampling.json": "Sampling rationale",
+        "interview.json": "Interview session",
+        "facilitator_trace.json": "Facilitator trace",
+        "transcript.md": "Interview transcript",
         "raw_responses.json": "Persona responses",
         "stage_results.json": "Stage results",
         "errors.json": "Error log",
@@ -113,6 +134,12 @@ def _artifact_title(artifact_rel_path: str) -> str:
         "summary.json": "Run summary",
         "skeptic.json": "Skeptic review",
         "planner.json": "Planner steps",
+        "stimulus_analysis.json": "Stimulus analysis",
+        "hypothesis_evidence_judgment.json": "Hypothesis evidence judgment",
+        "insight_report.json": "Insight report",
+        "insights.md": "Insight markdown",
+        "persona_driver_trace.json": "Persona driver trace",
+        "persona_driver_trace.md": "Persona driver trace markdown",
         "report.json": "Run report",
         "report.md": "Markdown report",
         "run_contract.json": "Run contract",
@@ -271,6 +298,118 @@ def _build_planner_replay_steps(payload: list[Any]) -> list[dict[str, Any]]:
     return replay_steps
 
 
+def _group_interview_exchanges_by_phase(payload: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    exchanges = payload.get("exchanges") if isinstance(payload.get("exchanges"), list) else []
+    for item in exchanges:
+        if not isinstance(item, dict):
+            continue
+        phase = str(item.get("facilitator_phase") or "").strip()
+        if not phase:
+            continue
+        grouped.setdefault(phase, []).append(item)
+    return grouped
+
+
+def _build_workflow_map_from_interview_payload(payload: dict[str, Any]) -> dict[str, Any] | None:
+    if str(payload.get("interview_mode") or "").strip() != "workflow_mapping":
+        return None
+    grouped = _group_interview_exchanges_by_phase(payload)
+
+    def items(phase: str) -> list[dict[str, Any]]:
+        records: list[dict[str, Any]] = []
+        for index, item in enumerate(grouped.get(phase, []), start=1):
+            response = str(item.get("persona_response") or "").strip()
+            if not response:
+                continue
+            exchange_id = int(item.get("exchange_id") or index)
+            records.append(
+                {
+                    "id": f"{phase}_{index}",
+                    "summary": response,
+                    "evidence_ref": f"exchange_{exchange_id}.persona",
+                    "exchange_id": exchange_id,
+                    "facilitator_question": str(item.get("facilitator_question") or "").strip(),
+                }
+            )
+        return records
+
+    coverage = payload.get("coverage_status") if isinstance(payload.get("coverage_status"), dict) else {}
+    workflow_steps = items("workflow_sequence")
+    fragmentation_points = items("fragmentation_point")
+    handoff_boundaries = items("handoff_boundary")
+    switching_costs = items("switching_cost")
+    responsibility_gaps = items("responsibility_gap")
+    return {
+        "contract_version": "workflow-map/v1",
+        "research_goal": str(payload.get("research_goal") or "").strip(),
+        "coverage_requirements": list(coverage.get("requirements", [])) if isinstance(coverage.get("requirements"), list) else [],
+        "coverage_complete": bool(coverage.get("coverage_complete")),
+        "missing_coverage": list(coverage.get("missing", [])) if isinstance(coverage.get("missing"), list) else [],
+        "current_state_summary": (
+            workflow_steps[0]["summary"] if workflow_steps
+            else fragmentation_points[0]["summary"] if fragmentation_points
+            else ""
+        ),
+        "recent_episode": items("recent_event"),
+        "workflow_steps": workflow_steps,
+        "handoff_boundaries": handoff_boundaries,
+        "fragmentation_points": fragmentation_points,
+        "workaround_chain": items("current_workaround"),
+        "switching_costs": switching_costs,
+        "responsibility_gaps": responsibility_gaps,
+        "evidence_refs": [
+            record["evidence_ref"]
+            for group in (
+                items("recent_event"),
+                workflow_steps,
+                handoff_boundaries,
+                fragmentation_points,
+                items("current_workaround"),
+                switching_costs,
+                responsibility_gaps,
+            )
+            for record in group
+        ],
+        "review_guidance": (
+            "Review workflow sequence, handoff, fragmentation, switching cost, and responsibility-gap evidence "
+            "before evaluating solution desirability or adoption claims."
+        ),
+    }
+
+
+def _workflow_replay_steps(workflow_map: dict[str, Any]) -> list[dict[str, Any]]:
+    steps: list[dict[str, Any]] = []
+    sections = [
+        ("recent_episode", "Recent episode"),
+        ("workflow_steps", "Workflow step"),
+        ("handoff_boundaries", "Handoff"),
+        ("fragmentation_points", "Fragmentation"),
+        ("workaround_chain", "Workaround"),
+        ("switching_costs", "Switching cost"),
+        ("responsibility_gaps", "Responsibility gap"),
+    ]
+    counter = 1
+    for key, title in sections:
+        entries = workflow_map.get(key) if isinstance(workflow_map.get(key), list) else []
+        for item in entries:
+            if not isinstance(item, dict):
+                continue
+            note = str(item.get("summary") or "").strip()
+            if not note:
+                continue
+            steps.append(
+                {
+                    "id": str(item.get("id") or f"workflow-{counter:02d}"),
+                    "title": title,
+                    "timestamp": str(item.get("evidence_ref") or f"workflow step {counter}"),
+                    "note": note,
+                }
+            )
+            counter += 1
+    return steps
+
+
 def _report_summary(payload: dict[str, Any]) -> tuple[str, list[str]]:
     project_name = str(payload.get("project_name") or "report")
     run_status = str(payload.get("run_status") or "unknown")
@@ -334,6 +473,7 @@ def _build_artifact_entry(
     detail_lines: list[str] = []
     replay_steps: list[dict[str, Any]] = []
     summary = f"{title} artifact."
+    workflow_projection: dict[str, Any] | None = None
 
     try:
         if artifact_path.suffix.lower() == ".json":
@@ -366,6 +506,31 @@ def _build_artifact_entry(
                         f"{key}: {value}"
                         for key, value in list(explainability.items())[:3]
                     ]
+            elif name == "interview.json" and isinstance(payload, dict):
+                summary = (
+                    f"{str(payload.get('interview_mode') or 'interview').replace('_', ' ')} "
+                    f"session for {str(payload.get('research_goal') or 'research review').strip()}."
+                )
+                coverage = payload.get("coverage_status") if isinstance(payload.get("coverage_status"), dict) else {}
+                detail_lines = [
+                    f"Research goal: {payload.get('research_goal', '')}",
+                    f"Coverage complete: {coverage.get('coverage_complete', False)}",
+                    (
+                        "Missing coverage: "
+                        + ", ".join(str(item) for item in coverage.get("missing", []))
+                        if isinstance(coverage.get("missing"), list) and coverage.get("missing")
+                        else ""
+                    ),
+                ]
+                workflow_projection = _build_workflow_map_from_interview_payload(payload)
+                if workflow_projection is not None:
+                    detail_lines.extend(
+                        [
+                            f"Workflow summary: {workflow_projection.get('current_state_summary', '')}",
+                            f"Fragmentation points: {len(workflow_projection.get('fragmentation_points', []))}",
+                            f"Responsibility gaps: {len(workflow_projection.get('responsibility_gaps', []))}",
+                        ]
+                    )
             elif name == "raw_responses.json" and isinstance(payload, list):
                 summary = f"{len(payload)} persona response record(s) captured."
                 detail_lines = []
@@ -415,6 +580,54 @@ def _build_artifact_entry(
                 summary = f"{len(payload)} planner step(s) generated."
                 detail_lines = [str(item) for item in payload[:5]]
                 replay_steps = _build_planner_replay_steps(payload)
+            elif name == "stimulus_analysis.json" and isinstance(payload, dict):
+                summary = str(payload.get("summary") or "Stimulus analysis output.")
+                detail_lines = [
+                    f"Analysis type: {payload.get('analysis_type', '')}",
+                    f"Task relevance: {payload.get('task_relevance', '')}",
+                    f"Evidence boundary: {payload.get('evidence_boundary', '')}",
+                ]
+            elif name == "hypothesis_evidence_judgment.json" and isinstance(payload, dict):
+                summary = f"Hypothesis verdict: {payload.get('verdict', 'not_tested')}."
+                detail_lines = [
+                    f"Confidence: {payload.get('confidence', '')}",
+                    f"Mechanism basis: {payload.get('mechanism_test_basis', '')}",
+                ]
+            elif name == "insight_report.json" and isinstance(payload, dict):
+                summary = str(payload.get("executive_summary") or "Insight synthesis output.")
+                detail_lines = [
+                    f"Insight count: {len(payload.get('insights', [])) if isinstance(payload.get('insights'), list) else 0}",
+                    f"Evidence gaps: {len(payload.get('evidence_gaps', [])) if isinstance(payload.get('evidence_gaps'), list) else 0}",
+                ]
+                workflow_map = payload.get("workflow_map") if isinstance(payload.get("workflow_map"), dict) else None
+                if workflow_map is not None:
+                    workflow_projection = dict(workflow_map)
+                    kind = "workflow_map_evidence"
+                    detail_lines.extend(
+                        [
+                            f"Workflow summary: {workflow_map.get('current_state_summary', '')}",
+                            f"Fragmentation points: {len(workflow_map.get('fragmentation_points', []))}",
+                            f"Switching costs: {len(workflow_map.get('switching_costs', []))}",
+                        ]
+                    )
+                    replay_steps = _workflow_replay_steps(workflow_map)
+                top_insight = ""
+                if isinstance(payload.get("insights"), list) and payload.get("insights"):
+                    first_item = payload["insights"][0]
+                    if isinstance(first_item, dict):
+                        top_insight = str(first_item.get("insight") or "").strip()
+                if top_insight:
+                    detail_lines.append(f"Top insight: {top_insight}")
+            elif name == "persona_driver_trace.json" and isinstance(payload, dict):
+                summary = str(
+                    payload.get("behavioral_summary")
+                    or payload.get("what_they_seemed_to_optimize_for")
+                    or "Persona driver trace."
+                )
+                detail_lines = [
+                    f"Optimize for: {payload.get('what_they_seemed_to_optimize_for', '')}",
+                    f"Implicit constraints: {len(payload.get('what_stayed_implicit', [])) if isinstance(payload.get('what_stayed_implicit'), list) else 0}",
+                ]
             elif name == "report.json" and isinstance(payload, dict):
                 summary, detail_lines = _report_summary(payload)
             elif name == "run.json" and isinstance(payload, dict):
@@ -440,6 +653,20 @@ def _build_artifact_entry(
         summary = f"{title} artifact could not be parsed cleanly."
         detail_lines = [str(exc)]
 
+    if workflow_projection is not None:
+        tags.extend(
+            [
+                "workflow_mapping",
+                "workflow",
+                "handoff",
+                "fragmentation",
+                "switching_cost",
+                "responsibility_gap",
+            ]
+        )
+        if not replay_steps:
+            replay_steps = _workflow_replay_steps(workflow_projection)
+    tags = [tag for tag in [family, kind, *tags] if tag]
     detail_lines = [line for line in detail_lines if line][:5]
     replay_step_titles = [str(step.get("title", "")) for step in replay_steps if isinstance(step, dict)]
     return {
@@ -458,6 +685,7 @@ def _build_artifact_entry(
         "replay_step_titles": [value for value in replay_step_titles if value],
         "sort_timestamp": sort_timestamp,
         "artifact_type": artifact_type,
+        "workflow_evidence_projection": workflow_projection,
     }
 
 
@@ -947,6 +1175,14 @@ def _extract_signal_terms(item: dict[str, Any] | None) -> list[str]:
     text = _evidence_text(item)
     terms = []
     for term in [
+        "workflow",
+        "handoff",
+        "fragmentation",
+        "switching cost",
+        "switching_cost",
+        "responsibility gap",
+        "responsibility_gap",
+        "workaround",
         "objection",
         "trust",
         "risk",
@@ -1082,13 +1318,33 @@ def _build_missing_context(
     if human_calibration:
         readiness = human_calibration.get("replacement_readiness", {})
         status = readiness.get("status") if isinstance(readiness, dict) else "unknown"
+        projection = human_calibration.get("readiness_projection", {})
+        if isinstance(projection, dict):
+            for reason in projection.get("gate_reasons", []):
+                if str(reason) == "fixture_human_review_only":
+                    missing.append(
+                        {
+                            "id": "external_benchmark_gap",
+                            "label": "external benchmark gap",
+                            "severity": "medium",
+                            "note": "Attached calibration is still fixture-backed; broader real human benchmark coverage is still missing for stronger market-facing confidence.",
+                        }
+                    )
+                    break
         if status not in {"candidate_replacement_ready", "directional_calibration_ready", "calibrated_fixture_only"}:
+            note = "Attached human outcome calibration does not meet the configured readiness threshold."
+            if isinstance(projection, dict) and projection.get("threshold_gaps"):
+                note = (
+                    "Attached human outcome calibration does not meet the configured readiness threshold: "
+                    + ", ".join(str(item) for item in projection.get("threshold_gaps", []))
+                    + "."
+                )
             missing.append(
                 {
                     "id": "human_calibration_threshold_gap",
                     "label": "human calibration threshold gap",
                     "severity": "high",
-                    "note": "Attached human outcome calibration does not meet the configured readiness threshold.",
+                    "note": note,
                 }
             )
     else:
@@ -1212,6 +1468,8 @@ def _build_calibration_records(
         accuracy = human_calibration.get("prediction_accuracy", {})
         readiness = human_calibration.get("replacement_readiness", {})
         benchmark = human_calibration.get("human_benchmark", {})
+        projection = human_calibration.get("readiness_projection", {})
+        miss_attribution = human_calibration.get("miss_attribution", {})
         records.append(
             {
                 "id": "human_benchmark_alignment",
@@ -1225,6 +1483,34 @@ def _build_calibration_records(
                 "note": readiness.get("boundary") if isinstance(readiness, dict) else "",
             }
         )
+        if isinstance(projection, dict):
+            coverage = projection.get("coverage", {})
+            records.append(
+                {
+                    "id": "external_benchmark_readiness",
+                    "status": projection.get("status", "unknown"),
+                    "label": "External benchmark readiness",
+                    "benchmark_origin": coverage.get("benchmark_origin") if isinstance(coverage, dict) else None,
+                    "source_type": coverage.get("source_type") if isinstance(coverage, dict) else None,
+                    "human_participant_count": coverage.get("human_participant_count") if isinstance(coverage, dict) else None,
+                    "human_outcome_count": coverage.get("human_outcome_count") if isinstance(coverage, dict) else None,
+                    "gate_reasons": projection.get("gate_reasons", []),
+                    "threshold_gaps": projection.get("threshold_gaps", []),
+                    "note": projection.get("boundary", ""),
+                }
+            )
+        if isinstance(miss_attribution, dict):
+            records.append(
+                {
+                    "id": "calibration_miss_attribution",
+                    "status": miss_attribution.get("status", "unknown"),
+                    "label": "Calibration miss attribution",
+                    "primary_cause_id": miss_attribution.get("primary_cause_id"),
+                    "primary_cause_label": miss_attribution.get("primary_cause_label"),
+                    "likely_causes": miss_attribution.get("likely_causes", []),
+                    "note": miss_attribution.get("boundary") or miss_attribution.get("summary", ""),
+                }
+            )
     return records
 
 

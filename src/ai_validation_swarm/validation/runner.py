@@ -250,6 +250,7 @@ def run_validation(
     personas = load_personas(persona_dir)
     if not personas:
         raise ValueError("No personas found. Generate personas before running validation.")
+    provider_name = str(getattr(provider, "provider_name", "") or provider.__class__.__name__)
 
     run_id = _new_run_id()
     run_dir = run_root / run_id
@@ -285,10 +286,14 @@ def run_validation(
     failed_response_count = 0
     report_markdown = ""
     report_payload: dict[str, object]
+    panel_rationale = ""
+    panel_explainability: dict[str, object] = {}
 
     try:
         sampling_result = sample_personas(personas, panel_spec)
         selected_personas = sampling_result.personas
+        panel_rationale = sampling_result.rationale
+        panel_explainability = sampling_result.explainability
         stage_results["sampling"] = {
             "stage_name": "sampling",
             "status": "succeeded",
@@ -300,8 +305,8 @@ def run_validation(
         write_json(
             run_dir / "sampling.json",
             {
-                "rationale": sampling_result.rationale,
-                "explainability": sampling_result.explainability,
+                "rationale": panel_rationale,
+                "explainability": panel_explainability,
             },
         )
 
@@ -341,6 +346,8 @@ def run_validation(
                 run_id=run_id,
                 brief=brief,
                 panel_spec=panel_spec.to_dict(),
+                panel_rationale=panel_rationale,
+                panel_explainability=panel_explainability,
                 summary=summary,
                 responses=[],
                 planner_steps=_default_planner_steps(),
@@ -435,6 +442,8 @@ def run_validation(
                 run_id=run_id,
                 brief=brief,
                 panel_spec=panel_spec.to_dict(),
+                panel_rationale=panel_rationale,
+                panel_explainability=panel_explainability,
                 summary=summary,
                 responses=responses,
                 planner_steps=planner_steps,
@@ -493,6 +502,8 @@ def run_validation(
             run_id=run_id,
             brief=brief,
             panel_spec=panel_spec.to_dict(),
+            panel_rationale=panel_rationale,
+            panel_explainability=panel_explainability,
             summary=summary,
             responses=[],
             planner_steps=_default_planner_steps(),
@@ -541,7 +552,7 @@ def run_validation(
             successful_response_count=successful_response_count,
             failed_response_count=failed_response_count,
             error_count=len(error_records),
-            provider_name=provider.__class__.__name__,
+            provider_name=provider_name,
             model_name=provider.model_version,
             finished_at=run_payload["finished_at"],
         ),
