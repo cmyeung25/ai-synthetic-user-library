@@ -15,7 +15,7 @@
 
 直接雙擊：
 
-- `scripts/start_stage12_demo.bat`
+- `scripts/start_local_workspace_demo.bat`
 
 它會自動做以下事情：
 
@@ -54,7 +54,7 @@ Stage 14:
 
 ### Smoke test
 
-1. 雙擊 `scripts/start_stage12_demo.bat`
+1. 雙擊 `scripts/start_local_workspace_demo.bat`
 2. 等瀏覽器打開 Stage 14
 3. 保留或修改 intake panel 內的 research intent、desired output、同 first-task anchor
 4. 點 `attach screenshots`
@@ -194,7 +194,7 @@ python -m ai_validation_swarm.cli.main run-saas-worker
 
 解法：
 
-- 重新執行 `scripts/start_stage12_demo.bat`
+- 重新執行 `scripts/start_local_workspace_demo.bat`
 
 ## 建議 review 重點
 

@@ -1,0 +1,192 @@
+{
+  "aggregation_version": "aggregator/v1",
+  "project_name": "Frontline Research",
+  "persona_count": 3,
+  "selected_persona_count": 3,
+  "successful_response_count": 3,
+  "failed_response_count": 0,
+  "response_coverage_pct": 100.0,
+  "run_status": "completed",
+  "failure_reasons": [],
+  "average_scores": {
+    "problem_resonance": 4.0,
+    "solution_attractiveness": 3.0,
+    "willingness_to_pay": 3.33
+  },
+  "top_buying_triggers": [
+    {
+      "trigger": "clear time savings",
+      "count": 3,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0019",
+        "su_0010",
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "clear time savings"
+      ]
+    }
+  ],
+  "top_objections": [
+    {
+      "objection": "uncertain ROI",
+      "count": 3,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0019",
+        "su_0010",
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "uncertain ROI"
+      ]
+    }
+  ],
+  "trigger_clusters": [
+    {
+      "trigger": "clear time savings",
+      "count": 3,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0019",
+        "su_0010",
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "clear time savings"
+      ]
+    }
+  ],
+  "objection_clusters": [
+    {
+      "objection": "uncertain ROI",
+      "count": 3,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0019",
+        "su_0010",
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "uncertain ROI"
+      ]
+    }
+  ],
+  "segment_summary": {
+    "mainstream": {
+      "count": 3,
+      "problem_resonance": 4.0,
+      "solution_attractiveness": 3.0,
+      "willingness_to_pay": 3.33,
+      "top_objections": [
+        {
+          "objection": "uncertain ROI",
+          "count": 3
+        }
+      ],
+      "top_triggers": [
+        {
+          "trigger": "clear time savings",
+          "count": 3
+        }
+      ],
+      "top_trust_concerns": [
+        {
+          "trust_concern": "I would need proof that this fits smoothly into existing habits.",
+          "count": 3
+        }
+      ]
+    }
+  },
+  "risk_map": [
+    {
+      "category": "reporting_risk",
+      "highest_severity": "low",
+      "finding_count": 1,
+      "affected_persona_ids": [],
+      "observations": [
+        "No major sensitive-topic trigger was detected in this run, but the result should still be treated as pre-validation only."
+      ],
+      "recommended_validation_questions": [
+        "What real-user checks would most quickly falsify the strongest assumption in this concept?"
+      ]
+    }
+  ],
+  "audit_categories": [
+    {
+      "category": "reporting_risk",
+      "severity": "low",
+      "observation": "No major sensitive-topic trigger was detected in this run, but the result should still be treated as pre-validation only.",
+      "evidence_refs": [
+        "run_summary"
+      ],
+      "recommended_validation_question": "What real-user checks would most quickly falsify the strongest assumption in this concept?"
+    }
+  ],
+  "skeptic_review": {
+    "review_version": "skeptic-review/v1",
+    "summary": "Skeptic review focuses on weak proof, habit-change friction, pricing readiness, and value-capture gaps.",
+    "challenged_assumptions": [
+      {
+        "finding_id": "skeptic_solution_clarity",
+        "severity": "medium",
+        "title": "Solution story may still be too abstract",
+        "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+        "evidence_refs": [
+          "raw_responses",
+          "summary"
+        ],
+        "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+      },
+      {
+        "finding_id": "skeptic_roi_gap",
+        "severity": "high",
+        "title": "Messaging still leans on implied ROI",
+        "observation": "The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff.",
+        "evidence_refs": [
+          "raw_responses",
+          "objection_clusters"
+        ],
+        "recommended_validation_question": "What metric or visible output can the founder show to reduce ROI ambiguity?"
+      }
+    ]
+  },
+  "assumption_risk_map": [
+    {
+      "finding_id": "skeptic_solution_clarity",
+      "severity": "medium",
+      "title": "Solution story may still be too abstract",
+      "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+      "evidence_refs": [
+        "raw_responses",
+        "summary"
+      ],
+      "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+    },
+    {
+      "finding_id": "skeptic_roi_gap",
+      "severity": "high",
+      "title": "Messaging still leans on implied ROI",
+      "observation": "The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff.",
+      "evidence_refs": [
+        "raw_responses",
+        "objection_clusters"
+      ],
+      "recommended_validation_question": "What metric or visible output can the founder show to reduce ROI ambiguity?"
+    }
+  ],
+  "generated_at": "2026-06-30T16:47:14+00:00"
+}

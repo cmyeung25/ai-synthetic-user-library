@@ -123,6 +123,10 @@ It contains:
 - observer-controlled interview
 - panel runs
 - panel synthesis
+- run observability and progress phase projection
+- transcript, facilitator trace, synthetic participant reasoning trace, and source-linked evidence provenance
+- bounded run event stream with safe transcript preview and observed-interview bridge metadata
+- guided research playbooks and comparison-ready rerun templates
 - facilitator audit learning
 - over-optimism detection
 
@@ -139,7 +143,9 @@ Access surfaces should evolve in this order:
 1. CLI shell
 2. structured APIs and job orchestration
 3. workspace product UI
-4. SaaS controls such as auth, billing, roles, and retention
+4. SaaS controls such as auth, billing, roles, retention, privacy, data residency, redaction, deletion requests, exports, and shares
+5. continuous calibration observability and public-claim readiness gates
+6. boundary-preserving integration events and delivery audit for customer systems
 
 Question this layer answers:
 
@@ -149,6 +155,9 @@ Important rule:
 
 - `CLI` is the first execution shell, not the platform itself.
 - the default workspace product surface should gather research intent conversationally, keep internal mode taxonomy behind the scenes, and require explicit plan confirmation before execution
+- run, transcript, trace, evidence view, decision, share, and calibration-health review should stay route-aware and source-linked rather than report-only
+- privacy/export controls should govern raw transcripts, facilitator traces, synthetic participant reasoning traces, uploaded artifacts, generated evidence, calibration records, exports, and shares without weakening evidence lineage
+- integration events should preserve readiness gates, source exchange refs, source trace refs, privacy/export controls, and human-validation gaps; they must not become a parallel unreviewed reporting channel
 - the canonical product-surface doctrine lives in `PLATFORM_UI_DESIGN_SYSTEM_PRINCIPLES.md` and `UX_OPERATING_MODEL.md`, which define the study-first shell, evidence-review hierarchy, and default operating loop
 
 ## Product Surface Principle
@@ -177,6 +186,27 @@ Canonical operating rule:
 - the default information architecture should stay `workspace -> project -> study -> run -> saved evidence view -> decision log -> export or share bundle`
 - `study` is the primary product object; `run` is a record inside the study, not the product's top-level mental model
 
+## Persona Library Storage Rule
+
+Persona libraries are part of the simulation core and the evidence chain. They must be queryable enough for product use and durable enough for audit, replay, backup, and calibration.
+
+The accepted rule is `artifact-first, SQL-indexed, object-store-ready`.
+
+Local-first implementation:
+
+- SQLite indexes persona catalogs, traits, readiness state, selected IDs, and generation jobs
+- local JSON and Markdown artifacts remain the durable source of truth
+
+Future SaaS/cloud implementation:
+
+- Postgres owns catalog, query, lifecycle, tenant permissions, readiness, and generation job state
+- object storage owns immutable persona artifacts, manifests, hashes, prompt/model/seed lineage, and run snapshots
+- production server local disk is cache/export/temp storage only, not the source of truth
+
+Dynamic persona generation is a core capability, but it must be explicit and auditable. The platform should reuse ready personas first, recommend gap-fill generation when target-audience coverage is insufficient, create provisional personas through explicit jobs, and promote them to ready only after validation, duplicate, and coverage checks.
+
+Public-figure, celebrity, expert, or influencer-inspired personas are separate simulated lenses for critique or messaging stress tests. They must not be mixed into the normal participant persona pool by default, and they must never be presented as the real person's views or endorsement.
+
 ## 5. Evidence Model
 
 The platform should distinguish at least these evidence classes:
@@ -185,6 +215,8 @@ The platform should distinguish at least these evidence classes:
 - `recalled_behavior`
 - `decision_reconstruction`
 - `inferred_driver`
+- `source_exchange`
+- `source_trace`
 - `observed_action`
 - `simulated_risk`
 - `human_validation_gap`

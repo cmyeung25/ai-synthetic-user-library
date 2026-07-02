@@ -235,6 +235,22 @@ def _distinct_count(distribution: dict[str, int]) -> int:
     return len(distribution)
 
 
+def _persona_field(
+    persona: PersonaSkill,
+    section_name: str,
+    field_name: str,
+    *,
+    seed_field_name: str = "",
+    default: str = "unknown",
+) -> str:
+    section = getattr(persona.profile, section_name, {})
+    value = section.get(field_name) if isinstance(section, dict) else None
+    if (value is None or value == "") and seed_field_name:
+        value = getattr(persona.seed, seed_field_name, "")
+    text = str(value or "").strip()
+    return text or default
+
+
 def build_persona_library_summary(personas: list[PersonaSkill]) -> dict[str, object]:
     locale_packs = sorted(
         {
@@ -245,23 +261,53 @@ def build_persona_library_summary(personas: list[PersonaSkill]) -> dict[str, obj
     )
 
     panel_role_distribution = _distribution([persona.seed.panel_role for persona in personas])
-    gender_distribution = _distribution([persona.profile.basic_identity["gender"] for persona in personas])
-    location_distribution = _distribution([persona.profile.basic_identity["location"] for persona in personas])
-    locale_pack_distribution = _distribution([persona.profile.basic_identity["locale_pack"] for persona in personas])
-    life_stage_distribution = _distribution([persona.profile.basic_identity["life_stage"] for persona in personas])
-    occupation_distribution = _distribution([persona.profile.basic_identity["occupation"] for persona in personas])
-    family_structure_distribution = _distribution([persona.profile.basic_identity["family_structure"] for persona in personas])
+    gender_distribution = _distribution([
+        _persona_field(persona, "basic_identity", "gender")
+        for persona in personas
+    ])
+    location_distribution = _distribution([
+        _persona_field(persona, "basic_identity", "location", seed_field_name="locale_pack")
+        for persona in personas
+    ])
+    locale_pack_distribution = _distribution([
+        _persona_field(persona, "basic_identity", "locale_pack", seed_field_name="locale_pack")
+        for persona in personas
+    ])
+    life_stage_distribution = _distribution([
+        _persona_field(persona, "basic_identity", "life_stage", seed_field_name="life_stage")
+        for persona in personas
+    ])
+    occupation_distribution = _distribution([
+        _persona_field(persona, "basic_identity", "occupation", seed_field_name="occupation_title")
+        for persona in personas
+    ])
+    family_structure_distribution = _distribution([
+        _persona_field(persona, "basic_identity", "family_structure", seed_field_name="household_structure")
+        for persona in personas
+    ])
     purchase_authority_distribution = _distribution(
-        [persona.profile.economic_profile["purchase_authority_type"] for persona in personas]
+        [
+            _persona_field(persona, "economic_profile", "purchase_authority_type", seed_field_name="purchase_authority_type")
+            for persona in personas
+        ]
     )
     workflow_maturity_distribution = _distribution(
-        [persona.profile.behavior_profile["workflow_maturity"] for persona in personas]
+        [
+            _persona_field(persona, "behavior_profile", "workflow_maturity", seed_field_name="workflow_maturity")
+            for persona in personas
+        ]
     )
     cash_flow_distribution = _distribution(
-        [persona.profile.economic_profile["cash_flow_volatility"] for persona in personas]
+        [
+            _persona_field(persona, "economic_profile", "cash_flow_volatility", seed_field_name="cash_flow_volatility")
+            for persona in personas
+        ]
     )
 
-    names = [persona.profile.basic_identity["name"] for persona in personas]
+    names = [
+        _persona_field(persona, "basic_identity", "name", default=persona.profile.synthetic_user_id)
+        for persona in personas
+    ]
     unique_names = len(set(names))
 
     coverage_checks = {

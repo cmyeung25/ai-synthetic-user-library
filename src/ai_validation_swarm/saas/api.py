@@ -100,7 +100,13 @@ def _redirect_response(
     return []
 
 
-def _file_response(start_response: Callable[..., Any], status: str, path: Path) -> list[bytes]:
+def _file_response(
+    start_response: Callable[..., Any],
+    status: str,
+    path: Path,
+    *,
+    extra_headers: list[tuple[str, str]] | None = None,
+) -> list[bytes]:
     body = path.read_bytes()
     content_type, _ = mimetypes.guess_type(str(path))
     start_response(
@@ -108,6 +114,7 @@ def _file_response(start_response: Callable[..., Any], status: str, path: Path) 
         [
             ("Content-Type", content_type or "application/octet-stream"),
             ("Content-Length", str(len(body))),
+            *(extra_headers or []),
             *_cors_headers(),
         ],
     )
@@ -213,6 +220,8 @@ class SaasApiApplication:
                 or path == "/api/v1/operations/summary"
                 or path == "/api/v1/persona-library"
                 or path == "/api/v1/public-launch-readiness"
+                or path == "/api/v1/research-playbooks"
+                or path == "/api/v1/calibration-observatory"
                 or path.startswith("/api/v1/validation-jobs")
                 or path.startswith("/api/v1/evidence-query")
                 or path.startswith("/api/v1/export-bundles")
@@ -233,6 +242,10 @@ class SaasApiApplication:
                 or path == "/api/v1/session"
                 or path == "/api/v1/session/logout"
                 or path == "/api/v1/workspace-shell"
+                or path == "/api/v1/privacy-export-controls"
+                or path.startswith("/api/v1/privacy-export-controls/")
+                or path == "/api/v1/integration-events"
+                or path.startswith("/api/v1/integration-events/")
             ):
                 return _empty_response(capture_start_response)
             if method == "GET" and path == "/api/v1/health":
@@ -247,6 +260,20 @@ class SaasApiApplication:
                 return self._get_workspace_operations_summary(environ, capture_start_response)
             if method == "GET" and path == "/api/v1/public-launch-readiness":
                 return self._get_workspace_public_launch_readiness(environ, capture_start_response)
+            if method == "GET" and path == "/api/v1/research-playbooks":
+                return self._get_research_playbooks(environ, capture_start_response)
+            if method == "GET" and path == "/api/v1/calibration-observatory":
+                return self._get_calibration_observatory(environ, capture_start_response)
+            if method == "GET" and path == "/api/v1/privacy-export-controls":
+                return self._get_privacy_export_controls(environ, capture_start_response)
+            if method == "POST" and path == "/api/v1/privacy-export-controls/policy":
+                return self._update_privacy_export_policy(environ, capture_start_response)
+            if method == "POST" and path == "/api/v1/privacy-export-controls/deletion-requests":
+                return self._create_privacy_deletion_request(environ, capture_start_response)
+            if method == "GET" and path == "/api/v1/integration-events":
+                return self._get_workspace_integration_events(environ, capture_start_response)
+            if method == "POST" and path == "/api/v1/integration-events/delivery-attempts":
+                return self._record_integration_event_delivery_attempt(environ, capture_start_response)
             if method == "GET" and path.startswith("/app-static/"):
                 return self._get_static_asset(path.removeprefix("/app-static/"), capture_start_response)
             if method == "GET" and self._is_hosted_workspace_route(path):
@@ -260,6 +287,8 @@ class SaasApiApplication:
                 return self._get_session(environ, capture_start_response)
             if method == "GET" and path == "/api/v1/persona-library":
                 return self._get_persona_library(environ, capture_start_response)
+            if method == "POST" and path == "/api/v1/persona-library/generation-jobs":
+                return self._create_persona_generation_job(environ, capture_start_response)
             if method == "POST" and path == "/api/v1/session/logout":
                 return self._logout_session(environ, capture_start_response)
             if method == "GET" and path == "/api/v1/workspace-settings":
@@ -309,6 +338,22 @@ class SaasApiApplication:
             if method == "POST" and path.startswith("/api/v1/studies/") and path.endswith("/frontline-runs"):
                 study_id = path.removesuffix("/frontline-runs").rsplit("/", 1)[-1]
                 return self._start_frontline_research_run(study_id, environ, capture_start_response)
+            if method == "POST" and path.startswith("/api/v1/studies/") and (
+                path.endswith("/frontline-reruns") or path.endswith("/reruns")
+            ):
+                study_id = path.removesuffix("/frontline-reruns").removesuffix("/reruns").rsplit("/", 1)[-1]
+                return self._create_frontline_rerun_plan(study_id, environ, capture_start_response)
+            run_observability_match = self._match_study_run_observability_path(path)
+            if method == "GET" and run_observability_match is not None:
+                study_id, run_id, artifact_kind = run_observability_match
+                if artifact_kind == "progress":
+                    return self._get_frontline_run_progress(study_id, run_id, environ, capture_start_response)
+                if artifact_kind == "transcript":
+                    return self._get_frontline_run_transcript(study_id, run_id, environ, capture_start_response)
+                if artifact_kind == "trace":
+                    return self._get_frontline_run_trace(study_id, run_id, environ, capture_start_response)
+                if artifact_kind == "events":
+                    return self._get_frontline_run_events(study_id, run_id, environ, capture_start_response)
             if method == "GET" and path.startswith("/api/v1/studies/"):
                 study_id = path.rsplit("/", 1)[-1]
                 return self._get_study(study_id, environ, capture_start_response)
@@ -474,6 +519,7 @@ class SaasApiApplication:
                 "contract_manifest_endpoint": "/api/v1/contract-manifest",
                 "workspace_operations_summary_endpoint": "/api/v1/operations/summary",
                 "workspace_public_launch_readiness_endpoint": "/api/v1/public-launch-readiness",
+                "privacy_export_controls_endpoint": "/api/v1/privacy-export-controls",
                 "runtime_contract_version": runtime_ops["contract_version"],
             },
             "typed_contracts": {
@@ -493,6 +539,15 @@ class SaasApiApplication:
                 "contract_manifest": "/api/v1/contract-manifest",
                 "workspace_operations_summary": "/api/v1/operations/summary",
                 "workspace_public_launch_readiness": "/api/v1/public-launch-readiness",
+                "research_playbooks": "/api/v1/research-playbooks",
+                "calibration_observatory": "/api/v1/calibration-observatory",
+                "privacy_export_controls": "/api/v1/privacy-export-controls",
+                "frontline_run_progress": "/api/v1/studies/{study_id}/runs/{run_id}/progress",
+                "frontline_run_transcript": "/api/v1/studies/{study_id}/runs/{run_id}/transcript",
+                "frontline_run_trace": "/api/v1/studies/{study_id}/runs/{run_id}/trace",
+                "frontline_run_events": "/api/v1/studies/{study_id}/runs/{run_id}/events",
+                "integration_events": "/api/v1/integration-events",
+                "integration_delivery_attempts": "/api/v1/integration-events/delivery-attempts",
             },
             "synthetic_boundary": (
                 "Service metadata and operations endpoints describe transport and deployment boundaries only; "
@@ -558,6 +613,97 @@ class SaasApiApplication:
                     "response_root": ["overall_status", "study_governance", "benchmark_disclosure", "distribution_readiness", "customer_claim_boundary"],
                 },
                 {
+                    "id": "research_playbooks",
+                    "path": "/api/v1/research-playbooks",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "response_contract_version": "frontline-research-playbook-catalog/v1",
+                    "response_root_key": "research_playbooks",
+                },
+                {
+                    "id": "calibration_observatory",
+                    "path": "/api/v1/calibration-observatory",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "response_contract_version": "calibration-observatory/v1",
+                    "response_root_key": "calibration_observatory",
+                },
+                {
+                    "id": "privacy_export_controls",
+                    "path": "/api/v1/privacy-export-controls",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "query_params": [
+                        {"name": "study_id", "type": "string", "required": False},
+                        {"name": "export_bundle_id", "type": "string", "required": False},
+                        {"name": "share_bundle_id", "type": "string", "required": False},
+                    ],
+                    "response_contract_version": "workspace-privacy-export-controls/v1",
+                    "response_root_key": "privacy_export_controls",
+                    "linked_contract_specs": ["specs/milestone_41_privacy_data_residency_and_export_controls_design_spec.md"],
+                },
+                {
+                    "id": "privacy_export_policy",
+                    "path": "/api/v1/privacy-export-controls/policy",
+                    "methods": ["POST"],
+                    "auth": "api_token_or_browser_session",
+                    "request_body": {
+                        "data_residency_region": "string",
+                        "artifact_retention_days": "integer",
+                        "deletion_request_policy": "string",
+                        "export_review_required": "boolean",
+                        "share_default_expiry_days": "integer",
+                        "note": "string",
+                    },
+                    "response_root_key": "privacy_export_controls",
+                    "linked_contract_specs": ["specs/milestone_41_privacy_data_residency_and_export_controls_design_spec.md"],
+                },
+                {
+                    "id": "privacy_deletion_requests",
+                    "path": "/api/v1/privacy-export-controls/deletion-requests",
+                    "methods": ["POST"],
+                    "auth": "api_token_or_browser_session",
+                    "request_body": {
+                        "scope_type": "string",
+                        "scope_id": "string",
+                        "reason": "string",
+                        "requested_action": "string",
+                        "approval_note": "string",
+                    },
+                    "response_root": ["deletion_request", "privacy_export_controls"],
+                    "linked_contract_specs": ["specs/milestone_41_privacy_data_residency_and_export_controls_design_spec.md"],
+                },
+                {
+                    "id": "integration_events",
+                    "path": "/api/v1/integration-events",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "query_params": [
+                        {"name": "study_id", "type": "string", "required": False},
+                        {"name": "event_type", "type": "string", "required": False},
+                        {"name": "limit", "type": "integer", "required": False},
+                    ],
+                    "response_contract_version": "workspace-integration-events/v1",
+                    "response_root_key": "integration_events",
+                    "linked_contract_specs": ["specs/milestone_42_integration_surface_run_event_stream_and_webhooks_design_spec.md"],
+                },
+                {
+                    "id": "integration_delivery_attempts",
+                    "path": "/api/v1/integration-events/delivery-attempts",
+                    "methods": ["POST"],
+                    "auth": "api_token_or_browser_session",
+                    "request_body": {
+                        "event_id": "string",
+                        "consumer_id": "string",
+                        "status": "string",
+                        "response_code": "integer",
+                        "note": "string",
+                        "retry_after_seconds": "integer",
+                    },
+                    "response_root": ["delivery_attempt", "integration_events"],
+                    "linked_contract_specs": ["specs/milestone_42_integration_surface_run_event_stream_and_webhooks_design_spec.md"],
+                },
+                {
                     "id": "session",
                     "path": "/api/v1/session",
                     "methods": ["GET"],
@@ -576,6 +722,19 @@ class SaasApiApplication:
                         {"name": "selected_persona_id", "type": "array[string]", "required": False},
                     ],
                     "response_root_key": "persona_library",
+                },
+                {
+                    "id": "persona_generation_jobs",
+                    "path": "/api/v1/persona-library/generation-jobs",
+                    "methods": ["POST"],
+                    "auth": "api_token_or_browser_session",
+                    "request_contract": {
+                        "panel_type": "string",
+                        "requested_count": "integer",
+                        "random_seed": "integer",
+                        "target_audience": "object",
+                    },
+                    "response_root_key": "persona_generation_job",
                 },
                 {
                     "id": "workspace_shell",
@@ -714,6 +873,56 @@ class SaasApiApplication:
                     },
                     "response_root": ["study", "job", "research_run"],
                     "linked_contract_specs": ["specs/frontline_research_studio_terminology_and_data_model.md"],
+                },
+                {
+                    "id": "frontline_reruns",
+                    "path": "/api/v1/studies/{study_id}/frontline-reruns",
+                    "methods": ["POST"],
+                    "auth": "api_token_or_browser_session",
+                    "request_body": {
+                        "source_run_id": "string",
+                        "playbook_id": "string",
+                        "change_set": "object",
+                        "metadata": "object",
+                    },
+                    "response_root": ["study", "rerun_plan"],
+                    "linked_contract_specs": ["specs/milestone_37_live_interview_observability_and_transcript_evidence_design_spec.md"],
+                },
+                {
+                    "id": "frontline_run_progress",
+                    "path": "/api/v1/studies/{study_id}/runs/{run_id}/progress",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "response_contract_version": "frontline-run-progress/v1",
+                    "response_root_key": "run_progress",
+                    "linked_contract_specs": ["specs/milestone_37_live_interview_observability_and_transcript_evidence_design_spec.md"],
+                },
+                {
+                    "id": "frontline_run_transcript",
+                    "path": "/api/v1/studies/{study_id}/runs/{run_id}/transcript",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "response_contract_version": "frontline-run-transcript/v1",
+                    "response_root_key": "run_transcript",
+                    "linked_contract_specs": ["specs/milestone_37_live_interview_observability_and_transcript_evidence_design_spec.md"],
+                },
+                {
+                    "id": "frontline_run_trace",
+                    "path": "/api/v1/studies/{study_id}/runs/{run_id}/trace",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "response_contract_version": "frontline-run-trace/v1",
+                    "response_root_key": "run_trace",
+                    "linked_contract_specs": ["specs/milestone_37_live_interview_observability_and_transcript_evidence_design_spec.md"],
+                },
+                {
+                    "id": "frontline_run_events",
+                    "path": "/api/v1/studies/{study_id}/runs/{run_id}/events",
+                    "methods": ["GET"],
+                    "auth": "api_token_or_browser_session",
+                    "response_contract_version": "workspace-run-event-stream/v1",
+                    "response_root_key": "run_event_stream",
+                    "linked_contract_specs": ["specs/milestone_42_integration_surface_run_event_stream_and_webhooks_design_spec.md"],
                 },
                 {
                     "id": "study_reports",
@@ -999,6 +1208,38 @@ class SaasApiApplication:
         launch_readiness = self.runtime.describe_workspace_public_launch_readiness(auth)
         return _json_response(start_response, "200 OK", {"launch_readiness": launch_readiness})
 
+    def _get_research_playbooks(
+        self,
+        environ: dict[str, Any],
+        start_response: Callable[..., Any],
+    ) -> list[bytes]:
+        auth = self._auth(environ)
+        playbooks = self.runtime.describe_research_playbooks(auth)
+        return _json_response(start_response, "200 OK", {"research_playbooks": playbooks})
+
+    def _get_calibration_observatory(
+        self,
+        environ: dict[str, Any],
+        start_response: Callable[..., Any],
+    ) -> list[bytes]:
+        auth = self._auth(environ)
+        observatory = self.runtime.describe_calibration_observatory(auth)
+        return _json_response(start_response, "200 OK", {"calibration_observatory": observatory})
+
+    @staticmethod
+    def _match_study_run_observability_path(path: str) -> tuple[str, str, str] | None:
+        parts = path.split("/")
+        if len(parts) != 8:
+            return None
+        if parts[:4] != ["", "api", "v1", "studies"]:
+            return None
+        if parts[5] != "runs":
+            return None
+        artifact_kind = parts[7]
+        if artifact_kind not in {"progress", "transcript", "trace", "events"}:
+            return None
+        return parts[4], parts[6], artifact_kind
+
     def _get_static_asset(self, relative_path: str, start_response: Callable[..., Any]) -> list[bytes]:
         normalized = unquote(relative_path).lstrip("/").replace("\\", "/")
         if not normalized:
@@ -1013,7 +1254,10 @@ class SaasApiApplication:
             asset_path.relative_to(self.repo_root)
         except ValueError as exc:
             raise FileNotFoundError("Static asset not found.") from exc
-        return _file_response(start_response, "200 OK", asset_path)
+        extra_headers: list[tuple[str, str]] = []
+        if normalized.startswith("frontend/frontline_research_studio/dist/"):
+            extra_headers.append(("Cache-Control", "no-store"))
+        return _file_response(start_response, "200 OK", asset_path, extra_headers=extra_headers)
 
     def _is_hosted_workspace_route(self, path: str) -> bool:
         normalized = path.rstrip("/")
@@ -1227,7 +1471,7 @@ class SaasApiApplication:
         self._auth(environ)
         route_context = self._hosted_frontline_route_context(path)
         html = self._render_framework_hosted_frontline_studio(route_context)
-        return _html_response(start_response, "200 OK", html)
+        return _html_response(start_response, "200 OK", html, extra_headers=[("Cache-Control", "no-store")])
 
     def _auth(self, environ: dict[str, Any]):
         authorization = str(environ.get("HTTP_AUTHORIZATION", "")).strip()
@@ -1392,6 +1636,71 @@ class SaasApiApplication:
             metadata=dict(payload.get("metadata", {})) if isinstance(payload.get("metadata", {}), dict) else {},
         )
         return _json_response(start_response, "202 Accepted", result)
+
+    def _create_frontline_rerun_plan(
+        self,
+        study_id: str,
+        environ: dict[str, Any],
+        start_response: Callable[..., Any],
+    ) -> list[bytes]:
+        auth = self._auth(environ)
+        payload = _parse_json_body(environ)
+        change_set = payload.get("change_set", {})
+        if change_set is not None and not isinstance(change_set, dict):
+            raise ValueError("Field 'change_set' must be an object.")
+        result = self.runtime.create_frontline_rerun_plan(
+            auth,
+            study_id=study_id,
+            source_run_id=str(payload.get("source_run_id", "")),
+            playbook_id=str(payload.get("playbook_id", "")),
+            change_set=dict(change_set or {}),
+            metadata=dict(payload.get("metadata", {})) if isinstance(payload.get("metadata", {}), dict) else {},
+        )
+        return _json_response(start_response, "201 Created", result)
+
+    def _get_frontline_run_progress(
+        self,
+        study_id: str,
+        run_id: str,
+        environ: dict[str, Any],
+        start_response: Callable[..., Any],
+    ) -> list[bytes]:
+        auth = self._auth(environ)
+        progress = self.runtime.get_frontline_run_progress(auth, study_id=study_id, run_id=run_id)
+        return _json_response(start_response, "200 OK", {"run_progress": progress})
+
+    def _get_frontline_run_transcript(
+        self,
+        study_id: str,
+        run_id: str,
+        environ: dict[str, Any],
+        start_response: Callable[..., Any],
+    ) -> list[bytes]:
+        auth = self._auth(environ)
+        transcript = self.runtime.get_frontline_run_transcript(auth, study_id=study_id, run_id=run_id)
+        return _json_response(start_response, "200 OK", {"run_transcript": transcript})
+
+    def _get_frontline_run_trace(
+        self,
+        study_id: str,
+        run_id: str,
+        environ: dict[str, Any],
+        start_response: Callable[..., Any],
+    ) -> list[bytes]:
+        auth = self._auth(environ)
+        trace = self.runtime.get_frontline_run_trace(auth, study_id=study_id, run_id=run_id)
+        return _json_response(start_response, "200 OK", {"run_trace": trace})
+
+    def _get_frontline_run_events(
+        self,
+        study_id: str,
+        run_id: str,
+        environ: dict[str, Any],
+        start_response: Callable[..., Any],
+    ) -> list[bytes]:
+        auth = self._auth(environ)
+        event_stream = self.runtime.get_frontline_run_event_stream(auth, study_id=study_id, run_id=run_id)
+        return _json_response(start_response, "200 OK", {"run_event_stream": event_stream})
 
     def _create_study_report(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
         auth = self._auth(environ)
@@ -1888,6 +2197,28 @@ class SaasApiApplication:
         )
         return _json_response(start_response, "200 OK", {"persona_library": persona_library})
 
+    def _create_persona_generation_job(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
+        auth = self._auth(environ)
+        payload = _parse_json_body(environ)
+        try:
+            requested_count = int(payload.get("requested_count", payload.get("count", 3)))
+        except (TypeError, ValueError):
+            requested_count = 3
+        try:
+            random_seed = int(payload.get("random_seed", 41))
+        except (TypeError, ValueError):
+            random_seed = 41
+        target_audience = payload.get("target_audience")
+        generation_job = self.runtime.create_frontline_persona_generation_job(
+            auth,
+            panel_type=str(payload.get("panel_type") or "mainstream"),
+            requested_count=requested_count,
+            random_seed=random_seed,
+            target_audience=target_audience if isinstance(target_audience, dict) else {},
+            metadata=dict(payload.get("metadata", {})) if isinstance(payload.get("metadata"), dict) else {},
+        )
+        return _json_response(start_response, "201 Created", {"persona_generation_job": generation_job})
+
     def _logout_session(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
         browser_session_id = _cookie_value(environ, HOSTED_BROWSER_SESSION_COOKIE)
         if browser_session_id:
@@ -1902,6 +2233,83 @@ class SaasApiApplication:
         auth = self._auth(environ)
         settings = self.runtime.describe_workspace_settings(auth)
         return _json_response(start_response, "200 OK", {"workspace_settings": settings})
+
+    def _get_privacy_export_controls(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
+        auth = self._auth(environ)
+        query = parse_qs(str(environ.get("QUERY_STRING", "")), keep_blank_values=False)
+
+        def first(name: str, default: str = "") -> str:
+            values = query.get(name)
+            if not values:
+                return default
+            return str(values[0])
+
+        controls = self.runtime.describe_workspace_privacy_export_controls(
+            auth,
+            study_id=first("study_id"),
+            export_bundle_id=first("export_bundle_id"),
+            share_bundle_id=first("share_bundle_id"),
+        )
+        return _json_response(start_response, "200 OK", {"privacy_export_controls": controls})
+
+    def _update_privacy_export_policy(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
+        auth = self._auth(environ)
+        payload = _parse_json_body(environ)
+        controls = self.runtime.update_workspace_privacy_policy(
+            auth,
+            data_residency_region=payload.get("data_residency_region") if "data_residency_region" in payload else None,
+            artifact_retention_days=payload.get("artifact_retention_days") if "artifact_retention_days" in payload else None,
+            deletion_request_policy=payload.get("deletion_request_policy") if "deletion_request_policy" in payload else None,
+            export_review_required=payload.get("export_review_required") if "export_review_required" in payload else None,
+            share_default_expiry_days=payload.get("share_default_expiry_days") if "share_default_expiry_days" in payload else None,
+            note=str(payload.get("note", "")),
+        )
+        return _json_response(start_response, "200 OK", {"privacy_export_controls": controls})
+
+    def _create_privacy_deletion_request(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
+        auth = self._auth(environ)
+        payload = _parse_json_body(environ)
+        result = self.runtime.record_workspace_privacy_deletion_request(
+            auth,
+            scope_type=str(payload.get("scope_type", "")),
+            scope_id=str(payload.get("scope_id", "")),
+            reason=str(payload.get("reason", "")),
+            requested_action=str(payload.get("requested_action", "")),
+            approval_note=str(payload.get("approval_note", "")),
+        )
+        return _json_response(start_response, "201 Created", result)
+
+    def _get_workspace_integration_events(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
+        auth = self._auth(environ)
+        query = parse_qs(str(environ.get("QUERY_STRING", "")), keep_blank_values=False)
+
+        def first(name: str, default: str = "") -> str:
+            values = query.get(name)
+            if not values:
+                return default
+            return str(values[0])
+
+        integration_events = self.runtime.describe_workspace_integration_events(
+            auth,
+            study_id=first("study_id"),
+            event_type=first("event_type"),
+            limit=int(first("limit", "50")),
+        )
+        return _json_response(start_response, "200 OK", {"integration_events": integration_events})
+
+    def _record_integration_event_delivery_attempt(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
+        auth = self._auth(environ)
+        payload = _parse_json_body(environ)
+        result = self.runtime.record_workspace_integration_delivery_attempt(
+            auth,
+            event_id=str(payload.get("event_id", "")),
+            consumer_id=str(payload.get("consumer_id", "")),
+            status=str(payload.get("status", "")),
+            response_code=payload.get("response_code") if "response_code" in payload else None,
+            note=str(payload.get("note", "")),
+            retry_after_seconds=payload.get("retry_after_seconds") if "retry_after_seconds" in payload else None,
+        )
+        return _json_response(start_response, "201 Created", result)
 
     def _get_workspace_audit_events(self, environ: dict[str, Any], start_response: Callable[..., Any]) -> list[bytes]:
         auth = self._auth(environ)

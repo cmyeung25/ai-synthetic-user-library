@@ -31,7 +31,7 @@ Key linked artifacts:
 
 How to try it:
 
-1. double-click `scripts/start_stage12_demo.bat` and let it wait for the local API session endpoint before opening the page
+1. double-click `scripts/start_local_workspace_demo.bat` and let it wait for the local API session endpoint before opening the page
 2. open `demo/workspace_ui_moss_stage14/index.html`
 3. keep or edit the research intent, desired output, and first-task anchor inside the intake panel
 4. click `attach screenshots`

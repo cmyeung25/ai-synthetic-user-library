@@ -212,7 +212,7 @@ async function runDemoBootstrap() {
 
   log("Bootstrapping local Stage 15 demo runtime...");
   return await new Promise((resolve, reject) => {
-    const child = spawn("cmd.exe", ["/c", "scripts\\start_stage12_demo.bat"], {
+    const child = spawn("cmd.exe", ["/c", "scripts\\start_local_workspace_demo.bat"], {
       cwd: repoRoot,
       env: {
         ...process.env,

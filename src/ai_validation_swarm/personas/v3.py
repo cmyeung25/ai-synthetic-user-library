@@ -570,6 +570,15 @@ def _voiceprint(persona: PersonaSkill, *, contrast_mode: bool = False) -> dict[s
 def _specific_chapter_scene(persona: PersonaSkill, age_range: str) -> dict[str, Any]:
     archetype = _archetype_key(persona)
     location = str(persona.profile.basic_identity.get("location", ""))
+    fallback_scene = {
+        "specific_scene": f"A formative {age_range} scene in {location} taught this persona to look past polished claims.",
+        "product_relevant_memory": "The memorable lesson was that visible promises and lived routines often diverge.",
+        "social_or_relationship_context": "Social comfort shaped whether the persona would keep using a system once novelty faded.",
+        "money_or_effort_tradeoff": "Effort and explainability mattered as much as price.",
+        "beliefs_formed": ["A tool must fit ordinary behavior, not ideal behavior."],
+        "current_reaction_link": "This still shapes how the persona reacts to product claims today.",
+        "formative_level": "medium",
+    }
     if archetype == "early_career_practical_trial_user":
         scenes = {
             "0-9": {
@@ -600,7 +609,7 @@ def _specific_chapter_scene(persona: PersonaSkill, age_range: str) -> dict[str, 
                 "formative_level": "high",
             },
         }
-        return scenes[age_range]
+        return scenes.get(age_range, fallback_scene)
 
     if archetype == "mature_operator_retention_skeptic":
         scenes = {
@@ -659,17 +668,9 @@ def _specific_chapter_scene(persona: PersonaSkill, age_range: str) -> dict[str, 
                 "formative_level": "high",
             },
         }
-        return scenes[age_range]
+        return scenes.get(age_range, fallback_scene)
 
-    return {
-        "specific_scene": f"A formative {age_range} scene in {location} taught this persona to look past polished claims.",
-        "product_relevant_memory": "The memorable lesson was that visible promises and lived routines often diverge.",
-        "social_or_relationship_context": "Social comfort shaped whether the persona would keep using a system once novelty faded.",
-        "money_or_effort_tradeoff": "Effort and explainability mattered as much as price.",
-        "beliefs_formed": ["A tool must fit ordinary behavior, not ideal behavior."],
-        "current_reaction_link": "This still shapes how the persona reacts to product claims today.",
-        "formative_level": "medium",
-    }
+    return fallback_scene
 
 
 def _canonical_biography_v3(persona: PersonaSkill) -> dict[str, Any]:

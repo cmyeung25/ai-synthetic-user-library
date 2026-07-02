@@ -413,6 +413,29 @@ def _ensure_schema(connection: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_validation_jobs_workspace_status_created
             ON validation_jobs(workspace_id, status, created_at);
 
+        CREATE TABLE IF NOT EXISTS workspace_persona_generation_jobs (
+            generation_job_id TEXT PRIMARY KEY,
+            workspace_id TEXT NOT NULL,
+            requested_by_user_id TEXT NOT NULL,
+            status TEXT NOT NULL,
+            panel_type TEXT NOT NULL,
+            requested_count INTEGER NOT NULL,
+            random_seed INTEGER NOT NULL,
+            target_audience_json TEXT NOT NULL DEFAULT '{}',
+            generated_persona_ids_json TEXT NOT NULL DEFAULT '[]',
+            promoted_persona_ids_json TEXT NOT NULL DEFAULT '[]',
+            failed_persona_ids_json TEXT NOT NULL DEFAULT '[]',
+            failure_message TEXT NOT NULL DEFAULT '',
+            payload_path TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            FOREIGN KEY (workspace_id) REFERENCES workspaces(workspace_id) ON DELETE CASCADE
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_persona_generation_jobs_workspace_status_created
+            ON workspace_persona_generation_jobs(workspace_id, status, created_at DESC);
+
         CREATE TABLE IF NOT EXISTS audit_events (
             audit_event_id TEXT PRIMARY KEY,
             workspace_id TEXT NOT NULL,
@@ -769,6 +792,41 @@ def _job_from_row(row: sqlite3.Row | None) -> dict[str, Any] | None:
         "finished_at": str(row["finished_at"]) if row["finished_at"] is not None else None,
         "idempotency_key": str(row["idempotency_key"]),
         "last_error": str(row["last_error"]),
+        "metadata": dict(_json_loads(str(row["metadata_json"]))) if str(row["metadata_json"]) else {},
+    }
+
+
+def _persona_generation_job_from_row(row: sqlite3.Row | None) -> dict[str, Any] | None:
+    if row is None:
+        return None
+    return {
+        "generation_job_id": str(row["generation_job_id"]),
+        "workspace_id": str(row["workspace_id"]),
+        "requested_by_user_id": str(row["requested_by_user_id"]),
+        "status": str(row["status"]),
+        "panel_type": str(row["panel_type"]),
+        "requested_count": int(row["requested_count"]),
+        "random_seed": int(row["random_seed"]),
+        "target_audience": dict(_json_loads(str(row["target_audience_json"]))) if str(row["target_audience_json"]) else {},
+        "generated_persona_ids": (
+            list(_json_loads(str(row["generated_persona_ids_json"])))
+            if str(row["generated_persona_ids_json"])
+            else []
+        ),
+        "promoted_persona_ids": (
+            list(_json_loads(str(row["promoted_persona_ids_json"])))
+            if str(row["promoted_persona_ids_json"])
+            else []
+        ),
+        "failed_persona_ids": (
+            list(_json_loads(str(row["failed_persona_ids_json"])))
+            if str(row["failed_persona_ids_json"])
+            else []
+        ),
+        "failure_message": str(row["failure_message"]),
+        "payload_path": str(row["payload_path"]),
+        "created_at": str(row["created_at"]),
+        "updated_at": str(row["updated_at"]),
         "metadata": dict(_json_loads(str(row["metadata_json"]))) if str(row["metadata_json"]) else {},
     }
 
@@ -2054,6 +2112,166 @@ def list_audit_events(
     with closing(_connect(runtime_db_path(runtime_root))) as connection:
         rows = connection.execute(query, tuple(params)).fetchall()
         return [event for row in rows if (event := _audit_event_from_row(row)) is not None]
+
+
+def create_persona_generation_job(
+    runtime_root: Path,
+    *,
+    generation_job_id: str,
+    workspace_id: str,
+    requested_by_user_id: str,
+    status: str,
+    panel_type: str,
+    requested_count: int,
+    random_seed: int,
+    target_audience: dict[str, Any] | None = None,
+    generated_persona_ids: list[str] | None = None,
+    promoted_persona_ids: list[str] | None = None,
+    failed_persona_ids: list[str] | None = None,
+    failure_message: str = "",
+    payload_path: str = "",
+    created_at: str | None = None,
+    updated_at: str | None = None,
+    metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    now = created_at or utc_now_iso()
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        connection.execute(
+            """
+            INSERT INTO workspace_persona_generation_jobs(
+                generation_job_id,
+                workspace_id,
+                requested_by_user_id,
+                status,
+                panel_type,
+                requested_count,
+                random_seed,
+                target_audience_json,
+                generated_persona_ids_json,
+                promoted_persona_ids_json,
+                failed_persona_ids_json,
+                failure_message,
+                payload_path,
+                created_at,
+                updated_at,
+                metadata_json
+            )
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                generation_job_id,
+                workspace_id,
+                requested_by_user_id,
+                status,
+                panel_type,
+                int(requested_count),
+                int(random_seed),
+                _json_dumps(target_audience or {}),
+                _json_dumps(generated_persona_ids or []),
+                _json_dumps(promoted_persona_ids or []),
+                _json_dumps(failed_persona_ids or []),
+                failure_message,
+                payload_path,
+                now,
+                updated_at or now,
+                _json_dumps(metadata or {}),
+            ),
+        )
+        connection.commit()
+        return _persona_generation_job_from_row(
+            connection.execute(
+                "SELECT * FROM workspace_persona_generation_jobs WHERE generation_job_id = ?",
+                (generation_job_id,),
+            ).fetchone()
+        )  # type: ignore[return-value]
+
+
+def update_persona_generation_job(
+    runtime_root: Path,
+    *,
+    generation_job_id: str,
+    status: str | None = None,
+    generated_persona_ids: list[str] | None = None,
+    promoted_persona_ids: list[str] | None = None,
+    failed_persona_ids: list[str] | None = None,
+    failure_message: str | None = None,
+    payload_path: str | None = None,
+    metadata_updates: dict[str, Any] | None = None,
+    updated_at: str | None = None,
+) -> dict[str, Any]:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        current = connection.execute(
+            "SELECT * FROM workspace_persona_generation_jobs WHERE generation_job_id = ?",
+            (generation_job_id,),
+        ).fetchone()
+        if current is None:
+            raise KeyError(f"Unknown persona generation job '{generation_job_id}'")
+        current_payload = _persona_generation_job_from_row(current) or {}
+        metadata = dict(current_payload.get("metadata", {}))
+        metadata.update(metadata_updates or {})
+        connection.execute(
+            """
+            UPDATE workspace_persona_generation_jobs
+            SET status = ?,
+                generated_persona_ids_json = ?,
+                promoted_persona_ids_json = ?,
+                failed_persona_ids_json = ?,
+                failure_message = ?,
+                payload_path = ?,
+                updated_at = ?,
+                metadata_json = ?
+            WHERE generation_job_id = ?
+            """,
+            (
+                status or str(current["status"]),
+                _json_dumps(generated_persona_ids if generated_persona_ids is not None else current_payload.get("generated_persona_ids", [])),
+                _json_dumps(promoted_persona_ids if promoted_persona_ids is not None else current_payload.get("promoted_persona_ids", [])),
+                _json_dumps(failed_persona_ids if failed_persona_ids is not None else current_payload.get("failed_persona_ids", [])),
+                failure_message if failure_message is not None else str(current["failure_message"]),
+                payload_path if payload_path is not None else str(current["payload_path"]),
+                updated_at or utc_now_iso(),
+                _json_dumps(metadata),
+                generation_job_id,
+            ),
+        )
+        connection.commit()
+        return _persona_generation_job_from_row(
+            connection.execute(
+                "SELECT * FROM workspace_persona_generation_jobs WHERE generation_job_id = ?",
+                (generation_job_id,),
+            ).fetchone()
+        )  # type: ignore[return-value]
+
+
+def get_persona_generation_job(runtime_root: Path, generation_job_id: str) -> dict[str, Any] | None:
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        return _persona_generation_job_from_row(
+            connection.execute(
+                "SELECT * FROM workspace_persona_generation_jobs WHERE generation_job_id = ?",
+                (generation_job_id,),
+            ).fetchone()
+        )
+
+
+def list_workspace_persona_generation_jobs(
+    runtime_root: Path,
+    workspace_id: str,
+    *,
+    limit: int = 25,
+) -> list[dict[str, Any]]:
+    clean_limit = max(1, min(int(limit), 100))
+    with closing(_connect(runtime_db_path(runtime_root))) as connection:
+        rows = connection.execute(
+            """
+            SELECT *
+            FROM workspace_persona_generation_jobs
+            WHERE workspace_id = ?
+            ORDER BY created_at DESC, generation_job_id DESC
+            LIMIT ?
+            """,
+            (workspace_id, clean_limit),
+        ).fetchall()
+        return [job for row in rows if (job := _persona_generation_job_from_row(row)) is not None]
 
 
 def create_browser_session(runtime_root: Path, session: WorkspaceBrowserSession) -> WorkspaceBrowserSession:

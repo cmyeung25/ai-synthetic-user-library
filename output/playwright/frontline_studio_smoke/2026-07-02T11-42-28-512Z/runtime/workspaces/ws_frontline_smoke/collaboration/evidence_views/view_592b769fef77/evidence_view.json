@@ -1,0 +1,306 @@
+{
+  "evidence_view_id": "view_592b769fef77",
+  "workspace_id": "ws_frontline_smoke",
+  "project_id": "project_5db079b77f81",
+  "study_id": "study_a94ea7b04fff",
+  "job_id": "job_20260702_114235_e5d8a4a6",
+  "run_id": "run_20260702_114236_484485_882b0cdf",
+  "title": "Concept validation study evidence view",
+  "note": "Saved from Frontline Studio for later decision review.",
+  "query_text": "",
+  "active_family": "all",
+  "sort_by": "relevance",
+  "selected_result_id": "query-artifact-raw_responses-json",
+  "selected_replay_step_id": "response-01",
+  "selected_comparison_run_id": null,
+  "created_at": "2026-07-02T11:42:39+00:00",
+  "created_by_user_id": "owner_frontline_smoke",
+  "readiness_gate": {
+    "contract_version": "workspace-evidence-readiness-gate/v0-draft",
+    "status": "human_validation_required",
+    "share_status": "boundary_only",
+    "market_claims_allowed": false,
+    "boundary_required": true,
+    "selected_signal_id": "trace:persona_responses",
+    "stability_label": "mixed_or_contradictory",
+    "stability_score": 0,
+    "human_validation_gap": true,
+    "missing_context_count": 3,
+    "contradicting_evidence_count": 2,
+    "supporting_evidence_count": 0,
+    "calibration_status": "unavailable",
+    "external_benchmark_status": null,
+    "provider_name": "mock",
+    "provider_evidence_mode": "mock_demo",
+    "provider_runtime_status": "completed",
+    "gate_reasons": [
+      "human_validation_gap"
+    ],
+    "threshold_gaps": [],
+    "boundary_note": "Synthetic evidence only. Reliability labels require human calibration before replacement-grade claims.",
+    "distribution_note": "Synthetic evidence may be shared only with explicit boundary language until human calibration is attached.",
+    "calibration_records": [
+      {
+        "id": "synthetic_boundary",
+        "status": "requires_human_validation",
+        "label": "Synthetic evidence boundary",
+        "note": "This reliability review improves repeatability discipline but remains synthetic evidence, not human market proof."
+      },
+      {
+        "id": "repeatability",
+        "status": "mixed_or_contradictory",
+        "label": "Repeatability signal",
+        "score": 0,
+        "supporting_count": 0,
+        "contradicting_count": 2
+      },
+      {
+        "id": "coverage_gap",
+        "status": "open",
+        "label": "Coverage and calibration gaps",
+        "missing_count": 3,
+        "note": "Missing context must stay visible before using this evidence for stronger prediction claims."
+      }
+    ]
+  },
+  "provider_runtime_boundary": {
+    "contract_version": "validation-provider-runtime/v0-draft",
+    "provider_name": "mock",
+    "provider_family": "mock",
+    "evidence_mode": "mock_demo",
+    "is_supported": true,
+    "is_live_provider": false,
+    "is_codex_provider": false,
+    "requires_auth": false,
+    "auth_readiness": "not_required",
+    "auth_source": null,
+    "auth_sources_checked": [],
+    "runtime_status": "completed",
+    "job_status": "completed",
+    "failure_kind": null,
+    "failure_category": "no_failure",
+    "last_error_visible": false,
+    "boundary_label": "Mock demo evidence",
+    "boundary_message": "This provider creates mock demo evidence for product flow testing only.",
+    "next_actions": [
+      "Use codex or codex-sdk when you need live synthetic evidence instead of mock demo evidence."
+    ]
+  },
+  "governed_review": {
+    "contract_version": "workspace-study-governed-review/v0-draft",
+    "regulated_review_boundary": {
+      "contract_version": "workspace-study-regulated-review-boundary/v0-draft",
+      "classification_status": "standard",
+      "matched_domain_ids": [],
+      "matched_domains": [],
+      "requires_governed_review": false,
+      "boundary_handling_status": "not_required",
+      "execution_status": "allowed",
+      "allow_execution": true,
+      "explicit_boundary_acknowledged": false,
+      "explicit_boundary_acknowledged_at": null,
+      "explicit_boundary_acknowledged_by_user_id": null,
+      "explicit_boundary_note": "",
+      "policy_labels": [
+        "synthetic_evidence_only"
+      ],
+      "source_fields": [
+        "title",
+        "research_intent",
+        "desired_output",
+        "first_task",
+        "artifact_refs"
+      ],
+      "boundary_message": "This study is not currently classified as regulated or high-stakes."
+    },
+    "reviewer_handoff": {
+      "contract_version": "workspace-study-governed-review-assignment/v0-draft",
+      "required": false,
+      "status": "not_required",
+      "assignee_user_ids": [],
+      "reviewer_members": [],
+      "assigned_at": null,
+      "assigned_by_user_id": null,
+      "escalated_at": null,
+      "escalated_by_user_id": null,
+      "latest_note": ""
+    },
+    "reviewer_handoff_history": [],
+    "review_gate_status": "not_required",
+    "policy_labels": [
+      "synthetic_evidence_only",
+      "governed_review_not_required",
+      "governed_review_status:not_required"
+    ],
+    "human_review_required": false,
+    "human_review_note": "No additional governed reviewer responsibility is required for this study.",
+    "blocked_reason": null,
+    "decision_review_allowed": true,
+    "circulation_allowed": true
+  },
+  "governed_redaction": {
+    "contract_version": "workspace-study-governed-redaction/v0-draft",
+    "required": false,
+    "status": "not_required",
+    "redaction_rules": [],
+    "rule_count": 0,
+    "policy_labels": [
+      "governed_redaction_not_required",
+      "governed_redaction_status:not_required"
+    ],
+    "circulation_allowed": true,
+    "blocked_reason": null,
+    "latest_note": "No governed redaction policy is required for this study.",
+    "updated_at": null,
+    "updated_by_user_id": null
+  },
+  "metadata": {
+    "source": "frontline_research_studio",
+    "saved_from_route": "study_evidence",
+    "selected_evidence_context": {
+      "selected_result_id": "query-artifact-raw_responses-json",
+      "selected_artifact_id": "artifact-raw_responses-json",
+      "selected_result_title": "Persona responses",
+      "selected_result_family": "trace",
+      "selected_result_kind": "persona_responses",
+      "source_exchange_refs": [
+        "exchange_1.synthetic_participant",
+        "exchange_2.synthetic_participant",
+        "exchange_3.synthetic_participant"
+      ],
+      "source_trace_refs": [
+        "participant_reasoning_trace:su_0003",
+        "participant_reasoning_trace:su_0002",
+        "participant_reasoning_trace:su_0001"
+      ],
+      "selected_signal_id": "trace:persona_responses",
+      "signal_terms": [
+        "objection",
+        "try signal"
+      ],
+      "workflow_map_focus": false,
+      "workflow_fragmentation_count": 0,
+      "workflow_handoff_count": 0,
+      "workflow_responsibility_gap_count": 0,
+      "workflow_review_guidance": null,
+      "longitudinal_focus": {
+        "selected_window_id": "study_timeline",
+        "same_study_run_count": 0,
+        "same_project_study_count": 0,
+        "study_timeline_entry_count": 1,
+        "source_calibration_status": "unavailable"
+      },
+      "recurring_signal_focus": {
+        "pattern_count": 3,
+        "persistent_pattern_count": 0,
+        "pattern_ids": [
+          "objection",
+          "task_failure",
+          "contradiction"
+        ]
+      },
+      "panel_learning_focus": {
+        "segment_status": "stable",
+        "repeated_hotspot_axes": [],
+        "persistent_undercovered_axes": [],
+        "confidence_status": "drifting",
+        "total_decision_count": 0,
+        "latest_decision_change_status": "no_decision"
+      },
+      "readiness_gate": {
+        "contract_version": "workspace-evidence-readiness-gate/v0-draft",
+        "status": "human_validation_required",
+        "share_status": "boundary_only",
+        "market_claims_allowed": false,
+        "boundary_required": true,
+        "selected_signal_id": "trace:persona_responses",
+        "stability_label": "mixed_or_contradictory",
+        "stability_score": 0,
+        "human_validation_gap": true,
+        "missing_context_count": 3,
+        "contradicting_evidence_count": 2,
+        "supporting_evidence_count": 0,
+        "calibration_status": "unavailable",
+        "external_benchmark_status": null,
+        "provider_name": "mock",
+        "provider_evidence_mode": "mock_demo",
+        "provider_runtime_status": "completed",
+        "gate_reasons": [
+          "human_validation_gap"
+        ],
+        "threshold_gaps": [],
+        "boundary_note": "Synthetic evidence only. Reliability labels require human calibration before replacement-grade claims.",
+        "distribution_note": "Synthetic evidence may be shared only with explicit boundary language until human calibration is attached.",
+        "calibration_records": [
+          {
+            "id": "synthetic_boundary",
+            "status": "requires_human_validation",
+            "label": "Synthetic evidence boundary",
+            "note": "This reliability review improves repeatability discipline but remains synthetic evidence, not human market proof."
+          },
+          {
+            "id": "repeatability",
+            "status": "mixed_or_contradictory",
+            "label": "Repeatability signal",
+            "score": 0,
+            "supporting_count": 0,
+            "contradicting_count": 2
+          },
+          {
+            "id": "coverage_gap",
+            "status": "open",
+            "label": "Coverage and calibration gaps",
+            "missing_count": 3,
+            "note": "Missing context must stay visible before using this evidence for stronger prediction claims."
+          }
+        ]
+      },
+      "provider_runtime_boundary": {
+        "contract_version": "validation-provider-runtime/v0-draft",
+        "provider_name": "mock",
+        "provider_family": "mock",
+        "evidence_mode": "mock_demo",
+        "is_supported": true,
+        "is_live_provider": false,
+        "is_codex_provider": false,
+        "requires_auth": false,
+        "auth_readiness": "not_required",
+        "auth_source": null,
+        "auth_sources_checked": [],
+        "runtime_status": "completed",
+        "job_status": "completed",
+        "failure_kind": null,
+        "failure_category": "no_failure",
+        "last_error_visible": false,
+        "boundary_label": "Mock demo evidence",
+        "boundary_message": "This provider creates mock demo evidence for product flow testing only.",
+        "next_actions": [
+          "Use codex or codex-sdk when you need live synthetic evidence instead of mock demo evidence."
+        ]
+      }
+    },
+    "provider_runtime_boundary": {
+      "contract_version": "validation-provider-runtime/v0-draft",
+      "provider_name": "mock",
+      "provider_family": "mock",
+      "evidence_mode": "mock_demo",
+      "is_supported": true,
+      "is_live_provider": false,
+      "is_codex_provider": false,
+      "requires_auth": false,
+      "auth_readiness": "not_required",
+      "auth_source": null,
+      "auth_sources_checked": [],
+      "runtime_status": "completed",
+      "job_status": "completed",
+      "failure_kind": null,
+      "failure_category": "no_failure",
+      "last_error_visible": false,
+      "boundary_label": "Mock demo evidence",
+      "boundary_message": "This provider creates mock demo evidence for product flow testing only.",
+      "next_actions": [
+        "Use codex or codex-sdk when you need live synthetic evidence instead of mock demo evidence."
+      ]
+    }
+  }
+}

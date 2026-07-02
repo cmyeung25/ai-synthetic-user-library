@@ -25,7 +25,7 @@ Key linked artifacts:
 
 How to try it:
 
-1. double-click `scripts/start_stage12_demo.bat`
+1. double-click `scripts/start_local_workspace_demo.bat`
 2. open `demo/workspace_ui_moss_stage13/index.html`
 3. click `confirmed draft`
 4. click `load workspace session`

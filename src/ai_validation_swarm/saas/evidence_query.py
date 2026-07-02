@@ -474,6 +474,8 @@ def _build_artifact_entry(
     replay_steps: list[dict[str, Any]] = []
     summary = f"{title} artifact."
     workflow_projection: dict[str, Any] | None = None
+    source_exchange_refs: list[str] = []
+    source_trace_refs: list[str] = []
 
     try:
         if artifact_path.suffix.lower() == ".json":
@@ -534,10 +536,15 @@ def _build_artifact_entry(
             elif name == "raw_responses.json" and isinstance(payload, list):
                 summary = f"{len(payload)} persona response record(s) captured."
                 detail_lines = []
-                for item in payload[:3]:
+                for index, item in enumerate(payload[:3], start=1):
                     if not isinstance(item, dict):
                         continue
                     response = item.get("response") if isinstance(item.get("response"), dict) else {}
+                    source_exchange_refs.append(f"exchange_{index}.synthetic_participant")
+                    if item.get("synthetic_user_id") or response.get("synthetic_user_id"):
+                        source_trace_refs.append(
+                            f"participant_reasoning_trace:{item.get('synthetic_user_id') or response.get('synthetic_user_id')}"
+                        )
                     detail_lines.append(
                         f"{item.get('synthetic_user_id', 'persona')}: objection {response.get('likely_objection', 'n/a')} | try signal {response.get('what_would_make_them_try', 'n/a')}"
                     )
@@ -549,6 +556,7 @@ def _build_artifact_entry(
                     for stage, stage_payload in payload.items()
                     if isinstance(stage_payload, dict)
                 ][:6]
+                source_trace_refs = [f"stage_results:{stage}" for stage in payload.keys()]
                 replay_steps = _build_stage_result_replay_steps(payload)
             elif name == "errors.json" and isinstance(payload, list):
                 summary = f"{len(payload)} error record(s)."
@@ -565,6 +573,7 @@ def _build_artifact_entry(
                     for item in payload[:5]
                     if isinstance(item, dict)
                 ]
+                source_trace_refs = [f"audit_{index}" for index, _item in enumerate(payload[:5], start=1)]
             elif name == "aggregation.json" and isinstance(payload, dict):
                 summary, detail_lines = _summary_payload_summary(payload)
             elif name == "summary.json" and isinstance(payload, dict):
@@ -686,6 +695,8 @@ def _build_artifact_entry(
         "sort_timestamp": sort_timestamp,
         "artifact_type": artifact_type,
         "workflow_evidence_projection": workflow_projection,
+        "source_exchange_refs": source_exchange_refs,
+        "source_trace_refs": source_trace_refs,
     }
 
 
@@ -837,6 +848,8 @@ def _project_query_result(item: dict[str, Any]) -> dict[str, Any]:
         "tags": item["tags"],
         "replay_step_titles": item["replay_step_titles"],
         "relevance_score": item["relevance_score"],
+        "source_exchange_refs": list(item.get("source_exchange_refs", [])),
+        "source_trace_refs": list(item.get("source_trace_refs", [])),
     }
 
 

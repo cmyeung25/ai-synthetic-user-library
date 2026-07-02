@@ -15,7 +15,9 @@ from ai_validation_swarm.domain.models import FounderBrief, PanelSpec
 from ai_validation_swarm.conversation.providers import ChatResult
 from ai_validation_swarm.facilitator.models import FacilitatorDecision
 from ai_validation_swarm.facilitator.runtime import FacilitatedInterviewRuntime
+from ai_validation_swarm.personas.frontline_v5_generator import FrontlineLocalV5SynthesisAdapter, build_frontline_v5_generation_guide
 from ai_validation_swarm.personas.generator import generate_personas
+from ai_validation_swarm.personas.v5 import generate_v5_persona
 from ai_validation_swarm.providers.base import BaseProvider
 from ai_validation_swarm.saas import job_store
 from ai_validation_swarm.saas.evidence_query import query_run_evidence
@@ -42,6 +44,117 @@ class SaasRuntimeTest(unittest.TestCase):
         persona_dir = workspace_root / "personas"
         save_persona(generate_personas(count=1, random_seed=41)[0], persona_dir)
         return brief_path, persona_dir
+
+    def test_frontline_persona_library_uses_v5_participants_and_separates_lenses(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            runtime_root = Path(tmp) / "runtime"
+            runtime = SaasRuntime(runtime_root)
+            bootstrap = runtime.bootstrap_workspace(
+                workspace_id="ws_v5_personas",
+                slug="v5-personas",
+                display_name="V5 Personas",
+                owner_user_id="owner_legacy",
+                api_token="token-legacy",
+                plan_tier="trial",
+                billing_status="trialing",
+                settings={"daily_runs": 5, "max_concurrent_jobs": 2},
+            )
+            workspace_root = Path(bootstrap["workspace_root"])
+            persona_dir = workspace_root / "personas"
+            persona = generate_personas(count=1, random_seed=91)[0]
+            persona.seed.panel_role = "general_research_participant"
+            persona.profile.basic_identity.pop("locale_pack", None)
+            persona.profile.economic_profile.pop("purchase_authority_type", None)
+            save_persona(persona, persona_dir)
+            adapter = FrontlineLocalV5SynthesisAdapter()
+            guide = build_frontline_v5_generation_guide(panel_type="mainstream", target_audience={"summary": "Solo founders"})
+            participant_folder = generate_v5_persona(
+                persona_id="su_9001",
+                output_dir=persona_dir,
+                adapter=adapter,
+                guide=guide,
+                random_seed=91,
+                max_transport_attempts=1,
+            )
+            lens_folder = generate_v5_persona(
+                persona_id="su_9002",
+                output_dir=persona_dir,
+                adapter=adapter,
+                guide=guide,
+                random_seed=92,
+                max_transport_attempts=1,
+            )
+            write_json(
+                lens_folder / "persona_library_record.json",
+                {
+                    "contract_version": "persona-library-record/v0-draft",
+                    "synthetic_user_id": "su_9002",
+                    "persona_kind": "public_figure_lens",
+                    "readiness_status": "ready",
+                    "lens_boundary": "Simulated and unaffiliated public-figure lens, not participant evidence.",
+                },
+            )
+
+            auth = runtime.authenticate("token-legacy")
+            library = runtime.describe_frontline_persona_library(
+                auth,
+                panel_type="mainstream",
+                sample_size=1,
+                random_seed=17,
+            )
+
+            self.assertEqual(library["readiness"]["status"], "ready")
+            self.assertEqual(library["readiness"]["active_panel_ready_count"], 1)
+            self.assertEqual(library["readiness"]["legacy_participant_count"], 1)
+            self.assertEqual(library["readiness"]["simulated_lens_count"], 1)
+            self.assertEqual(len(library["personas"]), 1)
+            self.assertEqual(library["personas"][0]["panel_role"], "mainstream")
+            self.assertEqual(library["personas"][0]["source_schema_version"], "v5_1")
+            self.assertEqual(library["personas"][0]["generator_version"], "persona-generator/v5.1")
+            self.assertEqual(library["default_selection"]["selected_persona_ids"], ["su_9001"])
+            self.assertEqual(len(library["simulated_lenses"]), 1)
+            self.assertEqual(library["simulated_lenses"][0]["synthetic_user_id"], "su_9002")
+            self.assertEqual(library["simulated_lenses"][0]["persona_kind"], "public_figure_lens")
+            self.assertEqual(library["library_summary"]["library_size"], 1)
+            self.assertTrue((participant_folder / "profile.json").exists())
+
+            empty_skeptic = runtime.describe_frontline_persona_library(
+                auth,
+                panel_type="skeptic",
+                sample_size=1,
+                random_seed=17,
+            )
+            self.assertEqual(empty_skeptic["readiness"]["status"], "empty")
+            self.assertEqual(empty_skeptic["readiness"]["active_panel_ready_count"], 0)
+            self.assertEqual(empty_skeptic["readiness"]["alternative_panel_type"], "mainstream")
+            self.assertEqual(empty_skeptic["readiness"]["alternative_panel_count"], 1)
+            self.assertEqual(len(empty_skeptic["personas"]), 0)
+            self.assertIn("Switch panel or generate Skeptic participants", empty_skeptic["readiness"]["message"])
+
+            skeptic_guide = build_frontline_v5_generation_guide(
+                panel_type="skeptic",
+                target_audience={"summary": "Skeptical founders"},
+            )
+            skeptic_folder = generate_v5_persona(
+                persona_id="su_9003",
+                output_dir=persona_dir,
+                adapter=adapter,
+                guide=skeptic_guide,
+                random_seed=93,
+                max_transport_attempts=1,
+            )
+            skeptic_library = runtime.describe_frontline_persona_library(
+                auth,
+                panel_type="skeptic",
+                sample_size=1,
+                random_seed=17,
+            )
+            self.assertEqual(skeptic_library["readiness"]["status"], "ready")
+            self.assertEqual(skeptic_library["readiness"]["active_panel_ready_count"], 1)
+            self.assertEqual(skeptic_library["personas"][0]["synthetic_user_id"], "su_9003")
+            self.assertEqual(skeptic_library["personas"][0]["panel_role"], "skeptic")
+            self.assertEqual(skeptic_library["default_selection"]["selected_persona_ids"], ["su_9003"])
+            self.assertTrue((skeptic_folder / "profile.json").exists())
 
     def test_runtime_submit_process_and_purge_job_with_retention(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -814,7 +927,19 @@ class SaasRuntimeTest(unittest.TestCase):
                 settings={"daily_runs": 10, "max_concurrent_jobs": 2},
             )
             workspace_root = Path(bootstrap["workspace_root"])
-            brief_path, persona_dir = self._workspace_inputs(workspace_root)
+            brief_path = workspace_root / "briefs" / "brief.json"
+            write_json(
+                brief_path,
+                FounderBrief(
+                    brief_id="brief_frontline",
+                    project_name="Frontline Concept",
+                    problem_statement="Founders lose evidence context across follow-up work.",
+                    target_market="Solo founders",
+                    offered_solution="A workspace that keeps recommendation evidence inspectable.",
+                    validation_goal="Check whether the concept creates trust and adoption objections.",
+                ).to_dict(),
+            )
+            persona_dir = workspace_root / "personas"
             app = SaasApiApplication(runtime)
 
             def call_app_raw(
@@ -930,10 +1055,79 @@ class SaasRuntimeTest(unittest.TestCase):
             self.assertEqual(status, "200 OK")
             persona_library = payload["persona_library"]
             self.assertEqual(persona_library["active_panel_type"], "mainstream")
+            self.assertEqual(persona_library["readiness"]["status"], "empty")
             self.assertGreaterEqual(len(persona_library["panel_options"]), 1)
+            self.assertEqual(len(persona_library["personas"]), 0)
+            self.assertEqual(persona_library["default_selection"]["selected_persona_ids"], [])
+
+            status, payload = call_app(
+                "POST",
+                f"/api/v1/studies/{study_id}/frontline-plan-proposals",
+                token="token-frontline",
+                payload={
+                    "user_message": "This should fail until a synthetic participant is selected.",
+                    "persona_panel": {
+                        "contract_version": "persona-panel-selection/v0-draft",
+                        "panel_type": "mainstream",
+                        "sample_size": 1,
+                        "selected_persona_ids": [],
+                    },
+                },
+            )
+            self.assertEqual(status, "400 Bad Request")
+            self.assertIn("Select at least one synthetic participant", payload["message"])
+
+            status, payload = call_app(
+                "POST",
+                "/api/v1/persona-library/generation-jobs",
+                token="token-frontline",
+                payload={
+                    "panel_type": "mainstream",
+                    "requested_count": 2,
+                    "random_seed": 41,
+                    "target_audience": {"summary": "Solo founders evaluating evidence tools"},
+                },
+            )
+            self.assertEqual(status, "201 Created")
+            generation_job = payload["persona_generation_job"]["generation_job"]
+            self.assertEqual(generation_job["status"], "completed")
+            self.assertEqual(generation_job["panel_type"], "mainstream")
+            self.assertEqual(len(payload["persona_generation_job"]["generated_persona_ids"]), 2)
+            generation_lifecycle = generation_job["metadata"]["lifecycle"]
+            self.assertIn("provisional", {entry["status"] for entry in generation_lifecycle})
+            self.assertIn("ready", {entry["status"] for entry in generation_lifecycle})
+            generation_job_artifact_path = workspace_root / generation_job["payload_path"]
+            self.assertTrue(generation_job_artifact_path.exists())
+            generation_job_artifact = json.loads(generation_job_artifact_path.read_text(encoding="utf-8"))
+            self.assertEqual(generation_job_artifact["generation_job"]["generation_job_id"], generation_job["generation_job_id"])
+            self.assertEqual(
+                generation_job_artifact["promoted_persona_ids"],
+                payload["persona_generation_job"]["promoted_persona_ids"],
+            )
+
+            status, payload = call_app(
+                "GET",
+                "/api/v1/persona-library",
+                token="token-frontline",
+                query="panel_type=mainstream&sample_size=1&random_seed=17",
+            )
+            self.assertEqual(status, "200 OK")
+            persona_library = payload["persona_library"]
+            self.assertEqual(persona_library["readiness"]["status"], "ready")
             self.assertGreaterEqual(len(persona_library["personas"]), 1)
+            self.assertEqual(persona_library["personas"][0]["readiness_status"], "ready")
+            self.assertEqual(persona_library["personas"][0]["source_schema_version"], "v5_1")
+            self.assertEqual(persona_library["personas"][0]["generator_version"], "persona-generator/v5.1")
+            self.assertEqual(persona_library["persona_groups"]["generated_personas"]["count"], 2)
+            self.assertTrue(persona_library["personas"][0]["persona_version"])
+            self.assertIn("profile.json", persona_library["personas"][0]["artifact_hashes"])
+            self.assertIn("generation_job_id", persona_library["personas"][0])
+            self.assertIn("public_figure_lens", persona_library["lens_boundary"]["excluded_from_participant_pool"])
             selected_persona_ids = persona_library["default_selection"]["selected_persona_ids"]
             self.assertEqual(len(selected_persona_ids), 1)
+            self.assertTrue(
+                (workspace_root / "personas" / selected_persona_ids[0] / "v5_1" / "profile.json").exists()
+            )
             persona_panel = {
                 **persona_library["default_selection"],
                 "coverage_snapshot": persona_library["library_summary"]["human_difference_axis_summary"],
@@ -946,6 +1140,25 @@ class SaasRuntimeTest(unittest.TestCase):
                 ],
                 "excluded_context": "Do not treat this panel as recruited market proof.",
             }
+
+            status, payload = call_app(
+                "POST",
+                f"/api/v1/studies/{study_id}/frontline-plan-proposals",
+                token="token-frontline",
+                payload={
+                    "user_message": "I need to test a landing page headline, positioning copy, and value proposition.",
+                    "target_persona": target_audience["summary"],
+                    "target_audience": target_audience,
+                    "persona_panel": persona_panel,
+                    "moderator_questions": [
+                        "What do you believe this message promises?",
+                        "Which words feel credible, vague, exaggerated, or confusing?",
+                    ],
+                },
+            )
+            self.assertEqual(status, "201 Created")
+            self.assertEqual(payload["plan_proposal"]["mode_inference"]["mode"], "messaging_validation")
+            self.assertIn("message_comprehension", payload["plan_proposal"]["expected_evidence_types"])
 
             status, payload = call_app(
                 "POST",
@@ -1010,6 +1223,25 @@ class SaasRuntimeTest(unittest.TestCase):
                 selected_persona_ids,
             )
             self.assertEqual(payload["research_run"]["status"], "started")
+            queued_job_id = payload["job"]["job_id"]
+            status, payload = call_app(
+                "GET",
+                f"/api/v1/studies/{study_id}/runs/{queued_job_id}/progress",
+                token="token-frontline",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["run_progress"]["contract_version"], "frontline-run-progress/v1")
+            self.assertEqual(payload["run_progress"]["phase"], "queued")
+            self.assertEqual(payload["run_progress"]["observed_interview_contract"]["transport"], "polling_api")
+            status, payload = call_app(
+                "GET",
+                f"/api/v1/studies/{study_id}/runs/{queued_job_id}/events",
+                token="token-frontline",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["run_event_stream"]["contract_version"], "workspace-run-event-stream/v1")
+            self.assertEqual(payload["run_event_stream"]["phase"], "queued")
+            self.assertEqual(payload["run_event_stream"]["transport"]["current_transport"], "polling_api")
             completed_jobs = [runtime.process_next_job()]
             selected_personas_path = Path(completed_jobs[0]["output_run_path"]) / "selected_personas.json"
             selected_personas = json.loads(selected_personas_path.read_text(encoding="utf-8"))
@@ -1017,6 +1249,21 @@ class SaasRuntimeTest(unittest.TestCase):
                 [persona["synthetic_user_id"] for persona in selected_personas],
                 selected_persona_ids,
             )
+            panel_snapshot_path = Path(completed_jobs[0]["output_run_path"]) / "frontline_persona_panel_snapshot.json"
+            self.assertTrue(panel_snapshot_path.exists())
+            panel_snapshot = json.loads(panel_snapshot_path.read_text(encoding="utf-8"))
+            selected_snapshot = panel_snapshot["selected_persona_snapshot"]
+            self.assertEqual(selected_snapshot["selected_persona_ids"], selected_persona_ids)
+            self.assertFalse(selected_snapshot["has_provisional_personas"])
+            self.assertEqual(
+                sorted(selected_snapshot["selected_persona_versions"].keys()),
+                sorted(selected_persona_ids),
+            )
+            self.assertIn(
+                "profile.json",
+                selected_snapshot["artifact_hashes_by_persona"][selected_persona_ids[0]],
+            )
+            self.assertIn("coverage_gaps", selected_snapshot["coverage_snapshot"])
 
             status, payload = call_app(
                 "POST",
@@ -1047,11 +1294,88 @@ class SaasRuntimeTest(unittest.TestCase):
             self.assertEqual(payload["study"]["status"], "reviewing")
             self.assertEqual(payload["study"]["run_count"], 2)
 
+            status, payload = call_app("GET", "/api/v1/research-playbooks", token="token-frontline")
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["research_playbooks"]["contract_version"], "frontline-research-playbook-catalog/v1")
+            self.assertTrue(any(item["playbook_id"] == "messaging_positioning" for item in payload["research_playbooks"]["playbooks"]))
+
+            status, payload = call_app(
+                "GET",
+                f"/api/v1/studies/{study_id}/runs/{run_ids[0]}/progress",
+                token="token-frontline",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["run_progress"]["phase"], "completed")
+            self.assertGreaterEqual(payload["run_progress"]["participant_progress"]["completed_count"], 1)
+
+            status, payload = call_app(
+                "GET",
+                f"/api/v1/studies/{study_id}/runs/{run_ids[0]}/transcript",
+                token="token-frontline",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["run_transcript"]["contract_version"], "frontline-run-transcript/v1")
+            self.assertGreaterEqual(payload["run_transcript"]["exchange_count"], 1)
+            self.assertIn("synthetic interview transcript", payload["run_transcript"]["synthetic_boundary"])
+
+            status, payload = call_app(
+                "GET",
+                f"/api/v1/studies/{study_id}/runs/{run_ids[0]}/trace",
+                token="token-frontline",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["run_trace"]["contract_version"], "frontline-run-trace/v1")
+            self.assertGreaterEqual(len(payload["run_trace"]["synthetic_participant_reasoning_trace"]), 1)
+            self.assertEqual(payload["run_trace"]["provider_lineage"]["provider_name"], "mock")
+
+            status, payload = call_app(
+                "GET",
+                f"/api/v1/studies/{study_id}/runs/{run_ids[0]}/events",
+                token="token-frontline",
+            )
+            self.assertEqual(status, "200 OK")
+            run_event_stream = payload["run_event_stream"]
+            self.assertEqual(run_event_stream["contract_version"], "workspace-run-event-stream/v1")
+            self.assertEqual(run_event_stream["phase"], "completed")
+            self.assertEqual(run_event_stream["observed_interview_bridge"]["status"], "not_attached")
+            self.assertTrue(run_event_stream["latest_safe_turn"]["source_refs"])
+            self.assertIn(
+                "run.synthetic_participant_turn_recorded",
+                {event["event_type"] for event in run_event_stream["events"]},
+            )
+            self.assertIn("synthetic interview execution", run_event_stream["synthetic_boundary"])
+
+            status, payload = call_app(
+                "POST",
+                f"/api/v1/studies/{study_id}/frontline-reruns",
+                token="token-frontline",
+                payload={
+                    "source_run_id": run_ids[0],
+                    "playbook_id": "messaging_positioning",
+                    "change_set": {
+                        "message_variant": "Rewrite the headline around concrete proof instead of broad AI promise.",
+                        "guide_focus": "Compare comprehension, credibility, trust gaps, and misunderstanding separately.",
+                    },
+                    "metadata": {"source": "frontline_rerun_test"},
+                },
+            )
+            self.assertEqual(status, "201 Created")
+            self.assertEqual(payload["rerun_plan"]["contract_version"], "frontline-rerun-plan/v1")
+            self.assertEqual(payload["rerun_plan"]["mode_inference"]["mode"], "messaging_validation")
+            self.assertEqual(payload["rerun_plan"]["rerun_lineage"]["source_run_id"], run_ids[0])
+
+            status, payload = call_app("GET", "/api/v1/calibration-observatory", token="token-frontline")
+            self.assertEqual(status, "200 OK")
+            observatory = payload["calibration_observatory"]
+            self.assertEqual(observatory["contract_version"], "calibration-observatory/v1")
+            self.assertEqual(observatory["health_summary"]["status"], "insufficient_benchmarking")
+            self.assertIn("mock", observatory["segments"]["provider_counts"])
+
             status, payload = call_app(
                 "GET",
                 "/api/v1/evidence-query",
                 token="token-frontline",
-                query=f"job_id={job_ids[0]}",
+                query=f"job_id={job_ids[0]}&query_text=objection",
             )
             self.assertEqual(status, "200 OK")
             evidence_query = payload["query"]
@@ -1060,6 +1384,7 @@ class SaasRuntimeTest(unittest.TestCase):
             self.assertEqual(evidence_query["provider_runtime_boundary"]["provider_name"], "mock")
             self.assertGreaterEqual(evidence_query["result_count"], 1)
             self.assertTrue(evidence_query["selected_result_id"])
+            self.assertTrue(any(result.get("source_exchange_refs") for result in evidence_query["results"]))
 
             status, payload = call_app(
                 "POST",
@@ -1087,6 +1412,7 @@ class SaasRuntimeTest(unittest.TestCase):
             self.assertTrue(evidence_view["selected_signal_id"])
             self.assertTrue(evidence_view["readiness_gate"]["boundary_required"])
             self.assertEqual(evidence_view["provider_runtime_boundary"]["provider_name"], "mock")
+            self.assertTrue(evidence_view["source_exchange_refs"])
             evidence_view_id = evidence_view["evidence_view_id"]
             assert_frontline_route(
                 f"/studio/studies/{study_id}/evidence-views/{evidence_view_id}",
@@ -1098,6 +1424,46 @@ class SaasRuntimeTest(unittest.TestCase):
             self.assertEqual(status, "200 OK")
             self.assertEqual(payload["evidence_view"]["selected_signal_id"], evidence_view["selected_signal_id"])
             self.assertEqual(payload["evidence_view"]["run_id"], run_ids[0])
+
+            status, payload = call_app(
+                "GET",
+                "/api/v1/integration-events",
+                token="token-frontline",
+                query=f"study_id={study_id}&limit=20",
+            )
+            self.assertEqual(status, "200 OK")
+            integration_events = payload["integration_events"]
+            self.assertEqual(integration_events["contract_version"], "workspace-integration-events/v1")
+            integration_event_types = {event["event_type"] for event in integration_events["events"]}
+            self.assertIn("study.created", integration_event_types)
+            self.assertIn("run.completed", integration_event_types)
+            self.assertIn("evidence_view.saved", integration_event_types)
+            self.assertIn("readiness.changed", integration_event_types)
+            run_completed_event = next(event for event in integration_events["events"] if event["event_type"] == "run.completed")
+            self.assertTrue(run_completed_event["payload"]["provenance"]["source_exchange_refs"])
+            self.assertTrue(run_completed_event["payload"]["human_validation_required"])
+            self.assertIn("privacy_export_controls", run_completed_event["payload"])
+
+            status, payload = call_app(
+                "POST",
+                "/api/v1/integration-events/delivery-attempts",
+                token="token-frontline",
+                payload={
+                    "event_id": run_completed_event["event_id"],
+                    "consumer_id": "customer-review-feed",
+                    "status": "failed",
+                    "response_code": 503,
+                    "note": "Simulated downstream retry visibility.",
+                    "retry_after_seconds": 60,
+                },
+            )
+            self.assertEqual(status, "201 Created")
+            self.assertEqual(payload["delivery_attempt"]["status"], "failed")
+            delivered_event = next(
+                event for event in payload["integration_events"]["events"] if event["event_id"] == run_completed_event["event_id"]
+            )
+            self.assertEqual(delivered_event["delivery"]["status"], "failed")
+            self.assertTrue(delivered_event["delivery"]["retry_visible"])
 
             status, payload = call_app(
                 "POST",
@@ -1178,6 +1544,16 @@ class SaasRuntimeTest(unittest.TestCase):
             )
 
             status, payload = call_app(
+                "GET",
+                "/api/v1/integration-events",
+                token="token-frontline",
+                query=f"study_id={study_id}&event_type=decision.logged",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(payload["integration_events"]["events"][0]["event_type"], "decision.logged")
+            self.assertEqual(payload["integration_events"]["events"][0]["target_id"], decision_log_id)
+
+            status, payload = call_app(
                 "POST",
                 "/api/v1/export-bundles",
                 token="token-frontline",
@@ -1236,6 +1612,18 @@ class SaasRuntimeTest(unittest.TestCase):
             self.assertEqual(status, "200 OK")
             self.assertEqual(payload["share_bundle"]["metadata"]["decision_log_id"], decision_log_id)
             self.assertGreaterEqual(len(payload["share_bundle"]["files"]), 1)
+
+            status, payload = call_app(
+                "GET",
+                "/api/v1/audit-events",
+                token="token-frontline",
+                query="target_type=integration_event&action_prefix=integration_event.&limit=5",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertIn(
+                "integration_event.delivery_recorded",
+                {event["action"] for event in payload["audit_history"]["audit_events"]},
+            )
 
             assert_frontline_route("/studio/share", "share_collection")
             assert_frontline_route(
@@ -4057,6 +4445,76 @@ class SaasRuntimeTest(unittest.TestCase):
             self.assertEqual(
                 payload["billing"]["billing_governance"]["latest_policy_change"]["note"],
                 "Extend retention while keeping the partner pilot under review.",
+            )
+
+            status, payload = call_app("GET", "/api/v1/privacy-export-controls", token="token-settings")
+            self.assertEqual(status, "200 OK")
+            privacy_controls = payload["privacy_export_controls"]
+            self.assertEqual(privacy_controls["contract_version"], "workspace-privacy-export-controls/v1")
+            self.assertEqual(privacy_controls["retention_controls"]["artifact_retention_days"], 45)
+            self.assertEqual(privacy_controls["export_share_controls"]["export_bundle_count"], 0)
+            self.assertIn(
+                "deletion_request_policy_missing",
+                privacy_controls["privacy_readiness"]["blocked_reasons"],
+            )
+
+            status, payload = call_app(
+                "POST",
+                "/api/v1/privacy-export-controls/policy",
+                token="token-settings",
+                payload={
+                    "data_residency_region": "us-east-1",
+                    "artifact_retention_days": 60,
+                    "deletion_request_policy": "owner_review_required",
+                    "export_review_required": True,
+                    "share_default_expiry_days": 21,
+                    "note": "Prepare customer-grade privacy controls for broader pilot review.",
+                },
+            )
+            self.assertEqual(status, "200 OK")
+            privacy_controls = payload["privacy_export_controls"]
+            self.assertEqual(privacy_controls["data_residency"]["data_residency_region"], "us-east-1")
+            self.assertEqual(privacy_controls["retention_controls"]["artifact_retention_days"], 60)
+            self.assertEqual(privacy_controls["deletion_controls"]["deletion_request_policy"], "owner_review_required")
+            self.assertEqual(privacy_controls["export_share_controls"]["share_default_expiry_days"], 21)
+            self.assertEqual(privacy_controls["privacy_readiness"]["status"], "ready_for_customer_review")
+            self.assertEqual(
+                privacy_controls["downstream_lineage"]["latest_policy_change"]["changes"]["artifact_retention_days"]["next"],
+                60,
+            )
+
+            status, payload = call_app(
+                "POST",
+                "/api/v1/privacy-export-controls/deletion-requests",
+                token="token-settings",
+                payload={
+                    "scope_type": "workspace",
+                    "scope_id": "ws_settings",
+                    "reason": "Customer requested review of retained uploaded artifacts before wider pilot.",
+                    "requested_action": "record_for_review",
+                    "approval_note": "Keep lineage while privacy owner reviews payload deletion.",
+                },
+            )
+            self.assertEqual(status, "201 Created")
+            deletion_request = payload["deletion_request"]
+            self.assertTrue(deletion_request["deletion_request_id"].startswith("privacy_delete_"))
+            self.assertEqual(deletion_request["scope_type"], "workspace")
+            self.assertTrue(deletion_request["lineage_retained"])
+            self.assertEqual(
+                payload["privacy_export_controls"]["deletion_controls"]["latest_request"]["deletion_request_id"],
+                deletion_request["deletion_request_id"],
+            )
+
+            status, payload = call_app(
+                "GET",
+                "/api/v1/audit-events",
+                token="token-settings",
+                query="action_prefix=workspace.privacy&limit=10",
+            )
+            self.assertEqual(status, "200 OK")
+            self.assertEqual(
+                {event["action"] for event in payload["audit_history"]["audit_events"]},
+                {"workspace.privacy_policy_updated", "workspace.privacy_deletion_requested"},
             )
 
             status, payload = call_app(

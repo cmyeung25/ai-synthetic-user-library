@@ -13,6 +13,7 @@ const runtimeRoot = path.join(artifactDir, "runtime");
 const apiPort = Number.parseInt(process.env.FRONTLINE_STUDIO_SMOKE_PORT || "8051", 10);
 const apiBaseUrl = `http://127.0.0.1:${apiPort}`;
 const apiToken = "token-frontline-smoke";
+const routeLoadTimeoutMs = Number.parseInt(process.env.FRONTLINE_STUDIO_ROUTE_LOAD_TIMEOUT_MS || "30000", 10);
 
 async function pathExists(candidatePath) {
   try {
@@ -87,7 +88,8 @@ function startServer() {
 import os
 import sys
 from pathlib import Path
-from wsgiref.simple_server import make_server
+from socketserver import ThreadingMixIn
+from wsgiref.simple_server import WSGIServer, make_server
 repo = Path(os.environ["FRONTLINE_REPO_ROOT"])
 src = repo / "src"
 if str(src) not in sys.path:
@@ -105,7 +107,15 @@ runtime.bootstrap_workspace(
     billing_status="active",
     settings={"daily_runs": 10, "max_concurrent_jobs": 2},
 )
-with make_server("127.0.0.1", int(os.environ["FRONTLINE_API_PORT"]), SaasApiApplication(runtime)) as server:
+class ThreadingWSGIServer(ThreadingMixIn, WSGIServer):
+    daemon_threads = True
+
+with make_server(
+    "127.0.0.1",
+    int(os.environ["FRONTLINE_API_PORT"]),
+    SaasApiApplication(runtime),
+    server_class=ThreadingWSGIServer,
+) as server:
     server.serve_forever()
 `;
   return spawn(process.env.PYTHON || "python", ["-c", pythonCode], {
@@ -192,7 +202,7 @@ async function run() {
         await page.waitForFunction(
           (title) => document.querySelector("#route-title")?.textContent === title,
           expectedTitle,
-          { timeout: 15000 },
+          { timeout: routeLoadTimeoutMs },
         );
       } catch (error) {
         const state = await page.evaluate(() => ({
@@ -203,13 +213,13 @@ async function run() {
           injectedRoutePath: window.__FRONTLINE_ROUTE_CONTEXT__?.route_path || "",
           body: document.body?.innerText?.slice(0, 1200) || "",
         }));
-        throw new Error(`Expected route title "${expectedTitle}" but saw ${JSON.stringify(state)}: ${error.message}`);
+        throw new Error(`Expected route title "${expectedTitle}" but saw ${JSON.stringify({ ...state, browserDiagnostics })}: ${error.message}`);
       }
       try {
         await page.waitForFunction(
           () => !document.querySelector(".loading-card"),
           undefined,
-          { timeout: 15000 },
+          { timeout: routeLoadTimeoutMs },
         );
       } catch (error) {
         const state = await page.evaluate(() => ({
@@ -220,9 +230,92 @@ async function run() {
           injectedRoutePath: window.__FRONTLINE_ROUTE_CONTEXT__?.route_path || "",
           errorCard: document.querySelector(".error-card")?.textContent || "",
           loadingText: document.querySelector(".loading-card")?.textContent || "",
+          resourceEntries: performance.getEntriesByType("resource")
+            .filter((entry) => String(entry.name || "").includes("/api/v1/"))
+            .slice(-12)
+            .map((entry) => ({
+              name: String(entry.name || "").replace(window.location.origin, ""),
+              duration: Math.round(entry.duration || 0),
+              transferSize: entry.transferSize || 0,
+            })),
           body: document.body?.innerText?.slice(0, 1200) || "",
         }));
         throw new Error(`Route "${expectedTitle}" did not finish loading: ${JSON.stringify({ ...state, browserDiagnostics })}: ${error.message}`);
+      }
+    }
+
+    async function waitForDocumentLang(expectedLang) {
+      await page.waitForFunction(
+        (lang) => document.documentElement.lang === lang,
+        expectedLang,
+        { timeout: 10000 },
+      );
+    }
+
+    async function assertVisibleTextIncludes(selector, expectedText) {
+      const locator = page.locator(selector);
+      try {
+        await locator.first().waitFor({ timeout: routeLoadTimeoutMs });
+      } catch (error) {
+        const state = await page.evaluate(() => ({
+          url: window.location.href,
+          routeTitle: document.querySelector("#route-title")?.textContent || "",
+          routeKind: document.querySelector("#route-kind")?.textContent || "",
+          errorCard: document.querySelector(".error-card")?.textContent || "",
+          emptyState: document.querySelector(".empty-state")?.textContent || "",
+          loadingText: document.querySelector(".loading-card")?.textContent || "",
+          resourceEntries: performance.getEntriesByType("resource")
+            .filter((entry) => String(entry.name || "").includes("/api/v1/"))
+            .slice(-12)
+            .map((entry) => ({
+              name: String(entry.name || "").replace(window.location.origin, ""),
+              duration: Math.round(entry.duration || 0),
+              transferSize: entry.transferSize || 0,
+            })),
+          body: document.body?.innerText?.slice(0, 1600) || "",
+        }));
+        throw new Error(`Expected ${selector} to be visible before checking "${expectedText}": ${JSON.stringify({ ...state, browserDiagnostics })}: ${error.message}`);
+      }
+      const text = await locator.first().innerText();
+      if (!text.includes(expectedText)) {
+        throw new Error(`Expected ${selector} to include "${expectedText}" but saw "${text.slice(0, 1000)}"`);
+      }
+    }
+
+    async function assertNoZhHantTerminologyRegression(selectors) {
+      const bannedTerms = [
+        "Study 首頁",
+        "Project 清單",
+        "研究 Run",
+        "Evidence 工作區",
+        "Plan 草稿",
+        "Persona Library",
+        "synthetic participant",
+        "Synthetic participant",
+        "human-validation gaps",
+        "Evidence 邊界",
+        "Share 視圖",
+        "Evidence workspace",
+        "Research attempts",
+        "Guided setup",
+        "Confirm Plan",
+        "Plan tuning",
+        "Study setup",
+        "Study report",
+        "Decision review",
+        "Share view",
+      ];
+      const chunks = [];
+      for (const selector of selectors) {
+        const texts = await page.locator(selector).evaluateAll((elements) => (
+          elements.map((element) => element.innerText || element.textContent || "").filter(Boolean)
+        ));
+        chunks.push(...texts);
+      }
+      const visibleChrome = chunks.join("\n");
+      const leaked = bannedTerms.filter((term) => visibleChrome.includes(term));
+      if (leaked.length) {
+        throw new Error(`zh-Hant product chrome has mixed terminology: ${leaked.join(", ")} | ${visibleChrome.slice(0, 1600)}`);
       }
     }
 
@@ -319,7 +412,7 @@ async function run() {
       }
     }
 
-    await page.goto(`${apiBaseUrl}/studio?token=${encodeURIComponent(apiToken)}`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${apiBaseUrl}/studio?token=${encodeURIComponent(apiToken)}`, { waitUntil: "domcontentloaded", timeout: routeLoadTimeoutMs });
     await waitForRouteTitle("Home");
     for (const forbiddenGlobalNavId of ["#nav-studies", "#nav-evidence", "#nav-decisions", "#nav-share"]) {
       if (await page.locator(forbiddenGlobalNavId).count()) {
@@ -327,6 +420,9 @@ async function run() {
       }
     }
     await page.waitForSelector("#project-list");
+    await page.waitForSelector("#calibration-observatory-card");
+    await page.waitForSelector("#privacy-export-controls-card");
+    await page.waitForSelector("#integration-events-card");
     await assertNavLevel("projects");
     await assertNoInternalTerms();
     await assertNoHorizontalOverflow(1280);
@@ -342,10 +438,11 @@ async function run() {
     if (await page.locator("#start-new-study").count()) {
       await page.click("#start-new-study");
     } else {
-      await page.goto(`${apiBaseUrl}/studio/studies/new`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${apiBaseUrl}/studio/studies/new`, { waitUntil: "domcontentloaded", timeout: routeLoadTimeoutMs });
     }
     await waitForRouteTitle("New study");
     await page.waitForSelector("#create-study", { timeout: 15000 });
+    await page.waitForSelector("#research-playbook-picker");
     await page.fill(
       "#intent",
       "I want to learn whether solo founders understand a scheduling assistant concept and what would stop them from trying it."
@@ -376,6 +473,11 @@ async function run() {
     await waitForRouteTitle("Guided setup");
     await assertNavLevel("study");
     await page.waitForSelector("#persona-library-picker");
+    await page.waitForSelector("#persona-library-readiness");
+    await page.waitForFunction(() => !document.body.textContent?.toLowerCase().includes("persona library is preparing"));
+    if (await page.locator("#persona-picker-cards .persona-card").count() === 0) {
+      await page.click("#generate-persona-library");
+    }
     await page.waitForSelector("#persona-picker-cards .persona-card");
     await page.fill("#audience-criteria", "Recently handled sales calls or follow-up work\nOwns the workflow decision or strongly influences it");
     await page.fill("#guide-questions", "What do you understand this assistant is meant to help with?\nWhere would trust, effort, or setup risk stop you?\nWhat would you need to see before trying it?");
@@ -401,9 +503,10 @@ async function run() {
     await assertNavLevel("study");
 
     const workerOutput = await runWorkerOnce();
-    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.reload({ waitUntil: "commit", timeout: routeLoadTimeoutMs });
     await waitForRouteTitle("Research attempts");
     await page.waitForFunction(() => document.querySelector("#research-run-list")?.textContent?.includes("Ready for evidence review"));
+    await page.waitForFunction(() => document.querySelector("#research-run-list")?.textContent?.includes("Mock demo evidence"));
     await page.locator("#research-run-list button", { hasText: "Open attempt" }).first().click();
     await waitForRouteTitle("Research attempt");
     try {
@@ -420,6 +523,18 @@ async function run() {
       throw new Error(`Research attempt did not expose source evidence: ${JSON.stringify(state)}: ${error.message}`);
     }
     await page.waitForSelector("#run-audit-notes");
+    await page.waitForSelector("#run-execution-source-boundary");
+    await page.waitForFunction(() => document.querySelector("#run-execution-source-boundary")?.textContent?.includes("Mock demo evidence"));
+    await page.waitForSelector("#run-event-stream-panel");
+    await page.waitForSelector("#run-live-monitor");
+    await page.waitForSelector("#run-transcript-panel");
+    await page.waitForSelector("#run-trace-panel");
+    await page.waitForFunction(() => document.querySelector("#run-event-stream-panel")?.textContent?.includes("Event stream"));
+    await page.waitForFunction(() => document.querySelector("#run-live-monitor")?.textContent?.includes("Progress"));
+    await page.waitForFunction(() => document.querySelector("#run-transcript-panel")?.textContent?.includes("source exchange"));
+    await page.waitForFunction(() => document.querySelector("#run-transcript-panel")?.textContent?.includes("Mock summary transcript"));
+    await page.waitForFunction(() => !document.querySelector("#run-transcript-panel")?.textContent?.includes("0 source exchange"));
+    await page.waitForFunction(() => document.querySelector("#run-trace-panel")?.textContent?.includes("Trace provenance"));
     await page.waitForFunction(() => document.querySelector("#source-evidence")?.textContent?.includes("Source evidence"));
     await page.waitForFunction(() => document.querySelector("#interpretation-panel")?.textContent?.includes("Interpretation"));
     await page.waitForFunction(() => document.querySelector("#human-validation-gaps")?.textContent?.includes("Human-validation gaps"));
@@ -442,9 +557,35 @@ async function run() {
     await page.waitForSelector("#saved-view-provenance");
     await page.waitForFunction(() => document.querySelector("#saved-view-provenance")?.textContent?.includes("Provenance retained"));
     await assertNoInternalTerms();
-    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.reload({ waitUntil: "commit", timeout: routeLoadTimeoutMs });
     await waitForRouteTitle("Saved evidence view");
-    await page.waitForSelector("#saved-view-provenance");
+    try {
+      await page.waitForSelector("#saved-view-provenance");
+    } catch (error) {
+      const state = await page.evaluate(() => ({
+        url: window.location.href,
+        pathname: window.location.pathname,
+        routeTitle: document.querySelector("#route-title")?.textContent || "",
+        routeKind: document.querySelector("#route-kind")?.textContent || "",
+        injectedRouteKind: window.__FRONTLINE_ROUTE_CONTEXT__?.route_kind || "",
+        injectedRoutePath: window.__FRONTLINE_ROUTE_CONTEXT__?.route_path || "",
+        injectedStudyId: window.__FRONTLINE_ROUTE_CONTEXT__?.study_id || "",
+        injectedEvidenceViewId: window.__FRONTLINE_ROUTE_CONTEXT__?.evidence_view_id || "",
+        errorCard: document.querySelector(".error-card")?.textContent || "",
+        emptyState: document.querySelector(".empty-state")?.textContent || "",
+        loadingText: document.querySelector(".loading-card")?.textContent || "",
+        resourceEntries: performance.getEntriesByType("resource")
+          .filter((entry) => String(entry.name || "").includes("/api/v1/"))
+          .slice(-12)
+          .map((entry) => ({
+            name: String(entry.name || "").replace(window.location.origin, ""),
+            duration: Math.round(entry.duration || 0),
+            transferSize: entry.transferSize || 0,
+          })),
+        body: document.body?.innerText?.slice(0, 1600) || "",
+      }));
+      throw new Error(`Reloaded evidence view did not expose provenance: ${JSON.stringify(state)}: ${error.message}`);
+    }
     await page.waitForFunction(() => document.querySelector("#selected-study")?.textContent?.includes("Concept validation study"));
     await assertNavLevel("study");
     await assertNoInternalTerms();
@@ -460,7 +601,7 @@ async function run() {
     await page.waitForSelector("#report-human-gaps");
     await page.waitForFunction(() => document.querySelector("#report-cited-evidence")?.textContent?.includes("Cited attempts"));
     await assertNoInternalTerms();
-    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.reload({ waitUntil: "commit", timeout: routeLoadTimeoutMs });
     await waitForRouteTitle("Study report");
     await page.waitForSelector("#report-cited-evidence");
     await assertNavLevel("study");
@@ -486,16 +627,39 @@ async function run() {
     await waitForRouteTitle("Share view");
     await page.waitForSelector("#share-decision");
     await page.waitForSelector("#share-evidence-digest");
+    await page.waitForSelector("#share-privacy-boundary");
     await page.waitForSelector("#share-included-artifacts");
     await page.waitForSelector("#share-boundary");
     await page.waitForFunction(() => document.querySelector("#share-boundary")?.textContent?.includes("Synthetic-only signal"));
+    await page.waitForFunction(() => document.querySelector("#share-privacy-boundary")?.textContent?.includes("Privacy and export controls"));
     await page.waitForFunction(() => document.querySelector("#share-public-link")?.textContent?.includes("/public/v1/share-bundles/"));
     await assertNoInternalTerms();
     await assertNoHorizontalOverflow(1280);
     await assertNoCriticalOverlap();
-    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.reload({ waitUntil: "commit", timeout: routeLoadTimeoutMs });
     await waitForRouteTitle("Share view");
-    await page.waitForSelector("#share-decision");
+    try {
+      await page.waitForSelector("#share-decision");
+    } catch (error) {
+      const state = await page.evaluate(() => ({
+        url: window.location.href,
+        routeTitle: document.querySelector("#route-title")?.textContent || "",
+        routeKind: document.querySelector("#route-kind")?.textContent || "",
+        errorCard: document.querySelector(".error-card")?.textContent || "",
+        emptyState: document.querySelector(".empty-state")?.textContent || "",
+        loadingText: document.querySelector(".loading-card")?.textContent || "",
+        resourceEntries: performance.getEntriesByType("resource")
+          .filter((entry) => String(entry.name || "").includes("/api/v1/"))
+          .slice(-12)
+          .map((entry) => ({
+            name: String(entry.name || "").replace(window.location.origin, ""),
+            duration: Math.round(entry.duration || 0),
+            transferSize: entry.transferSize || 0,
+          })),
+        body: document.body?.innerText?.slice(0, 1600) || "",
+      }));
+      throw new Error(`Reloaded share view did not expose decision context: ${JSON.stringify(state)}: ${error.message}`);
+    }
     await page.waitForSelector("#share-boundary");
     await assertNoInternalTerms();
 
@@ -505,6 +669,7 @@ async function run() {
     await page.goForward({ waitUntil: "domcontentloaded" });
     await waitForRouteTitle("Share view");
     await assertNoInternalTerms();
+    const createdSharePath = new URL(page.url()).pathname;
 
     const routeChecks = [
       [`/studio/projects/project_missing`, "Project"],
@@ -519,7 +684,7 @@ async function run() {
     ];
     for (const [routePath, expectedTitle] of routeChecks) {
       console.log(`Checking route ${routePath}`);
-      await page.goto(`${apiBaseUrl}${routePath}`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${apiBaseUrl}${routePath}`, { waitUntil: "domcontentloaded", timeout: routeLoadTimeoutMs });
       await waitForRouteTitle(expectedTitle);
       await assertNoInternalTerms();
       await assertNoHorizontalOverflow(1280);
@@ -538,6 +703,62 @@ async function run() {
     if (layout.hasHorizontalOverflow) {
       throw new Error("Frontline Studio has horizontal overflow at 1280px viewport.");
     }
+
+    const zhHantChecks = [
+      ["/studio", "首頁", [
+        ["#route-title", "首頁"],
+        ["#project-list", "專案"],
+        [".language-switcher", "繁中"],
+      ]],
+      [`/studio/studies/${studyId}/setup`, "引導式設定", [
+        ["#route-title", "引導式設定"],
+        ["#persona-library-picker", "合成受訪者庫"],
+        [".copilot-panel", "研究助理"],
+        ["#plan-confirmation", "確認研究計劃"],
+      ]],
+      [`/studio/studies/${studyId}/runs`, "研究執行紀錄", [
+        ["#route-title", "研究執行紀錄"],
+        ["#research-run-list", "研究執行"],
+      ]],
+      [`/studio/studies/${studyId}/evidence`, "證據工作區", [
+        ["#route-title", "證據工作區"],
+        ["#evidence-filters", "證據篩選"],
+        ["#comparison-panel", "比較"],
+      ]],
+      [createdSharePath, "分享視圖", [
+        ["#route-title", "分享視圖"],
+        ["#share-boundary", "只屬合成訊號"],
+      ]],
+    ];
+    for (const [routePath, expectedTitle, textChecks] of zhHantChecks) {
+      console.log(`Checking zh-Hant route ${routePath}`);
+      await page.goto(`${apiBaseUrl}${routePath}?token=${encodeURIComponent(apiToken)}&lang=zh-Hant`, {
+        waitUntil: "domcontentloaded",
+        timeout: routeLoadTimeoutMs,
+      });
+      await waitForDocumentLang("zh-Hant");
+      await waitForRouteTitle(expectedTitle);
+      for (const [selector, expectedText] of textChecks) {
+        await assertVisibleTextIncludes(selector, expectedText);
+      }
+      await assertNoZhHantTerminologyRegression([
+        ".route-header",
+        ".language-switcher",
+        ".copilot-panel",
+        "#persona-library-picker",
+        "#plan-confirmation",
+        "#research-run-list",
+        "#evidence-filters",
+        "#comparison-panel",
+        "#share-boundary",
+        "#share-privacy-boundary",
+        ".empty-state",
+        ".button-row",
+      ]);
+      await assertNoHorizontalOverflow(1280);
+      await assertNoCriticalOverlap();
+    }
+
     await page.screenshot({ path: path.join(artifactDir, "frontline-studio.png"), fullPage: true });
     const summary = {
       status: "passed",
@@ -545,7 +766,8 @@ async function run() {
       artifactDir,
       layout,
       workerOutput,
-      boundary: "Browser smoke verifies the /studio frontline path through completed synthetic evidence review, saved view, study report, decision logging, and boundary-preserving share creation; it does not prove human market validation.",
+      zhHantRouteChecks: zhHantChecks.map(([routePath, expectedTitle]) => ({ routePath, expectedTitle })),
+      boundary: "Browser smoke verifies the /studio frontline path through completed synthetic evidence review, saved view, study report, decision logging, boundary-preserving share creation, and zh-Hant product-chrome terminology checks; it does not prove human market validation.",
     };
     await fs.writeFile(path.join(artifactDir, "frontline_studio_smoke.summary.json"), JSON.stringify(summary, null, 2));
     console.log(JSON.stringify(summary, null, 2));

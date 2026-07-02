@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, UTC
 from pathlib import Path
+import hashlib
+import json
 import mimetypes
 import os
 from typing import Any, Callable
@@ -13,8 +15,13 @@ import uuid
 
 from ai_validation_swarm.domain.models import FounderBrief, PanelSpec, utc_now_iso
 from ai_validation_swarm.domain.validators import load_and_validate_founder_brief, validate_panel_spec
-from ai_validation_swarm.personas.generator import PANEL_ROLES, generate_personas
+from ai_validation_swarm.personas.frontline_v5_generator import (
+    FrontlineLocalV5SynthesisAdapter,
+    build_frontline_v5_generation_guide,
+)
+from ai_validation_swarm.personas.generator import PANEL_ROLES
 from ai_validation_swarm.personas.analysis import build_persona_library_summary
+from ai_validation_swarm.personas.v5 import GENERATOR_VERSION as V5_GENERATOR_VERSION, generate_v5_persona
 from ai_validation_swarm.providers.base import BaseProvider
 from ai_validation_swarm.providers.factory import build_provider
 from ai_validation_swarm.providers.openai_client import load_codex_access_token
@@ -44,7 +51,15 @@ from ai_validation_swarm.saas.models import (
     WorkspaceStudy,
 )
 from ai_validation_swarm.sampling.engine import sample_personas
-from ai_validation_swarm.storage.files import export_file, load_personas, read_json, save_persona, write_json, write_markdown
+from ai_validation_swarm.storage.files import (
+    export_file,
+    load_persona,
+    load_personas,
+    read_json,
+    resolve_persona_version_folder,
+    write_json,
+    write_markdown,
+)
 from ai_validation_swarm.validation.runner import run_validation
 
 
@@ -60,6 +75,7 @@ EXPORTABLE_ROLE_SET = {"owner", "admin", "editor"}
 SHAREABLE_ROLE_SET = {"owner", "admin", "editor"}
 WORKSPACE_SETTINGS_MUTATION_ROLES = {"owner", "admin"}
 WORKSPACE_BILLING_MUTATION_ROLES = {"owner", "billing_admin"}
+WORKSPACE_PRIVACY_MUTATION_ROLES = {"owner", "admin"}
 MVP_PROMOTION_REQUEST_ROLES = {"owner", "admin", "editor"}
 MVP_PROMOTION_REVIEW_ROLES = {"owner", "admin"}
 MVP_RELEASE_REVIEW_REQUEST_ROLES = {"owner", "admin", "editor"}
@@ -79,6 +95,17 @@ DECISION_REVIEW_ASSIGNMENT_STATUSES = {"unassigned", "assigned"}
 SUPPORT_HANDOFF_STATUSES = {"unassigned", "assigned", "acknowledged", "resolved"}
 GOVERNED_REVIEW_ASSIGNMENT_STATUSES = {"unassigned", "assigned", "escalated"}
 GOVERNED_REDACTION_STATUSES = {"unconfigured", "draft", "active", "escalated", "not_required"}
+PERSONA_LIBRARY_READINESS_STATES = ("ready", "empty", "generating", "failed", "stale", "provisional")
+PERSONA_LIBRARY_RECORD_FILENAME = "persona_library_record.json"
+PERSONA_LIBRARY_PARTICIPANT_KIND = "participant"
+PERSONA_LIBRARY_LENS_KINDS = {
+    "public_figure_lens",
+    "celebrity_lens",
+    "expert_advisor_lens",
+    "influencer_style_lens",
+    "founder_critique_lens",
+}
+FRONTLINE_FORMAL_PERSONA_SCHEMA_VERSIONS = {"v5", "v5_1"}
 LONGITUDINAL_PATTERN_DEFINITIONS = (
     {
         "pattern_id": "objection",
@@ -108,6 +135,103 @@ CALIBRATION_STATUS_RANK = {
     "candidate_replacement_ready": 3,
     "scoped_external_ready": 4,
 }
+FRONTLINE_RUN_PHASES = (
+    "queued",
+    "planning",
+    "sampling_panel",
+    "interviewing",
+    "synthesizing",
+    "auditing",
+    "completed",
+    "blocked",
+    "failed",
+)
+FRONTLINE_STAGE_PHASES = {
+    "sampling": "sampling_panel",
+    "persona_responses": "interviewing",
+    "skeptic_review": "synthesizing",
+    "sensitive_audit": "auditing",
+    "aggregation": "synthesizing",
+    "planner": "planning",
+    "report_writer": "synthesizing",
+}
+INTEGRATION_EVENT_ACTION_TYPES = {
+    "study.created": "study.created",
+    "validation_job.completed": "run.completed",
+    "validation_job.failed": "run.failed",
+    "evidence_view.saved": "evidence_view.saved",
+    "decision_log.created": "decision.logged",
+    "support_snapshot.handoff_updated": "support.handoff_changed",
+}
+INTEGRATION_DELIVERY_HISTORY_SETTING = "integration_delivery_attempts"
+INTEGRATION_DELIVERY_STATUSES = {"queued", "delivered", "failed", "retrying", "skipped"}
+FRONTLINE_RESEARCH_PLAYBOOKS = (
+    {
+        "playbook_id": "discovery_pain_insight",
+        "label": "Pain, empathy, and insight discovery",
+        "mode": "pain_point_discovery",
+        "best_for": "When the user has a domain or problem area but not yet a fixed solution.",
+        "starter_questions": [
+            "What happened the last time this problem appeared?",
+            "What workaround did you use and what did it cost?",
+            "Which part still feels unresolved after the workaround?",
+        ],
+        "expected_evidence_types": ["recalled_behavior", "pain_signal", "workflow_fragmentation", "human_validation_gaps"],
+        "rerun_change_axes": ["target_audience", "problem_frame", "moderator_guide"],
+    },
+    {
+        "playbook_id": "concept_validation",
+        "label": "Concept validation",
+        "mode": "concept_validation",
+        "best_for": "When the user has a startup idea or product concept and wants to test clarity, trust, and adoption risk.",
+        "starter_questions": [
+            "What do you understand this concept is trying to help with?",
+            "Where would trust, effort, or switching risk stop you?",
+            "What proof would make you try it?",
+        ],
+        "expected_evidence_types": ["comprehension", "objections", "trust_gaps", "adoption_barriers"],
+        "rerun_change_axes": ["target_audience", "concept_variant", "pricing_or_proof"],
+    },
+    {
+        "playbook_id": "prototype_comprehension",
+        "label": "Prototype comprehension",
+        "mode": "prototype_validation",
+        "best_for": "When the user has UI, UX, screens, flow notes, or prototype artifacts.",
+        "starter_questions": [
+            "What do you think this screen asks you to do first?",
+            "Which label, button, or flow state creates doubt?",
+            "Where would you pause, backtrack, or abandon?",
+        ],
+        "expected_evidence_types": ["wording_confusion", "cta_ambiguity", "task_friction", "observed_action_trace_if_available"],
+        "rerun_change_axes": ["artifact_version", "prototype_task", "screen_or_flow_variant"],
+    },
+    {
+        "playbook_id": "messaging_positioning",
+        "label": "Messaging and positioning validation",
+        "mode": "messaging_validation",
+        "best_for": "When the user needs to test wording, headline, value proposition, landing-page copy, or positioning.",
+        "starter_questions": [
+            "What do you believe this message promises?",
+            "Which words feel credible, vague, exaggerated, or confusing?",
+            "What would you still not know before taking the next step?",
+        ],
+        "expected_evidence_types": ["message_comprehension", "credibility_gap", "trust_gap", "misunderstanding", "next_step_clarity"],
+        "rerun_change_axes": ["message_variant", "audience_segment", "proof_point"],
+    },
+    {
+        "playbook_id": "adoption_barrier",
+        "label": "Adoption barrier review",
+        "mode": "adoption_barrier_validation",
+        "best_for": "When the user needs to predict why a plausible buyer or user still would not adopt.",
+        "starter_questions": [
+            "What would make this feel too risky or too costly to try?",
+            "Which existing habit, stakeholder, or workflow blocks adoption?",
+            "What would need to be true before this becomes worth switching to?",
+        ],
+        "expected_evidence_types": ["switching_cost", "stakeholder_blocker", "trust_gap", "trial_trigger"],
+        "rerun_change_axes": ["target_audience", "proof_point", "onboarding_or_switching_path"],
+    },
+)
 REGULATED_REVIEW_DOMAIN_DEFINITIONS = (
     {
         "domain_id": "finance",
@@ -368,11 +492,300 @@ def _normalize_frontline_persona_panel(persona_panel: dict[str, Any] | None, *, 
             for item in payload.get("selected_personas", [])
             if isinstance(item, dict)
         ] if isinstance(payload.get("selected_personas", []), list) else [],
+        "readiness_status": str(payload.get("readiness_status") or "").strip(),
+        "allow_empty_selection": bool(payload.get("allow_empty_selection")),
+        "empty_selection_exception": (
+            dict(payload.get("empty_selection_exception", {}))
+            if isinstance(payload.get("empty_selection_exception"), dict)
+            else {}
+        ),
+        "allow_provisional_personas": bool(payload.get("allow_provisional_personas")),
+        "provisional_persona_exception": (
+            dict(payload.get("provisional_persona_exception", {}))
+            if isinstance(payload.get("provisional_persona_exception"), dict)
+            else {}
+        ),
+        "selected_persona_snapshot": (
+            dict(payload.get("selected_persona_snapshot", {}))
+            if isinstance(payload.get("selected_persona_snapshot"), dict)
+            else {}
+        ),
         "synthetic_boundary": str(
             payload.get("synthetic_boundary")
             or "Persona selection improves simulation coverage, but it does not create recruited human evidence."
         ).strip(),
     }
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _persona_artifact_hashes(folder: Path) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for artifact_name in ("profile.json", "audit.json", "persona.md", "generation_notes.json", "section_manifest.json"):
+        path = folder / artifact_name
+        if path.exists() and path.is_file():
+            hashes[artifact_name] = _sha256_file(path)
+    return hashes
+
+
+def _persona_artifact_paths(folder: Path, persona_dir: Path) -> dict[str, str]:
+    paths: dict[str, str] = {}
+    for artifact_name in ("profile.json", "audit.json", "persona.md", "generation_notes.json", "section_manifest.json"):
+        path = folder / artifact_name
+        if path.exists() and path.is_file():
+            try:
+                paths[artifact_name] = path.relative_to(persona_dir).as_posix()
+            except ValueError:
+                paths[artifact_name] = str(path)
+    return paths
+
+
+def _clean_persona_readiness_status(value: Any, *, default: str = "ready") -> str:
+    status = str(value or "").strip()
+    return status if status in PERSONA_LIBRARY_READINESS_STATES else default
+
+
+def _clean_persona_kind(value: Any) -> str:
+    kind = str(value or PERSONA_LIBRARY_PARTICIPANT_KIND).strip()
+    if kind == PERSONA_LIBRARY_PARTICIPANT_KIND or kind in PERSONA_LIBRARY_LENS_KINDS:
+        return kind
+    return PERSONA_LIBRARY_PARTICIPANT_KIND
+
+
+def _frontline_source_schema_version(folder: Path, persona: Any) -> str:
+    if folder.name in {"v3_2", "v3_3", "v4", "v5", "v5_1"}:
+        return folder.name
+    if (folder / "persona_schema_v5_1.json").exists():
+        return "v5_1"
+    skill_version = str(getattr(persona, "skill_version", "") or "").lower()
+    if "v5.1" in skill_version or "v5_1" in skill_version:
+        return "v5_1"
+    if "v5" in skill_version:
+        return "v5"
+    return str(folder.name or "unknown")
+
+
+def _infer_persona_kind(persona: Any, record: dict[str, Any]) -> str:
+    explicit_kind = str(record.get("persona_kind") or "").strip()
+    if explicit_kind:
+        return _clean_persona_kind(explicit_kind)
+    identity = getattr(persona.profile, "basic_identity", {}) if getattr(persona, "profile", None) else {}
+    name = str(identity.get("name") or "").strip().lower() if isinstance(identity, dict) else ""
+    if any(token in name for token in ("elon musk", "steve jobs", "public figure", "celebrity")):
+        return "public_figure_lens"
+    if " perspective" in name and str(getattr(persona.seed, "panel_role", "") or "") == "expert_advisor":
+        return "expert_advisor_lens"
+    return PERSONA_LIBRARY_PARTICIPANT_KIND
+
+
+def _is_frontline_formal_participant(entry: dict[str, Any]) -> bool:
+    record = dict(entry.get("record", {}))
+    return str(record.get("source_schema_version") or "") in FRONTLINE_FORMAL_PERSONA_SCHEMA_VERSIONS
+
+
+def _normalize_frontline_panel_role(value: Any) -> str:
+    role = str(value or "").strip()
+    if role in PANEL_ROLES:
+        return role
+    lowered = role.lower()
+    if "expert" in lowered or "advisor" in lowered:
+        return "expert_advisor"
+    if "privacy" in lowered:
+        return "privacy_sensitive"
+    if "budget" in lowered or "price" in lowered or "cost" in lowered:
+        return "budget_constrained"
+    if "skeptic" in lowered or "sceptic" in lowered:
+        return "skeptic"
+    if "inclusion" in lowered or "accessibility" in lowered:
+        return "inclusion"
+    if "political" in lowered or "reputation" in lowered:
+        return "political_risk"
+    if "low tech" in lowered or "low_tech" in lowered:
+        return "low_tech"
+    if "extreme" in lowered:
+        return "extreme_user"
+    return "mainstream"
+
+
+def _persona_library_record(folder: Path, persona_dir: Path, persona: Any) -> dict[str, Any]:
+    record_path = folder / PERSONA_LIBRARY_RECORD_FILENAME
+    record: dict[str, Any] = {}
+    if record_path.exists():
+        try:
+            payload = read_json(record_path)
+            record = dict(payload) if isinstance(payload, dict) else {}
+        except Exception:
+            record = {}
+    generation_notes: dict[str, Any] = {}
+    generation_notes_path = folder / "generation_notes.json"
+    if generation_notes_path.exists():
+        try:
+            payload = read_json(generation_notes_path)
+            generation_notes = dict(payload) if isinstance(payload, dict) else {}
+        except Exception:
+            generation_notes = {}
+    artifact_hashes = _persona_artifact_hashes(folder)
+    profile_hash = artifact_hashes.get("profile.json", "")
+    persona_version = str(
+        record.get("persona_version")
+        or record.get("version")
+        or persona.skill_version
+        or profile_hash[:12]
+        or "unknown"
+    ).strip()
+    status = _clean_persona_readiness_status(record.get("readiness_status"), default="ready")
+    persona_kind = _infer_persona_kind(persona, record)
+    source_schema_version = str(
+        record.get("source_schema_version")
+        or generation_notes.get("persona_schema_version")
+        or _frontline_source_schema_version(folder, persona)
+    ).strip()
+    if source_schema_version in {"v5.1", "persona_schema_v5_1"} or source_schema_version.startswith("persona-schema/v5.1"):
+        source_schema_version = "v5_1"
+    elif source_schema_version == "v5.0" or source_schema_version.startswith("persona-schema/v5"):
+        source_schema_version = "v5"
+    generator_version = str(record.get("generator_version") or generation_notes.get("generator_version") or "").strip()
+    source_kind = str(record.get("source_kind") or ("generated" if generation_notes else "imported")).strip()
+    return {
+        "contract_version": "persona-library-record/v0-draft",
+        "synthetic_user_id": persona.profile.synthetic_user_id,
+        "persona_version": persona_version,
+        "readiness_status": status,
+        "persona_kind": persona_kind,
+        "panel_role": persona.seed.panel_role,
+        "source_schema_version": source_schema_version,
+        "source_kind": source_kind,
+        "generator_version": generator_version,
+        "generation_job_id": str(record.get("generation_job_id") or "").strip(),
+        "generated_at": str(record.get("generated_at") or "").strip(),
+        "promoted_at": str(record.get("promoted_at") or "").strip(),
+        "last_checked_at": str(record.get("last_checked_at") or "").strip(),
+        "readiness_checks": (
+            dict(record.get("readiness_checks", {}))
+            if isinstance(record.get("readiness_checks"), dict)
+            else {}
+        ),
+        "lifecycle_history": (
+            [dict(item) for item in record.get("lifecycle_history", []) if isinstance(item, dict)]
+            if isinstance(record.get("lifecycle_history", []), list)
+            else []
+        ),
+        "artifact_hashes": artifact_hashes,
+        "artifact_paths": _persona_artifact_paths(folder, persona_dir),
+        "artifact_root": folder.relative_to(persona_dir).as_posix() if folder.is_relative_to(persona_dir) else str(folder),
+        "lens_boundary": str(
+            record.get("lens_boundary")
+            or (
+                "This is a simulated, unaffiliated lens. It is not the real person's view, endorsement, or behavior."
+                if persona_kind in PERSONA_LIBRARY_LENS_KINDS
+                else ""
+            )
+        ).strip(),
+    }
+
+
+def _write_persona_library_record(folder: Path, payload: dict[str, Any]) -> None:
+    write_json(folder / PERSONA_LIBRARY_RECORD_FILENAME, payload)
+
+
+def _load_frontline_persona_entries(persona_dir: Path) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
+    if not persona_dir.exists():
+        return [], []
+    entries: list[dict[str, Any]] = []
+    failures: list[dict[str, str]] = []
+    for folder in sorted(persona_dir.iterdir()):
+        if not folder.is_dir() or folder.name.startswith((".", "_")):
+            continue
+        try:
+            version_folder = resolve_persona_version_folder(folder)
+            persona = load_persona(version_folder)
+            source_panel_role = str(getattr(persona.seed, "panel_role", "") or "").strip()
+            normalized_panel_role = _normalize_frontline_panel_role(source_panel_role)
+            if normalized_panel_role != source_panel_role:
+                persona.seed.panel_role = normalized_panel_role
+            record = _persona_library_record(version_folder, persona_dir, persona)
+            if normalized_panel_role != source_panel_role:
+                record["source_panel_role"] = source_panel_role
+                record["panel_role_normalized"] = True
+            entries.append({"persona": persona, "folder": version_folder, "record": record})
+        except Exception as exc:
+            failures.append({"folder": folder.name, "error": str(exc)})
+    return entries, failures
+
+
+def _persona_panel_empty_selection_allowed(persona_panel: dict[str, Any]) -> bool:
+    if bool(persona_panel.get("allow_empty_selection")):
+        return True
+    exception = persona_panel.get("empty_selection_exception")
+    return isinstance(exception, dict) and bool(str(exception.get("reason") or "").strip())
+
+
+def _assert_persona_panel_has_selection(persona_panel: dict[str, Any], *, action: str) -> None:
+    selected_ids = [
+        str(item).strip()
+        for item in persona_panel.get("selected_persona_ids", [])
+        if str(item).strip()
+    ] if isinstance(persona_panel.get("selected_persona_ids", []), list) else []
+    if selected_ids or _persona_panel_empty_selection_allowed(persona_panel):
+        return
+    raise ValueError(
+        f"Select at least one synthetic participant before {action}, or record an explicit empty-selection exception."
+    )
+
+
+def _frontline_mode_from_signal_text(signal_text: str, explicit_mode: str = "") -> str:
+    mode = explicit_mode.strip()
+    if mode:
+        return mode
+    text = signal_text.lower()
+    if any(marker in text for marker in ("prototype", "ui", "ux", "button", "screen", "flow", "click")):
+        return "prototype_validation"
+    if any(marker in text for marker in ("message", "messaging", "positioning", "copy", "headline", "tagline", "landing page", "value proposition")):
+        return "messaging_validation"
+    if any(marker in text for marker in ("pain", "empathy", "problem", "workflow", "root cause")):
+        return "pain_point_discovery"
+    return "concept_validation"
+
+
+def _frontline_expected_evidence_types_for_mode(mode: str) -> list[str]:
+    if mode == "messaging_validation":
+        return [
+            "message_comprehension",
+            "credibility_gaps",
+            "trust_gaps",
+            "misunderstandings",
+            "next_step_clarity",
+            "human_validation_gaps",
+        ]
+    if mode == "prototype_validation":
+        return [
+            "wording_confusion",
+            "cta_ambiguity",
+            "task_friction",
+            "observed_action_trace_if_available",
+            "human_validation_gaps",
+        ]
+    if mode == "pain_point_discovery":
+        return [
+            "recalled_behavior",
+            "pain_signals",
+            "workflow_fragmentation",
+            "insights",
+            "human_validation_gaps",
+        ]
+    return [
+        "objections",
+        "trust_gaps",
+        "adoption_barriers",
+        "contradictions",
+        "human_validation_gaps",
+    ]
 
 
 def _history_entries(value: Any) -> list[dict[str, Any]]:
@@ -666,6 +1079,546 @@ class SaasRuntime:
             "synthetic_boundary": (
                 "Synthetic evidence only. Workspace governance controls do not change the evidence boundary."
             ),
+        }
+
+    def describe_workspace_privacy_export_controls(
+        self,
+        auth: AuthContext,
+        *,
+        study_id: str = "",
+        export_bundle_id: str = "",
+        share_bundle_id: str = "",
+    ) -> dict[str, Any]:
+        workspace, _billing = self._workspace_and_billing(auth)
+        limits = _plan_limits(workspace.plan_tier, workspace.settings)
+        settings = dict(workspace.settings or {})
+        studies = self.list_workspace_studies(auth)
+        jobs = self.list_workspace_jobs(auth)
+        export_bundles = self.list_workspace_export_bundles(auth)
+        share_bundles = self.list_workspace_share_bundles(auth)
+
+        linked_study = None
+        if study_id.strip():
+            linked_study = job_store.get_workspace_study(self.runtime_root, study_id.strip())
+            if linked_study is None or linked_study.workspace_id != auth.workspace_id:
+                raise AuthorizationError(f"Workspace study '{study_id}' is not visible in this workspace.")
+        linked_export = None
+        if export_bundle_id.strip():
+            linked_export = job_store.get_workspace_export_bundle(self.runtime_root, export_bundle_id.strip())
+            if linked_export is None or linked_export.workspace_id != auth.workspace_id:
+                raise AuthorizationError(f"Workspace export bundle '{export_bundle_id}' is not visible in this workspace.")
+        linked_share = None
+        if share_bundle_id.strip():
+            linked_share = job_store.get_workspace_share_bundle(self.runtime_root, share_bundle_id.strip())
+            if linked_share is None or linked_share.workspace_id != auth.workspace_id:
+                raise AuthorizationError(f"Workspace share bundle '{share_bundle_id}' is not visible in this workspace.")
+            linked_share = self._refresh_share_bundle_status(linked_share)
+
+        policy_history = _history_entries(settings.get("privacy_policy_history"))
+        deletion_requests = _history_entries(settings.get("privacy_deletion_requests"))
+        redaction_states = [
+            dict(study.get("governed_redaction", {}))
+            for study in studies
+            if isinstance(study.get("governed_redaction"), dict)
+        ]
+        unresolved_redaction_count = sum(
+            1
+            for item in redaction_states
+            if bool(item.get("required")) and not bool(item.get("circulation_allowed"))
+        )
+        linked_redaction = (
+            self._study_governed_redaction_state(linked_study)
+            if linked_study is not None
+            else {}
+        )
+        retention_days = int(limits["artifact_retention_days"])
+        blocked_reasons: list[str] = []
+        if retention_days < 30:
+            blocked_reasons.append("retention_window_too_short_for_customer_review")
+        if not str(workspace.data_residency_region or "").strip():
+            blocked_reasons.append("data_residency_region_missing")
+        if not str(settings.get("deletion_request_policy") or "").strip():
+            blocked_reasons.append("deletion_request_policy_missing")
+        if unresolved_redaction_count:
+            blocked_reasons.append("unresolved_governed_redaction")
+        status = "ready_for_customer_review" if not blocked_reasons else "needs_attention"
+
+        relevant_audit_actions = {
+            "workspace.privacy_policy_updated",
+            "workspace.privacy_deletion_requested",
+            "workspace_policy.updated",
+            "study.governed_redaction_updated",
+            "share_bundle.revoked",
+        }
+        recent_audit = [
+            event.to_dict()
+            for event in job_store.list_audit_events(self.runtime_root, auth.workspace_id, limit=30)
+            if event.action in relevant_audit_actions
+        ][:10]
+
+        return {
+            "contract_version": "workspace-privacy-export-controls/v1",
+            "workspace_id": workspace.workspace_id,
+            "generated_at": utc_now_iso(),
+            "workspace_boundary": {
+                "workspace_id": workspace.workspace_id,
+                "workspace_name": workspace.display_name,
+                "workspace_isolation": "workspace_scoped_auth_and_artifact_paths",
+                "local_first_boundary": (
+                    "Local development uses SQLite indexes plus filesystem artifacts; future SaaS/cloud must use "
+                    "database records plus object storage and backups instead of treating server local disk as durable production storage."
+                ),
+            },
+            "data_residency": {
+                "region_code": workspace.region_code,
+                "data_residency_region": workspace.data_residency_region,
+                "policy_source": "workspace_policy",
+                "object_storage_ready": bool(settings.get("object_storage_ready", True)),
+                "note": (
+                    "This is a policy declaration in the local-first runtime. Hosted SaaS must enforce it through "
+                    "database, object-storage, backup, and worker placement controls."
+                ),
+            },
+            "retention_controls": {
+                "artifact_retention_days": retention_days,
+                "retention_floor_days_for_customer_review": 30,
+                "object_classes": [
+                    {
+                        "object_class": "uploaded_artifacts",
+                        "retention_behavior": "retained_until_policy_or_delete_request_review",
+                        "lineage_behavior": "artifact references remain auditable even when the payload is removed or redacted",
+                    },
+                    {
+                        "object_class": "generated_evidence_and_run_artifacts",
+                        "retention_behavior": "retained_until_artifact_retention_days_then_purgeable",
+                        "lineage_behavior": "run, study, and audit metadata remain for review continuity",
+                    },
+                    {
+                        "object_class": "exports_and_shares",
+                        "retention_behavior": "exports remain workspace-scoped; shares can expire or be revoked",
+                        "lineage_behavior": "export/share metadata keeps readiness, redaction, and synthetic-boundary context",
+                    },
+                    {
+                        "object_class": "calibration_records",
+                        "retention_behavior": "retained as evidence-quality lineage until explicit governance review",
+                        "lineage_behavior": "calibration summaries stay attached to readiness decisions",
+                    },
+                ],
+            },
+            "deletion_controls": {
+                "deletion_request_policy": str(settings.get("deletion_request_policy") or "review_required"),
+                "delete_payload_without_losing_lineage": True,
+                "request_count": len(deletion_requests),
+                "latest_request": _history_latest(deletion_requests),
+                "recent_requests": deletion_requests[-5:],
+                "supported_scope_types": [
+                    "workspace",
+                    "project",
+                    "study",
+                    "run",
+                    "export_bundle",
+                    "share_bundle",
+                    "calibration_record",
+                    "artifact",
+                ],
+                "audit_note": "Deletion requests are append-only policy events; destructive artifact purge remains governed by retention and explicit review.",
+            },
+            "redaction_controls": {
+                "governed_redaction_state_counts": _count_values([
+                    str(item.get("status") or "unknown")
+                    for item in redaction_states
+                ]),
+                "unresolved_governed_redaction_count": unresolved_redaction_count,
+                "linked_study_redaction": linked_redaction,
+                "redaction_audit_lineage": (
+                    "Governed redaction preserves rule reason, updater, note, and affected downstream export/share payloads."
+                ),
+            },
+            "export_share_controls": {
+                "export_bundle_count": len(export_bundles),
+                "share_bundle_count": len(share_bundles),
+                "share_status_counts": _count_values([
+                    str(bundle.get("status") or "unknown")
+                    for bundle in share_bundles
+                ]),
+                "export_review_required": bool(settings.get("export_review_required", True)),
+                "share_default_expiry_days": int(settings.get("share_default_expiry_days") or 14),
+                "linked_export_bundle": self._export_bundle_summary(linked_export) if linked_export is not None else {},
+                "linked_share_bundle": self._share_bundle_summary(linked_share) if linked_share is not None else {},
+                "user_boundary_copy": (
+                    "Exports and shared views contain simulated evidence only. They should show what was retained, "
+                    "redacted, removed, or still synthetic-only before customer circulation."
+                ),
+            },
+            "downstream_lineage": {
+                "study_count": len(studies),
+                "run_count": len(jobs),
+                "completed_run_count": sum(1 for job in jobs if str(job.get("status") or "") == "completed"),
+                "export_bundle_count": len(export_bundles),
+                "share_bundle_count": len(share_bundles),
+                "policy_history_count": len(policy_history),
+                "latest_policy_change": _history_latest(policy_history),
+            },
+            "privacy_readiness": {
+                "status": status,
+                "blocked_reasons": blocked_reasons,
+                "customer_review_ready": status == "ready_for_customer_review",
+                "next_actions": self._workspace_privacy_next_actions(blocked_reasons),
+            },
+            "audit_boundary": {
+                "recent_event_count": len(recent_audit),
+                "recent_events": recent_audit,
+            },
+            "synthetic_boundary": (
+                "Privacy, residency, redaction, deletion, export, and share controls govern simulated research artifacts. "
+                "They do not convert synthetic evidence into human market proof."
+            ),
+        }
+
+    def update_workspace_privacy_policy(
+        self,
+        auth: AuthContext,
+        *,
+        data_residency_region: str | None = None,
+        artifact_retention_days: int | None = None,
+        deletion_request_policy: str | None = None,
+        export_review_required: bool | None = None,
+        share_default_expiry_days: int | None = None,
+        note: str = "",
+    ) -> dict[str, Any]:
+        workspace, _billing = self._workspace_and_billing(auth)
+        if auth.role not in WORKSPACE_PRIVACY_MUTATION_ROLES:
+            raise AuthorizationError(f"Role '{auth.role}' cannot manage workspace privacy policy.")
+
+        settings = dict(workspace.settings or {})
+        next_settings = dict(settings)
+        changes: dict[str, dict[str, Any]] = {}
+
+        next_data_residency_region = workspace.data_residency_region
+        if data_residency_region is not None:
+            clean_region = data_residency_region.strip()
+            if not clean_region:
+                raise ValueError("Field 'data_residency_region' cannot be blank when provided.")
+            if clean_region != workspace.data_residency_region:
+                changes["data_residency_region"] = {
+                    "previous": workspace.data_residency_region,
+                    "next": clean_region,
+                }
+                next_data_residency_region = clean_region
+
+        if artifact_retention_days is not None:
+            retention_days = int(artifact_retention_days)
+            if retention_days < 0:
+                raise ValueError("Field 'artifact_retention_days' must be greater than or equal to 0.")
+            if settings.get("artifact_retention_days") != retention_days:
+                changes["artifact_retention_days"] = {
+                    "previous": settings.get("artifact_retention_days"),
+                    "next": retention_days,
+                }
+                next_settings["artifact_retention_days"] = retention_days
+
+        if deletion_request_policy is not None:
+            clean_policy = deletion_request_policy.strip() or "review_required"
+            if settings.get("deletion_request_policy") != clean_policy:
+                changes["deletion_request_policy"] = {
+                    "previous": settings.get("deletion_request_policy"),
+                    "next": clean_policy,
+                }
+                next_settings["deletion_request_policy"] = clean_policy
+
+        if export_review_required is not None:
+            next_value = bool(export_review_required)
+            if bool(settings.get("export_review_required", True)) != next_value:
+                changes["export_review_required"] = {
+                    "previous": bool(settings.get("export_review_required", True)),
+                    "next": next_value,
+                }
+                next_settings["export_review_required"] = next_value
+
+        if share_default_expiry_days is not None:
+            expiry_days = int(share_default_expiry_days)
+            if expiry_days <= 0:
+                raise ValueError("Field 'share_default_expiry_days' must be greater than 0.")
+            if int(settings.get("share_default_expiry_days") or 14) != expiry_days:
+                changes["share_default_expiry_days"] = {
+                    "previous": int(settings.get("share_default_expiry_days") or 14),
+                    "next": expiry_days,
+                }
+                next_settings["share_default_expiry_days"] = expiry_days
+
+        change_note = note.strip()
+        now = utc_now_iso()
+        if changes:
+            policy_history = _history_entries(settings.get("privacy_policy_history"))
+            policy_history.append(
+                {
+                    "event": "privacy_policy_updated",
+                    "changed_at": now,
+                    "changed_by_user_id": auth.user_id,
+                    "actor_role": auth.role,
+                    "note": change_note,
+                    "changes": changes,
+                }
+            )
+            next_settings["privacy_policy_history"] = policy_history
+            saved_workspace = job_store.upsert_workspace(
+                self.runtime_root,
+                TenantWorkspace(
+                    workspace_id=workspace.workspace_id,
+                    slug=workspace.slug,
+                    display_name=workspace.display_name,
+                    region_code=workspace.region_code,
+                    data_residency_region=next_data_residency_region,
+                    plan_tier=workspace.plan_tier,
+                    status=workspace.status,
+                    created_at=workspace.created_at,
+                    settings=next_settings,
+                    members=list(workspace.members),
+                ),
+            )
+            job_store.create_audit_event(
+                self.runtime_root,
+                AuditEvent(
+                    audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                    workspace_id=saved_workspace.workspace_id,
+                    actor_user_id=auth.user_id,
+                    actor_role=auth.role,
+                    action="workspace.privacy_policy_updated",
+                    target_type="workspace_privacy_policy",
+                    target_id=saved_workspace.workspace_id,
+                    event_payload={
+                        "changes": changes,
+                        "note": change_note or None,
+                        "privacy_policy_history_count": len(policy_history),
+                    },
+                    created_at=now,
+                ),
+            )
+
+        return self.describe_workspace_privacy_export_controls(auth)
+
+    def record_workspace_privacy_deletion_request(
+        self,
+        auth: AuthContext,
+        *,
+        scope_type: str,
+        scope_id: str,
+        reason: str,
+        requested_action: str = "",
+        approval_note: str = "",
+    ) -> dict[str, Any]:
+        workspace, _billing = self._workspace_and_billing(auth)
+        if auth.role not in WORKSPACE_PRIVACY_MUTATION_ROLES:
+            raise AuthorizationError(f"Role '{auth.role}' cannot request workspace privacy deletion.")
+        clean_scope_type = scope_type.strip().lower()
+        allowed_scope_types = {
+            "workspace",
+            "project",
+            "study",
+            "run",
+            "export_bundle",
+            "share_bundle",
+            "calibration_record",
+            "artifact",
+        }
+        if clean_scope_type not in allowed_scope_types:
+            raise ValueError(f"Unsupported privacy deletion scope_type '{clean_scope_type}'.")
+        clean_scope_id = scope_id.strip()
+        if clean_scope_type != "workspace" and not clean_scope_id:
+            raise ValueError("Field 'scope_id' is required for this deletion request scope.")
+        clean_reason = reason.strip()
+        if not clean_reason:
+            raise ValueError("Field 'reason' is required for a privacy deletion request.")
+
+        now = utc_now_iso()
+        action = requested_action.strip() or "record_for_review"
+        affected_outputs = self._workspace_privacy_affected_outputs(
+            workspace_id=workspace.workspace_id,
+            scope_type=clean_scope_type,
+            scope_id=clean_scope_id or workspace.workspace_id,
+        )
+        request = {
+            "deletion_request_id": f"privacy_delete_{uuid.uuid4().hex[:12]}",
+            "requested_at": now,
+            "requested_by_user_id": auth.user_id,
+            "actor_role": auth.role,
+            "scope_type": clean_scope_type,
+            "scope_id": clean_scope_id or workspace.workspace_id,
+            "requested_action": action,
+            "status": "recorded",
+            "reason": clean_reason,
+            "approval_note": approval_note.strip(),
+            "affected_outputs": affected_outputs,
+            "lineage_retained": True,
+            "synthetic_boundary": (
+                "Deletion handling removes or restricts selected simulated research payloads only after governance review; "
+                "audit lineage stays available for evidence-boundary review."
+            ),
+        }
+
+        revoked_share_bundle_id = ""
+        if clean_scope_type == "share_bundle" and action in {"revoke_share", "delete_or_revoke", "delete"}:
+            share_bundle = job_store.get_workspace_share_bundle(self.runtime_root, clean_scope_id)
+            if share_bundle is None or share_bundle.workspace_id != workspace.workspace_id:
+                raise AuthorizationError(f"Workspace share bundle '{clean_scope_id}' is not visible in this workspace.")
+            updated_share = job_store.update_workspace_share_bundle(
+                self.runtime_root,
+                share_bundle_id=share_bundle.share_bundle_id,
+                status="revoked",
+                revoked_at=share_bundle.revoked_at or now,
+                metadata_updates={
+                    "privacy_deletion_request_id": request["deletion_request_id"],
+                    "privacy_deletion_reason": clean_reason,
+                    "privacy_deletion_requested_at": now,
+                },
+            )
+            revoked_share_bundle_id = updated_share.share_bundle_id
+            request["status"] = "recorded_and_share_revoked"
+            request["revoked_share_bundle_id"] = revoked_share_bundle_id
+
+        settings = dict(workspace.settings or {})
+        deletion_requests = _history_entries(settings.get("privacy_deletion_requests"))
+        deletion_requests.append(request)
+        settings["privacy_deletion_requests"] = deletion_requests
+        saved_workspace = job_store.upsert_workspace(
+            self.runtime_root,
+            TenantWorkspace(
+                workspace_id=workspace.workspace_id,
+                slug=workspace.slug,
+                display_name=workspace.display_name,
+                region_code=workspace.region_code,
+                data_residency_region=workspace.data_residency_region,
+                plan_tier=workspace.plan_tier,
+                status=workspace.status,
+                created_at=workspace.created_at,
+                settings=settings,
+                members=list(workspace.members),
+            ),
+        )
+        job_store.create_audit_event(
+            self.runtime_root,
+            AuditEvent(
+                audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                workspace_id=saved_workspace.workspace_id,
+                actor_user_id=auth.user_id,
+                actor_role=auth.role,
+                action="workspace.privacy_deletion_requested",
+                target_type=f"privacy_{clean_scope_type}",
+                target_id=request["scope_id"],
+                event_payload={
+                    "deletion_request_id": request["deletion_request_id"],
+                    "scope_type": clean_scope_type,
+                    "scope_id": request["scope_id"],
+                    "requested_action": action,
+                    "reason": clean_reason,
+                    "approval_note": approval_note.strip() or None,
+                    "affected_outputs": affected_outputs,
+                    "revoked_share_bundle_id": revoked_share_bundle_id or None,
+                    "lineage_retained": True,
+                },
+                created_at=now,
+            ),
+        )
+        if revoked_share_bundle_id:
+            job_store.create_audit_event(
+                self.runtime_root,
+                AuditEvent(
+                    audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                    workspace_id=saved_workspace.workspace_id,
+                    actor_user_id=auth.user_id,
+                    actor_role=auth.role,
+                    action="share_bundle.revoked",
+                    target_type="share_bundle",
+                    target_id=revoked_share_bundle_id,
+                    event_payload={
+                        "revoked_at": now,
+                        "reason": "privacy_deletion_request",
+                        "deletion_request_id": request["deletion_request_id"],
+                    },
+                    created_at=now,
+                ),
+            )
+        return {
+            "deletion_request": request,
+            "privacy_export_controls": self.describe_workspace_privacy_export_controls(auth),
+        }
+
+    def _workspace_privacy_next_actions(self, blocked_reasons: list[str]) -> list[str]:
+        actions: list[str] = []
+        if "retention_window_too_short_for_customer_review" in blocked_reasons:
+            actions.append("Set artifact_retention_days to at least 30 before broader customer review.")
+        if "data_residency_region_missing" in blocked_reasons:
+            actions.append("Record a workspace data_residency_region before customer onboarding.")
+        if "deletion_request_policy_missing" in blocked_reasons:
+            actions.append("Set deletion_request_policy so deletion and redaction requests do not depend on operator memory.")
+        if "unresolved_governed_redaction" in blocked_reasons:
+            actions.append("Resolve required governed redaction before export or share circulation.")
+        return actions or ["Review privacy, export, share, redaction, and deletion controls before customer circulation."]
+
+    def _workspace_privacy_affected_outputs(
+        self,
+        *,
+        workspace_id: str,
+        scope_type: str,
+        scope_id: str,
+    ) -> dict[str, Any]:
+        jobs = job_store.list_workspace_jobs(self.runtime_root, workspace_id)
+        export_bundles = job_store.list_workspace_export_bundles(self.runtime_root, workspace_id)
+        share_bundles = job_store.list_workspace_share_bundles(self.runtime_root, workspace_id)
+
+        def job_matches(job: dict[str, Any]) -> bool:
+            metadata = dict(job.get("metadata") or {})
+            if scope_type == "workspace":
+                return True
+            if scope_type == "study":
+                return str(metadata.get("study_id") or "") == scope_id
+            if scope_type == "project":
+                return str(metadata.get("project_id") or "") == scope_id
+            if scope_type == "run":
+                return scope_id in {
+                    str(job.get("job_id") or ""),
+                    str(metadata.get("run_id") or ""),
+                    _job_run_id(job),
+                }
+            return False
+
+        matched_jobs = [job for job in jobs if job_matches(job)]
+        matched_job_ids = {str(job.get("job_id") or "") for job in matched_jobs}
+        matched_run_ids = {
+            item
+            for job in matched_jobs
+            for item in {str(dict(job.get("metadata") or {}).get("run_id") or ""), _job_run_id(job)}
+            if item
+        }
+
+        def bundle_matches(bundle: WorkspaceExportBundle | WorkspaceShareBundle) -> bool:
+            if scope_type == "workspace":
+                return True
+            if scope_type == "study":
+                return bundle.study_id == scope_id
+            if scope_type == "project":
+                return bundle.project_id == scope_id
+            if scope_type == "run":
+                return bundle.run_id == scope_id or bundle.run_id in matched_run_ids or bundle.job_id in matched_job_ids
+            if scope_type == "export_bundle" and isinstance(bundle, WorkspaceExportBundle):
+                return bundle.export_bundle_id == scope_id
+            if scope_type == "export_bundle" and isinstance(bundle, WorkspaceShareBundle):
+                return bundle.export_bundle_id == scope_id
+            if scope_type == "share_bundle" and isinstance(bundle, WorkspaceShareBundle):
+                return bundle.share_bundle_id == scope_id
+            return False
+
+        matched_exports = [bundle for bundle in export_bundles if bundle_matches(bundle)]
+        matched_shares = [bundle for bundle in share_bundles if bundle_matches(bundle)]
+        return {
+            "job_ids": sorted(matched_job_ids),
+            "run_ids": sorted(matched_run_ids),
+            "export_bundle_ids": sorted(bundle.export_bundle_id for bundle in matched_exports),
+            "share_bundle_ids": sorted(bundle.share_bundle_id for bundle in matched_shares),
+            "affected_job_count": len(matched_jobs),
+            "affected_export_bundle_count": len(matched_exports),
+            "affected_share_bundle_count": len(matched_shares),
+            "lineage_note": "Affected outputs remain listed so reports, decisions, and shared views can explain removed or redacted material.",
         }
 
     def _workspace_billing_governance_summary(self, billing: BillingAccount) -> dict[str, Any]:
@@ -1039,6 +1992,393 @@ class SaasRuntime:
             "synthetic_boundary": (
                 "Synthetic evidence only. Audit history shows simulated-research operations and governance events, not human validation."
             ),
+        }
+
+    def describe_workspace_integration_events(
+        self,
+        auth: AuthContext,
+        *,
+        study_id: str = "",
+        event_type: str = "",
+        limit: int = 50,
+    ) -> dict[str, Any]:
+        workspace, _billing = self._workspace_and_billing(auth)
+        clean_study_id = study_id.strip()
+        if clean_study_id:
+            study = job_store.get_workspace_study(self.runtime_root, clean_study_id)
+            if study is None or study.workspace_id != auth.workspace_id:
+                raise AuthorizationError(f"Workspace study '{study_id}' is not visible in this workspace.")
+        clean_event_type = event_type.strip()
+        numeric_limit = max(1, min(int(limit), 200))
+        delivery_attempts = _history_entries(workspace.settings.get(INTEGRATION_DELIVERY_HISTORY_SETTING))
+
+        events: list[dict[str, Any]] = []
+        for audit_event in job_store.list_audit_events(self.runtime_root, auth.workspace_id, limit=1000):
+            integration_event = self._integration_event_from_audit_event(auth, audit_event)
+            if integration_event is not None:
+                events.append(integration_event)
+        events.extend(self._integration_readiness_events(auth))
+
+        filtered = []
+        for event in events:
+            if clean_study_id and str(event.get("study_id") or "") != clean_study_id:
+                continue
+            if clean_event_type and str(event.get("event_type") or "") != clean_event_type:
+                continue
+            event = dict(event)
+            event["delivery"] = self._integration_delivery_summary(str(event.get("event_id") or ""), delivery_attempts)
+            filtered.append(event)
+        filtered.sort(key=lambda item: (str(item.get("occurred_at") or ""), str(item.get("event_id") or "")), reverse=True)
+
+        return {
+            "contract_version": "workspace-integration-events/v1",
+            "workspace_id": auth.workspace_id,
+            "generated_at": utc_now_iso(),
+            "events": filtered[:numeric_limit],
+            "filters": {
+                "study_id": clean_study_id or None,
+                "event_type": clean_event_type or None,
+                "limit": numeric_limit,
+            },
+            "supported_event_types": sorted(set(INTEGRATION_EVENT_ACTION_TYPES.values()) | {"readiness.changed"}),
+            "delivery_audit": {
+                "attempt_count": len(delivery_attempts),
+                "latest_attempt": _history_latest(delivery_attempts),
+                "storage_boundary": "local_workspace_settings_and_audit_events",
+                "cloud_upgrade_path": "move delivery attempts to a durable queue/table without changing event payload contracts.",
+            },
+            "capabilities": {
+                "study_created": True,
+                "run_completed": True,
+                "evidence_view_saved": True,
+                "decision_logged": True,
+                "readiness_changed": True,
+                "support_handoff_changed": True,
+                "delivery_attempt_audit": True,
+            },
+            "synthetic_boundary": (
+                "Integration events preserve synthetic-evidence boundaries, readiness gates, provenance, privacy controls, "
+                "and human-validation gaps. They are not a market-proof reporting channel."
+            ),
+        }
+
+    def record_workspace_integration_delivery_attempt(
+        self,
+        auth: AuthContext,
+        *,
+        event_id: str,
+        consumer_id: str,
+        status: str,
+        response_code: int | None = None,
+        note: str = "",
+        retry_after_seconds: int | None = None,
+    ) -> dict[str, Any]:
+        workspace, _billing = self._workspace_and_billing(auth)
+        if auth.role not in WORKSPACE_SETTINGS_MUTATION_ROLES and auth.role not in SUBMITTER_ROLES:
+            raise AuthorizationError(f"Role '{auth.role}' cannot record integration delivery attempts.")
+        clean_event_id = event_id.strip()
+        clean_consumer_id = consumer_id.strip()
+        clean_status = status.strip().lower()
+        if not clean_event_id:
+            raise ValueError("Field 'event_id' is required.")
+        if not clean_consumer_id:
+            raise ValueError("Field 'consumer_id' is required.")
+        if clean_status not in INTEGRATION_DELIVERY_STATUSES:
+            raise ValueError(f"Unsupported delivery status '{clean_status}'.")
+
+        available_events = self.describe_workspace_integration_events(auth, limit=500)
+        matched_event = next((event for event in available_events["events"] if event.get("event_id") == clean_event_id), None)
+        if matched_event is None:
+            raise ValueError(f"Integration event '{clean_event_id}' is not available in this workspace.")
+
+        now = utc_now_iso()
+        payload_fingerprint = hashlib.sha256(
+            json.dumps(matched_event.get("payload", {}), sort_keys=True, ensure_ascii=False).encode("utf-8")
+        ).hexdigest()[:24]
+        attempt = {
+            "delivery_attempt_id": f"integration_delivery_{uuid.uuid4().hex[:12]}",
+            "event_id": clean_event_id,
+            "event_type": matched_event.get("event_type"),
+            "consumer_id": clean_consumer_id,
+            "status": clean_status,
+            "response_code": int(response_code) if response_code is not None else None,
+            "note": note.strip(),
+            "retry_after_seconds": int(retry_after_seconds) if retry_after_seconds is not None else None,
+            "attempted_at": now,
+            "attempted_by_user_id": auth.user_id,
+            "actor_role": auth.role,
+            "payload_boundary_hash": payload_fingerprint,
+            "synthetic_boundary": "Delivery audit records boundary-preserving integration handling, not human validation.",
+        }
+
+        settings = dict(workspace.settings or {})
+        attempts = _history_entries(settings.get(INTEGRATION_DELIVERY_HISTORY_SETTING))
+        attempts.append(attempt)
+        settings[INTEGRATION_DELIVERY_HISTORY_SETTING] = attempts[-500:]
+        saved_workspace = job_store.upsert_workspace(
+            self.runtime_root,
+            TenantWorkspace(
+                workspace_id=workspace.workspace_id,
+                slug=workspace.slug,
+                display_name=workspace.display_name,
+                region_code=workspace.region_code,
+                data_residency_region=workspace.data_residency_region,
+                plan_tier=workspace.plan_tier,
+                status=workspace.status,
+                created_at=workspace.created_at,
+                settings=settings,
+                members=list(workspace.members),
+            ),
+        )
+        job_store.create_audit_event(
+            self.runtime_root,
+            AuditEvent(
+                audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                workspace_id=saved_workspace.workspace_id,
+                actor_user_id=auth.user_id,
+                actor_role=auth.role,
+                action="integration_event.delivery_recorded",
+                target_type="integration_event",
+                target_id=clean_event_id,
+                event_payload={
+                    "event_id": clean_event_id,
+                    "event_type": matched_event.get("event_type"),
+                    "consumer_id": clean_consumer_id,
+                    "delivery_status": clean_status,
+                    "response_code": attempt["response_code"],
+                    "payload_boundary_hash": payload_fingerprint,
+                    "study_id": matched_event.get("study_id") or None,
+                    "run_id": matched_event.get("run_id") or None,
+                },
+                created_at=now,
+            ),
+        )
+        return {
+            "delivery_attempt": attempt,
+            "integration_events": self.describe_workspace_integration_events(
+                auth,
+                study_id=str(matched_event.get("study_id") or ""),
+                limit=50,
+            ),
+        }
+
+    def _integration_event_from_audit_event(self, auth: AuthContext, audit_event: AuditEvent) -> dict[str, Any] | None:
+        event_type = INTEGRATION_EVENT_ACTION_TYPES.get(audit_event.action)
+        if event_type is None:
+            return None
+        payload = dict(audit_event.event_payload or {})
+        study_id = str(payload.get("study_id") or (audit_event.target_id if audit_event.target_type == "study" else "")).strip()
+        job_id = str(payload.get("job_id") or (audit_event.target_id if audit_event.target_type == "validation_job" else "")).strip()
+        run_id = str(payload.get("run_id") or "").strip()
+        project_id = str(payload.get("project_id") or "").strip()
+        target_id = audit_event.target_id
+        route_path = self._integration_event_route(
+            event_type=event_type,
+            study_id=study_id,
+            run_id=run_id or job_id,
+            target_id=target_id,
+        )
+        integration_payload = self._integration_event_payload(
+            auth,
+            event_type=event_type,
+            source_payload=payload,
+            project_id=project_id,
+            study_id=study_id,
+            job_id=job_id,
+            run_id=run_id,
+            target_type=audit_event.target_type,
+            target_id=target_id,
+            source_audit_event_id=audit_event.audit_event_id,
+        )
+        return {
+            "event_id": f"integration_{audit_event.audit_event_id}",
+            "event_type": event_type,
+            "source_action": audit_event.action,
+            "workspace_id": auth.workspace_id,
+            "project_id": project_id or integration_payload.get("project_id"),
+            "study_id": study_id or integration_payload.get("study_id"),
+            "job_id": job_id or integration_payload.get("job_id"),
+            "run_id": run_id or integration_payload.get("run_id"),
+            "target_type": audit_event.target_type,
+            "target_id": target_id,
+            "occurred_at": audit_event.created_at,
+            "route_path": route_path,
+            "payload": integration_payload,
+            "synthetic_boundary": integration_payload["synthetic_boundary"],
+        }
+
+    def _integration_readiness_events(self, auth: AuthContext) -> list[dict[str, Any]]:
+        events: list[dict[str, Any]] = []
+        for evidence_view in job_store.list_workspace_evidence_views(self.runtime_root, auth.workspace_id):
+            summary = self._evidence_view_summary(evidence_view)
+            readiness_gate = summary.get("readiness_gate") if isinstance(summary.get("readiness_gate"), dict) else {}
+            readiness_status = str(readiness_gate.get("status") or "").strip()
+            if not readiness_status:
+                continue
+            payload = self._integration_event_payload(
+                auth,
+                event_type="readiness.changed",
+                source_payload={
+                    "readiness_status": readiness_status,
+                    "selected_signal_id": summary.get("selected_signal_id"),
+                    "source_exchange_refs": summary.get("source_exchange_refs", []),
+                    "source_trace_refs": summary.get("source_trace_refs", []),
+                },
+                project_id=evidence_view.project_id,
+                study_id=evidence_view.study_id,
+                job_id=str(evidence_view.job_id or ""),
+                run_id=str(evidence_view.run_id or ""),
+                target_type="evidence_view",
+                target_id=evidence_view.evidence_view_id,
+                source_audit_event_id="",
+                readiness_gate=readiness_gate,
+            )
+            events.append(
+                {
+                    "event_id": f"integration_readiness_{evidence_view.evidence_view_id}_{readiness_status}",
+                    "event_type": "readiness.changed",
+                    "source_action": "readiness.projected",
+                    "workspace_id": auth.workspace_id,
+                    "project_id": evidence_view.project_id,
+                    "study_id": evidence_view.study_id,
+                    "job_id": evidence_view.job_id,
+                    "run_id": evidence_view.run_id,
+                    "target_type": "evidence_view",
+                    "target_id": evidence_view.evidence_view_id,
+                    "occurred_at": evidence_view.updated_at or evidence_view.created_at,
+                    "route_path": f"/studio/studies/{evidence_view.study_id}/evidence-views/{evidence_view.evidence_view_id}",
+                    "payload": payload,
+                    "synthetic_boundary": payload["synthetic_boundary"],
+                }
+            )
+        return events
+
+    def _integration_event_payload(
+        self,
+        auth: AuthContext,
+        *,
+        event_type: str,
+        source_payload: dict[str, Any],
+        project_id: str,
+        study_id: str,
+        job_id: str,
+        run_id: str,
+        target_type: str,
+        target_id: str,
+        source_audit_event_id: str,
+        readiness_gate: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        source_exchange_refs: list[str] = []
+        source_trace_refs: list[str] = []
+        human_validation_gaps: list[Any] = []
+        provider_runtime_boundary: dict[str, Any] = (
+            dict(source_payload.get("provider_runtime_boundary"))
+            if isinstance(source_payload.get("provider_runtime_boundary"), dict)
+            else {}
+        )
+        gate = dict(readiness_gate or {}) if isinstance(readiness_gate, dict) else {}
+
+        if event_type in {"run.completed", "run.failed"} and job_id:
+            try:
+                query = self.query_workspace_evidence(auth, job_id=job_id)
+            except (FileNotFoundError, ValueError, AuthorizationError):
+                query = {}
+            if isinstance(query, dict) and query:
+                if not gate and isinstance(query.get("readiness_gate"), dict):
+                    gate = dict(query["readiness_gate"])
+                if not provider_runtime_boundary and isinstance(query.get("provider_runtime_boundary"), dict):
+                    provider_runtime_boundary = dict(query["provider_runtime_boundary"])
+                for result in query.get("results", []) if isinstance(query.get("results"), list) else []:
+                    if not isinstance(result, dict):
+                        continue
+                    if isinstance(result.get("source_exchange_refs"), list):
+                        source_exchange_refs.extend(str(ref) for ref in result["source_exchange_refs"] if str(ref).strip())
+                    if isinstance(result.get("source_trace_refs"), list):
+                        source_trace_refs.extend(str(ref) for ref in result["source_trace_refs"] if str(ref).strip())
+                reliability = query.get("evidence_reliability") if isinstance(query.get("evidence_reliability"), dict) else {}
+                human_validation_gaps = list(reliability.get("missing_context", [])) if isinstance(reliability.get("missing_context"), list) else []
+
+        if target_type == "evidence_view":
+            view = job_store.get_workspace_evidence_view(self.runtime_root, target_id)
+            if view is not None and view.workspace_id == auth.workspace_id:
+                summary = self._evidence_view_summary(view)
+                if not gate and isinstance(summary.get("readiness_gate"), dict):
+                    gate = dict(summary["readiness_gate"])
+                provider_runtime_boundary = provider_runtime_boundary or (
+                    dict(summary.get("provider_runtime_boundary", {})) if isinstance(summary.get("provider_runtime_boundary"), dict) else {}
+                )
+                source_exchange_refs.extend(str(ref) for ref in summary.get("source_exchange_refs", []) if str(ref).strip())
+                source_trace_refs.extend(str(ref) for ref in summary.get("source_trace_refs", []) if str(ref).strip())
+        elif target_type == "decision_log":
+            decision = job_store.get_workspace_decision_log(self.runtime_root, target_id)
+            if decision is not None and decision.workspace_id == auth.workspace_id:
+                summary = self._decision_log_summary(decision)
+                if not gate and isinstance(summary.get("readiness_gate"), dict):
+                    gate = dict(summary["readiness_gate"])
+                provider_runtime_boundary = provider_runtime_boundary or (
+                    dict(summary.get("provider_runtime_boundary", {})) if isinstance(summary.get("provider_runtime_boundary"), dict) else {}
+                )
+                source_exchange_refs.extend(str(ref) for ref in summary.get("source_exchange_refs", []) if str(ref).strip())
+                source_trace_refs.extend(str(ref) for ref in summary.get("source_trace_refs", []) if str(ref).strip())
+                if str(summary.get("metadata", {}).get("human_follow_up") if isinstance(summary.get("metadata"), dict) else "").strip():
+                    human_validation_gaps.append(str(summary["metadata"]["human_follow_up"]))
+
+        privacy_controls = self.describe_workspace_privacy_export_controls(auth, study_id=study_id)
+        return {
+            "contract_version": "workspace-integration-event-payload/v1",
+            "event_type": event_type,
+            "workspace_id": auth.workspace_id,
+            "project_id": project_id or None,
+            "study_id": study_id or None,
+            "job_id": job_id or None,
+            "run_id": run_id or None,
+            "target_type": target_type,
+            "target_id": target_id,
+            "readiness_gate": gate,
+            "provider_runtime_boundary": provider_runtime_boundary,
+            "provenance": {
+                "source_audit_event_id": source_audit_event_id or None,
+                "source_exchange_refs": _unique_preserve_order(source_exchange_refs)[:12],
+                "source_trace_refs": _unique_preserve_order(source_trace_refs)[:12],
+                "source_payload_keys": sorted(str(key) for key in source_payload.keys()),
+            },
+            "privacy_export_controls": {
+                "privacy_readiness": privacy_controls.get("privacy_readiness"),
+                "retention_controls": privacy_controls.get("retention_controls"),
+                "data_residency": privacy_controls.get("data_residency"),
+            },
+            "human_validation_gaps": human_validation_gaps[:8],
+            "human_validation_required": True,
+            "synthetic_boundary": (
+                "This integration payload carries simulated evidence state with provenance, readiness, privacy, and "
+                "human-validation boundaries. It must not be presented as human market proof."
+            ),
+        }
+
+    @staticmethod
+    def _integration_event_route(*, event_type: str, study_id: str, run_id: str, target_id: str) -> str | None:
+        if event_type == "study.created" and study_id:
+            return f"/studio/studies/{study_id}"
+        if event_type in {"run.completed", "run.failed"} and study_id and run_id:
+            return f"/studio/studies/{study_id}/runs/{run_id}"
+        if event_type in {"evidence_view.saved", "readiness.changed"} and study_id and target_id:
+            return f"/studio/studies/{study_id}/evidence-views/{target_id}"
+        if event_type == "decision.logged" and study_id and target_id:
+            return f"/studio/studies/{study_id}/decisions/{target_id}"
+        if event_type == "support.handoff_changed" and study_id:
+            return f"/studio/studies/{study_id}"
+        return None
+
+    @staticmethod
+    def _integration_delivery_summary(event_id: str, attempts: list[dict[str, Any]]) -> dict[str, Any]:
+        matching = [attempt for attempt in attempts if str(attempt.get("event_id") or "") == event_id]
+        latest = matching[-1] if matching else None
+        return {
+            "status": str(latest.get("status") or "not_delivered") if isinstance(latest, dict) else "not_delivered",
+            "attempt_count": len(matching),
+            "latest_attempt": latest,
+            "retry_visible": bool(isinstance(latest, dict) and str(latest.get("status") or "") in {"failed", "retrying"}),
+            "consumer_ids": sorted({str(attempt.get("consumer_id") or "") for attempt in matching if str(attempt.get("consumer_id") or "").strip()}),
         }
 
     def create_workspace_project(
@@ -1681,6 +3021,251 @@ class SaasRuntime:
             raise AuthorizationError(f"Workspace study '{study_id}' is not visible in this workspace.")
         return self._study_summary(study)
 
+    def create_frontline_persona_generation_job(
+        self,
+        auth: AuthContext,
+        *,
+        panel_type: str = "mainstream",
+        requested_count: int = 3,
+        random_seed: int = 41,
+        target_audience: dict[str, Any] | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        workspace, _billing = self._workspace_and_billing(auth)
+        if auth.role not in SUBMITTER_ROLES:
+            raise AuthorizationError(f"Role '{auth.role}' cannot generate persona libraries.")
+        clean_panel_type = panel_type.strip() if panel_type in PANEL_ROLES else "mainstream"
+        clean_count = _bounded_int(requested_count, default=3, minimum=1, maximum=6)
+        clean_seed = _bounded_int(random_seed, default=41, minimum=0, maximum=999999)
+        workspace_root = _workspace_root(self.runtime_root, workspace.workspace_id)
+        persona_dir = workspace_root / "personas"
+        persona_dir.mkdir(parents=True, exist_ok=True)
+        job_id = f"personagen_{uuid.uuid4().hex[:12]}"
+        now = utc_now_iso()
+        job_artifact_dir = workspace_root / "persona_generation_jobs" / job_id
+        job_artifact_dir.mkdir(parents=True, exist_ok=True)
+        job_artifact_path = job_artifact_dir / "generation_job.json"
+        relative_payload_path = job_artifact_path.relative_to(workspace_root).as_posix()
+        job = job_store.create_persona_generation_job(
+            self.runtime_root,
+            generation_job_id=job_id,
+            workspace_id=workspace.workspace_id,
+            requested_by_user_id=auth.user_id,
+            status="generating",
+            panel_type=clean_panel_type,
+            requested_count=clean_count,
+            random_seed=clean_seed,
+            target_audience=dict(target_audience or {}),
+            payload_path=relative_payload_path,
+            created_at=now,
+            updated_at=now,
+            metadata={
+                "contract_version": "persona-generation-job/v0-draft",
+                "source": "frontline_persona_library",
+                **dict(metadata or {}),
+            },
+        )
+        lifecycle = [{"status": "generating", "at": now}]
+        write_json(
+            job_artifact_path,
+            {
+                "contract_version": "persona-generation-job-artifact/v0-draft",
+                "generation_job": job,
+                "lifecycle": lifecycle,
+                "synthetic_boundary": "Generated personas are synthetic participants, not recruited human evidence.",
+            },
+        )
+        job_store.create_audit_event(
+            self.runtime_root,
+            AuditEvent(
+                audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                workspace_id=auth.workspace_id,
+                actor_user_id=auth.user_id,
+                actor_role=auth.role,
+                action="persona_generation_job.started",
+                target_type="persona_generation_job",
+                target_id=job_id,
+                event_payload={"panel_type": clean_panel_type, "requested_count": clean_count, "random_seed": clean_seed},
+                created_at=now,
+            ),
+        )
+        generated_ids: list[str] = []
+        promoted_ids: list[str] = []
+        failed_ids: list[str] = []
+        try:
+            existing_entries, _failures = _load_frontline_persona_entries(persona_dir)
+            existing_ids = {entry["persona"].profile.synthetic_user_id for entry in existing_entries}
+            next_id_number = 1
+            for existing_id in existing_ids:
+                match = re.fullmatch(r"su_(\d+)", existing_id)
+                if match:
+                    next_id_number = max(next_id_number, int(match.group(1)) + 1)
+            adapter = FrontlineLocalV5SynthesisAdapter()
+            guide = build_frontline_v5_generation_guide(
+                panel_type=clean_panel_type,
+                target_audience=target_audience,
+            )
+            for offset in range(clean_count):
+                while f"su_{next_id_number:04d}" in existing_ids:
+                    next_id_number += 1
+                synthetic_user_id = f"su_{next_id_number:04d}"
+                next_id_number += 1
+                existing_ids.add(synthetic_user_id)
+                folder = generate_v5_persona(
+                    persona_id=synthetic_user_id,
+                    output_dir=persona_dir,
+                    adapter=adapter,
+                    guide=guide,
+                    random_seed=clean_seed + offset,
+                    max_transport_attempts=1,
+                )
+                persona = load_persona(folder)
+                persona.seed.panel_role = clean_panel_type
+                provisional_at = utc_now_iso()
+                provisional_record = {
+                    "contract_version": "persona-library-record/v0-draft",
+                    "synthetic_user_id": synthetic_user_id,
+                    "persona_version": f"{persona.skill_version}:{_persona_artifact_hashes(folder).get('profile.json', '')[:12]}",
+                    "readiness_status": "provisional",
+                    "persona_kind": PERSONA_LIBRARY_PARTICIPANT_KIND,
+                    "panel_role": clean_panel_type,
+                    "source_schema_version": "v5_1",
+                    "source_kind": "generated",
+                    "generator_version": V5_GENERATOR_VERSION,
+                    "generation_job_id": job_id,
+                    "generated_at": provisional_at,
+                    "promoted_at": "",
+                    "last_checked_at": provisional_at,
+                    "readiness_checks": {
+                        "schema_validation": "passed",
+                        "duplicate_check": "passed",
+                        "coverage_check": "passed",
+                    },
+                    "lifecycle_history": [
+                        {
+                            "status": "provisional",
+                            "at": provisional_at,
+                            "reason": "Generated through explicit Frontline persona gap-fill job.",
+                        }
+                    ],
+                    "artifact_hashes": _persona_artifact_hashes(folder),
+                }
+                _write_persona_library_record(folder, provisional_record)
+                promoted_at = utc_now_iso()
+                ready_record = {
+                    **provisional_record,
+                    "readiness_status": "ready",
+                    "promoted_at": promoted_at,
+                    "last_checked_at": promoted_at,
+                    "lifecycle_history": [
+                        *provisional_record["lifecycle_history"],
+                        {
+                            "status": "ready",
+                            "at": promoted_at,
+                            "reason": "Schema validation, duplicate check, and requested coverage check passed.",
+                        },
+                    ],
+                    "artifact_hashes": _persona_artifact_hashes(folder),
+                }
+                _write_persona_library_record(folder, ready_record)
+                generated_ids.append(synthetic_user_id)
+                promoted_ids.append(synthetic_user_id)
+                lifecycle.extend(ready_record["lifecycle_history"])
+            if len(generated_ids) < clean_count:
+                raise ValueError(f"Generated {len(generated_ids)} personas for panel '{clean_panel_type}', expected {clean_count}.")
+            completed_at = utc_now_iso()
+            job = job_store.update_persona_generation_job(
+                self.runtime_root,
+                generation_job_id=job_id,
+                status="completed",
+                generated_persona_ids=generated_ids,
+                promoted_persona_ids=promoted_ids,
+                failed_persona_ids=failed_ids,
+                payload_path=relative_payload_path,
+                metadata_updates={
+                    "completed_at": completed_at,
+                    "lifecycle": lifecycle,
+                    "promotion_rule": "local synchronous validation, duplicate, and coverage checks",
+                },
+                updated_at=completed_at,
+            )
+            write_json(
+                job_artifact_path,
+                {
+                    "contract_version": "persona-generation-job-artifact/v0-draft",
+                    "generation_job": job,
+                    "lifecycle": lifecycle,
+                    "generated_persona_ids": generated_ids,
+                    "promoted_persona_ids": promoted_ids,
+                    "synthetic_boundary": "Generated personas are synthetic participants, not recruited human evidence.",
+                },
+            )
+            job_store.create_audit_event(
+                self.runtime_root,
+                AuditEvent(
+                    audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                    workspace_id=auth.workspace_id,
+                    actor_user_id=auth.user_id,
+                    actor_role=auth.role,
+                    action="persona_generation_job.completed",
+                    target_type="persona_generation_job",
+                    target_id=job_id,
+                    event_payload={
+                        "panel_type": clean_panel_type,
+                        "generated_persona_ids": generated_ids,
+                        "promoted_persona_ids": promoted_ids,
+                    },
+                    created_at=completed_at,
+                ),
+            )
+            return {
+                "generation_job": job,
+                "generated_persona_ids": generated_ids,
+                "promoted_persona_ids": promoted_ids,
+                "synthetic_boundary": "Generated personas are synthetic participants, not recruited human evidence.",
+            }
+        except Exception as exc:
+            failed_at = utc_now_iso()
+            job = job_store.update_persona_generation_job(
+                self.runtime_root,
+                generation_job_id=job_id,
+                status="failed",
+                generated_persona_ids=generated_ids,
+                promoted_persona_ids=promoted_ids,
+                failed_persona_ids=failed_ids,
+                failure_message=str(exc),
+                payload_path=relative_payload_path,
+                metadata_updates={"failed_at": failed_at, "lifecycle": [*lifecycle, {"status": "failed", "at": failed_at}]},
+                updated_at=failed_at,
+            )
+            write_json(
+                job_artifact_path,
+                {
+                    "contract_version": "persona-generation-job-artifact/v0-draft",
+                    "generation_job": job,
+                    "lifecycle": [*lifecycle, {"status": "failed", "at": failed_at}],
+                    "generated_persona_ids": generated_ids,
+                    "promoted_persona_ids": promoted_ids,
+                    "failure_message": str(exc),
+                    "synthetic_boundary": "Generated personas are synthetic participants, not recruited human evidence.",
+                },
+            )
+            job_store.create_audit_event(
+                self.runtime_root,
+                AuditEvent(
+                    audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                    workspace_id=auth.workspace_id,
+                    actor_user_id=auth.user_id,
+                    actor_role=auth.role,
+                    action="persona_generation_job.failed",
+                    target_type="persona_generation_job",
+                    target_id=job_id,
+                    event_payload={"panel_type": clean_panel_type, "failure_message": str(exc)},
+                    created_at=failed_at,
+                ),
+            )
+            raise
+
     def describe_frontline_persona_library(
         self,
         auth: AuthContext,
@@ -1693,15 +3278,32 @@ class SaasRuntime:
         workspace, _billing = self._workspace_and_billing(auth)
         persona_dir = _workspace_root(self.runtime_root, workspace.workspace_id) / "personas"
         persona_dir.mkdir(parents=True, exist_ok=True)
-        personas = load_personas(persona_dir)
-        if not personas:
-            for persona in generate_personas(count=len(PANEL_ROLES) * 3, random_seed=41):
-                save_persona(persona, persona_dir)
-            personas = load_personas(persona_dir)
-
+        entries, load_failures = _load_frontline_persona_entries(persona_dir)
+        generation_jobs = job_store.list_workspace_persona_generation_jobs(self.runtime_root, workspace.workspace_id, limit=10)
+        active_generation_job = next(
+            (job for job in generation_jobs if str(job.get("status") or "") in {"queued", "generating"}),
+            None,
+        )
+        participant_pool_entries = [
+            entry
+            for entry in entries
+            if entry["record"].get("persona_kind") == PERSONA_LIBRARY_PARTICIPANT_KIND
+            and entry["record"].get("readiness_status") in {"ready", "provisional"}
+        ]
+        participant_entries = [
+            entry for entry in participant_pool_entries if _is_frontline_formal_participant(entry)
+        ]
+        legacy_participant_entries = [
+            entry for entry in participant_pool_entries if not _is_frontline_formal_participant(entry)
+        ]
+        lens_entries = [
+            entry
+            for entry in entries
+            if entry["record"].get("persona_kind") in PERSONA_LIBRARY_LENS_KINDS
+            and entry["record"].get("readiness_status") in {"ready", "provisional"}
+        ]
+        selectable_personas = [entry["persona"] for entry in participant_entries]
         clean_panel_type = panel_type.strip() if panel_type in PANEL_ROLES else "mainstream"
-        if not any(persona.seed.panel_role == clean_panel_type for persona in personas) and personas:
-            clean_panel_type = personas[0].seed.panel_role
         clean_sample_size = _bounded_int(sample_size, default=3, minimum=1, maximum=6)
         clean_seed = _bounded_int(random_seed, default=17, minimum=0, maximum=999999)
         selected_ids = _unique_preserve_order(list(selected_persona_ids or []))
@@ -1710,18 +3312,77 @@ class SaasRuntime:
             panel_filters["synthetic_user_id"] = selected_ids
             clean_sample_size = min(clean_sample_size, len(selected_ids))
 
+        selected_panel_entries = [
+            entry for entry in participant_entries if entry["persona"].seed.panel_role == clean_panel_type
+        ]
+        ready_count = sum(1 for entry in selected_panel_entries if entry["record"].get("readiness_status") == "ready")
+        provisional_count = sum(1 for entry in selected_panel_entries if entry["record"].get("readiness_status") == "provisional")
+        panel_inventory_counts = {
+            role: sum(1 for entry in participant_entries if entry["persona"].seed.panel_role == role)
+            for role in PANEL_ROLES
+        }
+        alternative_panel_type = ""
+        alternative_panel_count = 0
+        if not selected_panel_entries:
+            available_alternatives = [
+                (role, count)
+                for role, count in panel_inventory_counts.items()
+                if role != clean_panel_type and count > 0
+            ]
+            if available_alternatives:
+                alternative_panel_type, alternative_panel_count = max(
+                    available_alternatives,
+                    key=lambda item: item[1],
+                )
+        latest_failed_job = next((job for job in generation_jobs if str(job.get("status") or "") == "failed"), None)
+        if active_generation_job is not None and not selected_panel_entries:
+            readiness_status = "generating"
+            readiness_message = "Persona generation is running for this workspace. The library will update when the job completes."
+        elif not entries and latest_failed_job is not None:
+            readiness_status = "failed"
+            readiness_message = latest_failed_job.get("failure_message") or "The last persona generation job failed."
+        elif not entries:
+            readiness_status = "empty"
+            readiness_message = "No synthetic participants are available yet. Generate a starter library before approving a study plan."
+        elif load_failures and not participant_entries:
+            readiness_status = "failed"
+            readiness_message = "Persona artifacts exist, but none can be loaded into the participant library."
+        elif ready_count > 0:
+            readiness_status = "ready"
+            readiness_message = "Ready synthetic participants are available for this panel."
+        elif provisional_count > 0:
+            readiness_status = "provisional"
+            readiness_message = "Only provisional synthetic participants are available; approval must explicitly allow provisional use."
+        elif participant_entries and alternative_panel_type:
+            requested_label = clean_panel_type.replace("_", " ").title()
+            alternative_label = alternative_panel_type.replace("_", " ").title()
+            readiness_status = "empty"
+            readiness_message = (
+                f"No selectable V5+ synthetic participants match {requested_label} yet. "
+                f"{alternative_label} has {alternative_panel_count} ready participant(s). "
+                f"Switch panel or generate {requested_label} participants before plan approval."
+            )
+        else:
+            readiness_status = "empty"
+            readiness_message = "No selectable V5+ synthetic participants match this panel yet. Older artifacts and simulated lenses are kept separate from participant evidence."
+
         selection: dict[str, Any] = {
+            "contract_version": "persona-panel-selection/v0-draft",
             "panel_type": clean_panel_type,
             "sample_size": clean_sample_size,
+            "random_seed": clean_seed,
             "selected_persona_ids": [],
             "selection_rationale": "No matching personas are available yet.",
             "explainability": {},
             "filters": panel_filters,
+            "selected_personas": [],
+            "readiness_status": readiness_status,
+            "synthetic_boundary": "Persona selection improves simulation coverage, but it does not create recruited human evidence.",
         }
-        if personas:
+        if selectable_personas:
             try:
                 sampling = sample_personas(
-                    personas,
+                    selectable_personas,
                     PanelSpec(
                         panel_type=clean_panel_type,
                         sample_size=clean_sample_size,
@@ -1740,20 +3401,83 @@ class SaasRuntime:
                     "selection_mode": "user_selected" if selected_ids else "system_suggested",
                     "selection_rationale": sampling.rationale,
                     "explainability": sampling.explainability,
-                    "selected_personas": [self._frontline_persona_summary(persona) for persona in sampling.personas],
+                    "selected_personas": [
+                        self._frontline_persona_summary(
+                            persona,
+                            record=next(
+                                (
+                                    entry["record"]
+                                    for entry in participant_entries
+                                    if entry["persona"].profile.synthetic_user_id == persona.profile.synthetic_user_id
+                                ),
+                                {},
+                            ),
+                        )
+                        for persona in sampling.personas
+                    ],
+                    "readiness_status": readiness_status,
                     "synthetic_boundary": "Persona selection improves simulation coverage, but it does not create recruited human evidence.",
                 }
             except ValueError:
                 pass
 
-        library_summary = build_persona_library_summary(personas)
+        library_summary = build_persona_library_summary(selectable_personas)
+        coverage_gaps = (
+            library_summary.get("human_difference_axis_summary", {}).get("coverage_gaps", [])
+            if isinstance(library_summary.get("human_difference_axis_summary"), dict)
+            else []
+        )
         return {
-            "contract_version": "frontline-persona-library/v0-draft",
+            "contract_version": "frontline-persona-library/v1-readiness",
+            "readiness": {
+                "contract_version": "persona-library-readiness/v0-draft",
+                "status": readiness_status,
+                "known_states": list(PERSONA_LIBRARY_READINESS_STATES),
+                "message": readiness_message,
+                "can_generate": auth.role in SUBMITTER_ROLES,
+                "active_generation_job_id": (
+                    str(active_generation_job.get("generation_job_id") or "")
+                    if isinstance(active_generation_job, dict)
+                    else ""
+                ),
+                "latest_failed_generation_job_id": (
+                    str(latest_failed_job.get("generation_job_id") or "")
+                    if isinstance(latest_failed_job, dict)
+                    else ""
+                ),
+                "failure_message": (
+                    str(latest_failed_job.get("failure_message") or "")
+                    if isinstance(latest_failed_job, dict)
+                    else ""
+                ),
+                "load_failures": load_failures,
+                "selectable_persona_count": len(participant_entries),
+                "legacy_participant_count": len(legacy_participant_entries),
+                "simulated_lens_count": len(lens_entries),
+                "active_panel_ready_count": ready_count,
+                "active_panel_provisional_count": provisional_count,
+                "alternative_panel_type": alternative_panel_type,
+                "alternative_panel_count": alternative_panel_count,
+                "panel_inventory_counts": panel_inventory_counts,
+                "coverage_gap_count": len(coverage_gaps),
+            },
             "panel_options": [
                 {
                     "panel_type": role,
                     "label": role.replace("_", " ").title(),
-                    "persona_count": sum(1 for persona in personas if persona.seed.panel_role == role),
+                    "persona_count": sum(1 for entry in participant_entries if entry["persona"].seed.panel_role == role),
+                    "ready_count": sum(
+                        1
+                        for entry in participant_entries
+                        if entry["persona"].seed.panel_role == role
+                        and entry["record"].get("readiness_status") == "ready"
+                    ),
+                    "provisional_count": sum(
+                        1
+                        for entry in participant_entries
+                        if entry["persona"].seed.panel_role == role
+                        and entry["record"].get("readiness_status") == "provisional"
+                    ),
                 }
                 for role in PANEL_ROLES
             ],
@@ -1762,24 +3486,75 @@ class SaasRuntime:
             "random_seed": clean_seed,
             "library_summary": library_summary,
             "personas": [
-                self._frontline_persona_summary(persona)
-                for persona in personas
-                if persona.seed.panel_role == clean_panel_type
+                self._frontline_persona_summary(entry["persona"], record=entry["record"])
+                for entry in participant_entries
+                if entry["persona"].seed.panel_role == clean_panel_type
             ],
+            "simulated_lenses": [
+                self._frontline_persona_summary(entry["persona"], record=entry["record"])
+                for entry in lens_entries
+            ],
+            "persona_groups": {
+                "participants": {
+                    "count": len(participant_entries),
+                    "formal_schema_versions": sorted(FRONTLINE_FORMAL_PERSONA_SCHEMA_VERSIONS),
+                    "legacy_excluded_count": len(legacy_participant_entries),
+                    "synthetic_boundary": "V5+ participant personas may be used for synthetic study panels, but remain simulated evidence.",
+                },
+                "generated_personas": {
+                    "count": sum(1 for entry in participant_entries if entry["record"].get("source_kind") == "generated"),
+                    "generator_versions": sorted({
+                        str(entry["record"].get("generator_version") or "unknown")
+                        for entry in participant_entries
+                        if entry["record"].get("source_kind") == "generated"
+                    }),
+                },
+                "simulated_lenses": {
+                    "count": len(lens_entries),
+                    "persona_kinds": sorted({
+                        str(entry["record"].get("persona_kind") or "")
+                        for entry in lens_entries
+                    }),
+                    "synthetic_boundary": "Public-figure, celebrity, expert, influencer, and founder-critique lenses are simulated and unaffiliated. They are not participant evidence.",
+                },
+            },
             "default_selection": selection,
+            "generation_jobs": generation_jobs,
+            "lens_boundary": {
+                "contract_version": "simulated-lens-boundary/v0-draft",
+                "excluded_from_participant_pool": sorted(PERSONA_LIBRARY_LENS_KINDS),
+                "message": "Public-figure, celebrity, expert, influencer, and founder-critique lenses are simulated and unaffiliated. They are not mixed into participant evidence by default.",
+            },
             "synthetic_boundary": "This is a synthetic persona library. Use coverage and gaps to choose a better simulation panel, not to claim human market proof.",
         }
 
-    def _frontline_persona_summary(self, persona: Any) -> dict[str, Any]:
+    def _frontline_persona_summary(self, persona: Any, *, record: dict[str, Any] | None = None) -> dict[str, Any]:
         identity = dict(persona.profile.basic_identity)
         technology = dict(persona.profile.technology_profile)
         economic = dict(persona.profile.economic_profile)
         behavior = dict(persona.profile.behavior_profile)
         axes = dict(getattr(persona.profile, "human_difference_axes", {}) or {})
+        record_payload = dict(record or {})
         return {
             "synthetic_user_id": persona.profile.synthetic_user_id,
             "name": str(identity.get("name") or persona.profile.synthetic_user_id),
             "panel_role": persona.seed.panel_role,
+            "persona_kind": str(record_payload.get("persona_kind") or PERSONA_LIBRARY_PARTICIPANT_KIND),
+            "library_group": (
+                "simulated_lens"
+                if str(record_payload.get("persona_kind") or "") in PERSONA_LIBRARY_LENS_KINDS
+                else "participant"
+            ),
+            "readiness_status": _clean_persona_readiness_status(record_payload.get("readiness_status"), default="ready"),
+            "persona_version": str(record_payload.get("persona_version") or persona.skill_version or ""),
+            "source_schema_version": str(record_payload.get("source_schema_version") or ""),
+            "source_kind": str(record_payload.get("source_kind") or ""),
+            "generator_version": str(record_payload.get("generator_version") or ""),
+            "source_panel_role": str(record_payload.get("source_panel_role") or ""),
+            "panel_role_normalized": bool(record_payload.get("panel_role_normalized")),
+            "lens_boundary": str(record_payload.get("lens_boundary") or ""),
+            "artifact_hashes": dict(record_payload.get("artifact_hashes", {})) if isinstance(record_payload.get("artifact_hashes"), dict) else {},
+            "generation_job_id": str(record_payload.get("generation_job_id") or ""),
             "occupation": str(identity.get("occupation") or ""),
             "location": str(identity.get("location") or ""),
             "life_stage": str(identity.get("life_stage") or persona.seed.life_stage or ""),
@@ -1795,6 +3570,83 @@ class SaasRuntime:
                 "rejection_triggers": list(persona.decision_policy.get("rejection_triggers", []))[:3],
                 "proof_requirements": list(persona.decision_policy.get("proof_requirements", []))[:3],
             },
+        }
+
+    def _build_frontline_selected_persona_snapshot(
+        self,
+        *,
+        persona_dir: Path,
+        persona_panel: dict[str, Any],
+    ) -> dict[str, Any]:
+        _assert_persona_panel_has_selection(persona_panel, action="starting a research run")
+        selected_ids = [
+            str(item).strip()
+            for item in persona_panel.get("selected_persona_ids", [])
+            if str(item).strip()
+        ] if isinstance(persona_panel.get("selected_persona_ids", []), list) else []
+        entries, load_failures = _load_frontline_persona_entries(persona_dir)
+        entries_by_id = {
+            entry["persona"].profile.synthetic_user_id: entry
+            for entry in entries
+        }
+        missing_ids = [synthetic_user_id for synthetic_user_id in selected_ids if synthetic_user_id not in entries_by_id]
+        if missing_ids:
+            raise ValueError(f"Selected synthetic participants are no longer available: {', '.join(missing_ids)}")
+        allow_provisional = bool(persona_panel.get("allow_provisional_personas")) or (
+            isinstance(persona_panel.get("provisional_persona_exception"), dict)
+            and bool(str(persona_panel.get("provisional_persona_exception", {}).get("reason") or "").strip())
+        )
+        selected_personas: list[dict[str, Any]] = []
+        provisional_ids: list[str] = []
+        lens_ids: list[str] = []
+        for synthetic_user_id in selected_ids:
+            entry = entries_by_id[synthetic_user_id]
+            persona = entry["persona"]
+            record = dict(entry["record"])
+            readiness_status = _clean_persona_readiness_status(record.get("readiness_status"), default="ready")
+            persona_kind = _clean_persona_kind(record.get("persona_kind"))
+            if readiness_status == "provisional":
+                provisional_ids.append(synthetic_user_id)
+            if readiness_status == "provisional" and not allow_provisional:
+                raise ValueError(
+                    f"Selected persona '{synthetic_user_id}' is provisional. Explicitly allow provisional personas before starting a run."
+                )
+            if readiness_status not in {"ready", "provisional"}:
+                raise ValueError(f"Selected persona '{synthetic_user_id}' is not ready for use: {readiness_status}.")
+            if persona_kind != PERSONA_LIBRARY_PARTICIPANT_KIND:
+                lens_ids.append(synthetic_user_id)
+            elif not _is_frontline_formal_participant(entry):
+                raise ValueError(
+                    f"Selected persona '{synthetic_user_id}' is not a formal V5+ participant persona for Frontline Studio use."
+                )
+            selected_personas.append(self._frontline_persona_summary(persona, record=record))
+        if lens_ids and not bool(persona_panel.get("allow_simulated_lenses")):
+            raise ValueError(
+                "Simulated public-figure, expert, celebrity, or influencer lenses cannot be used as participant evidence by default."
+            )
+        return {
+            "contract_version": "selected-persona-panel-snapshot/v0-draft",
+            "created_at": utc_now_iso(),
+            "selected_persona_ids": selected_ids,
+            "selected_personas": selected_personas,
+            "selected_persona_versions": {
+                item["synthetic_user_id"]: item.get("persona_version", "")
+                for item in selected_personas
+            },
+            "artifact_hashes_by_persona": {
+                item["synthetic_user_id"]: item.get("artifact_hashes", {})
+                for item in selected_personas
+            },
+            "coverage_snapshot": dict(persona_panel.get("coverage_snapshot", {})) if isinstance(persona_panel.get("coverage_snapshot"), dict) else {},
+            "readiness_statuses": {
+                item["synthetic_user_id"]: item.get("readiness_status", "ready")
+                for item in selected_personas
+            },
+            "has_provisional_personas": bool(provisional_ids),
+            "provisional_persona_ids": provisional_ids,
+            "simulated_lens_persona_ids": lens_ids,
+            "load_failures": load_failures,
+            "synthetic_boundary": "This snapshot records the synthetic participant versions used by the run. It is not recruited human evidence.",
         }
 
     def create_frontline_plan_proposal(
@@ -1830,13 +3682,7 @@ class SaasRuntime:
                 mode,
             ]
         ).lower()
-        inferred_mode = mode.strip() or (
-            "prototype_validation"
-            if any(marker in signal_text for marker in ("prototype", "ui", "ux", "button", "screen", "flow", "click"))
-            else "pain_point_discovery"
-            if any(marker in signal_text for marker in ("pain", "empathy", "problem", "workflow", "root cause"))
-            else "concept_validation"
-        )
+        inferred_mode = _frontline_mode_from_signal_text(signal_text, mode)
         proposal_id = f"proposal_{uuid.uuid4().hex[:12]}"
         clean_artifacts = _unique_preserve_order(
             [str(item) for item in [*(study.artifact_refs or []), *(artifacts or [])]]
@@ -1846,6 +3692,7 @@ class SaasRuntime:
             persona_panel,
             default_sample_size=_bounded_int(dict(workspace.settings).get("frontline_sample_size", 3), default=3, minimum=1, maximum=6),
         )
+        _assert_persona_panel_has_selection(persona_panel_payload, action="drafting a research plan")
         questions = [
             str(item).strip()
             for item in (moderator_questions or [])
@@ -1882,13 +3729,7 @@ class SaasRuntime:
                     "Capture contradictions and human validation gaps explicitly.",
                 ],
             },
-            "expected_evidence_types": [
-                "objections",
-                "trust_gaps",
-                "adoption_barriers",
-                "contradictions",
-                "human_validation_gaps",
-            ],
+            "expected_evidence_types": _frontline_expected_evidence_types_for_mode(inferred_mode),
             "open_questions": [
                 "Which segment should be treated as highest priority?",
                 "Which artifacts or prototype states are in scope?",
@@ -1962,6 +3803,10 @@ class SaasRuntime:
         if proposal is None:
             raise ValueError("A matching plan proposal is required before confirming a StudyPlanRevision.")
         now = utc_now_iso()
+        persona_panel_payload = _normalize_frontline_persona_panel(
+            dict(proposal.get("persona_panel", {})) if isinstance(proposal.get("persona_panel"), dict) else {},
+        )
+        _assert_persona_panel_has_selection(persona_panel_payload, action="approving a research plan")
         revision_id = f"planrev_{uuid.uuid4().hex[:12]}"
         revision = {
             "contract_version": "frontline-study-plan-revision/v0-draft",
@@ -1974,7 +3819,7 @@ class SaasRuntime:
             "study_purpose": proposal.get("study_purpose"),
             "target_persona": proposal.get("target_persona"),
             "target_audience": dict(proposal.get("target_audience", {})) if isinstance(proposal.get("target_audience"), dict) else {},
-            "persona_panel": dict(proposal.get("persona_panel", {})) if isinstance(proposal.get("persona_panel"), dict) else {},
+            "persona_panel": persona_panel_payload,
             "artifact_refs": list(proposal.get("artifact_refs", [])) if isinstance(proposal.get("artifact_refs"), list) else [],
             "mode_inference": dict(proposal.get("mode_inference", {})) if isinstance(proposal.get("mode_inference"), dict) else {},
             "moderator_interview_guide": (
@@ -2066,12 +3911,21 @@ class SaasRuntime:
             dict(current_revision.get("persona_panel", {})) if isinstance(current_revision.get("persona_panel"), dict) else {},
             default_sample_size=_bounded_int(dict(workspace.settings).get("frontline_sample_size", 3), default=3, minimum=1, maximum=6),
         )
+        _assert_persona_panel_has_selection(persona_panel, action="starting a research run")
         study_purpose = str(current_revision.get("study_purpose") or study.desired_output or study.research_intent)
+        mode_inference = (
+            dict(current_revision.get("mode_inference", {}))
+            if isinstance(current_revision.get("mode_inference"), dict)
+            else {}
+        )
+        inferred_mode = str(mode_inference.get("mode") or "").strip() or _frontline_mode_from_signal_text(
+            " ".join([study.title, study.research_intent, study.desired_output, study_purpose])
+        )
         expected_evidence = [
             str(item)
             for item in current_revision.get("expected_evidence_types", [])
             if str(item).strip()
-        ]
+        ] or _frontline_expected_evidence_types_for_mode(inferred_mode)
         audience_criteria = [
             str(item)
             for item in target_audience.get("inclusion_criteria", [])
@@ -2108,16 +3962,24 @@ class SaasRuntime:
 
         persona_dir = workspace_root / "personas"
         persona_dir.mkdir(parents=True, exist_ok=True)
-        has_persona = any((child / "profile.json").exists() for child in persona_dir.iterdir() if child.is_dir())
         seed_source = re.sub(r"[^0-9a-f]", "", study.study_id.lower())[-6:] or "32"
         random_seed = int(seed_source, 16) % 100000
         sample_size = int(dict(workspace.settings).get("frontline_sample_size", 1) or 1)
         sample_size = max(1, min(sample_size, 3))
         sample_size = int(persona_panel.get("sample_size") or sample_size)
         panel_filters = dict(persona_panel.get("filters", {})) if isinstance(persona_panel.get("filters"), dict) else {}
-        if not has_persona:
-            for persona in generate_personas(count=max(len(PANEL_ROLES) * 3, sample_size), random_seed=random_seed):
-                save_persona(persona, persona_dir)
+        selected_persona_snapshot = self._build_frontline_selected_persona_snapshot(
+            persona_dir=persona_dir,
+            persona_panel=persona_panel,
+        )
+        persona_panel = {
+            **persona_panel,
+            "readiness_status": (
+                "provisional" if selected_persona_snapshot.get("has_provisional_personas") else "ready"
+            ),
+            "selected_persona_snapshot": selected_persona_snapshot,
+            "selected_personas": list(selected_persona_snapshot.get("selected_personas", [])),
+        }
 
         provider_name = str(
             dict(workspace.settings).get("frontline_default_provider")
@@ -2135,8 +3997,16 @@ class SaasRuntime:
             "frontline_plan_revision_id": plan_revision_id,
             "frontline_requires_plan_revision": True,
             "frontline_run_contract_version": "frontline-live-run/v0-draft",
+            "mode": inferred_mode,
+            "mode_inference": mode_inference or {"mode": inferred_mode, "confidence": "directional"},
+            "expected_evidence_types": expected_evidence,
             "persona_panel": persona_panel,
             "selected_persona_ids": persona_panel.get("selected_persona_ids", []),
+            "selected_persona_snapshot": selected_persona_snapshot,
+            "selected_persona_versions": selected_persona_snapshot.get("selected_persona_versions", {}),
+            "selected_persona_artifact_hashes": selected_persona_snapshot.get("artifact_hashes_by_persona", {}),
+            "persona_coverage_snapshot": selected_persona_snapshot.get("coverage_snapshot", {}),
+            "has_provisional_personas": bool(selected_persona_snapshot.get("has_provisional_personas")),
         }
         job = self.submit_validation_job(
             auth,
@@ -2180,6 +4050,828 @@ class SaasRuntime:
             "study": self._study_summary(study),
             "synthetic_boundary": (
                 "Frontline Studio displays simulated evidence with provenance, contradictions, and human-validation gaps."
+            ),
+        }
+
+    def describe_research_playbooks(self, auth: AuthContext) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        return {
+            "contract_version": "frontline-research-playbook-catalog/v1",
+            "playbooks": [dict(item) for item in FRONTLINE_RESEARCH_PLAYBOOKS],
+            "default_playbook_id": "concept_validation",
+            "rerun_templates": [
+                {
+                    "template_id": "change_audience",
+                    "label": "Rerun with a different audience",
+                    "change_set_fields": ["target_audience", "persona_panel"],
+                },
+                {
+                    "template_id": "change_artifact_version",
+                    "label": "Rerun with a new artifact or prototype version",
+                    "change_set_fields": ["artifact_refs", "prototype_task"],
+                },
+                {
+                    "template_id": "change_message_variant",
+                    "label": "Rerun with a revised message variant",
+                    "change_set_fields": ["message_variant", "proof_point"],
+                },
+                {
+                    "template_id": "change_moderator_guide",
+                    "label": "Rerun with a different moderator guide",
+                    "change_set_fields": ["moderator_questions", "guide_focus"],
+                },
+            ],
+            "synthetic_boundary": (
+                "Playbooks lower setup effort and improve repeatability, but they do not widen the synthetic-evidence boundary."
+            ),
+        }
+
+    def create_frontline_rerun_plan(
+        self,
+        auth: AuthContext,
+        *,
+        study_id: str,
+        source_run_id: str = "",
+        playbook_id: str = "",
+        change_set: dict[str, Any] | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        if auth.role not in SUBMITTER_ROLES:
+            raise AuthorizationError(f"Role '{auth.role}' cannot prepare frontline reruns.")
+        study = job_store.get_workspace_study(self.runtime_root, study_id.strip())
+        if study is None or study.workspace_id != auth.workspace_id:
+            raise AuthorizationError(f"Workspace study '{study_id}' is not visible in this workspace.")
+        frontline = dict(study.metadata.get("frontline", {})) if isinstance(study.metadata.get("frontline"), dict) else {}
+        revisions = [dict(item) for item in frontline.get("plan_revisions", []) if isinstance(item, dict)]
+        proposals = [dict(item) for item in frontline.get("plan_proposals", []) if isinstance(item, dict)]
+        source_plan = revisions[-1] if revisions else (proposals[-1] if proposals else dict(study.draft_plan or {}))
+        if not source_plan:
+            raise ValueError("A source plan is required before preparing a rerun.")
+
+        selected_playbook = next(
+            (dict(item) for item in FRONTLINE_RESEARCH_PLAYBOOKS if item["playbook_id"] == playbook_id),
+            None,
+        )
+        changes = dict(change_set or {})
+        rerun_id = f"rerun_{uuid.uuid4().hex[:12]}"
+        proposal_id = f"proposal_{uuid.uuid4().hex[:12]}"
+        now = utc_now_iso()
+        mode_inference = dict(source_plan.get("mode_inference", {})) if isinstance(source_plan.get("mode_inference"), dict) else {}
+        if selected_playbook is not None:
+            mode_inference = {
+                "mode": selected_playbook["mode"],
+                "confidence": "playbook_selected",
+                "rationale": "Selected from a guided Frontline rerun playbook.",
+            }
+        target_audience = (
+            dict(changes.get("target_audience"))
+            if isinstance(changes.get("target_audience"), dict)
+            else dict(source_plan.get("target_audience", {})) if isinstance(source_plan.get("target_audience"), dict) else {}
+        )
+        persona_panel = (
+            dict(changes.get("persona_panel"))
+            if isinstance(changes.get("persona_panel"), dict)
+            else dict(source_plan.get("persona_panel", {})) if isinstance(source_plan.get("persona_panel"), dict) else {}
+        )
+        artifact_refs = [
+            str(item)
+            for item in (
+                changes.get("artifact_refs")
+                if isinstance(changes.get("artifact_refs"), list)
+                else source_plan.get("artifact_refs", [])
+            )
+            if str(item).strip()
+        ] if isinstance(source_plan.get("artifact_refs", []), list) or isinstance(changes.get("artifact_refs"), list) else []
+        guide = dict(source_plan.get("moderator_interview_guide", {})) if isinstance(source_plan.get("moderator_interview_guide"), dict) else {}
+        if isinstance(changes.get("moderator_questions"), list):
+            guide["questions"] = [str(item) for item in changes["moderator_questions"] if str(item).strip()]
+        if str(changes.get("guide_focus") or "").strip():
+            guide["focus"] = str(changes.get("guide_focus") or "").strip()
+        inferred_mode = str(
+            mode_inference.get("mode")
+            or _frontline_mode_from_signal_text(" ".join([study.title, study.research_intent, str(changes)]))
+        ).strip()
+        proposal = {
+            "contract_version": "frontline-rerun-plan/v1",
+            "plan_proposal_id": proposal_id,
+            "rerun_id": rerun_id,
+            "study_id": study.study_id,
+            "source": "frontline_rerun_template",
+            "status": "proposed",
+            "created_at": now,
+            "created_by_user_id": auth.user_id,
+            "source_plan_revision_id": source_plan.get("plan_revision_id"),
+            "source_plan_proposal_id": source_plan.get("plan_proposal_id"),
+            "source_run_id": source_run_id.strip() or None,
+            "playbook_id": selected_playbook["playbook_id"] if selected_playbook else playbook_id.strip() or None,
+            "study_purpose": str(changes.get("study_purpose") or source_plan.get("study_purpose") or study.desired_output or study.research_intent),
+            "target_persona": target_audience.get("summary") or source_plan.get("target_persona") or "",
+            "target_audience": target_audience,
+            "persona_panel": persona_panel,
+            "artifact_refs": artifact_refs,
+            "mode_inference": mode_inference or {"mode": inferred_mode, "confidence": "directional"},
+            "moderator_interview_guide": guide,
+            "expected_evidence_types": _frontline_expected_evidence_types_for_mode(inferred_mode),
+            "rerun_lineage": {
+                "contract_version": "frontline-rerun-lineage/v1",
+                "source_run_id": source_run_id.strip() or None,
+                "changed_fields": sorted(str(key) for key in changes.keys()),
+                "comparison_ready": True,
+                "note": "Rerun plans preserve source plan and run lineage so evidence can be compared instead of treated as a one-off summary.",
+            },
+            "synthetic_boundary": (
+                "This rerun plan prepares another synthetic research attempt. Compare it against the source run before making stronger claims."
+            ),
+            "metadata": {
+                **dict(metadata or {}),
+                "change_set": changes,
+                "selected_playbook": selected_playbook or {},
+            },
+        }
+        proposals.append(proposal)
+        frontline.update(
+            {
+                "contract_version": "frontline-study-planning/v0-draft",
+                "latest_plan_proposal_id": proposal_id,
+                "latest_rerun_id": rerun_id,
+                "plan_proposals": proposals,
+                "updated_at": now,
+            }
+        )
+        updated = job_store.update_workspace_study(
+            self.runtime_root,
+            study_id=study.study_id,
+            status="ready_to_run",
+            draft_plan=proposal,
+            metadata_updates={"frontline": frontline},
+        )
+        job_store.create_audit_event(
+            self.runtime_root,
+            AuditEvent(
+                audit_event_id=f"audit_{uuid.uuid4().hex[:12]}",
+                workspace_id=auth.workspace_id,
+                actor_user_id=auth.user_id,
+                actor_role=auth.role,
+                action="frontline.rerun_plan_created",
+                target_type="study",
+                target_id=study.study_id,
+                event_payload={
+                    "study_id": study.study_id,
+                    "rerun_id": rerun_id,
+                    "source_run_id": source_run_id.strip() or None,
+                    "playbook_id": proposal.get("playbook_id"),
+                    "changed_fields": proposal["rerun_lineage"]["changed_fields"],
+                },
+                created_at=now,
+            ),
+        )
+        return {
+            "study": self._study_summary(updated),
+            "rerun_plan": proposal,
+        }
+
+    def _resolve_frontline_run_context(
+        self,
+        auth: AuthContext,
+        *,
+        study_id: str,
+        run_id: str,
+    ) -> tuple[WorkspaceStudy, dict[str, Any], Path | None]:
+        study = job_store.get_workspace_study(self.runtime_root, study_id.strip())
+        if study is None or study.workspace_id != auth.workspace_id:
+            raise AuthorizationError(f"Workspace study '{study_id}' is not visible in this workspace.")
+        requested = run_id.strip()
+        jobs = job_store.list_workspace_jobs(self.runtime_root, auth.workspace_id)
+        for job in jobs:
+            metadata = dict(job.get("metadata", {}))
+            if str(metadata.get("study_id") or "") != study.study_id:
+                continue
+            output_run_path = str(job.get("output_run_path") or "").strip()
+            candidates = {
+                str(job.get("job_id") or "").strip(),
+                str(metadata.get("run_id") or "").strip(),
+                _job_run_id(job),
+                Path(output_run_path).name if output_run_path else "",
+            }
+            if requested not in {item for item in candidates if item}:
+                continue
+            run_dir = Path(output_run_path) if output_run_path else None
+            if run_dir is not None and not run_dir.exists():
+                run_dir = None
+            context = {
+                "run_id": _job_run_id(job) or requested,
+                "job_id": str(job.get("job_id") or ""),
+                "project_id": str(metadata.get("project_id") or "") or study.project_id,
+                "study_id": study.study_id,
+                "job_status": str(job.get("status") or ""),
+                "created_at": str(job.get("created_at") or ""),
+                "started_at": str(job.get("started_at") or ""),
+                "finished_at": str(job.get("finished_at") or ""),
+                "last_error": str(job.get("last_error") or ""),
+                "output_run_path": output_run_path or None,
+                "provider_name": str(job.get("provider_name") or ""),
+                "metadata": metadata,
+                "provider_runtime_boundary": self._validation_provider_runtime_boundary(
+                    str(job.get("provider_name") or ""),
+                    status=str(job.get("status") or ""),
+                    last_error=str(job.get("last_error") or ""),
+                    metadata=metadata,
+                ),
+            }
+            return study, context, run_dir
+        raise FileNotFoundError(f"Run '{run_id}' was not found inside study '{study_id}'.")
+
+    @staticmethod
+    def _read_run_artifact(run_dir: Path | None, name: str, default: Any) -> Any:
+        if run_dir is None:
+            return default
+        path = run_dir / name
+        if not path.exists():
+            return default
+        try:
+            return read_json(path)
+        except Exception:
+            return default
+
+    def get_frontline_run_progress(self, auth: AuthContext, *, study_id: str, run_id: str) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        _study, context, run_dir = self._resolve_frontline_run_context(auth, study_id=study_id, run_id=run_id)
+        job_status = str(context.get("job_status") or "")
+        stage_results = self._read_run_artifact(run_dir, "stage_results.json", {})
+        raw_responses = self._read_run_artifact(run_dir, "raw_responses.json", [])
+        errors = self._read_run_artifact(run_dir, "errors.json", [])
+        events: list[dict[str, Any]] = []
+
+        if isinstance(stage_results, dict) and stage_results:
+            for stage_name, payload in stage_results.items():
+                if not isinstance(payload, dict):
+                    continue
+                phase = FRONTLINE_STAGE_PHASES.get(str(stage_name), "synthesizing")
+                events.append(
+                    {
+                        "event_id": f"{context['run_id']}:{stage_name}",
+                        "phase": phase,
+                        "stage_name": str(stage_name),
+                        "status": str(payload.get("status") or "unknown"),
+                        "started_at": payload.get("started_at") or None,
+                        "finished_at": payload.get("finished_at") or None,
+                        "summary": self._frontline_stage_summary(str(stage_name), payload),
+                        "source_ref": f"stage_results.json#{stage_name}",
+                    }
+                )
+        else:
+            phase = "queued" if job_status == "queued" else "interviewing" if job_status == "running" else "failed" if job_status == "failed" else "blocked" if job_status == "canceled" else "completed" if job_status == "completed" else "queued"
+            events.append(
+                {
+                    "event_id": f"{context['job_id']}:{phase}",
+                    "phase": phase,
+                    "stage_name": phase,
+                    "status": job_status or "queued",
+                    "started_at": context.get("started_at") or context.get("created_at"),
+                    "finished_at": context.get("finished_at") or None,
+                    "summary": "Run has not produced stage artifacts yet; status is projected from the job record.",
+                    "source_ref": "validation_job",
+                }
+            )
+
+        if job_status == "failed" and context.get("last_error"):
+            events.append(
+                {
+                    "event_id": f"{context['job_id']}:failure",
+                    "phase": "failed",
+                    "stage_name": "failure",
+                    "status": "failed",
+                    "started_at": context.get("finished_at") or context.get("started_at"),
+                    "finished_at": context.get("finished_at") or None,
+                    "summary": str(context.get("last_error") or ""),
+                    "source_ref": "validation_job.last_error",
+                }
+            )
+        if isinstance(errors, list):
+            for index, item in enumerate(errors[:5], start=1):
+                if not isinstance(item, dict):
+                    continue
+                events.append(
+                    {
+                        "event_id": f"{context['run_id']}:error_{index}",
+                        "phase": "failed",
+                        "stage_name": str(item.get("stage_name") or "error"),
+                        "status": "failed",
+                        "started_at": item.get("started_at") or None,
+                        "finished_at": item.get("finished_at") or None,
+                        "summary": str(item.get("message") or item.get("error") or "Run error recorded."),
+                        "source_ref": f"errors.json#{index}",
+                    }
+                )
+
+        completed_count = sum(1 for event in events if str(event.get("status") or "") == "succeeded")
+        failed_count = sum(1 for event in events if str(event.get("status") or "") in {"failed", "error"})
+        if job_status == "completed":
+            phase = "completed"
+        elif job_status == "failed" or failed_count:
+            phase = "failed"
+        elif job_status == "canceled":
+            phase = "blocked"
+        elif job_status == "queued":
+            phase = "queued"
+        elif any(event.get("phase") == "interviewing" for event in events):
+            phase = "interviewing"
+        else:
+            phase = "planning"
+        response_items = raw_responses if isinstance(raw_responses, list) else []
+        return {
+            "contract_version": "frontline-run-progress/v1",
+            "study_id": study_id,
+            "run_id": context["run_id"],
+            "job_id": context["job_id"],
+            "phase": phase if phase in FRONTLINE_RUN_PHASES else "blocked",
+            "status": job_status or "unknown",
+            "progress_percent": 100 if job_status == "completed" else max(5, min(95, int((completed_count / max(len(events), 1)) * 100))),
+            "participant_progress": {
+                "selected_count": len(response_items),
+                "completed_count": sum(1 for item in response_items if isinstance(item, dict) and str(item.get("status") or "") == "succeeded"),
+                "failed_count": sum(1 for item in response_items if isinstance(item, dict) and str(item.get("status") or "") == "failed"),
+            },
+            "events": events,
+            "provider_runtime_boundary": context["provider_runtime_boundary"],
+            "observed_interview_contract": {
+                "transport": "polling_api",
+                "streaming_supported": False,
+                "observed_interview_mode": "artifact_projected",
+                "upgrade_path": "A future worker can append the same phase events while an LLM-backed interview is running.",
+            },
+            "synthetic_boundary": (
+                "Run progress describes synthetic interview execution state. It is operational telemetry, not human evidence."
+            ),
+        }
+
+    @staticmethod
+    def _frontline_stage_summary(stage_name: str, payload: dict[str, Any]) -> str:
+        if stage_name == "sampling":
+            return f"Selected {payload.get('selected_count', 0)} synthetic participant(s)."
+        if stage_name == "persona_responses":
+            return f"Captured {payload.get('successful_count', 0)} synthetic response(s); {payload.get('failed_count', 0)} failed."
+        if stage_name == "report_writer":
+            return "Generated the summary report from synthetic evidence artifacts."
+        if stage_name == "sensitive_audit":
+            return "Audited the run for sensitive-topic and boundary risks."
+        return f"{stage_name.replace('_', ' ')} stage {payload.get('status', 'recorded')}."
+
+    def get_frontline_run_transcript(self, auth: AuthContext, *, study_id: str, run_id: str) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        _study, context, run_dir = self._resolve_frontline_run_context(auth, study_id=study_id, run_id=run_id)
+        raw_responses = self._read_run_artifact(run_dir, "raw_responses.json", [])
+        guide_questions = []
+        metadata = dict(context.get("metadata", {}))
+        mode_inference_payload = metadata.get("mode_inference") if isinstance(metadata.get("mode_inference"), dict) else {}
+        mode = str(metadata.get("mode") or mode_inference_payload.get("mode") or "")
+        exchanges: list[dict[str, Any]] = []
+        if isinstance(raw_responses, list):
+            for index, item in enumerate(raw_responses, start=1):
+                if not isinstance(item, dict):
+                    continue
+                response = item.get("response") if isinstance(item.get("response"), dict) else {}
+                participant_text = self._frontline_response_text(response)
+                exchange_id = f"exchange_{index}"
+                synthetic_user_id = str(item.get("synthetic_user_id") or response.get("synthetic_user_id") or f"participant_{index}")
+                exchanges.append(
+                    {
+                        "exchange_id": exchange_id,
+                        "synthetic_user_id": synthetic_user_id,
+                        "panel_role": str(item.get("panel_role") or response.get("panel_role") or ""),
+                        "status": str(item.get("status") or "recorded"),
+                        "started_at": item.get("started_at") or None,
+                        "finished_at": item.get("finished_at") or None,
+                        "turns": [
+                            {
+                                "turn_id": f"{exchange_id}.facilitator",
+                                "speaker": "facilitator",
+                                "text": "The platform prompted the synthetic participant with the confirmed study plan and moderator guide.",
+                                "evidence_basis": "execution_prompt",
+                                "source_ref": "brief.json",
+                            },
+                            {
+                                "turn_id": f"{exchange_id}.synthetic_participant",
+                                "speaker": "synthetic_participant",
+                                "synthetic_user_id": synthetic_user_id,
+                                "text": participant_text,
+                                "evidence_basis": "synthetic_response",
+                                "source_ref": f"raw_responses.json#{index}",
+                            },
+                        ],
+                        "source_refs": [f"raw_responses.json#{index}"],
+                        "trace_refs": [f"participant_reasoning_trace:{synthetic_user_id}"],
+                    }
+                )
+        return {
+            "contract_version": "frontline-run-transcript/v1",
+            "study_id": study_id,
+            "run_id": context["run_id"],
+            "job_id": context["job_id"],
+            "mode": mode or "unknown",
+            "exchange_count": len(exchanges),
+            "guide_questions": guide_questions,
+            "exchanges": exchanges,
+            "source_link_policy": {
+                "stable_exchange_ref_format": "exchange_N.synthetic_participant",
+                "evidence_slice_source_field": "source_exchange_refs",
+                "trace_source_field": "trace_refs",
+            },
+            "synthetic_boundary": (
+                "This transcript is a synthetic interview transcript projected from run artifacts. It is not a real human interview transcript."
+            ),
+        }
+
+    @staticmethod
+    def _frontline_response_text(response: dict[str, Any]) -> str:
+        parts = [
+            response.get("first_impression"),
+            response.get("pain_relevance"),
+            response.get("solution_attractiveness"),
+            response.get("trust_concern"),
+            response.get("pricing_reaction"),
+            response.get("likely_objection"),
+            response.get("what_would_make_them_try"),
+            response.get("what_would_make_them_reject"),
+        ]
+        text = " ".join(str(part).strip() for part in parts if str(part or "").strip())
+        return text or "Synthetic participant response was recorded, but no participant-facing text was available."
+
+    def get_frontline_run_trace(self, auth: AuthContext, *, study_id: str, run_id: str) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        _study, context, run_dir = self._resolve_frontline_run_context(auth, study_id=study_id, run_id=run_id)
+        planner = self._read_run_artifact(run_dir, "planner.json", [])
+        raw_responses = self._read_run_artifact(run_dir, "raw_responses.json", [])
+        audit = self._read_run_artifact(run_dir, "audit.json", [])
+        observed_action = self._read_run_artifact(run_dir, "observed_action_trace.json", None)
+        run_contract = self._read_run_artifact(run_dir, "run_contract.json", {})
+        facilitator_trace = []
+        if isinstance(planner, list):
+            facilitator_trace = [
+                {
+                    "trace_id": f"facilitator_plan_{index}",
+                    "trace_type": "facilitator_trace",
+                    "summary": str(step),
+                    "source_ref": f"planner.json#{index}",
+                    "evidence_boundary": "Planning trace; not participant evidence.",
+                }
+                for index, step in enumerate(planner, start=1)
+            ]
+        participant_trace = []
+        if isinstance(raw_responses, list):
+            for index, item in enumerate(raw_responses, start=1):
+                if not isinstance(item, dict):
+                    continue
+                response = item.get("response") if isinstance(item.get("response"), dict) else {}
+                synthetic_user_id = str(item.get("synthetic_user_id") or response.get("synthetic_user_id") or f"participant_{index}")
+                participant_trace.append(
+                    {
+                        "trace_id": f"participant_reasoning_trace:{synthetic_user_id}",
+                        "trace_type": "synthetic_participant_reasoning_trace",
+                        "synthetic_user_id": synthetic_user_id,
+                        "top_objection": response.get("likely_objection"),
+                        "try_trigger": response.get("what_would_make_them_try"),
+                        "reject_trigger": response.get("what_would_make_them_reject"),
+                        "scorecard": response.get("scorecard") if isinstance(response.get("scorecard"), dict) else {},
+                        "themes": response.get("themes") if isinstance(response.get("themes"), dict) else {},
+                        "source_ref": f"raw_responses.json#{index}",
+                        "exchange_ref": f"exchange_{index}.synthetic_participant",
+                        "evidence_boundary": "Synthetic participant reasoning trace is a simulation clue source, not real-person mind reading.",
+                    }
+                )
+        audit_trace = []
+        if isinstance(audit, list):
+            audit_trace = [
+                {
+                    "trace_id": f"audit_{index}",
+                    "trace_type": "audit_report",
+                    "summary": str(item.get("observation") or item.get("message") or item) if isinstance(item, dict) else str(item),
+                    "source_ref": f"audit.json#{index}",
+                    "evidence_boundary": "Audit trace reviews the synthetic run boundary and risk posture.",
+                }
+                for index, item in enumerate(audit, start=1)
+            ]
+        observed_action_trace = []
+        if isinstance(observed_action, dict):
+            observed_action_trace.append(
+                {
+                    "trace_id": "observed_action_trace",
+                    "trace_type": "observed_action_trace",
+                    "summary": "Observed action trace artifact is attached to this run.",
+                    "source_ref": "observed_action_trace.json",
+                    "evidence_boundary": "Observed action trace is action-grounded only when captured from an instrumented task.",
+                    "event_count": len(observed_action.get("events", [])) if isinstance(observed_action.get("events"), list) else 0,
+                }
+            )
+        return {
+            "contract_version": "frontline-run-trace/v1",
+            "study_id": study_id,
+            "run_id": context["run_id"],
+            "job_id": context["job_id"],
+            "facilitator_trace": facilitator_trace,
+            "synthetic_participant_reasoning_trace": participant_trace,
+            "observed_action_trace": observed_action_trace,
+            "audit_trace": audit_trace,
+            "provider_lineage": {
+                "provider_name": context.get("provider_name"),
+                "provider_runtime_boundary": context.get("provider_runtime_boundary"),
+                "run_contract_status": (
+                    dict(run_contract.get("result", {})).get("status")
+                    if isinstance(run_contract, dict) and isinstance(run_contract.get("result"), dict)
+                    else context.get("job_status")
+                ),
+                "run_contract_ref": "run_contract.json" if run_contract else None,
+            },
+            "source_link_policy": {
+                "facilitator_trace_ref_format": "facilitator_plan_N",
+                "participant_reasoning_ref_format": "participant_reasoning_trace:{synthetic_user_id}",
+                "observed_action_trace_ref": "observed_action_trace",
+            },
+            "synthetic_boundary": (
+                "Trace records explain how synthetic evidence was produced and audited. Only observed_action_trace is action-grounded when an instrumented task artifact exists."
+            ),
+        }
+
+    def get_frontline_run_event_stream(self, auth: AuthContext, *, study_id: str, run_id: str) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        _study, context, _run_dir = self._resolve_frontline_run_context(auth, study_id=study_id, run_id=run_id)
+        progress = self.get_frontline_run_progress(auth, study_id=study_id, run_id=run_id)
+        transcript = self.get_frontline_run_transcript(auth, study_id=study_id, run_id=run_id)
+        trace = self.get_frontline_run_trace(auth, study_id=study_id, run_id=run_id)
+        events: list[dict[str, Any]] = []
+        fallback_time = str(context.get("started_at") or context.get("created_at") or utc_now_iso())
+
+        for index, event in enumerate(progress.get("events", []) if isinstance(progress.get("events"), list) else [], start=1):
+            if not isinstance(event, dict):
+                continue
+            phase = str(event.get("phase") or "queued")
+            status = str(event.get("status") or progress.get("status") or "recorded")
+            occurred_at = str(event.get("finished_at") or event.get("started_at") or fallback_time)
+            source_ref = str(event.get("source_ref") or "").strip()
+            events.append(
+                {
+                    "event_id": f"run_event_{index}_{re.sub(r'[^a-z0-9_]+', '_', str(event.get('event_id') or phase).lower()).strip('_')}",
+                    "event_type": f"run.{phase}",
+                    "phase": phase if phase in FRONTLINE_RUN_PHASES else "blocked",
+                    "status": status,
+                    "occurred_at": occurred_at,
+                    "summary": str(event.get("summary") or status),
+                    "safe_to_show": True,
+                    "source_refs": [source_ref] if source_ref else [],
+                    "trace_refs": [],
+                    "evidence_boundary": "operational_telemetry_not_human_evidence",
+                }
+            )
+
+        latest_safe_turn: dict[str, Any] | None = None
+        exchanges = transcript.get("exchanges", []) if isinstance(transcript.get("exchanges"), list) else []
+        for index, exchange in enumerate(exchanges, start=1):
+            if not isinstance(exchange, dict):
+                continue
+            turns = exchange.get("turns") if isinstance(exchange.get("turns"), list) else []
+            participant_turn = next((turn for turn in turns if isinstance(turn, dict) and turn.get("speaker") == "synthetic_participant"), {})
+            participant_text = str(participant_turn.get("text") or "")
+            preview = participant_text[:220] + ("..." if len(participant_text) > 220 else "")
+            source_refs = [str(ref) for ref in exchange.get("source_refs", []) if str(ref).strip()] if isinstance(exchange.get("source_refs"), list) else []
+            trace_refs = [str(ref) for ref in exchange.get("trace_refs", []) if str(ref).strip()] if isinstance(exchange.get("trace_refs"), list) else []
+            latest_safe_turn = {
+                "exchange_id": str(exchange.get("exchange_id") or f"exchange_{index}"),
+                "synthetic_user_id": str(exchange.get("synthetic_user_id") or ""),
+                "speaker": "synthetic_participant",
+                "text_preview": preview,
+                "source_refs": source_refs,
+                "trace_refs": trace_refs,
+                "boundary": "safe transcript preview from synthetic evidence; inspect transcript and trace for provenance.",
+            }
+            events.append(
+                {
+                    "event_id": f"run_event_transcript_{index}",
+                    "event_type": "run.synthetic_participant_turn_recorded",
+                    "phase": "interviewing",
+                    "status": str(exchange.get("status") or "recorded"),
+                    "occurred_at": str(exchange.get("finished_at") or exchange.get("started_at") or fallback_time),
+                    "summary": f"Recorded synthetic participant exchange {index}.",
+                    "safe_to_show": True,
+                    "source_refs": source_refs,
+                    "trace_refs": trace_refs,
+                    "latest_safe_turn": latest_safe_turn,
+                    "evidence_boundary": "synthetic_transcript_not_human_interview",
+                }
+            )
+
+        observed_action_trace = trace.get("observed_action_trace", []) if isinstance(trace.get("observed_action_trace"), list) else []
+        observed_event_count = 0
+        for index, item in enumerate(observed_action_trace, start=1):
+            if not isinstance(item, dict):
+                continue
+            observed_event_count += int(item.get("event_count") or 0)
+            events.append(
+                {
+                    "event_id": f"run_event_observed_{index}",
+                    "event_type": "run.observed_interview_event_recorded",
+                    "phase": "interviewing",
+                    "status": "recorded",
+                    "occurred_at": fallback_time,
+                    "summary": str(item.get("summary") or "Observed interview trace is attached to this run."),
+                    "safe_to_show": True,
+                    "source_refs": [str(item.get("source_ref") or "observed_action_trace.json")],
+                    "trace_refs": [str(item.get("trace_id") or "observed_action_trace")],
+                    "evidence_boundary": str(item.get("evidence_boundary") or "Observed action trace is action-grounded only when captured."),
+                }
+            )
+
+        audit_trace = trace.get("audit_trace", []) if isinstance(trace.get("audit_trace"), list) else []
+        for index, item in enumerate(audit_trace[:4], start=1):
+            if not isinstance(item, dict):
+                continue
+            events.append(
+                {
+                    "event_id": f"run_event_audit_{index}",
+                    "event_type": "run.audit_trace_recorded",
+                    "phase": "auditing",
+                    "status": "recorded",
+                    "occurred_at": fallback_time,
+                    "summary": str(item.get("summary") or "Audit trace recorded."),
+                    "safe_to_show": True,
+                    "source_refs": [str(item.get("source_ref") or "")] if str(item.get("source_ref") or "").strip() else [],
+                    "trace_refs": [str(item.get("trace_id") or "")] if str(item.get("trace_id") or "").strip() else [],
+                    "evidence_boundary": str(item.get("evidence_boundary") or "Audit trace records boundary review, not human proof."),
+                }
+            )
+
+        terminal_phase = str(progress.get("phase") or "queued")
+        if terminal_phase in {"completed", "failed", "blocked"}:
+            events.append(
+                {
+                    "event_id": f"run_event_terminal_{terminal_phase}",
+                    "event_type": f"run.{terminal_phase}",
+                    "phase": terminal_phase,
+                    "status": str(progress.get("status") or terminal_phase),
+                    "occurred_at": str(context.get("finished_at") or fallback_time),
+                    "summary": (
+                        "Run is ready for evidence review."
+                        if terminal_phase == "completed"
+                        else str(context.get("last_error") or f"Run ended in {terminal_phase} state.")
+                    ),
+                    "safe_to_show": True,
+                    "source_refs": ["validation_job"],
+                    "trace_refs": [],
+                    "evidence_boundary": "terminal run state is operational telemetry.",
+                }
+            )
+
+        privacy_controls = self.describe_workspace_privacy_export_controls(auth, study_id=study_id)
+        return {
+            "contract_version": "workspace-run-event-stream/v1",
+            "workspace_id": auth.workspace_id,
+            "project_id": str(context.get("project_id") or ""),
+            "study_id": study_id,
+            "run_id": context["run_id"],
+            "job_id": context["job_id"],
+            "phase": terminal_phase if terminal_phase in FRONTLINE_RUN_PHASES else "blocked",
+            "status": str(progress.get("status") or context.get("job_status") or "unknown"),
+            "progress_percent": int(progress.get("progress_percent") or 0),
+            "participant_progress": dict(progress.get("participant_progress", {})) if isinstance(progress.get("participant_progress"), dict) else {},
+            "latest_safe_turn": latest_safe_turn,
+            "events": events,
+            "transport": {
+                "current_transport": "polling_api",
+                "streaming_supported": False,
+                "future_streaming_contract": "same_event_shape",
+                "refresh_guidance": "Poll this endpoint while the run is queued or running; a future SSE transport must emit the same contract.",
+            },
+            "observed_interview_bridge": {
+                "status": "attached" if observed_action_trace else "not_attached",
+                "mode": "artifact_projected",
+                "observed_event_count": observed_event_count,
+                "source_refs": ["observed_action_trace.json"] if observed_action_trace else [],
+                "boundary": (
+                    "Observed interview events are bridged into the same run monitor only when an observed trace artifact exists."
+                ),
+            },
+            "provider_runtime_boundary": progress.get("provider_runtime_boundary"),
+            "privacy_export_controls": {
+                "contract_version": privacy_controls.get("contract_version"),
+                "privacy_readiness": privacy_controls.get("privacy_readiness"),
+                "retention_controls": privacy_controls.get("retention_controls"),
+                "data_residency": privacy_controls.get("data_residency"),
+            },
+            "provenance": {
+                "source_contracts": [
+                    "frontline-run-progress/v1",
+                    "frontline-run-transcript/v1",
+                    "frontline-run-trace/v1",
+                ],
+                "source_exchange_refs": [str(exchange.get("exchange_id") or "") for exchange in exchanges if isinstance(exchange, dict)],
+                "source_trace_ref_count": len(trace.get("synthetic_participant_reasoning_trace", [])) if isinstance(trace.get("synthetic_participant_reasoning_trace"), list) else 0,
+            },
+            "capabilities": {
+                "persona_interview_state": True,
+                "latest_safe_turn_metadata": True,
+                "observed_interview_bridge": True,
+                "transcript_trace_provenance": True,
+                "boundary_preserving_integration_ready": True,
+            },
+            "synthetic_boundary": (
+                "Run event stream describes synthetic interview execution and safe transcript/trace provenance. "
+                "It does not prove real human behavior."
+            ),
+        }
+
+    def describe_calibration_observatory(self, auth: AuthContext) -> dict[str, Any]:
+        self._workspace_and_billing(auth)
+        jobs = self.list_workspace_jobs(auth)
+        mode_counts: dict[str, int] = {}
+        provider_counts: dict[str, int] = {}
+        calibration_status_counts: dict[str, int] = {}
+        evidence_type_counts: dict[str, int] = {}
+        benchmark_suite_counts: dict[str, int] = {}
+        drift_signals: list[dict[str, Any]] = []
+        miss_attribution: list[dict[str, Any]] = []
+        unsupported_evidence_types: set[str] = set()
+        calibrated_run_count = 0
+        completed_run_count = 0
+
+        for job in jobs:
+            metadata = dict(job.get("metadata", {}))
+            mode_inference_payload = metadata.get("mode_inference") if isinstance(metadata.get("mode_inference"), dict) else {}
+            mode = str(metadata.get("mode") or mode_inference_payload.get("mode") or "unknown")
+            provider = str(job.get("provider_name") or "unknown")
+            mode_counts[mode] = mode_counts.get(mode, 0) + 1
+            provider_counts[provider] = provider_counts.get(provider, 0) + 1
+            for evidence_type in metadata.get("expected_evidence_types", []) if isinstance(metadata.get("expected_evidence_types"), list) else []:
+                key = str(evidence_type or "unknown")
+                evidence_type_counts[key] = evidence_type_counts.get(key, 0) + 1
+            run_context = {
+                "run_id": _job_run_id(job),
+                "output_run_path": str(job.get("output_run_path") or ""),
+            }
+            calibration_entry = self._run_calibration_lineage_entry(run_context=run_context)
+            status = str(calibration_entry.get("calibration_status") or "unavailable")
+            calibration_status_counts[status] = calibration_status_counts.get(status, 0) + 1
+            if str(job.get("status") or "") == "completed":
+                completed_run_count += 1
+            if calibration_entry.get("has_human_calibration"):
+                calibrated_run_count += 1
+                suite = str(calibration_entry.get("benchmark_id") or calibration_entry.get("benchmark_source_type") or "attached_human_benchmark")
+                benchmark_suite_counts[suite] = benchmark_suite_counts.get(suite, 0) + 1
+                human_calibration = _load_human_calibration_record(
+                    {
+                        "run_id": _job_run_id(job),
+                        "output_path": str(job.get("output_run_path") or ""),
+                        "primary_artifact_path": str(Path(str(job.get("output_run_path") or "")) / "run.json") if job.get("output_run_path") else "",
+                    }
+                )
+                if isinstance(human_calibration, dict):
+                    drift = human_calibration.get("drift_detection") if isinstance(human_calibration.get("drift_detection"), dict) else {}
+                    if drift:
+                        drift_signals.append({"run_id": _job_run_id(job), **drift})
+                    miss = human_calibration.get("miss_attribution") if isinstance(human_calibration.get("miss_attribution"), dict) else {}
+                    if miss:
+                        miss_attribution.append({"run_id": _job_run_id(job), **miss})
+            elif mode != "unknown":
+                unsupported_evidence_types.update(
+                    str(item)
+                    for item in metadata.get("expected_evidence_types", [])
+                    if isinstance(metadata.get("expected_evidence_types"), list) and str(item).strip()
+                )
+
+        readiness_status = "insufficient_benchmarking"
+        if completed_run_count and calibrated_run_count == completed_run_count:
+            readiness_status = "calibration_covered"
+        elif calibrated_run_count:
+            readiness_status = "partial_calibration"
+        return {
+            "contract_version": "calibration-observatory/v1",
+            "workspace_id": auth.workspace_id,
+            "generated_at": utc_now_iso(),
+            "health_summary": {
+                "status": readiness_status,
+                "completed_run_count": completed_run_count,
+                "calibrated_run_count": calibrated_run_count,
+                "uncalibrated_completed_run_count": max(0, completed_run_count - calibrated_run_count),
+                "launch_gate_status": "blocked" if readiness_status == "insufficient_benchmarking" else "operator_review_required",
+            },
+            "segments": {
+                "mode_counts": mode_counts,
+                "provider_counts": provider_counts,
+                "evidence_type_counts": evidence_type_counts,
+                "calibration_status_counts": calibration_status_counts,
+                "benchmark_suite_counts": benchmark_suite_counts,
+            },
+            "drift_signals": drift_signals[:10],
+            "miss_attribution": miss_attribution[:10],
+            "unsupported_evidence_types": sorted(unsupported_evidence_types),
+            "readiness_projection": {
+                "public_launch_dependency": "continuous_calibration_health",
+                "replacement_claim_allowed": False,
+                "next_required_evidence": (
+                    "Attach external human benchmark outcomes by mode, evidence type, provider, and market before public or replacement-grade claims."
+                ),
+            },
+            "synthetic_boundary": (
+                "Calibration observatory is an operator quality signal. It does not convert synthetic outputs into human market proof."
             ),
         }
 
@@ -2263,6 +4955,12 @@ class SaasRuntime:
                         "family": str(result.get("family") or ""),
                         "title": str(result.get("title") or result.get("label") or result.get("id") or ""),
                         "snippet": str(result.get("snippet") or result.get("summary") or "")[:320],
+                        "source_exchange_refs": [
+                            str(ref) for ref in result.get("source_exchange_refs", []) if str(ref).strip()
+                        ] if isinstance(result.get("source_exchange_refs"), list) else [],
+                        "source_trace_refs": [
+                            str(ref) for ref in result.get("source_trace_refs", []) if str(ref).strip()
+                        ] if isinstance(result.get("source_trace_refs"), list) else [],
                     }
                 )
 
@@ -5780,7 +8478,17 @@ class SaasRuntime:
             workspace=workspace,
             billing=billing,
         )
+        calibration_observatory = self.describe_calibration_observatory(auth)
+        privacy_export_controls = self.describe_workspace_privacy_export_controls(auth)
         launch_blocker_counts = dict(blocked_reason_counts)
+        if calibration_observatory.get("health_summary", {}).get("status") == "insufficient_benchmarking":
+            launch_blocker_counts["continuous_calibration_health_not_ready"] = (
+                launch_blocker_counts.get("continuous_calibration_health_not_ready", 0) + 1
+            )
+        if privacy_export_controls.get("privacy_readiness", {}).get("status") != "ready_for_customer_review":
+            launch_blocker_counts["privacy_export_controls_not_ready"] = (
+                launch_blocker_counts.get("privacy_export_controls_not_ready", 0) + 1
+            )
         for reason in customer_operations_support_boundary.get("blocked_reasons", []):
             key = str(reason or "").strip()
             if key:
@@ -5827,6 +8535,19 @@ class SaasRuntime:
             "launch_blockers": aggregate_launch_blockers,
             "customer_operations_support_boundary": customer_operations_support_boundary,
             "self_serve_onboarding_pricing_boundary": self_serve_onboarding_pricing_boundary,
+            "calibration_observatory": {
+                "contract_version": calibration_observatory.get("contract_version"),
+                "health_summary": calibration_observatory.get("health_summary", {}),
+                "unsupported_evidence_types": calibration_observatory.get("unsupported_evidence_types", []),
+                "readiness_projection": calibration_observatory.get("readiness_projection", {}),
+            },
+            "privacy_export_controls": {
+                "contract_version": privacy_export_controls.get("contract_version"),
+                "privacy_readiness": privacy_export_controls.get("privacy_readiness", {}),
+                "data_residency": privacy_export_controls.get("data_residency", {}),
+                "retention_controls": privacy_export_controls.get("retention_controls", {}),
+                "export_share_controls": privacy_export_controls.get("export_share_controls", {}),
+            },
             "customer_claim_boundary": {
                 "status": overall_status,
                 "self_serve_public_launch_allowed": self_serve_public_launch_allowed,
@@ -7541,6 +10262,21 @@ class SaasRuntime:
                 Path(str(metadata.get("run_root") or (_workspace_root(self.runtime_root, workspace.workspace_id) / "runs"))),
                 max_retries=int(metadata.get("max_retries", 1)),
             )
+            if isinstance(metadata.get("selected_persona_snapshot"), dict):
+                write_json(
+                    run_dir / "frontline_persona_panel_snapshot.json",
+                    {
+                        "contract_version": "frontline-persona-panel-run-snapshot/v0-draft",
+                        "job_id": str(leased.get("job_id") or ""),
+                        "workspace_id": workspace.workspace_id,
+                        "project_id": str(metadata.get("project_id") or ""),
+                        "study_id": str(metadata.get("study_id") or ""),
+                        "plan_revision_id": str(metadata.get("plan_revision_id") or ""),
+                        "persona_panel": dict(metadata.get("persona_panel", {})) if isinstance(metadata.get("persona_panel"), dict) else {},
+                        "selected_persona_snapshot": dict(metadata.get("selected_persona_snapshot", {})),
+                        "synthetic_boundary": "This run used synthetic persona records. The snapshot is for audit and replay, not human market proof.",
+                    },
+                )
             self._index_workspace_run_contract(workspace.workspace_id, run_dir)
             run_payload = read_json(run_dir / "run.json")
             research_run_status = str(run_payload.get("status") or "")
@@ -8464,6 +11200,12 @@ class SaasRuntime:
             "selected_result_title": str(selected_result.get("title") or "") or None,
             "selected_result_family": str(selected_result.get("family") or "") or None,
             "selected_result_kind": str(selected_result.get("kind") or "") or None,
+            "source_exchange_refs": [
+                str(ref) for ref in selected_result.get("source_exchange_refs", []) if str(ref).strip()
+            ] if isinstance(selected_result.get("source_exchange_refs"), list) else [],
+            "source_trace_refs": [
+                str(ref) for ref in selected_result.get("source_trace_refs", []) if str(ref).strip()
+            ] if isinstance(selected_result.get("source_trace_refs"), list) else [],
             "selected_signal_id": str(reliability.get("selected_signal_id") or "") or None,
             "signal_terms": list(reliability.get("signal_terms", [])) if isinstance(reliability.get("signal_terms"), list) else [],
             "workflow_map_focus": bool(workflow_projection),
@@ -9431,6 +12173,8 @@ class SaasRuntime:
             "has_comparison_focus": bool(evidence_view.selected_comparison_run_id),
             "selected_signal_id": selected_context.get("selected_signal_id"),
             "signal_terms": list(selected_context.get("signal_terms", [])) if isinstance(selected_context.get("signal_terms"), list) else [],
+            "source_exchange_refs": list(selected_context.get("source_exchange_refs", [])) if isinstance(selected_context.get("source_exchange_refs"), list) else [],
+            "source_trace_refs": list(selected_context.get("source_trace_refs", [])) if isinstance(selected_context.get("source_trace_refs"), list) else [],
             "workflow_map_focus": bool(selected_context.get("workflow_map_focus")),
             "longitudinal_focus": longitudinal_focus,
             "recurring_signal_focus": recurring_signal_focus,
@@ -9502,6 +12246,8 @@ class SaasRuntime:
             "latest_comment_preview": comment_summaries[-1]["body"] if comment_summaries else "",
             "selected_signal_id": selected_context.get("selected_signal_id"),
             "signal_terms": list(selected_context.get("signal_terms", [])) if isinstance(selected_context.get("signal_terms"), list) else [],
+            "source_exchange_refs": list(selected_context.get("source_exchange_refs", [])) if isinstance(selected_context.get("source_exchange_refs"), list) else [],
+            "source_trace_refs": list(selected_context.get("source_trace_refs", [])) if isinstance(selected_context.get("source_trace_refs"), list) else [],
             "workflow_map_focus": bool(selected_context.get("workflow_map_focus")),
             "longitudinal_focus": longitudinal_focus,
             "recurring_signal_focus": recurring_signal_focus,

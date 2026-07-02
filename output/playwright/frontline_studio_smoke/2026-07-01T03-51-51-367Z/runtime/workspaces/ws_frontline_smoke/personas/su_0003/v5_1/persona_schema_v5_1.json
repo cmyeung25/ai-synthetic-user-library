@@ -1,0 +1,89 @@
+{
+  "schema_version": "v5.1",
+  "backward_compatible_with": [
+    "v5"
+  ],
+  "optional_profile_fields": {
+    "persona_schema_meta": [
+      "schema_version",
+      "source_version",
+      "upgrade_strategy",
+      "optional_blocks_present",
+      "canonicalizations_applied"
+    ],
+    "relational_defense_model": [
+      "self_other_position",
+      "default_trust_posture",
+      "defensive_style",
+      "status_sensitivity",
+      "attribution_style",
+      "conflict_pattern",
+      "withdrawal_pattern"
+    ],
+    "communication_behavior_model": [
+      "baseline_answer_length",
+      "clarification_tendency",
+      "misunderstanding_risk",
+      "topic_drift_tendency",
+      "memory_lapse_tendency",
+      "revision_tendency",
+      "disinterest_expression_style",
+      "permission_sensitivity",
+      "pricing_confusion_risk",
+      "dropoff_style"
+    ],
+    "behavior_generation_rules": [
+      "when",
+      "then",
+      "because",
+      "source"
+    ]
+  },
+  "fallback_mapping": {
+    "persona_schema_meta": {
+      "mapping_type": "metadata",
+      "target_fields": {
+        "schema_version": "v5.1",
+        "source_version": "v5",
+        "upgrade_strategy": "fallback_from_v5",
+        "optional_blocks_present": "derived_after_upgrade",
+        "canonicalizations_applied": "applied_upgrade_steps"
+      }
+    },
+    "relational_defense_model": {
+      "mapping_type": "derived_optional_block",
+      "derived_from": [
+        "human_difference_axes",
+        "technology_profile.privacy_concern",
+        "values.fears",
+        "emotional_regulation_style"
+      ],
+      "policy": "If a legacy v5 artifact does not already contain this block, derive it from adjacent trust, control, risk, and regulation context."
+    },
+    "communication_behavior_model": {
+      "mapping_type": "derived_optional_block",
+      "derived_from": [
+        "human_difference_axes",
+        "product_reaction_rules.questions_they_would_ask",
+        "objection_language_style.polite_objection_examples"
+      ],
+      "policy": "If a legacy v5 artifact does not already contain this block, derive it from complexity tolerance, explanation need, and objection style."
+    },
+    "behavior_generation_rules": {
+      "mapping_type": "derived_optional_block",
+      "derived_from": [
+        "human_difference_axes",
+        "relational_defense_model",
+        "communication_behavior_model"
+      ],
+      "policy": "If a legacy v5 artifact does not already contain this block, derive explicit transcript-behavior rules from the persona's axes and behavior models."
+    }
+  },
+  "semantics": {
+    "human_difference_axes": "Stable person-level difference axes that shape decisions and tolerance thresholds.",
+    "relational_defense_model": "Stable self-other and trust-protection posture. Not a runtime friction switch.",
+    "communication_behavior_model": "Baseline conversational tendencies that can surface during interviews.",
+    "behavior_generation_rules": "Explicit mappings from person-level traits into expected transcript behavior.",
+    "friction_mode": "Runtime interview setting, not persona truth."
+  }
+}

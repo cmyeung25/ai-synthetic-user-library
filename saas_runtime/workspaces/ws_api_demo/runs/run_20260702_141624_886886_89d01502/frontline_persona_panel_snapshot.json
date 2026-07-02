@@ -1,0 +1,1818 @@
+{
+  "contract_version": "frontline-persona-panel-run-snapshot/v0-draft",
+  "job_id": "job_20260702_141624_185fefaa",
+  "workspace_id": "ws_api_demo",
+  "project_id": "project_6be8fee2e261",
+  "study_id": "study_317822aff3a2",
+  "plan_revision_id": "planrev_091adaa2ee9b",
+  "persona_panel": {
+    "contract_version": "persona-panel-selection/v0-draft",
+    "panel_type": "mainstream",
+    "sample_size": 3,
+    "random_seed": 17,
+    "selected_persona_ids": [
+      "su_2009",
+      "su_2007",
+      "su_3002"
+    ],
+    "filters": {
+      "synthetic_user_id": [
+        "su_2009",
+        "su_2007",
+        "su_3002"
+      ]
+    },
+    "selection_mode": "user_selected",
+    "selection_rationale": "Sampled 3 personas from panel 'mainstream' using preset 'frontline_persona_picker'. Eligible candidates moved from 15 to 15 after filters (no extra filters). Most common occupations in the final sample: Operations coordinator at a regional medical consumables distributor (1), Product manager at a mid-stage software company shipping customer-facing digital products (1), field service coordinator (1). Human-difference coverage still looks thin on: control_preference, trust_style, complexity_tolerance.",
+    "coverage_snapshot": {
+      "required_axes": [
+        "control_preference",
+        "trust_style",
+        "complexity_tolerance",
+        "decision_tempo",
+        "financial_attention_cadence",
+        "relationship_to_money",
+        "risk_orientation",
+        "need_for_explanation",
+        "life_load",
+        "fragmentation_reality",
+        "guidance_preference",
+        "reflection_style"
+      ],
+      "persona_with_axes_count": 14,
+      "axes_with_any_coverage_count": 12,
+      "axes_with_full_presence_count": 0,
+      "axes_with_multi_pattern_count": 0,
+      "axis_coverage": {
+        "control_preference": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "hybrid": 14
+          },
+          "bucket_count": 1,
+          "example_values": [
+            "Wants meaningful oversight with low-friction defaults; dislikes surrendering control before trust is earned",
+            "Wants practical control over setup, data, and exit, but not endless customization.",
+            "Wants visible control over commitments and settings, but not endless customization."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "trust_style": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "contextual": 3,
+            "institution_led": 1,
+            "verify_first": 10
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Slow-to-warm, evidence-based, strengthened by ordinary-use realism rather than authority branding alone",
+            "Earned trust through consistency, plain explanations, and low-pressure proof.",
+            "Trusts slowly through ordinary proof, consistency, and reversibility rather than authority alone."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "complexity_tolerance": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "high": 6,
+            "low": 2,
+            "moderate": 6
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Can handle complexity when necessary, but resents avoidable complexity disguised as empowerment",
+            "Can handle moderate complexity when tied to a familiar task; rejects abstract complexity.",
+            "Can handle moderate complexity if it maps to a real benefit; rejects complexity that feels decorative."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "decision_tempo": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "fast": 7,
+            "measured": 7
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Fast in narrowing options, slower in commitment when money, family, or workflow disruption is involved",
+            "Fast initial sorting, slow final commitment.",
+            "Quick at ruling things out, slower at committing money or workflow change."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "financial_attention_cadence": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "event_driven": 6,
+            "frequent": 4,
+            "occasional": 4
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Frequent light monitoring with periodic deeper reviews",
+            "Small charges are reviewed repeatedly; big purchases are researched carefully but less often.",
+            "Checks spending in bursts tied to billing cycles, school fees, and household admin moments."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "relationship_to_money": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "practical": 6,
+            "security": 8
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Money is a stabilizer and a leak risk; small recurring costs are emotionally important because they accumulate quietly",
+            "Money is a stabilizer and a source of vigilance, not identity or prestige.",
+            "Money is a stabilizer and leak-prevention problem more than a path to status."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "risk_orientation": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "conservative": 9,
+            "measured": 3,
+            "open": 2
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Downside-aware and reversibility-seeking, especially in subscriptions, privacy, and family contexts",
+            "Avoids downside first, then considers upside.",
+            "Cautious about downside, especially invisible or compounding downside."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "need_for_explanation": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "high": 14
+          },
+          "bucket_count": 1,
+          "example_values": [
+            "Needs concise, concrete explanation with visible tradeoffs; not academic detail, but enough to see where the catch might be",
+            "Needs enough explanation to understand consequences, especially recurring ones.",
+            "Needs enough explanation to predict daily use and failure modes, not technical depth for its own sake."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "life_load": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "high": 6,
+            "low": 6,
+            "moderate": 2
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "High and fragmented, with limited uninterrupted time and frequent context switching",
+            "High and fragmented, with frequent context switching across family and work.",
+            "Persistently medium-high; she operates under regular time fragmentation rather than acute crisis."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "fragmentation_reality": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "fragmented": 12,
+            "some_fragmentation": 2
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Lives across phone, chat, mental notes, and partial handoffs; products must survive interruption",
+            "Lives through short bursts of attention, uneven energy, and overlapping responsibilities.",
+            "Her attention, tools, and responsibilities are split across channels, people, and short time windows."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "guidance_preference": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "guided": 8,
+            "self_serve": 6
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Prefers guided starts with room to customize later, not blank-slate flexibility upfront",
+            "Prefers staged guidance and examples over tutorials or philosophy.",
+            "Prefers guided starts, examples, and sane defaults with the option to inspect details later."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "reflection_style": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "contextual": 5,
+            "example_tradeoff": 9
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Reflects through comparison and practical hindsight rather than abstract self-analysis",
+            "Reflects through specific incidents and practical hindsight rather than broad self-analysis.",
+            "Reflects through practical retrospection: what wasted time, what held up, what quietly cost more than expected."
+          ],
+          "coverage_status": "partial_presence"
+        }
+      },
+      "behavior_model_coverage": {
+        "relational_defense_model": {
+          "persona_count": 17,
+          "missing_persona_count": 0,
+          "coverage_status": "covered"
+        },
+        "communication_behavior_model": {
+          "persona_count": 17,
+          "missing_persona_count": 0,
+          "coverage_status": "covered"
+        },
+        "behavior_generation_rules": {
+          "persona_count": 17,
+          "missing_persona_count": 0,
+          "coverage_status": "covered"
+        }
+      },
+      "coverage_gaps": [
+        {
+          "axis": "control_preference",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "trust_style",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "complexity_tolerance",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "decision_tempo",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "financial_attention_cadence",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "relationship_to_money",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "risk_orientation",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "need_for_explanation",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "life_load",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "fragmentation_reality",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "guidance_preference",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "reflection_style",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        }
+      ]
+    },
+    "selected_personas": [
+      {
+        "synthetic_user_id": "su_2009",
+        "name": "Chen Yu-ting",
+        "panel_role": "mainstream",
+        "persona_kind": "participant",
+        "library_group": "participant",
+        "readiness_status": "ready",
+        "persona_version": "v5.1",
+        "source_schema_version": "v5_1",
+        "source_kind": "generated",
+        "generator_version": "persona-generator/v5.1",
+        "source_panel_role": "general_research_participant",
+        "panel_role_normalized": true,
+        "lens_boundary": "",
+        "artifact_hashes": {
+          "profile.json": "0831387d75386d23c2c9d463590d9a78fd19b30dbcab7538b8ffb231a872a969",
+          "audit.json": "3793031e050bb49f060b29a3b8c3dc5b1ef0d6a862fa8706f17cb2ff4b6c3577",
+          "persona.md": "55daf21b557d13441cd732c7550ae6520cf57e079ecd8dc56f8de18622618d58",
+          "generation_notes.json": "31faf0b88751ab71b3ea69adc1a96100686b220f7819411f9d4a5ec2b281cbd6"
+        },
+        "generation_job_id": "",
+        "occupation": "Operations coordinator at a regional medical consumables distributor",
+        "location": "Beitun District, Taichung, Taiwan",
+        "life_stage": "adult age 36",
+        "workflow_maturity": "context dependent",
+        "price_sensitivity": "She notices small recurring charges quickly and compares them against very concrete time savings.",
+        "privacy_concern": "She is especially protective of child-related information, payment data, ID numbers, and anything that feels like it could be reused without her control.",
+        "trust_threshold": "Trust builds through consistency, local proof, and whether a product seems honest about limits.",
+        "proof_threshold": "context dependent",
+        "human_difference_axes": {},
+        "decision_policy": {
+          "adoption_style": "Selective incremental adoption. She tests narrowly, confirms repeat value, then decides whether the product deserves a stable place in her routine.",
+          "trust_requirements": [
+            "Plain-language explanation of value and limits",
+            "Local or relatable user proof",
+            "Clear pricing in local terms"
+          ],
+          "rejection_triggers": [
+            "Hidden or slippery pricing",
+            "Too much setup before first value",
+            "Data requests that feel early or excessive"
+          ],
+          "proof_requirements": [
+            "A concrete example that matches her life rhythm",
+            "Second-use benefit, not just first-use novelty",
+            "Ordinary user feedback rather than only polished testimonials"
+          ]
+        }
+      },
+      {
+        "synthetic_user_id": "su_2007",
+        "name": "Janice Wong",
+        "panel_role": "mainstream",
+        "persona_kind": "participant",
+        "library_group": "participant",
+        "readiness_status": "ready",
+        "persona_version": "v5",
+        "source_schema_version": "v5",
+        "source_kind": "generated",
+        "generator_version": "persona-generator/v5",
+        "source_panel_role": "general_research_participant",
+        "panel_role_normalized": true,
+        "lens_boundary": "",
+        "artifact_hashes": {
+          "profile.json": "e3c49b6dbb0c567f264305682f05b02bbcddbcf1de040b75856ca41913299a2a",
+          "audit.json": "255b5643ac164308eaa90eba45fd4a9c5dd2b096c6fb149b08be99434b71d654",
+          "persona.md": "67c7bccb9fe550b423ce7ea3441e0ec01947f58ffb7a9b8ac9046f09a9265473",
+          "generation_notes.json": "80ac924c1654c13f54c6fb2553de2581bef365e33db5d9829ae98f56ff4f023e"
+        },
+        "generation_job_id": "",
+        "occupation": "Product manager at a mid-stage software company shipping customer-facing digital products",
+        "location": "Hong Kong",
+        "life_stage": "adult age 36",
+        "workflow_maturity": "context dependent",
+        "price_sensitivity": "Moderate. She is not looking for the cheapest option, but she notices when software adds another recurring cost without reducing real team effort.",
+        "privacy_concern": "Medium to high. She is pragmatic about software at work, but becomes careful when tools use customer transcripts, internal strategy notes, or anything that might expose individuals or product plans.",
+        "trust_threshold": "She trusts things that can be checked from more than one angle. She is more persuaded by clear limitations, repeatable output, and honest caveats than by confident marketing.",
+        "proof_threshold": "context dependent",
+        "human_difference_axes": {
+          "control_preference": "High. She wants visibility into how conclusions were reached before she uses them to influence prioritisation or stakeholder decisions.",
+          "trust_style": "Repeatability-and-caveat oriented. She trusts things that can be pressure-tested, compared, and criticised without collapsing.",
+          "complexity_tolerance": "Moderately high if the complexity sharpens judgment; low for complexity that exists only to prove sophistication.",
+          "decision_tempo": "Fast once she has enough to defend a direction, but she dislikes pretending uncertainty does not exist.",
+          "financial_attention_cadence": "Steady and managerial. She thinks about recurring spend, team utilisation, and whether a tool earns its place over time.",
+          "relationship_to_money": "Money represents breathing room, competence, and not creating wasteful commitments for herself or her team.",
+          "risk_orientation": "Bounded experimentation over blind adoption. She prefers reversible trials and clearer standards before scale-up.",
+          "need_for_explanation": "High but concise. She does not need a lecture; she needs a short explanation strong enough to hold in cross-functional review.",
+          "life_load": "Consistently loaded. Work deadlines, commuting, parenting, and household management leave limited spare cognitive space.",
+          "fragmentation_reality": "High fragmentation. Her attention is chopped across meetings, messages, home logistics, and partially completed comparisons.",
+          "guidance_preference": "Scenario-based guidance with concrete examples beats abstract frameworks.",
+          "reflection_style": "Quietly analytical. She often forms her real judgment after the meeting, once she has mentally replayed what felt solid versus slippery."
+        },
+        "decision_policy": {
+          "adoption_style": "Trial-first, narrow-scope, evidence-seeking adoption. She rarely commits broadly before seeing how a product behaves inside a real workflow.",
+          "trust_requirements": [
+            "A clear explanation of what the product is and is not good for",
+            "Visible reasoning, assumptions, or traceable input-output links",
+            "A realistic pilot using her own team's context"
+          ],
+          "rejection_triggers": [
+            "Overstated replacement claims with weak boundaries",
+            "Polished outputs that feel generic once inspected",
+            "Heavy onboarding before any proof of value"
+          ],
+          "proof_requirements": [
+            "One concrete decision improved or clarified in a live product context",
+            "Comparison against existing evidence sources such as interviews, analytics, or support data",
+            "Demonstration that the tool helps explanation, not only generation"
+          ]
+        }
+      },
+      {
+        "synthetic_user_id": "su_3002",
+        "name": "Sam Tan",
+        "panel_role": "mainstream",
+        "persona_kind": "participant",
+        "library_group": "participant",
+        "readiness_status": "ready",
+        "persona_version": "v5.1",
+        "source_schema_version": "v5_1",
+        "source_kind": "generated",
+        "generator_version": "persona-generator/v5.1",
+        "source_panel_role": "",
+        "panel_role_normalized": false,
+        "lens_boundary": "",
+        "artifact_hashes": {
+          "profile.json": "a6ec7f6992d269c12a2b8af4dabff8a052c129181cf23e02f31310760ed2a34c",
+          "audit.json": "5153c8f15bc8221cd5ff954f77931075aef409ebf75b9d3a319012dd617c8641",
+          "persona.md": "f6b7fb4e69110208b3cd7d0112082194418cff3313f81263851e0e407ebca190",
+          "generation_notes.json": "8a4bc517cc47dd6f4190e24e23cbfaaea98614f8f2f603323f802f04f278bd14"
+        },
+        "generation_job_id": "",
+        "occupation": "field service coordinator",
+        "location": "Kuala Lumpur",
+        "life_stage": "late career specialist",
+        "workflow_maturity": "ad_hoc",
+        "price_sensitivity": "low",
+        "privacy_concern": "medium",
+        "trust_threshold": "needs proof from concrete workflows, not just positioning",
+        "proof_threshold": "['specific examples from similar users', 'a short trial workflow', 'simple ROI signal within the first week', 'evidence that the workflow can survive internal review and comparison', 'clear before-and-after value', 'low-friction onboarding', 'simple setup with very few moving parts']",
+        "human_difference_axes": {
+          "control_preference": "Hybrid; wants room to decide but appreciates clear defaults.",
+          "trust_style": "Evidence-first with cautious benefit of the doubt for credible proof.",
+          "complexity_tolerance": "Moderate; will engage when detail clearly helps the decision.",
+          "decision_tempo": "Measured; gathers enough signal before acting.",
+          "financial_attention_cadence": "Periodic with event-driven spikes when consequences rise.",
+          "relationship_to_money": "Money is a practical buffer and progress marker.",
+          "risk_orientation": "Open to measured risk when the downside is understandable.",
+          "need_for_explanation": "High enough to want plain-language framing and concrete examples.",
+          "life_load": "Moderate; daily life leaves limited room for unnecessary friction.",
+          "fragmentation_reality": "Some information and decisions live across more than one place.",
+          "guidance_preference": "Hybrid self-serve plus optional expert clarification.",
+          "reflection_style": "Explains decisions through recent examples and trade-offs."
+        },
+        "decision_policy": {
+          "adoption_style": "adopts slowly and only if the tool feels easier than the current workaround",
+          "trust_requirements": [
+            "first value in one short session",
+            "easy restart after a missed week",
+            "low-energy onboarding that works on a tired evening"
+          ],
+          "rejection_triggers": [
+            "setup that requires a clean block of focus",
+            "products that create guilt loops when the user falls behind"
+          ],
+          "proof_requirements": [
+            "a tired-week use case, not just an ideal-week demo",
+            "evidence that the product still works after interrupted use"
+          ]
+        }
+      }
+    ],
+    "readiness_status": "ready",
+    "allow_empty_selection": false,
+    "empty_selection_exception": {},
+    "allow_provisional_personas": false,
+    "provisional_persona_exception": {},
+    "selected_persona_snapshot": {
+      "contract_version": "selected-persona-panel-snapshot/v0-draft",
+      "created_at": "2026-07-02T14:16:24+00:00",
+      "selected_persona_ids": [
+        "su_2009",
+        "su_2007",
+        "su_3002"
+      ],
+      "selected_personas": [
+        {
+          "synthetic_user_id": "su_2009",
+          "name": "Chen Yu-ting",
+          "panel_role": "mainstream",
+          "persona_kind": "participant",
+          "library_group": "participant",
+          "readiness_status": "ready",
+          "persona_version": "v5.1",
+          "source_schema_version": "v5_1",
+          "source_kind": "generated",
+          "generator_version": "persona-generator/v5.1",
+          "source_panel_role": "general_research_participant",
+          "panel_role_normalized": true,
+          "lens_boundary": "",
+          "artifact_hashes": {
+            "profile.json": "0831387d75386d23c2c9d463590d9a78fd19b30dbcab7538b8ffb231a872a969",
+            "audit.json": "3793031e050bb49f060b29a3b8c3dc5b1ef0d6a862fa8706f17cb2ff4b6c3577",
+            "persona.md": "55daf21b557d13441cd732c7550ae6520cf57e079ecd8dc56f8de18622618d58",
+            "generation_notes.json": "31faf0b88751ab71b3ea69adc1a96100686b220f7819411f9d4a5ec2b281cbd6"
+          },
+          "generation_job_id": "",
+          "occupation": "Operations coordinator at a regional medical consumables distributor",
+          "location": "Beitun District, Taichung, Taiwan",
+          "life_stage": "adult age 36",
+          "workflow_maturity": "context dependent",
+          "price_sensitivity": "She notices small recurring charges quickly and compares them against very concrete time savings.",
+          "privacy_concern": "She is especially protective of child-related information, payment data, ID numbers, and anything that feels like it could be reused without her control.",
+          "trust_threshold": "Trust builds through consistency, local proof, and whether a product seems honest about limits.",
+          "proof_threshold": "context dependent",
+          "human_difference_axes": {},
+          "decision_policy": {
+            "adoption_style": "Selective incremental adoption. She tests narrowly, confirms repeat value, then decides whether the product deserves a stable place in her routine.",
+            "trust_requirements": [
+              "Plain-language explanation of value and limits",
+              "Local or relatable user proof",
+              "Clear pricing in local terms"
+            ],
+            "rejection_triggers": [
+              "Hidden or slippery pricing",
+              "Too much setup before first value",
+              "Data requests that feel early or excessive"
+            ],
+            "proof_requirements": [
+              "A concrete example that matches her life rhythm",
+              "Second-use benefit, not just first-use novelty",
+              "Ordinary user feedback rather than only polished testimonials"
+            ]
+          }
+        },
+        {
+          "synthetic_user_id": "su_2007",
+          "name": "Janice Wong",
+          "panel_role": "mainstream",
+          "persona_kind": "participant",
+          "library_group": "participant",
+          "readiness_status": "ready",
+          "persona_version": "v5",
+          "source_schema_version": "v5",
+          "source_kind": "generated",
+          "generator_version": "persona-generator/v5",
+          "source_panel_role": "general_research_participant",
+          "panel_role_normalized": true,
+          "lens_boundary": "",
+          "artifact_hashes": {
+            "profile.json": "e3c49b6dbb0c567f264305682f05b02bbcddbcf1de040b75856ca41913299a2a",
+            "audit.json": "255b5643ac164308eaa90eba45fd4a9c5dd2b096c6fb149b08be99434b71d654",
+            "persona.md": "67c7bccb9fe550b423ce7ea3441e0ec01947f58ffb7a9b8ac9046f09a9265473",
+            "generation_notes.json": "80ac924c1654c13f54c6fb2553de2581bef365e33db5d9829ae98f56ff4f023e"
+          },
+          "generation_job_id": "",
+          "occupation": "Product manager at a mid-stage software company shipping customer-facing digital products",
+          "location": "Hong Kong",
+          "life_stage": "adult age 36",
+          "workflow_maturity": "context dependent",
+          "price_sensitivity": "Moderate. She is not looking for the cheapest option, but she notices when software adds another recurring cost without reducing real team effort.",
+          "privacy_concern": "Medium to high. She is pragmatic about software at work, but becomes careful when tools use customer transcripts, internal strategy notes, or anything that might expose individuals or product plans.",
+          "trust_threshold": "She trusts things that can be checked from more than one angle. She is more persuaded by clear limitations, repeatable output, and honest caveats than by confident marketing.",
+          "proof_threshold": "context dependent",
+          "human_difference_axes": {
+            "control_preference": "High. She wants visibility into how conclusions were reached before she uses them to influence prioritisation or stakeholder decisions.",
+            "trust_style": "Repeatability-and-caveat oriented. She trusts things that can be pressure-tested, compared, and criticised without collapsing.",
+            "complexity_tolerance": "Moderately high if the complexity sharpens judgment; low for complexity that exists only to prove sophistication.",
+            "decision_tempo": "Fast once she has enough to defend a direction, but she dislikes pretending uncertainty does not exist.",
+            "financial_attention_cadence": "Steady and managerial. She thinks about recurring spend, team utilisation, and whether a tool earns its place over time.",
+            "relationship_to_money": "Money represents breathing room, competence, and not creating wasteful commitments for herself or her team.",
+            "risk_orientation": "Bounded experimentation over blind adoption. She prefers reversible trials and clearer standards before scale-up.",
+            "need_for_explanation": "High but concise. She does not need a lecture; she needs a short explanation strong enough to hold in cross-functional review.",
+            "life_load": "Consistently loaded. Work deadlines, commuting, parenting, and household management leave limited spare cognitive space.",
+            "fragmentation_reality": "High fragmentation. Her attention is chopped across meetings, messages, home logistics, and partially completed comparisons.",
+            "guidance_preference": "Scenario-based guidance with concrete examples beats abstract frameworks.",
+            "reflection_style": "Quietly analytical. She often forms her real judgment after the meeting, once she has mentally replayed what felt solid versus slippery."
+          },
+          "decision_policy": {
+            "adoption_style": "Trial-first, narrow-scope, evidence-seeking adoption. She rarely commits broadly before seeing how a product behaves inside a real workflow.",
+            "trust_requirements": [
+              "A clear explanation of what the product is and is not good for",
+              "Visible reasoning, assumptions, or traceable input-output links",
+              "A realistic pilot using her own team's context"
+            ],
+            "rejection_triggers": [
+              "Overstated replacement claims with weak boundaries",
+              "Polished outputs that feel generic once inspected",
+              "Heavy onboarding before any proof of value"
+            ],
+            "proof_requirements": [
+              "One concrete decision improved or clarified in a live product context",
+              "Comparison against existing evidence sources such as interviews, analytics, or support data",
+              "Demonstration that the tool helps explanation, not only generation"
+            ]
+          }
+        },
+        {
+          "synthetic_user_id": "su_3002",
+          "name": "Sam Tan",
+          "panel_role": "mainstream",
+          "persona_kind": "participant",
+          "library_group": "participant",
+          "readiness_status": "ready",
+          "persona_version": "v5.1",
+          "source_schema_version": "v5_1",
+          "source_kind": "generated",
+          "generator_version": "persona-generator/v5.1",
+          "source_panel_role": "",
+          "panel_role_normalized": false,
+          "lens_boundary": "",
+          "artifact_hashes": {
+            "profile.json": "a6ec7f6992d269c12a2b8af4dabff8a052c129181cf23e02f31310760ed2a34c",
+            "audit.json": "5153c8f15bc8221cd5ff954f77931075aef409ebf75b9d3a319012dd617c8641",
+            "persona.md": "f6b7fb4e69110208b3cd7d0112082194418cff3313f81263851e0e407ebca190",
+            "generation_notes.json": "8a4bc517cc47dd6f4190e24e23cbfaaea98614f8f2f603323f802f04f278bd14"
+          },
+          "generation_job_id": "",
+          "occupation": "field service coordinator",
+          "location": "Kuala Lumpur",
+          "life_stage": "late career specialist",
+          "workflow_maturity": "ad_hoc",
+          "price_sensitivity": "low",
+          "privacy_concern": "medium",
+          "trust_threshold": "needs proof from concrete workflows, not just positioning",
+          "proof_threshold": "['specific examples from similar users', 'a short trial workflow', 'simple ROI signal within the first week', 'evidence that the workflow can survive internal review and comparison', 'clear before-and-after value', 'low-friction onboarding', 'simple setup with very few moving parts']",
+          "human_difference_axes": {
+            "control_preference": "Hybrid; wants room to decide but appreciates clear defaults.",
+            "trust_style": "Evidence-first with cautious benefit of the doubt for credible proof.",
+            "complexity_tolerance": "Moderate; will engage when detail clearly helps the decision.",
+            "decision_tempo": "Measured; gathers enough signal before acting.",
+            "financial_attention_cadence": "Periodic with event-driven spikes when consequences rise.",
+            "relationship_to_money": "Money is a practical buffer and progress marker.",
+            "risk_orientation": "Open to measured risk when the downside is understandable.",
+            "need_for_explanation": "High enough to want plain-language framing and concrete examples.",
+            "life_load": "Moderate; daily life leaves limited room for unnecessary friction.",
+            "fragmentation_reality": "Some information and decisions live across more than one place.",
+            "guidance_preference": "Hybrid self-serve plus optional expert clarification.",
+            "reflection_style": "Explains decisions through recent examples and trade-offs."
+          },
+          "decision_policy": {
+            "adoption_style": "adopts slowly and only if the tool feels easier than the current workaround",
+            "trust_requirements": [
+              "first value in one short session",
+              "easy restart after a missed week",
+              "low-energy onboarding that works on a tired evening"
+            ],
+            "rejection_triggers": [
+              "setup that requires a clean block of focus",
+              "products that create guilt loops when the user falls behind"
+            ],
+            "proof_requirements": [
+              "a tired-week use case, not just an ideal-week demo",
+              "evidence that the product still works after interrupted use"
+            ]
+          }
+        }
+      ],
+      "selected_persona_versions": {
+        "su_2009": "v5.1",
+        "su_2007": "v5",
+        "su_3002": "v5.1"
+      },
+      "artifact_hashes_by_persona": {
+        "su_2009": {
+          "profile.json": "0831387d75386d23c2c9d463590d9a78fd19b30dbcab7538b8ffb231a872a969",
+          "audit.json": "3793031e050bb49f060b29a3b8c3dc5b1ef0d6a862fa8706f17cb2ff4b6c3577",
+          "persona.md": "55daf21b557d13441cd732c7550ae6520cf57e079ecd8dc56f8de18622618d58",
+          "generation_notes.json": "31faf0b88751ab71b3ea69adc1a96100686b220f7819411f9d4a5ec2b281cbd6"
+        },
+        "su_2007": {
+          "profile.json": "e3c49b6dbb0c567f264305682f05b02bbcddbcf1de040b75856ca41913299a2a",
+          "audit.json": "255b5643ac164308eaa90eba45fd4a9c5dd2b096c6fb149b08be99434b71d654",
+          "persona.md": "67c7bccb9fe550b423ce7ea3441e0ec01947f58ffb7a9b8ac9046f09a9265473",
+          "generation_notes.json": "80ac924c1654c13f54c6fb2553de2581bef365e33db5d9829ae98f56ff4f023e"
+        },
+        "su_3002": {
+          "profile.json": "a6ec7f6992d269c12a2b8af4dabff8a052c129181cf23e02f31310760ed2a34c",
+          "audit.json": "5153c8f15bc8221cd5ff954f77931075aef409ebf75b9d3a319012dd617c8641",
+          "persona.md": "f6b7fb4e69110208b3cd7d0112082194418cff3313f81263851e0e407ebca190",
+          "generation_notes.json": "8a4bc517cc47dd6f4190e24e23cbfaaea98614f8f2f603323f802f04f278bd14"
+        }
+      },
+      "coverage_snapshot": {
+        "required_axes": [
+          "control_preference",
+          "trust_style",
+          "complexity_tolerance",
+          "decision_tempo",
+          "financial_attention_cadence",
+          "relationship_to_money",
+          "risk_orientation",
+          "need_for_explanation",
+          "life_load",
+          "fragmentation_reality",
+          "guidance_preference",
+          "reflection_style"
+        ],
+        "persona_with_axes_count": 14,
+        "axes_with_any_coverage_count": 12,
+        "axes_with_full_presence_count": 0,
+        "axes_with_multi_pattern_count": 0,
+        "axis_coverage": {
+          "control_preference": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "hybrid": 14
+            },
+            "bucket_count": 1,
+            "example_values": [
+              "Wants meaningful oversight with low-friction defaults; dislikes surrendering control before trust is earned",
+              "Wants practical control over setup, data, and exit, but not endless customization.",
+              "Wants visible control over commitments and settings, but not endless customization."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "trust_style": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "contextual": 3,
+              "institution_led": 1,
+              "verify_first": 10
+            },
+            "bucket_count": 3,
+            "example_values": [
+              "Slow-to-warm, evidence-based, strengthened by ordinary-use realism rather than authority branding alone",
+              "Earned trust through consistency, plain explanations, and low-pressure proof.",
+              "Trusts slowly through ordinary proof, consistency, and reversibility rather than authority alone."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "complexity_tolerance": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "high": 6,
+              "low": 2,
+              "moderate": 6
+            },
+            "bucket_count": 3,
+            "example_values": [
+              "Can handle complexity when necessary, but resents avoidable complexity disguised as empowerment",
+              "Can handle moderate complexity when tied to a familiar task; rejects abstract complexity.",
+              "Can handle moderate complexity if it maps to a real benefit; rejects complexity that feels decorative."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "decision_tempo": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "fast": 7,
+              "measured": 7
+            },
+            "bucket_count": 2,
+            "example_values": [
+              "Fast in narrowing options, slower in commitment when money, family, or workflow disruption is involved",
+              "Fast initial sorting, slow final commitment.",
+              "Quick at ruling things out, slower at committing money or workflow change."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "financial_attention_cadence": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "event_driven": 6,
+              "frequent": 4,
+              "occasional": 4
+            },
+            "bucket_count": 3,
+            "example_values": [
+              "Frequent light monitoring with periodic deeper reviews",
+              "Small charges are reviewed repeatedly; big purchases are researched carefully but less often.",
+              "Checks spending in bursts tied to billing cycles, school fees, and household admin moments."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "relationship_to_money": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "practical": 6,
+              "security": 8
+            },
+            "bucket_count": 2,
+            "example_values": [
+              "Money is a stabilizer and a leak risk; small recurring costs are emotionally important because they accumulate quietly",
+              "Money is a stabilizer and a source of vigilance, not identity or prestige.",
+              "Money is a stabilizer and leak-prevention problem more than a path to status."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "risk_orientation": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "conservative": 9,
+              "measured": 3,
+              "open": 2
+            },
+            "bucket_count": 3,
+            "example_values": [
+              "Downside-aware and reversibility-seeking, especially in subscriptions, privacy, and family contexts",
+              "Avoids downside first, then considers upside.",
+              "Cautious about downside, especially invisible or compounding downside."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "need_for_explanation": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "high": 14
+            },
+            "bucket_count": 1,
+            "example_values": [
+              "Needs concise, concrete explanation with visible tradeoffs; not academic detail, but enough to see where the catch might be",
+              "Needs enough explanation to understand consequences, especially recurring ones.",
+              "Needs enough explanation to predict daily use and failure modes, not technical depth for its own sake."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "life_load": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "high": 6,
+              "low": 6,
+              "moderate": 2
+            },
+            "bucket_count": 3,
+            "example_values": [
+              "High and fragmented, with limited uninterrupted time and frequent context switching",
+              "High and fragmented, with frequent context switching across family and work.",
+              "Persistently medium-high; she operates under regular time fragmentation rather than acute crisis."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "fragmentation_reality": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "fragmented": 12,
+              "some_fragmentation": 2
+            },
+            "bucket_count": 2,
+            "example_values": [
+              "Lives across phone, chat, mental notes, and partial handoffs; products must survive interruption",
+              "Lives through short bursts of attention, uneven energy, and overlapping responsibilities.",
+              "Her attention, tools, and responsibilities are split across channels, people, and short time windows."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "guidance_preference": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "guided": 8,
+              "self_serve": 6
+            },
+            "bucket_count": 2,
+            "example_values": [
+              "Prefers guided starts with room to customize later, not blank-slate flexibility upfront",
+              "Prefers staged guidance and examples over tutorials or philosophy.",
+              "Prefers guided starts, examples, and sane defaults with the option to inspect details later."
+            ],
+            "coverage_status": "partial_presence"
+          },
+          "reflection_style": {
+            "persona_count": 14,
+            "missing_persona_count": 3,
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ],
+            "bucket_distribution": {
+              "contextual": 5,
+              "example_tradeoff": 9
+            },
+            "bucket_count": 2,
+            "example_values": [
+              "Reflects through comparison and practical hindsight rather than abstract self-analysis",
+              "Reflects through specific incidents and practical hindsight rather than broad self-analysis.",
+              "Reflects through practical retrospection: what wasted time, what held up, what quietly cost more than expected."
+            ],
+            "coverage_status": "partial_presence"
+          }
+        },
+        "behavior_model_coverage": {
+          "relational_defense_model": {
+            "persona_count": 17,
+            "missing_persona_count": 0,
+            "coverage_status": "covered"
+          },
+          "communication_behavior_model": {
+            "persona_count": 17,
+            "missing_persona_count": 0,
+            "coverage_status": "covered"
+          },
+          "behavior_generation_rules": {
+            "persona_count": 17,
+            "missing_persona_count": 0,
+            "coverage_status": "covered"
+          }
+        },
+        "coverage_gaps": [
+          {
+            "axis": "control_preference",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "trust_style",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "complexity_tolerance",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "decision_tempo",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "financial_attention_cadence",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "relationship_to_money",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "risk_orientation",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "need_for_explanation",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "life_load",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "fragmentation_reality",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "guidance_preference",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          },
+          {
+            "axis": "reflection_style",
+            "gap_type": "partial_presence",
+            "missing_persona_ids": [
+              "su_2009",
+              "su_2010",
+              "su_2011"
+            ]
+          }
+        ]
+      },
+      "readiness_statuses": {
+        "su_2009": "ready",
+        "su_2007": "ready",
+        "su_3002": "ready"
+      },
+      "has_provisional_personas": false,
+      "provisional_persona_ids": [],
+      "simulated_lens_persona_ids": [],
+      "load_failures": [],
+      "synthetic_boundary": "This snapshot records the synthetic participant versions used by the run. It is not recruited human evidence."
+    },
+    "synthetic_boundary": "Persona selection improves simulation coverage, but it does not create recruited human evidence."
+  },
+  "selected_persona_snapshot": {
+    "contract_version": "selected-persona-panel-snapshot/v0-draft",
+    "created_at": "2026-07-02T14:16:24+00:00",
+    "selected_persona_ids": [
+      "su_2009",
+      "su_2007",
+      "su_3002"
+    ],
+    "selected_personas": [
+      {
+        "synthetic_user_id": "su_2009",
+        "name": "Chen Yu-ting",
+        "panel_role": "mainstream",
+        "persona_kind": "participant",
+        "library_group": "participant",
+        "readiness_status": "ready",
+        "persona_version": "v5.1",
+        "source_schema_version": "v5_1",
+        "source_kind": "generated",
+        "generator_version": "persona-generator/v5.1",
+        "source_panel_role": "general_research_participant",
+        "panel_role_normalized": true,
+        "lens_boundary": "",
+        "artifact_hashes": {
+          "profile.json": "0831387d75386d23c2c9d463590d9a78fd19b30dbcab7538b8ffb231a872a969",
+          "audit.json": "3793031e050bb49f060b29a3b8c3dc5b1ef0d6a862fa8706f17cb2ff4b6c3577",
+          "persona.md": "55daf21b557d13441cd732c7550ae6520cf57e079ecd8dc56f8de18622618d58",
+          "generation_notes.json": "31faf0b88751ab71b3ea69adc1a96100686b220f7819411f9d4a5ec2b281cbd6"
+        },
+        "generation_job_id": "",
+        "occupation": "Operations coordinator at a regional medical consumables distributor",
+        "location": "Beitun District, Taichung, Taiwan",
+        "life_stage": "adult age 36",
+        "workflow_maturity": "context dependent",
+        "price_sensitivity": "She notices small recurring charges quickly and compares them against very concrete time savings.",
+        "privacy_concern": "She is especially protective of child-related information, payment data, ID numbers, and anything that feels like it could be reused without her control.",
+        "trust_threshold": "Trust builds through consistency, local proof, and whether a product seems honest about limits.",
+        "proof_threshold": "context dependent",
+        "human_difference_axes": {},
+        "decision_policy": {
+          "adoption_style": "Selective incremental adoption. She tests narrowly, confirms repeat value, then decides whether the product deserves a stable place in her routine.",
+          "trust_requirements": [
+            "Plain-language explanation of value and limits",
+            "Local or relatable user proof",
+            "Clear pricing in local terms"
+          ],
+          "rejection_triggers": [
+            "Hidden or slippery pricing",
+            "Too much setup before first value",
+            "Data requests that feel early or excessive"
+          ],
+          "proof_requirements": [
+            "A concrete example that matches her life rhythm",
+            "Second-use benefit, not just first-use novelty",
+            "Ordinary user feedback rather than only polished testimonials"
+          ]
+        }
+      },
+      {
+        "synthetic_user_id": "su_2007",
+        "name": "Janice Wong",
+        "panel_role": "mainstream",
+        "persona_kind": "participant",
+        "library_group": "participant",
+        "readiness_status": "ready",
+        "persona_version": "v5",
+        "source_schema_version": "v5",
+        "source_kind": "generated",
+        "generator_version": "persona-generator/v5",
+        "source_panel_role": "general_research_participant",
+        "panel_role_normalized": true,
+        "lens_boundary": "",
+        "artifact_hashes": {
+          "profile.json": "e3c49b6dbb0c567f264305682f05b02bbcddbcf1de040b75856ca41913299a2a",
+          "audit.json": "255b5643ac164308eaa90eba45fd4a9c5dd2b096c6fb149b08be99434b71d654",
+          "persona.md": "67c7bccb9fe550b423ce7ea3441e0ec01947f58ffb7a9b8ac9046f09a9265473",
+          "generation_notes.json": "80ac924c1654c13f54c6fb2553de2581bef365e33db5d9829ae98f56ff4f023e"
+        },
+        "generation_job_id": "",
+        "occupation": "Product manager at a mid-stage software company shipping customer-facing digital products",
+        "location": "Hong Kong",
+        "life_stage": "adult age 36",
+        "workflow_maturity": "context dependent",
+        "price_sensitivity": "Moderate. She is not looking for the cheapest option, but she notices when software adds another recurring cost without reducing real team effort.",
+        "privacy_concern": "Medium to high. She is pragmatic about software at work, but becomes careful when tools use customer transcripts, internal strategy notes, or anything that might expose individuals or product plans.",
+        "trust_threshold": "She trusts things that can be checked from more than one angle. She is more persuaded by clear limitations, repeatable output, and honest caveats than by confident marketing.",
+        "proof_threshold": "context dependent",
+        "human_difference_axes": {
+          "control_preference": "High. She wants visibility into how conclusions were reached before she uses them to influence prioritisation or stakeholder decisions.",
+          "trust_style": "Repeatability-and-caveat oriented. She trusts things that can be pressure-tested, compared, and criticised without collapsing.",
+          "complexity_tolerance": "Moderately high if the complexity sharpens judgment; low for complexity that exists only to prove sophistication.",
+          "decision_tempo": "Fast once she has enough to defend a direction, but she dislikes pretending uncertainty does not exist.",
+          "financial_attention_cadence": "Steady and managerial. She thinks about recurring spend, team utilisation, and whether a tool earns its place over time.",
+          "relationship_to_money": "Money represents breathing room, competence, and not creating wasteful commitments for herself or her team.",
+          "risk_orientation": "Bounded experimentation over blind adoption. She prefers reversible trials and clearer standards before scale-up.",
+          "need_for_explanation": "High but concise. She does not need a lecture; she needs a short explanation strong enough to hold in cross-functional review.",
+          "life_load": "Consistently loaded. Work deadlines, commuting, parenting, and household management leave limited spare cognitive space.",
+          "fragmentation_reality": "High fragmentation. Her attention is chopped across meetings, messages, home logistics, and partially completed comparisons.",
+          "guidance_preference": "Scenario-based guidance with concrete examples beats abstract frameworks.",
+          "reflection_style": "Quietly analytical. She often forms her real judgment after the meeting, once she has mentally replayed what felt solid versus slippery."
+        },
+        "decision_policy": {
+          "adoption_style": "Trial-first, narrow-scope, evidence-seeking adoption. She rarely commits broadly before seeing how a product behaves inside a real workflow.",
+          "trust_requirements": [
+            "A clear explanation of what the product is and is not good for",
+            "Visible reasoning, assumptions, or traceable input-output links",
+            "A realistic pilot using her own team's context"
+          ],
+          "rejection_triggers": [
+            "Overstated replacement claims with weak boundaries",
+            "Polished outputs that feel generic once inspected",
+            "Heavy onboarding before any proof of value"
+          ],
+          "proof_requirements": [
+            "One concrete decision improved or clarified in a live product context",
+            "Comparison against existing evidence sources such as interviews, analytics, or support data",
+            "Demonstration that the tool helps explanation, not only generation"
+          ]
+        }
+      },
+      {
+        "synthetic_user_id": "su_3002",
+        "name": "Sam Tan",
+        "panel_role": "mainstream",
+        "persona_kind": "participant",
+        "library_group": "participant",
+        "readiness_status": "ready",
+        "persona_version": "v5.1",
+        "source_schema_version": "v5_1",
+        "source_kind": "generated",
+        "generator_version": "persona-generator/v5.1",
+        "source_panel_role": "",
+        "panel_role_normalized": false,
+        "lens_boundary": "",
+        "artifact_hashes": {
+          "profile.json": "a6ec7f6992d269c12a2b8af4dabff8a052c129181cf23e02f31310760ed2a34c",
+          "audit.json": "5153c8f15bc8221cd5ff954f77931075aef409ebf75b9d3a319012dd617c8641",
+          "persona.md": "f6b7fb4e69110208b3cd7d0112082194418cff3313f81263851e0e407ebca190",
+          "generation_notes.json": "8a4bc517cc47dd6f4190e24e23cbfaaea98614f8f2f603323f802f04f278bd14"
+        },
+        "generation_job_id": "",
+        "occupation": "field service coordinator",
+        "location": "Kuala Lumpur",
+        "life_stage": "late career specialist",
+        "workflow_maturity": "ad_hoc",
+        "price_sensitivity": "low",
+        "privacy_concern": "medium",
+        "trust_threshold": "needs proof from concrete workflows, not just positioning",
+        "proof_threshold": "['specific examples from similar users', 'a short trial workflow', 'simple ROI signal within the first week', 'evidence that the workflow can survive internal review and comparison', 'clear before-and-after value', 'low-friction onboarding', 'simple setup with very few moving parts']",
+        "human_difference_axes": {
+          "control_preference": "Hybrid; wants room to decide but appreciates clear defaults.",
+          "trust_style": "Evidence-first with cautious benefit of the doubt for credible proof.",
+          "complexity_tolerance": "Moderate; will engage when detail clearly helps the decision.",
+          "decision_tempo": "Measured; gathers enough signal before acting.",
+          "financial_attention_cadence": "Periodic with event-driven spikes when consequences rise.",
+          "relationship_to_money": "Money is a practical buffer and progress marker.",
+          "risk_orientation": "Open to measured risk when the downside is understandable.",
+          "need_for_explanation": "High enough to want plain-language framing and concrete examples.",
+          "life_load": "Moderate; daily life leaves limited room for unnecessary friction.",
+          "fragmentation_reality": "Some information and decisions live across more than one place.",
+          "guidance_preference": "Hybrid self-serve plus optional expert clarification.",
+          "reflection_style": "Explains decisions through recent examples and trade-offs."
+        },
+        "decision_policy": {
+          "adoption_style": "adopts slowly and only if the tool feels easier than the current workaround",
+          "trust_requirements": [
+            "first value in one short session",
+            "easy restart after a missed week",
+            "low-energy onboarding that works on a tired evening"
+          ],
+          "rejection_triggers": [
+            "setup that requires a clean block of focus",
+            "products that create guilt loops when the user falls behind"
+          ],
+          "proof_requirements": [
+            "a tired-week use case, not just an ideal-week demo",
+            "evidence that the product still works after interrupted use"
+          ]
+        }
+      }
+    ],
+    "selected_persona_versions": {
+      "su_2009": "v5.1",
+      "su_2007": "v5",
+      "su_3002": "v5.1"
+    },
+    "artifact_hashes_by_persona": {
+      "su_2009": {
+        "profile.json": "0831387d75386d23c2c9d463590d9a78fd19b30dbcab7538b8ffb231a872a969",
+        "audit.json": "3793031e050bb49f060b29a3b8c3dc5b1ef0d6a862fa8706f17cb2ff4b6c3577",
+        "persona.md": "55daf21b557d13441cd732c7550ae6520cf57e079ecd8dc56f8de18622618d58",
+        "generation_notes.json": "31faf0b88751ab71b3ea69adc1a96100686b220f7819411f9d4a5ec2b281cbd6"
+      },
+      "su_2007": {
+        "profile.json": "e3c49b6dbb0c567f264305682f05b02bbcddbcf1de040b75856ca41913299a2a",
+        "audit.json": "255b5643ac164308eaa90eba45fd4a9c5dd2b096c6fb149b08be99434b71d654",
+        "persona.md": "67c7bccb9fe550b423ce7ea3441e0ec01947f58ffb7a9b8ac9046f09a9265473",
+        "generation_notes.json": "80ac924c1654c13f54c6fb2553de2581bef365e33db5d9829ae98f56ff4f023e"
+      },
+      "su_3002": {
+        "profile.json": "a6ec7f6992d269c12a2b8af4dabff8a052c129181cf23e02f31310760ed2a34c",
+        "audit.json": "5153c8f15bc8221cd5ff954f77931075aef409ebf75b9d3a319012dd617c8641",
+        "persona.md": "f6b7fb4e69110208b3cd7d0112082194418cff3313f81263851e0e407ebca190",
+        "generation_notes.json": "8a4bc517cc47dd6f4190e24e23cbfaaea98614f8f2f603323f802f04f278bd14"
+      }
+    },
+    "coverage_snapshot": {
+      "required_axes": [
+        "control_preference",
+        "trust_style",
+        "complexity_tolerance",
+        "decision_tempo",
+        "financial_attention_cadence",
+        "relationship_to_money",
+        "risk_orientation",
+        "need_for_explanation",
+        "life_load",
+        "fragmentation_reality",
+        "guidance_preference",
+        "reflection_style"
+      ],
+      "persona_with_axes_count": 14,
+      "axes_with_any_coverage_count": 12,
+      "axes_with_full_presence_count": 0,
+      "axes_with_multi_pattern_count": 0,
+      "axis_coverage": {
+        "control_preference": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "hybrid": 14
+          },
+          "bucket_count": 1,
+          "example_values": [
+            "Wants meaningful oversight with low-friction defaults; dislikes surrendering control before trust is earned",
+            "Wants practical control over setup, data, and exit, but not endless customization.",
+            "Wants visible control over commitments and settings, but not endless customization."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "trust_style": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "contextual": 3,
+            "institution_led": 1,
+            "verify_first": 10
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Slow-to-warm, evidence-based, strengthened by ordinary-use realism rather than authority branding alone",
+            "Earned trust through consistency, plain explanations, and low-pressure proof.",
+            "Trusts slowly through ordinary proof, consistency, and reversibility rather than authority alone."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "complexity_tolerance": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "high": 6,
+            "low": 2,
+            "moderate": 6
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Can handle complexity when necessary, but resents avoidable complexity disguised as empowerment",
+            "Can handle moderate complexity when tied to a familiar task; rejects abstract complexity.",
+            "Can handle moderate complexity if it maps to a real benefit; rejects complexity that feels decorative."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "decision_tempo": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "fast": 7,
+            "measured": 7
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Fast in narrowing options, slower in commitment when money, family, or workflow disruption is involved",
+            "Fast initial sorting, slow final commitment.",
+            "Quick at ruling things out, slower at committing money or workflow change."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "financial_attention_cadence": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "event_driven": 6,
+            "frequent": 4,
+            "occasional": 4
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Frequent light monitoring with periodic deeper reviews",
+            "Small charges are reviewed repeatedly; big purchases are researched carefully but less often.",
+            "Checks spending in bursts tied to billing cycles, school fees, and household admin moments."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "relationship_to_money": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "practical": 6,
+            "security": 8
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Money is a stabilizer and a leak risk; small recurring costs are emotionally important because they accumulate quietly",
+            "Money is a stabilizer and a source of vigilance, not identity or prestige.",
+            "Money is a stabilizer and leak-prevention problem more than a path to status."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "risk_orientation": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "conservative": 9,
+            "measured": 3,
+            "open": 2
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "Downside-aware and reversibility-seeking, especially in subscriptions, privacy, and family contexts",
+            "Avoids downside first, then considers upside.",
+            "Cautious about downside, especially invisible or compounding downside."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "need_for_explanation": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "high": 14
+          },
+          "bucket_count": 1,
+          "example_values": [
+            "Needs concise, concrete explanation with visible tradeoffs; not academic detail, but enough to see where the catch might be",
+            "Needs enough explanation to understand consequences, especially recurring ones.",
+            "Needs enough explanation to predict daily use and failure modes, not technical depth for its own sake."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "life_load": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "high": 6,
+            "low": 6,
+            "moderate": 2
+          },
+          "bucket_count": 3,
+          "example_values": [
+            "High and fragmented, with limited uninterrupted time and frequent context switching",
+            "High and fragmented, with frequent context switching across family and work.",
+            "Persistently medium-high; she operates under regular time fragmentation rather than acute crisis."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "fragmentation_reality": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "fragmented": 12,
+            "some_fragmentation": 2
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Lives across phone, chat, mental notes, and partial handoffs; products must survive interruption",
+            "Lives through short bursts of attention, uneven energy, and overlapping responsibilities.",
+            "Her attention, tools, and responsibilities are split across channels, people, and short time windows."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "guidance_preference": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "guided": 8,
+            "self_serve": 6
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Prefers guided starts with room to customize later, not blank-slate flexibility upfront",
+            "Prefers staged guidance and examples over tutorials or philosophy.",
+            "Prefers guided starts, examples, and sane defaults with the option to inspect details later."
+          ],
+          "coverage_status": "partial_presence"
+        },
+        "reflection_style": {
+          "persona_count": 14,
+          "missing_persona_count": 3,
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ],
+          "bucket_distribution": {
+            "contextual": 5,
+            "example_tradeoff": 9
+          },
+          "bucket_count": 2,
+          "example_values": [
+            "Reflects through comparison and practical hindsight rather than abstract self-analysis",
+            "Reflects through specific incidents and practical hindsight rather than broad self-analysis.",
+            "Reflects through practical retrospection: what wasted time, what held up, what quietly cost more than expected."
+          ],
+          "coverage_status": "partial_presence"
+        }
+      },
+      "behavior_model_coverage": {
+        "relational_defense_model": {
+          "persona_count": 17,
+          "missing_persona_count": 0,
+          "coverage_status": "covered"
+        },
+        "communication_behavior_model": {
+          "persona_count": 17,
+          "missing_persona_count": 0,
+          "coverage_status": "covered"
+        },
+        "behavior_generation_rules": {
+          "persona_count": 17,
+          "missing_persona_count": 0,
+          "coverage_status": "covered"
+        }
+      },
+      "coverage_gaps": [
+        {
+          "axis": "control_preference",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "trust_style",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "complexity_tolerance",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "decision_tempo",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "financial_attention_cadence",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "relationship_to_money",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "risk_orientation",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "need_for_explanation",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "life_load",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "fragmentation_reality",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "guidance_preference",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        },
+        {
+          "axis": "reflection_style",
+          "gap_type": "partial_presence",
+          "missing_persona_ids": [
+            "su_2009",
+            "su_2010",
+            "su_2011"
+          ]
+        }
+      ]
+    },
+    "readiness_statuses": {
+      "su_2009": "ready",
+      "su_2007": "ready",
+      "su_3002": "ready"
+    },
+    "has_provisional_personas": false,
+    "provisional_persona_ids": [],
+    "simulated_lens_persona_ids": [],
+    "load_failures": [],
+    "synthetic_boundary": "This snapshot records the synthetic participant versions used by the run. It is not recruited human evidence."
+  },
+  "synthetic_boundary": "This run used synthetic persona records. The snapshot is for audit and replay, not human market proof."
+}

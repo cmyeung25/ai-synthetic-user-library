@@ -1,6 +1,6 @@
 metadata:
   schema_version: v2
-  last_updated: 2026-06-30
+  last_updated: 2026-07-02
   owner: platform-development-chief
   source_documents:
     - AGENTS.md
@@ -18,6 +18,8 @@ metadata:
     - specs/milestone_21_production_api_and_deployment_boundary_design_spec.md
     - specs/milestone_22_team_collaboration_and_governance_hardening_design_spec.md
     - specs/milestone_23_persona_library_and_human_difference_calibration_design_spec.md
+    - specs/persona_library_storage_and_saas_contract.md
+    - specs/milestone_35_persona_library_readiness_and_panel_contract_design_spec.md
     - specs/milestone_25_regulated_and_high_stakes_review_boundary_design_spec.md
     - specs/milestone_26_scaled_public_launch_readiness_design_spec.md
     - specs/workspace_project_study_contract.md
@@ -35,10 +37,53 @@ metadata:
     - specs/workspace_partner_onboarding_contract.md
     - specs/frontline_research_studio_terminology_and_data_model.md
     - specs/frontline_research_studio_ux_component_design_spec.md
+    - specs/frontline_research_studio_i18n_contract.md
+    - specs/frontline_research_studio_bilingual_terminology_glossary.md
+    - specs/milestone_37_live_interview_observability_and_transcript_evidence_design_spec.md
+    - specs/milestone_38_messaging_and_positioning_validation_design_spec.md
+    - specs/milestone_39_guided_research_playbooks_and_rerun_templates_design_spec.md
+    - specs/milestone_40_continuous_calibration_observatory_design_spec.md
+    - specs/milestone_41_privacy_data_residency_and_export_controls_design_spec.md
 
 current_platform_state:
-  current_stage: backend_foundation_complete_workspace_ui_readiness_complete_full_saas_product_surface_complete_evidence_reliability_complete_real_user_workspace_complete_browser_behavior_validation_complete_human_calibration_complete_post_login_ia_complete_external_benchmark_calibration_complete_discovery_coverage_complete_evidence_readiness_gates_complete_controlled_market_mvp_launch_complete_production_api_and_deployment_boundary_complete_team_collaboration_and_governance_hardening_complete_persona_library_and_human_difference_calibration_complete_longitudinal_study_and_panel_learning_complete_regulated_and_high_stakes_review_boundary_complete_scaled_public_launch_readiness_complete_frontend_to_codex_live_experiment_runtime_complete_personal_mvp_complete_frontline_guided_setup_live_run_complete_frontline_evidence_workspace_complete_frontline_decision_share_complete
-  strategic_focus: "start Milestone 35 Messaging and Positioning Validation against the route-complete Frontline journey with guided setup, persona-panel selection, evidence review, saved views, reports, decisions, and boundary-preserving shares"
+  current_stage: backend_foundation_complete_workspace_ui_readiness_complete_full_saas_product_surface_complete_evidence_reliability_complete_real_user_workspace_complete_browser_behavior_validation_complete_human_calibration_complete_post_login_ia_complete_external_benchmark_calibration_complete_discovery_coverage_complete_evidence_readiness_gates_complete_controlled_market_mvp_launch_complete_production_api_and_deployment_boundary_complete_team_collaboration_and_governance_hardening_complete_persona_library_and_human_difference_calibration_complete_longitudinal_study_and_panel_learning_complete_regulated_and_high_stakes_review_boundary_complete_scaled_public_launch_readiness_complete_frontend_to_codex_live_experiment_runtime_complete_personal_mvp_complete_frontline_guided_setup_live_run_complete_frontline_evidence_workspace_complete_frontline_decision_share_complete_persona_library_readiness_complete_frontline_personal_mvp_e2e_reliability_complete_live_interview_observability_complete_messaging_validation_complete_guided_playbooks_reruns_complete_continuous_calibration_observatory_complete_privacy_export_controls_complete_integration_surface_run_event_webhooks_complete
+  strategic_focus: "advance M43 persona profile review and study-time persona creation so users can inspect, generate, select, and audit synthetic participants before approving a study plan"
+  roadmap_operating_order:
+    - gate: core_quality_gate
+      milestones: M35
+      status: implemented
+      purpose: make synthetic participant selection auditable, reproducible, and explicit before more study types depend on the panel layer
+      advance_condition: completed; persona readiness, explicit generation jobs, zero-selection gates, selected-panel snapshots, simulated-lens boundaries, unit tests, browser smoke, and UX/IA review passed together
+    - gate: frontline_e2e_reliability_gate
+      milestones: M36
+      status: implemented
+      purpose: make the personal-MVP Frontline study loop route-safe, refresh-safe, deep-link-safe, and failure-visible before adding more study types
+      advance_condition: completed; project, study, setup, run, evidence view, report, decision, and share routes survive refresh/back-forward/detail hydration and preserve evidence provenance without silent blank states; latest full smoke includes explicit zh-Hant terminology checks
+    - gate: frontline_workflow_expansion
+      milestones: M37-M39
+      status: implemented
+      purpose: add live interview observability and transcript-backed evidence first, then messaging validation and ordinary-user repeatability after the panel contract and Frontline E2E loop are trustworthy
+      advance_condition: completed; run progress, transcript evidence, facilitator trace, synthetic participant reasoning trace, messaging evidence boundaries, guided playbooks, rerun templates, plan-revision lineage, and comparison-ready loops work from the Frontline UI
+    - gate: calibration_and_launch_claim_gate
+      milestones: M40
+      status: implemented
+      purpose: make calibration health continuous, segmented, and backend-owned before stronger launch, provider-routing, or readiness claims
+      advance_condition: completed; calibration health can be inspected by mode, evidence type, provider, benchmark coverage, unsupported evidence types, and launch-readiness blockers
+    - gate: customer_operations_hardening
+      milestones: M41-M42, M44
+      status: planned
+      purpose: harden privacy, export, integrations, procurement, billing, and support after the research-quality gates are stable
+      advance_condition: M41 privacy/export controls and M42 integration/run-event surfaces are implemented; M44 must preserve evidence boundaries, audit lineage, readiness gates, privacy controls, and synthetic-evidence limitations after M43 persona trust is closed
+    - gate: persona_trust_and_study_time_creation
+      milestones: M43
+      status: active
+      purpose: make selected synthetic participants inspectable, auditable, and creatable during study planning before broader enterprise workflows depend on panel trust
+      advance_condition: full profile review, study-time generation, readiness/provisional state, selected-profile lineage, artifact hashes, and synthetic-evidence boundaries are visible before plan approval
+    - gate: public_replacement_and_scale_readiness
+      milestones: M45-M48
+      status: planned
+      purpose: expand benchmark coverage, replacement-readiness governance, provider governance, and operational scale without weakening research records
+      advance_condition: broader market, provider, replacement-grade, and scale claims are backed by benchmark history, review decisions, and operational reliability evidence
   personal_mvp_status:
     status: implemented
     active_gate: milestone.frontend_to_codex_live_experiment_runtime
@@ -51,7 +96,7 @@ current_platform_state:
       completion_pct: 100.0
     release_decision: ready_for_local_personal_mvp
     current_decision: the platform now supports the local solo-user personal MVP from the frontend across startup idea concept validation, UI/prototype comprehension validation, and pain/empathy/insight discovery with live Codex-backed synthetic evidence
-    latest_checkpoint: three workflow-specific live Codex browser acceptances completed from the normal frontend path, and the Frontline Studio smoke now verifies persona-picker-driven guided setup through evidence, report, decision, and share review
+    latest_checkpoint: three workflow-specific live Codex browser acceptances completed from the normal frontend path; Frontline Studio smoke now verifies persona-picker-driven guided setup through evidence, report, decision, share review, refresh/back-forward/detail hydration, desktop layout gates, and deterministic English plus explicit Traditional Chinese product chrome for workspace, study setup, runs, evidence, and share routes
     supported_now:
       - engine-level concept validation, adoption-barrier review, evidence query, decision logs, exports, and shares
       - engine-level prototype validation for static images, flows, scripted clickable traces, and browser-observed action trace ingestion
@@ -68,6 +113,9 @@ current_platform_state:
       - browser-verified pain, empathy, root-cause, workflow, and insight discovery with natural-language inference into pain_point_discovery, evidence review, saved evidence view, decision logging, and share-boundary preservation
       - browser-verified Frontline Studio guided setup from new study through plan proposal, explicit plan approval, and plan-linked research-run start without default provider/job/runtime controls
       - browser-verified Frontline Studio persona-library picker where selected synthetic participant IDs, target-audience criteria, and moderator-guide questions become part of the approved plan and run lineage
+      - browser-verified Frontline Studio bilingual product chrome for English and glossary-governed Traditional Chinese across workspace navigation, study setup, synthetic participant library selection, research copilot, plan confirmation, run/evidence/share route chrome, action feedback, and synthetic-evidence boundary copy; generated evidence remains untranslated original evidence content
+      - browser-verified Frontline run monitor, transcript panel, and trace provenance panel for completed runs, with evidence slices, reports, and decisions able to retain source exchange and trace references
+      - Frontline guided research playbooks, messaging-validation inference, rerun plan proposals, and workspace calibration observatory surfaced through authenticated API contracts and product UI
     not_yet_supported_as_complete_frontend_mvp: []
   proven_capabilities:
     - reusable persona generation
@@ -75,6 +123,11 @@ current_platform_state:
     - observer-controlled interviews
     - panel synthesis
     - Frontline persona-library picker with selectable synthetic participants, coverage-gap visibility, selected-persona filters, and plan/run lineage preservation
+    - Frontline Studio bilingual product chrome with deterministic English default, explicit `zh-Hant` query/switcher selection, persisted locale preference, glossary-governed Traditional Chinese product terminology through setup/run/evidence/report/decision/share review contexts, and original-language preservation for generated evidence
+    - Frontline run observability through backend-owned progress, transcript, and trace contracts with route-safe UI panels
+    - messaging and positioning validation inferred from user intent with message-specific evidence boundaries
+    - guided research playbooks and rerun templates with source-run, source-plan, and changed-assumption lineage
+    - continuous calibration observatory with provider, mode, evidence-type, unsupported-signal, and launch-readiness projection
     - conversation realism scoring
     - over-optimism warnings
     - static image stimulus review for prototype validation
@@ -172,18 +225,35 @@ current_platform_state:
     - Milestone 32 is now implemented and hardened: the Frontline Studio browser path accepts user-entered research intent, creates a study, lets the user tune target-audience criteria, select synthetic participants from the persona library, preserve selected persona IDs through proposal/revision/run lineage, start a plan-linked research run, open Research attempts, preserve contextual navigation, and pass no-overflow/no-overlap/no-internal-term gates; latest evidence is output/playwright/frontline_studio_smoke/2026-06-30T07-58-52-260Z/frontline_studio_smoke.summary.json
     - Milestone 33 is now implemented: the Frontline Studio browser path processes a plan-linked research run to completion, opens run detail, hydrates backend evidence-query source slices, distinguishes source evidence, interpretation, summary boundary, contradictions, comparison, and human-validation gaps, saves a provenance-preserving evidence view, reloads it, creates a study report, reloads it, and keeps no-overflow/no-overlap/no-internal-term gates active; latest evidence is output/playwright/frontline_studio_smoke/2026-06-30T07-58-52-260Z/frontline_studio_smoke.summary.json
     - Milestone 34 is now implemented: the Frontline Studio browser path creates a decision from the study report with current belief, evidence basis, confidence boundary, and human follow-up visible, creates a boundary-preserving share view with linked decision context, evidence digest, included viewer-safe artifacts, public boundary link, and keeps no-overflow/no-overlap/no-internal-term gates active; latest evidence is output/playwright/frontline_studio_smoke/2026-06-30T07-58-52-260Z/frontline_studio_smoke.summary.json
+    - Milestone 41 is now implemented: workspace privacy/export controls expose retention, deletion request, redaction, data-residency, export/share, downstream lineage, audit, and readiness state through backend-owned APIs plus Frontline workspace/share boundary cards
+    - Milestone 42 is now implemented: Frontline run detail exposes a bounded run event stream with safe transcript preview, observed-interview bridge metadata, transcript/trace provenance, and privacy/export controls; workspace integration events expose boundary-preserving study, run, evidence, decision, readiness, and support events with delivery audit
   not_yet_proven:
-    - messaging and positioning validation for broader public acquisition language
+    - full persona profile review and study-time persona creation from Frontline setup before plan approval
+    - hosted outbound webhook delivery workers, customer-managed destinations, and retry queues beyond the current local delivery-attempt audit
     - unrestricted public signup, payment-provider checkout, enterprise procurement, and open benchmark dashboard readiness
     - broad external benchmark coverage across markets, domains, and repeated live human studies
     - replacement-grade reliability across research stages or high-stakes domains
   next_moves:
-    - "Milestone 35: validate messaging and positioning against the route-complete Frontline journey now that decision/share boundaries and persona-panel selection are implemented"
-    - "Milestone 36: add research templates and study playbooks only after messaging validation preserves evidence boundaries"
+    - "M43 persona profile review and study-time creation: let users inspect full synthetic participant profiles, generate gap-fill personas during setup, and preserve selected-profile lineage before plan approval"
+    - "M44 enterprise readiness: prepare procurement, workspace ownership, billing metadata, audit packs, and support-boundary controls"
+    - "M45-M48 public/replacement/scale readiness: expand multi-market benchmarks, replacement-readiness review, provider governance, and platform scale before any scoped replacement-grade claim or broad launch expansion"
     - keep reliability scoring, contradiction review, calibration records, readiness gates, audit lineage, MVP launch scope, promotion state, onboarding state, and release-review state backend-owned while calibration records are attached to browser-observed and interview evidence
     - keep the post-login IA route model as the guardrail for future framework-host decomposition rather than returning to dashboard-first, job-first, or admin-first page composition
     - keep bounded public-launch posture separate from replacement-grade reliability while calibration expansion remains incomplete
   accepted_architecture_decisions:
+    - id: decision.persona_library_artifact_sql_object_store
+      status: accepted
+      decision: keep persona storage artifact-first, SQL-indexed, and object-store-ready; local development uses SQLite plus local artifacts, while future SaaS/cloud should use Postgres plus object storage and never production server local disk as the durable persona source of truth
+      improves:
+        - behavioral_realism
+        - evidence_quality
+        - auditability
+        - scalable_research_throughput
+      evidence:
+        - specs/persona_library_storage_and_saas_contract.md records the accepted local-to-cloud persona storage, dynamic generation, backup, restore, and public-figure lens rules
+        - DEVELOPMENT_ROADMAP.md now records cloud_persona_catalog_and_object_artifact_storage as a planned P2 architecture backlog item for future SaaS/cloud implementation
+        - PERSONA_MODELING_GUIDE.md now points persona persistence decisions to the storage contract
+      boundary: this is a future SaaS/cloud implementation rule, not a completed cloud migration; current local MVP remains SQLite plus local artifacts
     - id: decision.framework_hosted_workspace_frontend
       status: accepted
       decision: use the current React/Vite workspace shell as the first framework-hosted implementation slice, while keeping Next.js as a later hosted-routing and production-session option
@@ -215,26 +285,26 @@ agile_tracking:
     - 13
   estimation_policy: story point rollups are backfilled first for active and upcoming strategic scopes; previously completed milestones may remain status-only unless deeper retrospective sizing is needed
   active_milestone:
-    id: milestone.messaging_and_positioning_validation
-    status: planned
-    current_checkpoint: M34 is implemented with route-level decision review, evidence-attached decision logs, boundary-preserving share views, UX audit gates, and M32 persona-picker hardening; next work is messaging and positioning validation against the route-complete Frontline journey
-    release_decision: ready_to_start_messaging_positioning_validation
-    task_count_total: 3
+    id: milestone.persona_profile_review_and_study_time_creation
+    status: active
+    current_checkpoint: M43 is the active roadmap gate after M42; it should make persona profiles inspectable and study-time persona generation explicit before users approve a plan
+    release_decision: finish_m43_before_enterprise_readiness_or_broader_customer_onboarding
+    task_count_total: 5
     task_count_completed: 0
-    story_points_total: 13
+    story_points_total: 21
     story_points_completed: 0
-    story_points_remaining: 13
+    story_points_remaining: 21
     completion_pct: 0.0
   active_epic:
-    id: milestone.messaging_and_positioning_validation
-    status: planned
-    current_checkpoint: M35 should validate message comprehension, credibility objections, trust language, and wording-driven false positives against explicit target-audience and persona-panel selections without confusing message evidence with adoption proof
-    release_decision: ready_to_start_messaging_positioning_validation
-    task_count_total: 3
+    id: milestone.persona_profile_review_and_study_time_creation
+    status: active
+    current_checkpoint: M43 should close the persona trust gap by letting users review full synthetic participant profiles, generate gap-fill participants, and preserve selected-profile lineage in plans and runs
+    release_decision: finish_m43_before_enterprise_readiness_or_broader_customer_onboarding
+    task_count_total: 5
     task_count_completed: 0
-    story_points_total: 13
+    story_points_total: 21
     story_points_completed: 0
-    story_points_remaining: 13
+    story_points_remaining: 21
     completion_pct: 0.0
 
 future_milestone_sequence:
@@ -380,76 +450,122 @@ future_milestone_sequence:
     story_points_remaining: 0
     mvp_relevance: frontline_user_mvp_completion
     purpose: complete decision/share routes and automated UX-audit gates for external-user wording, CTA hierarchy, and evidence boundaries
-  - id: milestone.messaging_and_positioning_validation
+  - id: milestone.persona_library_readiness_and_panel_contract_hardening
     number: 35
+    title: Persona Library Readiness and Panel Contract Hardening
+    status: implemented
+    story_points_total: 21
+    story_points_completed: 21
+    story_points_remaining: 0
+    mvp_relevance: frontline_research_quality_gate
+    purpose: harden persona readiness, dynamic gap-fill generation, selected-panel snapshots, and public-figure/expert lens boundaries before more validation modes depend on the panel layer
+  - id: milestone.frontline_personal_mvp_e2e_reliability_gate
+    number: 36
+    title: Frontline Personal MVP End-to-End Reliability Gate
+    status: implemented
+    story_points_total: 15
+    story_points_completed: 15
+    story_points_remaining: 0
+    mvp_relevance: frontline_user_mvp_reliability_gate
+    purpose: make the Frontline project-to-share study loop route-safe, refresh-safe, deep-link-safe, failure-visible, and acceptance-test stable before new study types depend on it
+  - id: milestone.live_interview_observability_and_transcript_evidence
+    number: 37
+    title: Live Interview Observability and Transcript Evidence
+    status: implemented
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    mvp_relevance: frontline_research_quality_gate
+    purpose: expose live synthetic interview progress plus transcript, facilitator trace, synthetic participant reasoning trace, observed interview artifacts, and source-linked evidence review before adding more study types
+  - id: milestone.messaging_and_positioning_validation
+    number: 38
     title: Messaging and Positioning Validation
+    status: implemented
+    story_points_total: 13
+    story_points_completed: 13
+    story_points_remaining: 0
+    mvp_relevance: frontline_research_quality_gate
+    purpose: validate wording, positioning, and value-proposition comprehension after the Frontline persona-panel contract, end-to-end loop, live run observability, and transcript-backed evidence review are hardened enough to test
+  - id: milestone.guided_research_playbooks_and_rerun_templates
+    number: 39
+    title: Guided Research Playbooks and Rerun Templates
+    status: implemented
+    story_points_total: 13
+    story_points_completed: 13
+    story_points_remaining: 0
+    mvp_relevance: frontline_research_quality_gate
+    purpose: accelerate common research workflows while preserving conversational intake and evidence gates
+  - id: milestone.continuous_calibration_observatory
+    number: 40
+    title: Continuous Calibration Observatory
+    status: implemented
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    mvp_relevance: reliability_expansion
+    purpose: monitor calibration health, drift, repeated misses, and benchmark coverage continuously
+  - id: milestone.privacy_data_residency_and_export_controls
+    number: 41
+    title: Privacy, Data Residency, and Export Controls
+    status: implemented
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    mvp_relevance: enterprise_expansion
+    purpose: make retention, redaction, deletion, export, and storage controls credible for broader customer use
+  - id: milestone.integration_surface_and_webhooks
+    number: 42
+    title: Integration Surface, Run Event Stream, and Webhooks
+    status: implemented
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    mvp_relevance: enterprise_expansion
+    purpose: connect bounded study, run, observed-interview, evidence, decision, readiness, and support events to customer systems without bypassing evidence or privacy boundaries
+  - id: milestone.persona_profile_review_and_study_time_creation
+    number: 43
+    title: Persona Profile Review and Study-Time Persona Creation
+    status: active
+    story_points_total: 21
+    story_points_completed: 0
+    story_points_remaining: 21
+    mvp_relevance: personal_mvp_quality
+    purpose: let users inspect, generate, select, and audit synthetic participants during study planning before approving a plan
+  - id: milestone.enterprise_readiness_and_procurement_controls
+    number: 44
+    title: Enterprise Readiness and Procurement Controls
     status: planned
     story_points_total: 13
     story_points_completed: 0
     story_points_remaining: 13
-    mvp_relevance: post_public_launch_expansion
-    purpose: validate wording, positioning, and value-proposition comprehension after the real Frontline journey is route-complete enough to test
-  - id: milestone.research_templates_and_study_playbooks
-    number: 36
-    title: Research Templates and Study Playbooks
-    status: planned
-    story_points_total: 13
-    mvp_relevance: post_public_launch_expansion
-    purpose: accelerate common research workflows while preserving conversational intake and evidence gates
-  - id: milestone.continuous_calibration_observatory
-    number: 37
-    title: Continuous Calibration Observatory
-    status: planned
-    story_points_total: 21
-    mvp_relevance: reliability_expansion
-    purpose: monitor calibration health, drift, repeated misses, and benchmark coverage continuously
-  - id: milestone.privacy_data_residency_and_export_controls
-    number: 38
-    title: Privacy, Data Residency, and Export Controls
-    status: planned
-    story_points_total: 13
-    mvp_relevance: enterprise_expansion
-    purpose: make retention, redaction, deletion, export, and storage controls credible for broader customer use
-  - id: milestone.integration_surface_and_webhooks
-    number: 39
-    title: Integration Surface and Webhooks
-    status: planned
-    story_points_total: 13
-    mvp_relevance: enterprise_expansion
-    purpose: connect bounded study, evidence, decision, and readiness events to customer systems
-  - id: milestone.enterprise_readiness_and_procurement_controls
-    number: 40
-    title: Enterprise Readiness and Procurement Controls
-    status: planned
-    story_points_total: 13
     mvp_relevance: enterprise_expansion
     purpose: support enterprise evaluation through governance, procurement, billing, and boundary documentation
   - id: milestone.multi_market_benchmark_expansion
-    number: 41
+    number: 45
     title: Multi-Market Benchmark Expansion
     status: planned
-    story_points_total: 21
+    story_points_total: 23
     mvp_relevance: reliability_expansion
     purpose: expand calibration by market, language, segment, and domain
   - id: milestone.replacement_readiness_review_board
-    number: 42
+    number: 46
     title: Replacement-Readiness Review Board
     status: planned
-    story_points_total: 13
+    story_points_total: 23
     mvp_relevance: replacement_claim_gate
     purpose: approve replacement-grade language only for scoped use cases with benchmark evidence and human-validation-gap closure
   - id: milestone.model_and_provider_governance
-    number: 43
+    number: 47
     title: Model and Provider Governance
     status: planned
     story_points_total: 13
     mvp_relevance: operational_quality
     purpose: route model and provider usage by benchmark-backed quality, cost, latency, sensitivity, and audit lineage
   - id: milestone.platform_scale_and_reliability_expansion
-    number: 44
+    number: 48
     title: Platform Scale and Reliability Expansion
     status: planned
-    story_points_total: 21
+    story_points_total: 23
     mvp_relevance: scale_expansion
     purpose: scale workers, queues, evidence indexing, calibration, browser capture, and exports without weakening research records
 
@@ -492,8 +608,8 @@ solo_user_mvp_activation_gate:
   boundary: personal MVP requires frontend-started live Codex-backed synthetic research with visible evidence boundaries; it is not replacement-grade market proof
 
 public_launch_readiness_gate:
-  earliest_milestone: milestone.frontend_to_codex_live_experiment_runtime
-  milestone_number: 27
+  earliest_milestone: milestone.privacy_data_residency_and_export_controls
+  milestone_number: 41
   launch_type: broader_self_serve_or_public_launch
   not_allowed_before:
     - milestone.controlled_market_mvp_launch
@@ -503,11 +619,19 @@ public_launch_readiness_gate:
     - milestone.longitudinal_study_and_panel_learning
     - milestone.regulated_and_high_stakes_review_boundary
     - milestone.scaled_public_launch_readiness
-  boundary: public launch can sell bounded synthetic research workflows only after public-claim readiness and frontend live-experiment activation are both credible; it still cannot claim replacement-grade reliability
+    - milestone.frontend_to_codex_live_experiment_runtime
+    - milestone.persona_library_readiness_and_panel_contract_hardening
+    - milestone.frontline_personal_mvp_e2e_reliability_gate
+    - milestone.live_interview_observability_and_transcript_evidence
+    - milestone.messaging_and_positioning_validation
+    - milestone.guided_research_playbooks_and_rerun_templates
+    - milestone.continuous_calibration_observatory
+    - milestone.privacy_data_residency_and_export_controls
+  boundary: public launch can sell bounded synthetic research workflows only after public-claim readiness, frontend live-experiment activation, persona-panel readiness, persona profile review, Frontline E2E route reliability, transcript-backed evidence review, user-facing study playbooks, continuous calibration health, and customer data controls are credible; it still cannot claim replacement-grade reliability
 
 replacement_readiness_claim_gate:
   earliest_milestone: milestone.replacement_readiness_review_board
-  milestone_number: 42
+  milestone_number: 46
   launch_type: scoped_replacement_readiness_claim
   not_allowed_before:
     - milestone.multi_market_benchmark_expansion
@@ -1038,7 +1162,7 @@ milestones:
       - demo/workspace_ui_moss_stage14/index.html now moves that product-facing shell onto one backend-driven workspace-shell snapshot path for session, selected-job, and evidence-focus refresh
       - demo/workspace_ui_moss_stage14/index.html now accepts real prototype file selection on the default intake path and keeps attached artifact names inside the shared shell state rather than using only a demo readiness toggle
       - demo/workspace_ui_moss_stage14/index.html now keeps mode override, panel setup, provider selection, runtime paths, and persona filters behind one collapsed advanced path instead of exposing that structured setup on the default intake canvas
-      - scripts/start_stage12_demo.bat now resets the local ws_api_demo workspace before each launch so repeated engineering-demo runs stay submittable and do not get blocked by retained trial quota state
+      - scripts/start_local_workspace_demo.bat now resets the local ws_api_demo workspace before each launch so repeated engineering-demo runs stay submittable and do not get blocked by retained trial quota state
       - src/ai_validation_swarm/saas/evidence_query.py now enriches raw-response and stage-result replay notes with persona-role, trust/pricing, attempt/retry, and first-error context while exposing backend-owned replay_context, comparison_context, and initial cross_run_comparison guidance in the same evidence-query contract
       - demo/workspace_ui_shared/workspace_ui_adapter.mjs now extracts the Stage 7 derivation into a shared executable adapter, run-monitor, evidence-browser, evidence-query, and integrated-shell module, while demo/workspace_ui_shared/workspace_runtime_bridge.mjs now defines the validation-job runtime bridge, demo/workspace_ui_shared/workspace_session_runtime_bridge.mjs now defines the authenticated workspace-session runtime bridge, demo/workspace_ui_shared/workspace_shell_runtime_client.mjs now defines the shared live runtime client for session/job/evidence-query/workspace-shell orchestration, demo/workspace_ui_shared/workspace_shell_runtime_sync.mjs now defines the shared heartbeat and polling layer for backend workspace-shell snapshot refresh, demo/workspace_ui_shared/workspace_shell_frontend_adapter.mjs now defines the page-level shell frontend adapter plus visible review-surface projection, demo/workspace_ui_shared/workspace_shell_app.mjs now defines the app-layer shell controller/model boundary, and tests/workspace_ui/test_workspace_ui_adapter.mjs, tests/workspace_ui/test_workspace_ui_run_monitor.mjs, tests/workspace_ui/test_workspace_ui_evidence_browser.mjs, tests/workspace_ui/test_workspace_ui_evidence_query.mjs, tests/workspace_ui/test_workspace_ui_shell_bundle.mjs, tests/workspace_ui/test_workspace_runtime_bridge.mjs, tests/workspace_ui/test_workspace_session_runtime_bridge.mjs, tests/workspace_ui/test_workspace_shell_runtime_client.mjs, tests/workspace_ui/test_workspace_shell_runtime_sync.mjs, tests/workspace_ui/test_workspace_shell_frontend_adapter.mjs, and tests/workspace_ui/test_workspace_shell_app.mjs now fix blocked, fallback, queueable, queued, running, completed, failed, retry-ready, evidence-browser, evidence-query, integrated-shell, runtime-bridge, session-runtime-bridge, shell-runtime-client, shell-runtime-sync, shell-app-controller, and shell-frontend-adapter transitions
       - specs/workspace_evidence_query_contract.md now defines the draft metadata-backed query and replay boundary between structured evidence indexes and the workspace review surface
@@ -1076,7 +1200,7 @@ milestones:
           - demo/workspace_ui_moss_stage11/index.html now maps the shell to the existing validation-job ingress endpoints while keeping the metadata-backed query/replay endpoint explicitly pending
           - demo/workspace_ui_moss_stage12/index.html now upgrades that shell boundary into a browser-callable validation-job bridge demo with live request mapping, job loading, and authenticated workspace-session loading
           - demo/workspace_ui_moss_stage13/index.html now reuses the same runtime bridge in a more product-facing workspace shell where plan, run, and evidence surfaces lead before raw debug payloads
-          - scripts/start_stage12_demo.bat now acts as one repo-local engineering-demo launcher that bootstraps the demo workspace, restarts the API and worker against current repo code, waits for GET /api/v1/session to respond, and opens Stage 14 by default
+          - scripts/start_local_workspace_demo.bat now acts as one repo-local engineering-demo launcher that bootstraps the demo workspace, restarts the API and worker against current repo code, waits for GET /api/v1/session to respond, and opens the hosted workspace shell by default
           - src/ai_validation_swarm/saas/api.py now exposes GET /api/v1/session so the shell can load workspace, billing, and plan-limit context through the same authenticated runtime
           - src/ai_validation_swarm/saas/api.py now exposes GET /api/v1/workspace-shell so the shell can hydrate session, selected-job, evidence-query, and runtime-sync state through one backend snapshot
           - demo/workspace_ui_shared/workspace_session_runtime_bridge.mjs now projects that session payload into one frontend-facing session/runtime state object
@@ -2431,7 +2555,7 @@ active_workstreams:
       - id: story.frontline_mvp.plan_linked_run_gate
         title: plan-linked frontend run gate
         status: implemented
-        story_points: 6
+        story_points: 8
         evidence:
           - submit_validation_job can require a confirmed frontline plan revision and persists plan_revision_id plus frontline_plan_revision_id into validation-job metadata
           - tests/unit/test_saas_runtime.py verifies frontend-style submitted runs carry the confirmed plan revision
@@ -2691,13 +2815,499 @@ active_workstreams:
           - scripts/verify_frontline_studio_smoke.mjs verifies 1280px no-overflow/no-critical-overlap on decision and share routes plus share refresh
           - output/playwright/frontline_studio_smoke/2026-06-30T07-58-52-260Z/frontline_studio_smoke.summary.json records the passing M34 browser acceptance
 
+  - id: workstream.persona_library_readiness_and_panel_contract_hardening
+    status: implemented
+    focus:
+      - data_model.persona_library_readiness
+      - data_model.persona_generation_job
+      - data_model.panel_selection_snapshot
+      - product_surface.frontline_persona_picker
+      - evidence_boundary.public_figure_lens
+    why_now: M35 hardened persona readiness, dynamic generation, and selected-panel snapshots before messaging validation and future templates depend on the persona-panel layer
+    task_count_total: 5
+    task_count_completed: 5
+    story_points_total: 21
+    story_points_completed: 21
+    story_points_remaining: 0
+    completion_pct: 100.0
+    canonical_spec: specs/milestone_35_persona_library_readiness_and_panel_contract_design_spec.md
+    verification:
+      - python -m py_compile src/ai_validation_swarm/saas/runtime.py src/ai_validation_swarm/saas/api.py src/ai_validation_swarm/saas/job_store.py
+      - python -m unittest tests.unit.test_saas_runtime
+      - npm -C frontend/frontline_research_studio run build
+      - node scripts/verify_frontline_studio_smoke.mjs
+      - output/playwright/frontline_studio_smoke/2026-06-30T16-47-06-247Z
+      - "UX/IA checklist review passed with no M35 blocker: persona picker remains study-scoped, plan approval is selection-gated, synthetic-evidence boundaries stay visible, and simulated lenses are not global participant evidence"
+    stories:
+      - id: story.persona_readiness.catalog_and_state_contract
+        title: persona catalog and readiness state contract
+        status: implemented
+        story_points: 5
+        acceptance:
+          - persona library responses expose ready, empty, generating, failed, stale, and provisional states without ambiguous preparing copy
+          - read endpoints do not silently generate new personas
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes frontline-persona-library/v1-readiness with known readiness states, load failures, counts, coverage gaps, and no read-time mutation
+          - tests/unit/test_saas_runtime.py verifies empty readiness, ready readiness after generation, panel options, default selection, and readiness metadata
+      - id: story.persona_readiness.dynamic_generation_job
+        title: explicit dynamic gap-fill generation job
+        status: implemented
+        story_points: 5
+        acceptance:
+          - target-audience coverage gaps can create explicit generation jobs
+          - generated personas start as provisional and require validation, duplicate, and coverage checks before ready promotion
+        evidence:
+          - src/ai_validation_swarm/saas/api.py exposes POST /api/v1/persona-library/generation-jobs
+          - src/ai_validation_swarm/saas/job_store.py persists workspace persona generation jobs
+          - tests/unit/test_saas_runtime.py verifies completed generation jobs, provisional and ready lifecycle entries, generated/promoted persona IDs, and generation_job.json artifacts
+      - id: story.persona_readiness.frontline_picker_and_plan_gate
+        title: Frontline picker and approved-plan gate
+        status: implemented
+        story_points: 5
+        acceptance:
+          - the Frontline persona picker blocks or explicitly records exceptions for zero selected personas
+          - approved plans preserve selected persona IDs plus coverage snapshot
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx disables plan proposal and approval until a selected synthetic participant exists and renders readiness, coverage gaps, generation CTA, and selected count
+          - tests/unit/test_saas_runtime.py verifies zero selected persona plan proposal is rejected and approved plan revisions preserve selected persona IDs and coverage snapshot
+      - id: story.persona_readiness.run_snapshot_and_audit_contract
+        title: selected-persona run snapshot and audit contract
+        status: implemented
+        story_points: 3
+        acceptance:
+          - every run records selected persona IDs, versions, artifact hashes, coverage snapshot, and provisional-persona status
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py writes selected_persona_snapshot metadata and frontline_persona_panel_snapshot.json
+          - tests/unit/test_saas_runtime.py verifies selected_personas.json and frontline_persona_panel_snapshot.json include IDs, versions, artifact hashes, coverage snapshot, and provisional status
+      - id: story.persona_readiness.public_figure_lens_boundary
+        title: public-figure and expert lens boundary
+        status: implemented
+        story_points: 3
+        acceptance:
+          - public-figure, celebrity, expert, and influencer-inspired lenses are categorized separately from participant personas
+          - reports and UI preserve unaffiliated simulated-lens boundary language
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py excludes public_figure_lens, celebrity_lens, expert_lens, influencer_lens, and founder_critique_lens from participant pools by default
+          - tests/unit/test_saas_runtime.py verifies the lens boundary exclusion appears in the persona library response
+
+  - id: workstream.frontline_personal_mvp_e2e_reliability_gate
+    status: implemented
+    focus:
+      - product_surface.frontline_study_loop_reliability
+      - product_surface.bilingual_product_chrome
+      - route_model.deep_link_hydration
+      - evidence_model.run_to_share_lineage
+      - ux.failure_visible_recovery
+    why_now: M36 stabilized the real user-facing personal MVP loop after persona readiness and before adding messaging validation or guided playbooks on top of the same route and evidence contracts
+    task_count_total: 4
+    task_count_completed: 4
+    story_points_total: 15
+    story_points_completed: 15
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.frontline_e2e.bilingual_chrome_and_i18n_boundary
+        title: bilingual product chrome and i18n evidence boundary
+        status: implemented
+        story_points: 2
+        acceptance:
+          - Frontline Studio supports deterministic English default plus explicit zh-Hant product chrome for route/navigation IA, setup, synthetic participant library, plan confirmation, run/evidence/report/decision/share route labels, action feedback, loading, empty, and boundary copy
+          - zh-Hant product chrome follows the bilingual terminology glossary for durable terms such as project, study, plan, run, evidence, decision, and synthetic participant
+          - generated evidence, transcripts, findings, persona artifacts, backend JSON artifacts, and audit records remain original-language content unless a future derivative evidence-translation contract is added
+          - focused browser acceptance verifies English default, zh-Hant workspace/setup/runs/evidence/share route chrome, html lang, and 1280px no-overflow behavior
+        evidence:
+          - frontend/frontline_research_studio/src/i18n.js owns the English and zh-Hant dictionaries plus locale resolution contract
+          - frontend/frontline_research_studio/src/main.jsx consumes the i18n context across Frontline route chrome and action feedback
+          - specs/frontline_research_studio_i18n_contract.md records the product-chrome-only i18n boundary
+          - specs/frontline_research_studio_bilingual_terminology_glossary.md records the canonical English / Traditional Chinese user-facing terminology and anti-patterns
+          - 2026-07-02 key coverage, UTF-8 content, and zh-Hant terminology scans passed for the Frontline i18n dictionary and glossary
+          - focused Playwright acceptance on 2026-07-01 verified /studio English default and zh-Hant workspace/setup/runs/evidence/share routes against the local server
+      - id: story.frontline_e2e.route_detail_hydration
+        title: route detail hydration and deep-link stability
+        status: implemented
+        story_points: 5
+        acceptance:
+          - study, run, evidence view, report, decision, and share routes can refresh and hydrate their backend-owned detail objects without silent blank states
+          - browser back/forward preserves the selected product object, study context, and synthetic-evidence boundary
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx hydrates direct study routes and preserves route-object fallback context for study-owned detail routes
+          - scripts/verify_frontline_studio_smoke.mjs verifies saved evidence view, study report, decision, and share reload paths plus browser back/forward preservation
+          - latest passing artifact is output/playwright/frontline_studio_smoke/2026-07-01T17-21-45-013Z/frontline_studio_smoke.summary.json
+      - id: story.frontline_e2e.full_loop_browser_acceptance
+        title: full personal MVP browser acceptance
+        status: implemented
+        story_points: 5
+        acceptance:
+          - browser smoke verifies project creation, study creation, guided setup, persona selection, plan approval, run start, run completion, evidence review, saved view, report, decision, share, refresh, and layout-overlap gates from the Frontline UI
+          - the flow completes without CLI operation, raw artifact inspection, provider/job/runtime terminology, or one-page-app fallback behavior
+        evidence:
+          - scripts/verify_frontline_studio_smoke.mjs verifies the full Frontline path from project and study setup through boundary-preserving share creation
+          - latest passing artifact is output/playwright/frontline_studio_smoke/2026-07-01T17-21-45-013Z/frontline_studio_smoke.summary.json
+          - browser smoke summary records Processed 1 SaaS validation jobs and a synthetic-evidence boundary note
+      - id: story.frontline_e2e.failure_state_and_lineage_contract
+        title: failure-visible state and lineage contract
+        status: implemented
+        story_points: 3
+        acceptance:
+          - failed, delayed, missing, or unauthorized route-detail loading shows actionable user-facing recovery states
+          - run, evidence view, report, decision, and share artifacts preserve plan revision, selected persona snapshot, provider boundary, evidence provenance, and human-validation-gap lineage
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx separates run status labels from study status labels and localizes loading, empty, and recovery states
+          - output/playwright/frontline_studio_smoke/2026-07-01T17-21-45-013Z/runtime/workspaces/ws_frontline_smoke/runs/run_20260701_172209_607158_4831c10c/frontline_persona_panel_snapshot.json preserves selected-persona lineage
+          - latest smoke artifacts include run, evidence view, study report, decision log, share payload, export bundle, provider boundary, and human-validation-gap lineage
+
+  - id: workstream.live_interview_observability_and_transcript_evidence
+    status: implemented
+    focus:
+      - product_surface.live_run_monitor
+      - evidence_model.transcript_source_provenance
+      - runtime.progress_event_contract
+      - artifact_bridge.facilitator_and_participant_traces
+      - evidence_boundary.synthetic_reasoning_trace
+    why_now: M37 should make LLM-backed synthetic interview execution visible and make summaries inspectable through transcript and trace provenance before adding more study types
+    task_count_total: 4
+    task_count_completed: 4
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.interview_observability.progress_event_contract
+        title: run progress event contract
+        status: implemented
+        story_points: 5
+        acceptance:
+          - runtime exposes queued, planning, sampling_panel, interviewing, synthesizing, auditing, completed, blocked, and failed phases without requiring raw CLI output
+          - progress events preserve provider boundary, selected persona, plan revision, and recoverable failure context
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes get_frontline_run_progress() with frontline-run-progress/v1
+          - src/ai_validation_swarm/saas/api.py exposes GET /api/v1/studies/{study_id}/runs/{run_id}/progress
+      - id: story.interview_observability.frontline_run_monitor
+        title: Frontline live run monitor
+        status: implemented
+        story_points: 5
+        acceptance:
+          - /studio/studies/{study_id}/runs/{run_id} shows live or near-live run phase, participant progress, latest safe interview turn, provider boundary, and blocked/failed recovery actions
+          - run monitor preserves study context and does not expose job/provider internals as the default mental model
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx renders #run-live-monitor on the run detail route
+          - scripts/verify_frontline_studio_smoke.mjs verifies #run-live-monitor in browser smoke
+      - id: story.interview_observability.transcript_trace_api_bridge
+        title: transcript and trace API bridge
+        status: implemented
+        story_points: 5
+        acceptance:
+          - Frontline can read transcript exchanges, facilitator trace, synthetic participant reasoning trace, observed interview artifacts, observed action trace, audit, and provider lineage through route-safe APIs
+          - transcript and trace records use stable source IDs that can be linked from evidence slices, reports, and decisions
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes get_frontline_run_transcript() and get_frontline_run_trace()
+          - src/ai_validation_swarm/saas/api.py exposes GET /api/v1/studies/{study_id}/runs/{run_id}/transcript and /trace
+      - id: story.interview_observability.source_linked_evidence_acceptance
+        title: source-linked evidence acceptance
+        status: implemented
+        story_points: 3
+        acceptance:
+          - browser and unit acceptance verify evidence slices, reports, and decisions can link back to transcript exchanges or trace entries
+          - UI copy distinguishes transcript evidence, facilitator trace, synthetic participant reasoning trace, observed action trace, summary, and human-validation gaps
+        evidence:
+          - src/ai_validation_swarm/saas/evidence_query.py projects source_exchange_refs and source_trace_refs
+          - tests/unit/test_saas_runtime.py verifies source-linked evidence view lineage
+          - scripts/verify_frontline_studio_smoke.mjs verifies transcript and trace provenance panels
+
   - id: workstream.messaging_and_positioning_validation
-    status: planned
+    status: implemented
     focus:
       - interview_mode.messaging_validation
       - product_surface.message_comprehension_study
       - evidence_boundary.message_vs_adoption
-    why_now: M35 should test positioning language against the route-complete Frontline journey after decision and share boundaries are implemented
+    why_now: M38 should test positioning language against the transcript-backed Frontline journey after decision/share boundaries, persona-panel readiness, Frontline E2E reliability, and interview observability are hardened
+    task_count_total: 3
+    task_count_completed: 3
+    story_points_total: 13
+    story_points_completed: 13
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.messaging_validation.mode_contract
+        title: messaging validation mode contract
+        status: implemented
+        story_points: 5
+        acceptance:
+          - messaging_validation distinguishes comprehension, credibility, trust language, false-positive appeal, and message-driven misunderstanding from product adoption evidence
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py adds messaging_validation inference and mode-specific expected evidence types
+      - id: story.messaging_validation.frontline_setup
+        title: Frontline messaging study setup
+        status: implemented
+        story_points: 5
+        acceptance:
+          - Frontline guided setup can infer a messaging validation study from natural-language intent and attach message artifacts without exposing internal mode taxonomy
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx renders messaging validation through guided playbook selection and plan proposal metadata
+      - id: story.messaging_validation.evidence_and_boundary_gate
+        title: messaging evidence and boundary gate
+        status: implemented
+        story_points: 3
+        acceptance:
+          - browser and unit acceptance verify message evidence can feed saved evidence views, decisions, and shares while preserving synthetic-evidence and non-adoption-proof boundaries
+        evidence:
+          - tests/unit/test_saas_runtime.py verifies messaging_validation plan proposal and rerun plan inference
+
+  - id: workstream.guided_research_playbooks_and_rerun_templates
+    status: implemented
+    focus:
+      - product_surface.guided_playbooks
+      - data_model.plan_revision_iteration
+      - evidence_model.comparison_setup
+      - ux.researcher_onboarding
+    why_now: M39 should reduce ordinary-user setup ambiguity after persona readiness, Frontline E2E reliability, interview observability, and messaging validation, while preserving study-first confirmation and comparison discipline
+    task_count_total: 3
+    task_count_completed: 3
+    story_points_total: 13
+    story_points_completed: 13
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.playbooks.catalog_and_defaults
+        title: guided playbook catalog and defaults
+        status: implemented
+        story_points: 5
+        acceptance:
+          - discovery, concept evaluation, prototype validation, messaging, and adoption-barrier starts are available as guided conversational playbooks
+          - playbooks provide evidence-boundary defaults without requiring users to choose internal mode IDs first
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes describe_research_playbooks()
+          - src/ai_validation_swarm/saas/api.py exposes GET /api/v1/research-playbooks
+      - id: story.playbooks.rerun_and_plan_revision
+        title: rerun templates and plan-revision lineage
+        status: implemented
+        story_points: 5
+        acceptance:
+          - users can rerun a study with a changed target audience, artifact version, message variant, prototype version, or moderator guide
+          - each rerun records what assumption changed and preserves comparison-ready plan-revision lineage
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes create_frontline_rerun_plan()
+          - src/ai_validation_swarm/saas/api.py exposes POST /api/v1/studies/{study_id}/frontline-reruns
+      - id: story.playbooks.frontline_acceptance
+        title: Frontline playbook acceptance
+        status: implemented
+        story_points: 3
+        acceptance:
+          - browser acceptance verifies guided starts, confirmation sheets, reruns, evidence review, comparison, decisions, and boundary copy from the Frontline UI
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx renders playbook quick starts and prepare-rerun action
+          - scripts/verify_frontline_studio_smoke.mjs covers Frontline playbook UI in the route flow
+
+  - id: workstream.continuous_calibration_observatory
+    status: implemented
+    focus:
+      - evidence_model.calibration_health
+      - operations.benchmark_drift
+      - readiness_gates.launch_claims
+      - audit.calibration_lineage
+    why_now: M40 should turn calibration from a release-time check into an ongoing quality signal before broader launch, provider routing, or replacement-readiness review
+    task_count_total: 4
+    task_count_completed: 4
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.calibration_observatory.health_model
+        title: calibration health model
+        status: implemented
+        story_points: 5
+        acceptance:
+          - calibration health can be segmented by mode, evidence type, market, model, provider, and benchmark suite
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes describe_calibration_observatory() with calibration-observatory/v1
+      - id: story.calibration_observatory.drift_and_miss_attribution
+        title: drift and miss attribution
+        status: implemented
+        story_points: 5
+        acceptance:
+          - repeated misses can be attributed to persona coverage, facilitator behavior, stimulus handling, synthesis, ranking, or provider changes
+        evidence:
+          - calibration observatory projects unsupported evidence types, benchmark signals, and attached human-calibration attribution when present
+      - id: story.calibration_observatory.readiness_gate_projection
+        title: readiness gate projection
+        status: implemented
+        story_points: 5
+        acceptance:
+          - launch, export, share, and replacement-readiness surfaces can consume bounded calibration health without reading raw benchmark internals
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py embeds calibration_observatory into workspace public launch readiness and adds continuous_calibration_health_not_ready when needed
+      - id: story.calibration_observatory.operator_surface
+        title: operator calibration observability surface
+        status: implemented
+        story_points: 3
+        acceptance:
+          - platform owners can inspect calibration trend, unsupported evidence types, and benchmark coverage from an operator-facing surface
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx renders #calibration-observatory-card
+          - scripts/verify_frontline_studio_smoke.mjs verifies the calibration observatory card
+
+  - id: workstream.privacy_data_residency_and_export_controls
+    status: implemented
+    focus:
+      - governance.retention
+      - governance.redaction
+      - governance.data_residency
+      - evidence_boundary.export_controls
+    why_now: M41 should make customer data handling credible before broader team, enterprise, or public launch use
+    task_count_total: 4
+    task_count_completed: 4
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.privacy.retention_and_deletion_contract
+        title: retention and deletion contract
+        status: implemented
+        story_points: 5
+        acceptance:
+          - uploaded artifacts, generated evidence, exports, shares, and calibration records have explicit retention and deletion behavior
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes retention_controls and deletion_controls in workspace-privacy-export-controls/v1
+          - tests/unit/test_saas_runtime.py verifies privacy-export controls read and deletion request recording
+      - id: story.privacy.redaction_audit_lineage
+        title: redaction audit lineage
+        status: implemented
+        story_points: 5
+        acceptance:
+          - redacted or removed evidence preserves why it changed, who approved it, and which downstream outputs are affected
+        evidence:
+          - workspace-privacy-export-controls/v1 reports governed redaction state counts, linked-study redaction state, affected outputs, and recent audit events
+          - POST /api/v1/privacy-export-controls/deletion-requests records affected job, run, export, and share identifiers with lineage_retained
+      - id: story.privacy.residency_policy_model
+        title: data residency policy model
+        status: implemented
+        story_points: 5
+        acceptance:
+          - workspace policy can express storage-region and object-retention expectations without treating local disk as production durable storage
+        evidence:
+          - POST /api/v1/privacy-export-controls/policy updates data_residency_region and artifact_retention_days
+          - specs/milestone_41_privacy_data_residency_and_export_controls_design_spec.md records the local-first to SaaS/object-storage boundary
+      - id: story.privacy.frontline_boundary_copy
+        title: privacy boundary copy and controls
+        status: implemented
+        story_points: 3
+        acceptance:
+          - user-facing export and share flows explain retained, redacted, deleted, and synthetic-only material without exposing internal storage terminology
+        evidence:
+          - frontend/frontline_research_studio/src/main.jsx renders #privacy-export-controls-card and #share-privacy-boundary
+          - frontend/frontline_research_studio/src/i18n.js includes English and zh-Hant privacy/export terminology
+
+  - id: workstream.integration_surface_and_webhooks
+    status: implemented
+    focus:
+      - api.integration_events
+      - api.run_event_stream
+      - evidence_boundary.observed_interview_events
+      - evidence_boundary.webhook_payloads
+      - product_surface.external_workflows
+    why_now: M42 should connect run progress, observed-interview events, study outcomes, and decision outcomes to customer systems only after evidence, readiness, privacy/export, and audit contracts are stable
+    task_count_total: 4
+    task_count_completed: 4
+    story_points_total: 18
+    story_points_completed: 18
+    story_points_remaining: 0
+    completion_pct: 100.0
+    stories:
+      - id: story.integrations.run_event_stream
+        title: bounded run event stream
+        status: implemented
+        story_points: 5
+        acceptance:
+          - run progress exposes provider/persona-interview phases, observed-interview events, latest safe turn metadata, blocked states, and completion transitions through a backend event contract
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes get_frontline_run_event_stream returning workspace-run-event-stream/v1
+          - src/ai_validation_swarm/saas/api.py exposes GET /api/v1/studies/{study_id}/runs/{run_id}/events
+          - frontend/frontline_research_studio/src/main.jsx renders #run-event-stream-panel
+      - id: story.integrations.event_contract
+        title: bounded integration event contract
+        status: implemented
+        story_points: 5
+        acceptance:
+          - stable events exist for study created, run completed, evidence view saved, decision logged, readiness changed, and support handoff changed
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes describe_workspace_integration_events returning workspace-integration-events/v1
+          - src/ai_validation_swarm/saas/api.py exposes GET /api/v1/integration-events
+      - id: story.integrations.boundary_preserving_payloads
+        title: boundary-preserving payloads
+        status: implemented
+        story_points: 5
+        acceptance:
+          - integration payloads preserve synthetic-evidence boundaries, readiness gates, provenance, and human-validation gaps
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py emits workspace-integration-event-payload/v1 with readiness, provenance, privacy/export controls, and human-validation gaps
+          - specs/milestone_42_integration_surface_run_event_stream_and_webhooks_design_spec.md records the payload boundary contract
+      - id: story.integrations.delivery_and_audit
+        title: delivery status and audit
+        status: implemented
+        story_points: 3
+        acceptance:
+          - webhook delivery, retry, failure, and consumer audit events are visible without bypassing the evidence review path
+        evidence:
+          - src/ai_validation_swarm/saas/runtime.py exposes record_workspace_integration_delivery_attempt with payload boundary hashes and audit events
+          - src/ai_validation_swarm/saas/api.py exposes POST /api/v1/integration-events/delivery-attempts
+
+  - id: workstream.persona_profile_review_and_study_time_creation
+    status: active
+    focus:
+      - persona_library.full_profile_review
+      - persona_library.study_time_generation
+      - evidence_boundary.selected_persona_lineage
+      - product_surface.setup_profile_review
+      - audit.persona_generation_and_selection
+    why_now: M43 closes the persona trust gap before broader enterprise workflows depend on users accepting synthetic participant panels they cannot fully inspect
+    task_count_total: 5
+    task_count_completed: 0
+    story_points_total: 21
+    story_points_completed: 0
+    story_points_remaining: 21
+    completion_pct: 0.0
+    stories:
+      - id: story.persona_profile.profile_contract
+        title: full persona profile contract
+        status: planned
+        story_points: 5
+        acceptance:
+          - route-safe API returns bounded full synthetic participant profile data with readiness, generation lineage, artifact hashes, decision behavior, human-difference axes, and synthetic-evidence boundaries
+      - id: story.persona_profile.setup_review_surface
+        title: setup profile review surface
+        status: planned
+        story_points: 5
+        acceptance:
+          - Frontline setup lets users open a selected or candidate synthetic participant profile without leaving study context or reading raw local artifacts
+      - id: story.persona_profile.study_time_generation
+        title: study-time persona generation
+        status: planned
+        story_points: 5
+        acceptance:
+          - users can generate gap-fill personas from current target audience, panel type, sample size, and coverage gaps before plan approval, with generated/provisional/ready state visible
+      - id: story.persona_profile.plan_lineage_snapshot
+        title: selected-profile lineage snapshot
+        status: planned
+        story_points: 3
+        acceptance:
+          - approved plans and runs preserve selected persona profile versions, artifact hashes, readiness status, generation job lineage, and coverage rationale
+      - id: story.persona_profile.ux_and_boundary_acceptance
+        title: profile UX and boundary acceptance
+        status: planned
+        story_points: 3
+        acceptance:
+          - browser smoke verifies profile review, generation, selection, plan approval, refresh/back-forward behavior, no internal terminology leaks, and synthetic participant boundary copy
+
+  - id: workstream.enterprise_readiness_and_procurement_controls
+    status: planned
+    focus:
+      - governance.procurement
+      - governance.workspace_ownership
+      - commercial.billing_metadata
+      - support.sla_boundary
+    why_now: M44 should support buyer review only after the research workflow, persona trust, evidence boundary, and privacy/export controls are credible
     task_count_total: 3
     task_count_completed: 0
     story_points_total: 13
@@ -2705,29 +3315,184 @@ active_workstreams:
     story_points_remaining: 13
     completion_pct: 0.0
     stories:
-      - id: story.messaging_validation.mode_contract
-        title: messaging validation mode contract
+      - id: story.enterprise.procurement_pack
+        title: procurement and evidence-boundary pack
         status: planned
         story_points: 5
         acceptance:
-          - messaging_validation distinguishes comprehension, credibility, trust language, false-positive appeal, and message-driven misunderstanding from product adoption evidence
-      - id: story.messaging_validation.frontline_setup
-        title: Frontline messaging study setup
+          - enterprise reviewers can inspect security, privacy, evidence, calibration, and support boundaries from a durable pack
+      - id: story.enterprise.workspace_ownership_and_billing
+        title: workspace ownership and billing metadata
         status: planned
         story_points: 5
         acceptance:
-          - Frontline guided setup can infer a messaging validation study from natural-language intent and attach message artifacts without exposing internal mode taxonomy
-      - id: story.messaging_validation.evidence_and_boundary_gate
-        title: messaging evidence and boundary gate
+          - workspace ownership, invoice metadata, admin responsibility, and procurement contacts are recorded without weakening study audit trails
+      - id: story.enterprise.support_sla_boundary
+        title: support SLA boundary
         status: planned
         story_points: 3
         acceptance:
-          - browser and unit acceptance verify message evidence can feed saved evidence views, decisions, and shares while preserving synthetic-evidence and non-adoption-proof boundaries
+          - support expectations distinguish product operations, research-quality limitations, calibration gaps, and unsupported replacement claims
+
+  - id: workstream.multi_market_benchmark_expansion
+    status: planned
+    focus:
+      - calibration.market_coverage
+      - calibration.language_coverage
+      - evidence_model.segmented_readiness
+      - persona_model.cultural_context
+    why_now: M45 should prevent broad public or replacement-readiness claims from averaging across unsupported markets, domains, languages, or segments
+    task_count_total: 4
+    task_count_completed: 0
+    story_points_total: 23
+    story_points_completed: 0
+    story_points_remaining: 23
+    completion_pct: 0.0
+    stories:
+      - id: story.benchmark.market_suite_contract
+        title: market benchmark suite contract
+        status: planned
+        story_points: 5
+        acceptance:
+          - benchmark suites can declare market, language, domain, segment, evidence type, and research-stage coverage
+      - id: story.benchmark.segmented_readiness_scoring
+        title: segmented readiness scoring
+        status: planned
+        story_points: 5
+        acceptance:
+          - readiness is scored by market, domain, research stage, and evidence type instead of one global average
+      - id: story.benchmark.persona_and_prompt_gap_projection
+        title: persona and prompt gap projection
+        status: planned
+        story_points: 5
+        acceptance:
+          - market-specific misses can be traced to persona coverage, cultural context, language handling, prompt behavior, or evidence extraction
+      - id: story.benchmark.frontline_readiness_boundary
+        title: Frontline readiness boundary
+        status: planned
+        story_points: 8
+        acceptance:
+          - Frontline and share/export surfaces can communicate unsupported market boundaries without exposing raw benchmark internals
+
+  - id: workstream.replacement_readiness_review_board
+    status: planned
+    focus:
+      - governance.replacement_readiness
+      - evidence_model.benchmark_proof
+      - claims_control.public_language
+      - human_validation_gap.closure
+    why_now: M46 should keep replacement-grade language scoped, reviewed, and evidence-backed rather than inferred from polished synthetic outputs
+    task_count_total: 4
+    task_count_completed: 0
+    story_points_total: 23
+    story_points_completed: 0
+    story_points_remaining: 23
+    completion_pct: 0.0
+    stories:
+      - id: story.replacement_review.scope_model
+        title: scoped readiness decision model
+        status: planned
+        story_points: 5
+        acceptance:
+          - readiness can be classified as research support, human-reducing, or replacement-ready only for scoped use cases
+      - id: story.replacement_review.evidence_dossier
+        title: readiness evidence dossier
+        status: planned
+        story_points: 5
+        acceptance:
+          - decisions require benchmark evidence, calibration history, failure-mode review, safety review, and human-validation-gap status
+      - id: story.replacement_review.approval_workflow
+        title: approval and rejection workflow
+        status: planned
+        story_points: 5
+        acceptance:
+          - approved, rejected, and deferred replacement-readiness decisions are auditable and linked to the relevant evidence scope
+      - id: story.replacement_review.claims_enforcement
+        title: claims enforcement
+        status: planned
+        story_points: 8
+        acceptance:
+          - marketing, product UI, exports, and shares cannot use replacement-grade language without an approved scoped readiness decision
+
+  - id: workstream.model_and_provider_governance
+    status: planned
+    focus:
+      - provider_quality.benchmark_deltas
+      - operations.cost_latency
+      - audit.prompt_model_lineage
+      - routing.mode_sensitivity
+    why_now: M47 should make model or provider changes measurable against evidence quality before cost or latency optimization changes customer-facing outputs
+    task_count_total: 3
+    task_count_completed: 0
+    story_points_total: 13
+    story_points_completed: 0
+    story_points_remaining: 13
+    completion_pct: 0.0
+    stories:
+      - id: story.provider_governance.eval_matrix
+        title: provider evaluation matrix
+        status: planned
+        story_points: 5
+        acceptance:
+          - model and provider changes are compared by calibration deltas, cost, latency, refusal behavior, language support, and evidence quality
+      - id: story.provider_governance.routing_policy
+        title: benchmark-backed routing policy
+        status: planned
+        story_points: 5
+        acceptance:
+          - workloads can route by research mode, sensitivity, language, and benchmark-backed quality instead of global provider preference
+      - id: story.provider_governance.lineage_enforcement
+        title: prompt and model lineage enforcement
+        status: planned
+        story_points: 3
+        acceptance:
+          - every customer-facing result preserves prompt, model, provider, seed, and runtime lineage for audit and calibration
+
+  - id: workstream.platform_scale_and_reliability_expansion
+    status: planned
+    focus:
+      - operations.worker_scale
+      - operations.queue_reliability
+      - evidence_index.scale
+      - browser_capture.reliability
+      - export_share.delivery
+    why_now: M48 should scale throughput only after the evidence contract, calibration gates, privacy controls, and provider governance can survive higher volume
+    task_count_total: 4
+    task_count_completed: 0
+    story_points_total: 23
+    story_points_completed: 0
+    story_points_remaining: 23
+    completion_pct: 0.0
+    stories:
+      - id: story.scale.worker_and_queue_reliability
+        title: worker and queue reliability
+        status: planned
+        story_points: 5
+        acceptance:
+          - queued studies, calibration jobs, browser captures, exports, and shares can recover from retries and partial failures without corrupting research records
+      - id: story.scale.evidence_index_performance
+        title: evidence index performance
+        status: planned
+        story_points: 5
+        acceptance:
+          - evidence query, comparison, report generation, and decision review remain performant at larger study volumes
+      - id: story.scale.operational_slos_and_runbooks
+        title: operational SLOs and runbooks
+        status: planned
+        story_points: 5
+        acceptance:
+          - reliability SLOs, backpressure behavior, failure visibility, and operator runbooks exist for production-like volume
+      - id: story.scale.launch_volume_acceptance
+        title: launch-volume acceptance
+        status: planned
+        story_points: 8
+        acceptance:
+          - browser and API acceptance verify larger customer volume without losing run, evidence, calibration, export, share, or audit lineage
 
 blockers:
   - id: blocker.persona_coverage_gap
     severity: high
-    detail: the Frontline picker now exposes and preserves persona-panel selection, but broader public launch still lacks calibrated evidence that persona coverage is sufficient across markets, domains, languages, and repeated human benchmarks
+    detail: M35 completed productized persona-library readiness, explicit generation lifecycle, selected-panel version snapshots, and simulated-lens separation; broader calibrated coverage across markets/domains/languages remains a later benchmark expansion gap before replacement-grade claims
 
   - id: blocker.prototype_calibration_gap
     severity: medium

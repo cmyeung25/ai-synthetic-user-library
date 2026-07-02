@@ -1,0 +1,955 @@
+{
+  "report_version": "report/v1",
+  "run_id": "run_20260702_021106_371477_3049477a",
+  "brief_id": "frontline_study_50da34bc75e2",
+  "project_name": "Frontline Research",
+  "generated_at": "2026-07-02T02:11:06+00:00",
+  "run_status": "completed",
+  "panel_spec": {
+    "panel_type": "mainstream",
+    "sample_size": 3,
+    "random_seed": 17,
+    "filters": {
+      "synthetic_user_id": [
+        "su_0003",
+        "su_0002",
+        "su_0001"
+      ]
+    },
+    "preset_name": "frontline_persona_picker"
+  },
+  "panel_rationale": "Sampled 3 personas from panel 'mainstream' using preset 'frontline_persona_picker'. Eligible candidates moved from 3 to 3 after filters (synthetic_user_id=['su_0003', 'su_0002', 'su_0001']). Most common occupations in the final sample: operations manager (1), program manager (1), small business owner (1).",
+  "panel_explainability": {
+    "panel_type": "mainstream",
+    "preset_name": "frontline_persona_picker",
+    "requested_sample_size": 3,
+    "actual_sample_size": 3,
+    "random_seed": 17,
+    "filters": {
+      "synthetic_user_id": [
+        "su_0003",
+        "su_0002",
+        "su_0001"
+      ]
+    },
+    "eligible_before_filters": 3,
+    "eligible_after_filters": 3,
+    "filter_stage_counts": {
+      "before_filters": 3,
+      "after_synthetic_user_id": 3
+    },
+    "top_occupations": [
+      [
+        "operations manager",
+        1
+      ],
+      [
+        "program manager",
+        1
+      ],
+      [
+        "small business owner",
+        1
+      ]
+    ],
+    "top_locations": [
+      [
+        "Kaohsiung",
+        2
+      ],
+      [
+        "Hong Kong",
+        1
+      ]
+    ],
+    "gender_mix": {
+      "non-binary": 2,
+      "woman": 1
+    },
+    "selected_persona_ids": [
+      "su_0003",
+      "su_0002",
+      "su_0001"
+    ],
+    "human_difference_axis_coverage": {
+      "selected_panel": {
+        "required_axes": [
+          "control_preference",
+          "trust_style",
+          "complexity_tolerance",
+          "decision_tempo",
+          "financial_attention_cadence",
+          "relationship_to_money",
+          "risk_orientation",
+          "need_for_explanation",
+          "life_load",
+          "fragmentation_reality",
+          "guidance_preference",
+          "reflection_style"
+        ],
+        "persona_with_axes_count": 3,
+        "axis_coverage": {
+          "control_preference": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "hybrid": 3
+            },
+            "bucket_persona_ids": {
+              "hybrid": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "hybrid": [
+                "Hybrid; wants room to decide but appreciates clear defaults."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "trust_style": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "verify_first": 3
+            },
+            "bucket_persona_ids": {
+              "verify_first": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "verify_first": [
+                "Evidence-first with cautious benefit of the doubt for credible proof."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "complexity_tolerance": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "moderate": 3
+            },
+            "bucket_persona_ids": {
+              "moderate": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "moderate": [
+                "Moderate; will engage when detail clearly helps the decision."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "decision_tempo": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "measured": 3
+            },
+            "bucket_persona_ids": {
+              "measured": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "measured": [
+                "Measured; gathers enough signal before acting."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "financial_attention_cadence": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "event_driven": 3
+            },
+            "bucket_persona_ids": {
+              "event_driven": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "event_driven": [
+                "Periodic with event-driven spikes when consequences rise."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "relationship_to_money": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "security": 3
+            },
+            "bucket_persona_ids": {
+              "security": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "security": [
+                "Money is a practical buffer and progress marker."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "risk_orientation": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "conservative": 3
+            },
+            "bucket_persona_ids": {
+              "conservative": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "conservative": [
+                "Open to measured risk when the downside is understandable."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "need_for_explanation": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "high": 3
+            },
+            "bucket_persona_ids": {
+              "high": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "high": [
+                "High enough to want plain-language framing and concrete examples."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "life_load": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "low": 3
+            },
+            "bucket_persona_ids": {
+              "low": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "low": [
+                "Moderate; daily life leaves limited room for unnecessary friction."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "fragmentation_reality": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "fragmented": 3
+            },
+            "bucket_persona_ids": {
+              "fragmented": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "fragmented": [
+                "Some information and decisions live across more than one place."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "guidance_preference": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "self_serve": 3
+            },
+            "bucket_persona_ids": {
+              "self_serve": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "self_serve": [
+                "Hybrid self-serve plus optional expert clarification."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "reflection_style": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "example_tradeoff": 3
+            },
+            "bucket_persona_ids": {
+              "example_tradeoff": [
+                "su_0003",
+                "su_0002",
+                "su_0001"
+              ]
+            },
+            "bucket_examples": {
+              "example_tradeoff": [
+                "Explains decisions through recent examples and trade-offs."
+              ]
+            },
+            "bucket_count": 1
+          }
+        }
+      },
+      "eligible_pool_after_filters": {
+        "required_axes": [
+          "control_preference",
+          "trust_style",
+          "complexity_tolerance",
+          "decision_tempo",
+          "financial_attention_cadence",
+          "relationship_to_money",
+          "risk_orientation",
+          "need_for_explanation",
+          "life_load",
+          "fragmentation_reality",
+          "guidance_preference",
+          "reflection_style"
+        ],
+        "persona_with_axes_count": 3,
+        "axis_coverage": {
+          "control_preference": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "hybrid": 3
+            },
+            "bucket_persona_ids": {
+              "hybrid": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "hybrid": [
+                "Hybrid; wants room to decide but appreciates clear defaults."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "trust_style": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "verify_first": 3
+            },
+            "bucket_persona_ids": {
+              "verify_first": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "verify_first": [
+                "Evidence-first with cautious benefit of the doubt for credible proof."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "complexity_tolerance": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "moderate": 3
+            },
+            "bucket_persona_ids": {
+              "moderate": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "moderate": [
+                "Moderate; will engage when detail clearly helps the decision."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "decision_tempo": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "measured": 3
+            },
+            "bucket_persona_ids": {
+              "measured": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "measured": [
+                "Measured; gathers enough signal before acting."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "financial_attention_cadence": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "event_driven": 3
+            },
+            "bucket_persona_ids": {
+              "event_driven": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "event_driven": [
+                "Periodic with event-driven spikes when consequences rise."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "relationship_to_money": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "security": 3
+            },
+            "bucket_persona_ids": {
+              "security": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "security": [
+                "Money is a practical buffer and progress marker."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "risk_orientation": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "conservative": 3
+            },
+            "bucket_persona_ids": {
+              "conservative": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "conservative": [
+                "Open to measured risk when the downside is understandable."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "need_for_explanation": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "high": 3
+            },
+            "bucket_persona_ids": {
+              "high": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "high": [
+                "High enough to want plain-language framing and concrete examples."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "life_load": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "low": 3
+            },
+            "bucket_persona_ids": {
+              "low": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "low": [
+                "Moderate; daily life leaves limited room for unnecessary friction."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "fragmentation_reality": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "fragmented": 3
+            },
+            "bucket_persona_ids": {
+              "fragmented": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "fragmented": [
+                "Some information and decisions live across more than one place."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "guidance_preference": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "self_serve": 3
+            },
+            "bucket_persona_ids": {
+              "self_serve": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "self_serve": [
+                "Hybrid self-serve plus optional expert clarification."
+              ]
+            },
+            "bucket_count": 1
+          },
+          "reflection_style": {
+            "persona_count": 3,
+            "missing_persona_count": 0,
+            "missing_persona_ids": [],
+            "bucket_distribution": {
+              "example_tradeoff": 3
+            },
+            "bucket_persona_ids": {
+              "example_tradeoff": [
+                "su_0001",
+                "su_0002",
+                "su_0003"
+              ]
+            },
+            "bucket_examples": {
+              "example_tradeoff": [
+                "Explains decisions through recent examples and trade-offs."
+              ]
+            },
+            "bucket_count": 1
+          }
+        }
+      }
+    },
+    "undercovered_axes": [],
+    "similarity_hotspots": [
+      {
+        "axis": "trust_style",
+        "bucket": "verify_first",
+        "persona_count": 3,
+        "selected_share": 1.0,
+        "persona_ids": [
+          "su_0003",
+          "su_0002",
+          "su_0001"
+        ],
+        "example_values": [
+          "Evidence-first with cautious benefit of the doubt for credible proof."
+        ],
+        "note": "3 selected personas cluster on trust_style=verify_first."
+      },
+      {
+        "axis": "risk_orientation",
+        "bucket": "conservative",
+        "persona_count": 3,
+        "selected_share": 1.0,
+        "persona_ids": [
+          "su_0003",
+          "su_0002",
+          "su_0001"
+        ],
+        "example_values": [
+          "Open to measured risk when the downside is understandable."
+        ],
+        "note": "3 selected personas cluster on risk_orientation=conservative."
+      },
+      {
+        "axis": "relationship_to_money",
+        "bucket": "security",
+        "persona_count": 3,
+        "selected_share": 1.0,
+        "persona_ids": [
+          "su_0003",
+          "su_0002",
+          "su_0001"
+        ],
+        "example_values": [
+          "Money is a practical buffer and progress marker."
+        ],
+        "note": "3 selected personas cluster on relationship_to_money=security."
+      },
+      {
+        "axis": "reflection_style",
+        "bucket": "example_tradeoff",
+        "persona_count": 3,
+        "selected_share": 1.0,
+        "persona_ids": [
+          "su_0003",
+          "su_0002",
+          "su_0001"
+        ],
+        "example_values": [
+          "Explains decisions through recent examples and trade-offs."
+        ],
+        "note": "3 selected personas cluster on reflection_style=example_tradeoff."
+      },
+      {
+        "axis": "need_for_explanation",
+        "bucket": "high",
+        "persona_count": 3,
+        "selected_share": 1.0,
+        "persona_ids": [
+          "su_0003",
+          "su_0002",
+          "su_0001"
+        ],
+        "example_values": [
+          "High enough to want plain-language framing and concrete examples."
+        ],
+        "note": "3 selected personas cluster on need_for_explanation=high."
+      }
+    ],
+    "selection_rationale_by_persona": [
+      {
+        "synthetic_user_id": "su_0003",
+        "matched_filters": {
+          "synthetic_user_id": "su_0003"
+        },
+        "axis_contributions": [],
+        "distinctive_attributes": [
+          {
+            "attribute": "occupation",
+            "value": "operations manager"
+          },
+          {
+            "attribute": "life_stage",
+            "value": "senior operator"
+          },
+          {
+            "attribute": "workflow_maturity",
+            "value": "repeatable"
+          }
+        ],
+        "inclusion_reason": "Matched synthetic_user_id=su_0003 and stays distinctive through occupation=operations manager, life_stage=senior operator."
+      },
+      {
+        "synthetic_user_id": "su_0002",
+        "matched_filters": {
+          "synthetic_user_id": "su_0002"
+        },
+        "axis_contributions": [],
+        "distinctive_attributes": [
+          {
+            "attribute": "occupation",
+            "value": "program manager"
+          },
+          {
+            "attribute": "location",
+            "value": "Hong Kong"
+          },
+          {
+            "attribute": "workflow_maturity",
+            "value": "tool heavy"
+          }
+        ],
+        "inclusion_reason": "Matched synthetic_user_id=su_0002 and stays distinctive through occupation=program manager, location=Hong Kong."
+      },
+      {
+        "synthetic_user_id": "su_0001",
+        "matched_filters": {
+          "synthetic_user_id": "su_0001"
+        },
+        "axis_contributions": [],
+        "distinctive_attributes": [
+          {
+            "attribute": "occupation",
+            "value": "small business owner"
+          },
+          {
+            "attribute": "workflow_maturity",
+            "value": "ad_hoc"
+          }
+        ],
+        "inclusion_reason": "Matched synthetic_user_id=su_0001 and stays distinctive through occupation=small business owner, workflow_maturity=ad_hoc."
+      }
+    ]
+  },
+  "brief_overview": {
+    "problem_statement": "I want to learn whether solo founders understand a scheduling assistant concept and what would stop them from trying it.",
+    "target_market": "Solo founders who manage sales calls and follow-up tasks themselves.",
+    "offered_solution": "Decide whether to continue with this concept and what objections need human follow-up.",
+    "validation_goal": "Decide whether to continue with this concept and what objections need human follow-up.",
+    "pricing_hypothesis": ""
+  },
+  "execution": {
+    "selected_persona_count": 3,
+    "successful_response_count": 3,
+    "failed_response_count": 0,
+    "response_coverage_pct": 100.0,
+    "failure_reasons": []
+  },
+  "scores": {
+    "problem_resonance": 4.0,
+    "solution_attractiveness": 3.0,
+    "willingness_to_pay": 3.0
+  },
+  "trigger_clusters": [
+    {
+      "trigger": "clear time savings",
+      "count": 3,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0003",
+        "su_0002",
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "clear time savings"
+      ]
+    }
+  ],
+  "objection_clusters": [
+    {
+      "objection": "uncertain ROI",
+      "count": 3,
+      "share_pct": 100.0,
+      "persona_ids": [
+        "su_0003",
+        "su_0002",
+        "su_0001"
+      ],
+      "panel_roles": [
+        "mainstream"
+      ],
+      "examples": [
+        "uncertain ROI"
+      ]
+    }
+  ],
+  "segment_summary": {
+    "mainstream": {
+      "count": 3,
+      "problem_resonance": 4.0,
+      "solution_attractiveness": 3.0,
+      "willingness_to_pay": 3.0,
+      "top_objections": [
+        {
+          "objection": "uncertain ROI",
+          "count": 3
+        }
+      ],
+      "top_triggers": [
+        {
+          "trigger": "clear time savings",
+          "count": 3
+        }
+      ],
+      "top_trust_concerns": [
+        {
+          "trust_concern": "I would need proof that this fits smoothly into existing habits.",
+          "count": 3
+        }
+      ]
+    }
+  },
+  "risk_map": [
+    {
+      "category": "reporting_risk",
+      "highest_severity": "low",
+      "finding_count": 1,
+      "affected_persona_ids": [],
+      "observations": [
+        "No major sensitive-topic trigger was detected in this run, but the result should still be treated as pre-validation only."
+      ],
+      "recommended_validation_questions": [
+        "What real-user checks would most quickly falsify the strongest assumption in this concept?"
+      ]
+    }
+  ],
+  "skeptic_review": {
+    "review_version": "skeptic-review/v1",
+    "summary": "Skeptic review focuses on weak proof, habit-change friction, pricing readiness, and value-capture gaps.",
+    "challenged_assumptions": [
+      {
+        "finding_id": "skeptic_solution_clarity",
+        "severity": "medium",
+        "title": "Solution story may still be too abstract",
+        "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+        "evidence_refs": [
+          "raw_responses",
+          "summary"
+        ],
+        "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+      },
+      {
+        "finding_id": "skeptic_roi_gap",
+        "severity": "high",
+        "title": "Messaging still leans on implied ROI",
+        "observation": "The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff.",
+        "evidence_refs": [
+          "raw_responses",
+          "objection_clusters"
+        ],
+        "recommended_validation_question": "What metric or visible output can the founder show to reduce ROI ambiguity?"
+      }
+    ]
+  },
+  "assumption_risk_map": [
+    {
+      "finding_id": "skeptic_solution_clarity",
+      "severity": "medium",
+      "title": "Solution story may still be too abstract",
+      "observation": "The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove.",
+      "evidence_refs": [
+        "raw_responses",
+        "summary"
+      ],
+      "recommended_validation_question": "Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?"
+    },
+    {
+      "finding_id": "skeptic_roi_gap",
+      "severity": "high",
+      "title": "Messaging still leans on implied ROI",
+      "observation": "The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff.",
+      "evidence_refs": [
+        "raw_responses",
+        "objection_clusters"
+      ],
+      "recommended_validation_question": "What metric or visible output can the founder show to reduce ROI ambiguity?"
+    }
+  ],
+  "planner_steps": [
+    "Day 1: Rewrite the landing page headline around the most concrete workflow outcome rather than broad AI promise.",
+    "Day 2: Interview 3 target users about current follow-up and coordination workarounds before showing the solution.",
+    "Day 3: Show a low-fidelity concierge workflow and ask what data they would or would not share.",
+    "Day 4: Test one pricing anchor with a trial-first option and capture resistance in plain language.",
+    "Day 5: Compare reactions between one likely early adopter and one skeptical buyer in the same target segment.",
+    "Day 6: Rewrite copy using the top objection and top trigger found in this run.",
+    "Day 7: Decide whether to narrow the target workflow, change the proof requirement, or delay pricing pressure."
+  ],
+  "response_index": [
+    {
+      "synthetic_user_id": "su_0003",
+      "panel_role": "mainstream",
+      "likely_objection": "uncertain ROI",
+      "what_would_make_them_try": "clear time savings",
+      "scorecard": {
+        "problem_resonance": 4,
+        "solution_attractiveness": 3,
+        "willingness_to_pay": 3
+      }
+    },
+    {
+      "synthetic_user_id": "su_0002",
+      "panel_role": "mainstream",
+      "likely_objection": "uncertain ROI",
+      "what_would_make_them_try": "clear time savings",
+      "scorecard": {
+        "problem_resonance": 4,
+        "solution_attractiveness": 3,
+        "willingness_to_pay": 3
+      }
+    },
+    {
+      "synthetic_user_id": "su_0001",
+      "panel_role": "mainstream",
+      "likely_objection": "uncertain ROI",
+      "what_would_make_them_try": "clear time savings",
+      "scorecard": {
+        "problem_resonance": 4,
+        "solution_attractiveness": 3,
+        "willingness_to_pay": 3
+      }
+    }
+  ],
+  "disclaimer": "This result is AI pre-validation only. It should not replace real user interviews, market tests, professional advice, or compliance review.",
+  "report_markdown_path": "report.md",
+  "report_markdown": "# Validation Report: Frontline Research\n\n## 1. Executive Summary\nThe concept shows problem resonance at 4.0/5, solution attractiveness at 3.0/5, and willingness to pay at 3.0/5 across this synthetic panel.\n\n## 2. Concept Understanding\nProblem: I want to learn whether solo founders understand a scheduling assistant concept and what would stop them from trying it.\nSolution: Decide whether to continue with this concept and what objections need human follow-up.\n\n## 3. Target Segment Fit\nThis run selected 3 personas and received 3 successful responses.\n\n## 4. Problem Resonance Score\n4.0/5\n\n## 5. Solution Attractiveness Score\n3.0/5\n\n## 6. Willingness to Pay Signals\n3.0/5\n\n## 7. Top Buying Triggers\n- clear time savings (3 personas, 100.0%)\n\n## 8. Top Objections\n- uncertain ROI (3 personas, 100.0%)\n\n## 9. Segment-by-Segment Reaction\n- mainstream: 3 responses, problem 4.0/5, solution 3.0/5, willingness to pay 3.0/5, top objection: uncertain ROI, top trigger: clear time savings\n\n## 10. Sensitive Topic Risk\n- reporting_risk (low): No major sensitive-topic trigger was detected in this run, but the result should still be treated as pre-validation only.\n\n## 11. Privacy / Fairness / Inclusion Risk\n- reporting_risk: No major sensitive-topic trigger was detected in this run, but the result should still be treated as pre-validation only.\n\n## 12. Assumption Risk Map\n- Solution story may still be too abstract (medium): The proposed workflow benefit still looks conditional on execution details that the current pitch does not yet prove. Next question: Which exact before-and-after workflow improvement can the founder demonstrate in a short trial?\n- Messaging still leans on implied ROI (high): The strongest objection cluster suggests the concept still lacks concrete proof of measurable payoff. Next question: What metric or visible output can the founder show to reduce ROI ambiguity?\n\n## 13. Recommended Repositioning\nLead with a specific workflow outcome and reduce broad AI claims unless proof can be shown immediately.\n\n## 14. Suggested Landing Page Message\nTurn messy follow-up into a short, reviewable action list without adding another heavy workflow.\n\n## 15. Suggested Concierge MVP\nOffer a manual or semi-manual concierge setup that proves the follow-up outcome before full automation.\n\n## 16. Suggested 7-Day No-Code Validation Plan\n- Day 1: Rewrite the landing page headline around the most concrete workflow outcome rather than broad AI promise.\n- Day 2: Interview 3 target users about current follow-up and coordination workarounds before showing the solution.\n- Day 3: Show a low-fidelity concierge workflow and ask what data they would or would not share.\n- Day 4: Test one pricing anchor with a trial-first option and capture resistance in plain language.\n- Day 5: Compare reactions between one likely early adopter and one skeptical buyer in the same target segment.\n- Day 6: Rewrite copy using the top objection and top trigger found in this run.\n- Day 7: Decide whether to narrow the target workflow, change the proof requirement, or delay pricing pressure.\n\n## 17. Suggested Real User Interview Script\n- Walk me through the last time this problem showed up.\n- What did you do instead of buying a new tool?\n- What would you need to trust this workflow enough to try it?\n- Which part of the pitch feels too vague or too risky?\n- What would make the price feel justified in week one?\n\n## 18. What This AI Validation Cannot Prove\n- It cannot prove real willingness to buy.\n- It cannot replace real switching behaviour, retention, or trust formation.\n- It cannot replace expert review in high-stakes or regulated contexts.\n\n## 19. Disclaimer\nThis result is AI pre-validation only. It should not replace real user interviews, market tests, professional advice, or compliance review.\n\n## Response Appendix\n- su_0003: uncertain ROI; try signal: clear time savings\n- su_0002: uncertain ROI; try signal: clear time savings\n- su_0001: uncertain ROI; try signal: clear time savings"
+}

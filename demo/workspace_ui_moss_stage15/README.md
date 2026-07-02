@@ -39,7 +39,7 @@ Key linked artifacts:
 
 How to try it:
 
-1. start the local SaaS API with `scripts/start_stage12_demo.bat`
+1. start the local SaaS API with `scripts/start_local_workspace_demo.bat`
 2. open `http://127.0.0.1:8011/app/workspace?token=token-api` for the first authenticated bootstrap
 3. click `refresh workspace`
 4. create or select a project

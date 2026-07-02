@@ -60,6 +60,25 @@ Use these layers in order:
 3. interview/runtime response
    Use when the reaction should be generated live from persona + concept and does not need to become a reusable stored contract.
 
+## Persistence and SaaS Storage Rule
+
+Persona storage follows the `artifact-first, SQL-indexed, object-store-ready` rule defined in [specs/persona_library_storage_and_saas_contract.md](./specs/persona_library_storage_and_saas_contract.md).
+
+Local-first development should use:
+
+- SQLite for catalog, search, filtering, generation state, and persona-selection indexes
+- local JSON and Markdown artifacts as the durable source of truth
+
+Future SaaS or cloud deployment should use:
+
+- Postgres for catalog, query, permissions, readiness state, generation jobs, trait indexes, and tenant lifecycle
+- object storage for immutable persona artifacts, manifests, hashes, generation notes, and run-time selected-persona snapshots
+- server local disk only as cache, export, or temporary workspace storage
+
+Do not silently generate personas from read endpoints. Dynamic generation must be an explicit, auditable job that starts new personas as `provisional` before validation, duplicate detection, coverage checks, and promotion to `ready`.
+
+Public-figure, celebrity, expert, or influencer-inspired personas must be treated as separate simulated lenses, not normal participant personas. They may support concept critique or messaging stress tests, but they are not evidence of the real person's views, endorsement, or behavior.
+
 ## Decision rules
 
 ### Add to core only after checking three tests

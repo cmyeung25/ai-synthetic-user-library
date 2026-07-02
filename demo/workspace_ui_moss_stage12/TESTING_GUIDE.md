@@ -67,7 +67,7 @@ What it proves:
 
 Double-click:
 
-- `scripts/start_stage12_demo.bat`
+- `scripts/start_local_workspace_demo.bat`
 
 That helper will:
 
@@ -90,7 +90,7 @@ Default live-mode values:
 
 If you only want one short pass, use this sequence:
 
-1. double-click `scripts/start_stage12_demo.bat`
+1. double-click `scripts/start_local_workspace_demo.bat`
 2. wait until the browser opens Stage 14
 3. keep or edit the research intent, desired output, and first-task anchor in the intake panel
 4. click `attach screenshots`
@@ -238,7 +238,7 @@ Expected result:
 
 Precondition:
 
-- `scripts/start_stage12_demo.bat` already ran successfully
+- `scripts/start_local_workspace_demo.bat` already ran successfully
 
 ### Case 1: submit live job
 
@@ -426,7 +426,7 @@ Cause:
 
 Fix:
 
-- rerun `scripts/start_stage12_demo.bat`
+- rerun `scripts/start_local_workspace_demo.bat`
 
 ### jobs remain queued
 
@@ -436,7 +436,7 @@ Cause:
 
 Fix:
 
-- rerun `scripts/start_stage12_demo.bat`
+- rerun `scripts/start_local_workspace_demo.bat`
 - or start the worker manually:
 
 ```powershell

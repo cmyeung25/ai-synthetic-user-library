@@ -1,5 +1,6 @@
 import io
 import json
+import random
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -12,7 +13,8 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from ai_validation_swarm.cli.main import main
-from ai_validation_swarm.personas.v3 import RAW_ENUM_TOKENS
+from ai_validation_swarm.personas.generator import build_seed, enrich_seed
+from ai_validation_swarm.personas.v3 import RAW_ENUM_TOKENS, _specific_chapter_scene
 from ai_validation_swarm.storage.files import read_json
 from tests.unit.persona_fixture_factory import build_legacy_v2_fixtures
 
@@ -94,6 +96,20 @@ class PersonaV3Test(unittest.TestCase):
             chapters = profile["canonical_biography"]["decade_timeline"]
             self.assertGreaterEqual(len(chapters), 3)
             self.assertTrue(all(chapter.get("specific_scene") for chapter in chapters))
+
+    def test_specific_chapter_scene_falls_back_for_uncovered_decade(self) -> None:
+        seed = build_seed(index=1, rng=random.Random(31), panel_role="mainstream")
+        persona = enrich_seed(seed=seed, index=1, rng=random.Random(32))
+        persona.profile.basic_identity["age"] = 31
+        persona.profile.basic_identity["occupation"] = "program manager"
+        persona.profile.basic_identity["location"] = "Hong Kong"
+        persona.profile.technology_profile["ai_familiarity"] = "medium"
+
+        scene = _specific_chapter_scene(persona, "30-39")
+
+        self.assertIn("specific_scene", scene)
+        self.assertIn("30-39", scene["specific_scene"])
+        self.assertEqual(scene["formative_level"], "medium")
 
     def test_local_grounding_layer_exists(self) -> None:
         for persona_id in ("su_0001", "su_0002"):

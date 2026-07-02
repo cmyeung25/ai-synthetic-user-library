@@ -100,6 +100,31 @@ class PersonaAnalysisTest(unittest.TestCase):
             )
         )
 
+    def test_build_persona_library_summary_tolerates_legacy_missing_profile_fields(self) -> None:
+        persona = generate_personas(count=1, random_seed=83)[0]
+        del persona.profile.basic_identity["locale_pack"]
+        del persona.profile.basic_identity["life_stage"]
+        del persona.profile.basic_identity["family_structure"]
+        del persona.profile.economic_profile["purchase_authority_type"]
+        del persona.profile.economic_profile["cash_flow_volatility"]
+        persona.profile.behavior_profile.pop("workflow_maturity", None)
+
+        summary = build_persona_library_summary([persona])
+
+        self.assertEqual(summary["library_size"], 1)
+        self.assertEqual(
+            summary["distributions"]["locale_pack"],
+            {persona.seed.locale_pack: 1},
+        )
+        self.assertEqual(
+            summary["distributions"]["family_structure"],
+            {persona.seed.household_structure: 1},
+        )
+        self.assertEqual(
+            summary["distributions"]["purchase_authority_type"],
+            {persona.seed.purchase_authority_type: 1},
+        )
+
     def test_summarize_personas_cli_writes_json(self) -> None:
         personas = generate_personas(count=24, random_seed=11)
         with tempfile.TemporaryDirectory() as tmp:

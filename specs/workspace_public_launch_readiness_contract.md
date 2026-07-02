@@ -6,6 +6,7 @@ This contract defines the current Milestone 26 public-launch-readiness layer for
 - one backend-owned `public_claims_boundary` object
 - one backend-owned `customer_operations_support_boundary` object
 - one backend-owned `self_serve_onboarding_pricing_boundary` object
+- one backend-owned `privacy_export_controls` projection from `workspace-privacy-export-controls/v1`
 - benchmark disclosure and customer-facing claim limits on export and share artifacts
 
 The goal is to keep broader launch posture tied to benchmark-backed evidence and governed circulation state, not to page-local interpretation or marketing copy.
@@ -91,6 +92,23 @@ Response root:
       "public_self_serve_launch_not_yet_approved",
       "replacement_grade_claims_not_allowed"
     ],
+    "privacy_export_controls": {
+      "contract_version": "workspace-privacy-export-controls/v1",
+      "privacy_readiness": {
+        "status": "ready_for_customer_review",
+        "blocked_reasons": []
+      },
+      "data_residency": {
+        "data_residency_region": "us-east-1"
+      },
+      "retention_controls": {
+        "artifact_retention_days": 30
+      },
+      "export_share_controls": {
+        "export_bundle_count": 1,
+        "share_bundle_count": 1
+      }
+    },
     "customer_operations_support_boundary": {
       "contract_version": "workspace-public-launch-support-boundary/v0-draft",
       "status": "bounded_operator_ready",
@@ -204,6 +222,7 @@ It is derived from:
 - `regulated_review_boundary`
 - `governed_review`
 - `governed_redaction`
+- `privacy_export_controls`
 
 It must not be fabricated by frontend heuristics.
 
@@ -226,6 +245,8 @@ Current status meanings:
 - `governed_preview_only`: high-stakes or governed-review conditions still block broader public-facing launch posture
 - `controlled_mvp_only`: scoped external readiness may support bounded design-partner or pilot claims, but self-serve public launch remains blocked
 - `bounded_public_candidate`: reserved for later M26 work once broader public-launch boundaries are explicitly approved
+
+If `privacy_export_controls.privacy_readiness.status` is not `ready_for_customer_review`, launch readiness must include `privacy_export_controls_not_ready` in `launch_blockers`.
 
 ## Artifact projection rule
 
